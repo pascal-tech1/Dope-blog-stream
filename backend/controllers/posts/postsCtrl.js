@@ -1,0 +1,230 @@
+const expressAsyncHandler = require("express-async-handler");
+const Post = require("../../model/post/Post");
+
+const validateMongoDbUserId = require("../../utils/validateMongoDbUserId");
+const fs = require("fs");
+const {
+	handleCloudinaryUpload,
+} = require("../../config/cloundinary/cloudinaryUploadConfig");
+const User = require("../../model/user/User");
+const checkProfanity = require("../../utils/profanWords");
+
+// '''''''''''''''''''''''''''''''''''''''''
+//   Create Post conttoller
+// '''''''''''''''''''''''''''''''''''''''''''''
+const createPostCtrl = expressAsyncHandler(async (req, res) => {
+	const { id } = req.user;
+	validateMongoDbUserId(id);
+
+	const user = await User.findById(id);
+
+	const enteredDetails =
+		req?.body?.title +
+		"" +
+		req?.body?.description +
+		"" +
+		req?.body?.category;
+
+	if (checkProfanity(enteredDetails)) {
+		user.isBlocked = true;
+		await user.save();
+		throw new Error(
+			"post creation failed, account has been block for using profan words"
+		);
+	}
+	try {
+		const imageLocalPath = `public/images/posts/${req?.file?.fileName}`;
+		uploadedImage = await handleCloudinaryUpload(
+			imageLocalPath,
+			`mern-blog-app/${user?.email}/postImage`
+		);
+		// if (fs.existsSync(imageLocalPath)) {
+		// 	fs.unlink(imageLocalPath);
+		// } else {
+		// 	throw new Error("No valid file path found for deletions");
+		// }
+
+		const post = await Post.create({
+			...req.body,
+			user: id,
+			image: uploadedImage?.url,
+		});
+
+		res.json(post);
+	} catch (error) {
+		console.log(error);
+		res.status(500).json({ message: error.message });
+	}
+});
+
+// '''''''''''''''''''''''''''''''''''''''''
+//   fetch all post and populate with the user that created it Post conttoller
+// '''''''''''''''''''''''''''''''''''''''''''''
+
+const fetchAllPostsCtrl = expressAsyncHandler(async (req, res) => {
+	try {
+		const allPosts = await Post.find({}).populate("user");
+		res.json(allPosts);
+	} catch (error) {
+		res.json({ message: error.message });
+	}
+});
+
+// '''''''''''''''''''''''''''''''''''''''''
+//   fetch single post controller
+// '''''''''''''''''''''''''''''''''''''''''''''
+const fetchSinglePostsCtrl = expressAsyncHandler(async (req, res) => {
+	const { id } = req.params;
+	validateMongoDbUserId(id);
+	try {
+		const post = await Post.findById(id).populate("user");
+		// updating number of views of post
+		post.numViews++;
+		await post.save();
+		// or you can also do this
+		// await Post.findByIdAndUpdate(
+		// 	id,
+		// 	{
+		// 		$inc: { numViews: 1 },s
+		// 	},
+		// 	{ new: true }
+		// );
+		res.json(post);
+	} catch (error) {
+		res.json(error);
+	}
+});
+
+// '''''''''''''''''''''''''''''''''''''''''
+//   update post controller
+// '''''''''''''''''''''''''''''''''''''''''''''
+const updatePostCtrl = expressAsyncHandler(async (req, res) => {
+	// const { loginUserId } = req?.user;
+	const { id } = req?.params;
+	validateMongoDbUserId(id);
+	console.log(id);
+	try {
+		const post = await Post.findByIdAndUpdate(
+			id,
+			{
+				...req.body,
+			},
+			{
+				new: true,
+			}
+		);
+		console.log(post);
+		res.json(post);
+	} catch (error) {
+		res.json({ message: error.stack });
+	}
+});
+
+// '''''''''''''''''''''''''''''''''''''''''
+//   delete post controller
+// ''''''''''''''''''''''''''''''''''''''''''''
+
+const deletePostCtrl = expressAsyncHandler(async (req, res) => {
+	const { id } = req?.params;
+	try {
+		const post = await Post.findByIdAndDelete(id);
+		res.json(post);
+	} catch (error) {
+		res.json(error);
+	}
+});
+// '''''''''''''''''''''''''''''''''''''''''
+//   liking a post controller
+// ''''''''''''''''''''''''''''''''''''''''''''
+
+const likePostCtrl = expressAsyncHandler(async (req, res) => {
+	const { postId } = req?.body;
+	const loginUserId = req?.user?.id;
+	try {
+		const post = await Post.findById(postId);
+		const alreadyDisliked = post.disLikes.includes(loginUserId);
+		if (alreadyDisliked) {
+			const newPost = await Post.findByIdAndUpdate(
+				postId,
+				{
+					$pull: { disLikes: loginUserId },
+				},
+				{ new: true }
+			);
+		}
+		const alreadyLiked = post.likes.includes(loginUserId);
+		if (alreadyLiked) {
+			const newPost = await Post.findByIdAndUpdate(
+				postId,
+				{
+					$pull: { likes: loginUserId },
+				},
+				{ new: true }
+			);
+			res.json(newPost);
+		} else {
+			const newPost = await Post.findByIdAndUpdate(
+				postId,
+				{
+					$push: { likes: loginUserId },
+				},
+				{ new: true }
+			);
+			res.json(newPost);
+		}
+	} catch (error) {
+		res.json(error);
+	}
+});
+// '''''''''''''''''''''''''''''''''''''''''
+//   Disliking a post controller
+// ''''''''''''''''''''''''''''''''''''''''''''
+
+const disLikingPostCtrl = expressAsyncHandler(async (req, res) => {
+	const { postId } = req?.body;
+	const loginUserId = req?.user?.id;
+	try {
+		const post = await Post.findById(postId);
+		const alreadyLiked = post.likes.includes(loginUserId);
+		if (alreadyLiked) {
+			newPost = await Post.findByIdAndUpdate(
+				postId,
+				{
+					$pull: { likes: loginUserId },
+				},
+				{ new: true }
+			);
+		}
+		const alreadyDisliked = post.disLikes.includes(loginUserId);
+		if (alreadyDisliked) {
+			const newPost = await Post.findByIdAndUpdate(
+				postId,
+				{
+					$pull: { disLikes: loginUserId },
+				},
+				{ new: true }
+			);
+			res.json(newPost);
+		} else {
+			const newPost = await Post.findByIdAndUpdate(
+				postId,
+				{
+					$push: { disLikes: loginUserId },
+				},
+				{ new: true }
+			);
+			res.json(newPost);
+		}
+	} catch (error) {
+		res.json(error);
+	}
+});
+module.exports = {
+	createPostCtrl,
+	fetchAllPostsCtrl,
+	fetchSinglePostsCtrl,
+	updatePostCtrl,
+	deletePostCtrl,
+	likePostCtrl,
+	disLikingPostCtrl,
+};
