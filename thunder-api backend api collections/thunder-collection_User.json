@@ -1,0 +1,323 @@
+{
+    "client": "Thunder Client",
+    "collectionName": "User",
+    "dateExported": "2023-08-23T23:57:05.038Z",
+    "version": "1.1",
+    "folders": [],
+    "requests": [
+        {
+            "_id": "86fb1b98-9f51-48e6-b0e4-a95edb52fe4e",
+            "colId": "ccf920c3-aad4-44eb-9e94-ebf168c24ba3",
+            "containerId": "",
+            "name": "Register user",
+            "url": "http://localhost:5000/api/users/register",
+            "method": "POST",
+            "sortNum": 10000,
+            "created": "2023-08-20T19:45:34.072Z",
+            "modified": "2023-08-21T05:21:01.194Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"firstName\": \"pascal\",\n  \"lastName\": \"azubike\",\n  \"email\": \"pascalazubike0010@gmail.com\",\n  \"password\": \"12345\"\n}",
+                "form": []
+            },
+            "tests": []
+        },
+        {
+            "_id": "b51ec083-1d93-44df-9e1d-a050162bd2aa",
+            "colId": "ccf920c3-aad4-44eb-9e94-ebf168c24ba3",
+            "containerId": "",
+            "name": "login user",
+            "url": "http://localhost:5000/api/users/login",
+            "method": "POST",
+            "sortNum": 20000,
+            "created": "2023-08-20T19:45:45.610Z",
+            "modified": "2023-08-22T20:40:04.365Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n    \"email\": \"pascalazubike0010@gmail.com\",\n    \"password\": \"12345\"\n}",
+                "form": []
+            },
+            "tests": []
+        },
+        {
+            "_id": "f4d6e7bf-f738-4b98-a5d7-039d80e54108",
+            "colId": "ccf920c3-aad4-44eb-9e94-ebf168c24ba3",
+            "containerId": "",
+            "name": "fetch all users",
+            "url": "http://localhost:5000/api/users",
+            "method": "GET",
+            "sortNum": 30000,
+            "created": "2023-08-20T19:45:48.951Z",
+            "modified": "2023-08-21T02:25:35.443Z",
+            "headers": [],
+            "params": [],
+            "auth": {
+                "type": "bearer",
+                "bearer": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0ZTI2ZThlMGM3ZTdhMTQzMjgyMDZmOSIsImlhdCI6MTY5MjU4NDcxNywiZXhwIjoxNjkzNDQ4NzE3fQ.EGobS-8Zo0MjBXMNLPQUfC0Fv4E_w8KIaAfoRPl2PTE"
+            },
+            "tests": []
+        },
+        {
+            "_id": "1f971cc4-b471-4558-9776-efd5f1aefad0",
+            "colId": "ccf920c3-aad4-44eb-9e94-ebf168c24ba3",
+            "containerId": "",
+            "name": "delete user",
+            "url": "http://localhost:5000/api/users/delete/64e25dbe0c7e7a14328206f5",
+            "method": "DELETE",
+            "sortNum": 40000,
+            "created": "2023-08-20T19:45:51.337Z",
+            "modified": "2023-08-21T02:32:32.744Z",
+            "headers": [],
+            "params": [],
+            "auth": {
+                "type": "bearer",
+                "bearer": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0ZTI2ZThlMGM3ZTdhMTQzMjgyMDZmOSIsImlhdCI6MTY5MjU2MTUzNywiZXhwIjoxNjkzNDI1NTM3fQ.f9PZWvK_q8muBw3q9idSnKHzSFZfqFfmxu4phv0JFQE"
+            },
+            "tests": []
+        },
+        {
+            "_id": "9fd55ca2-6bd3-456e-babd-0c19bc980da4",
+            "colId": "ccf920c3-aad4-44eb-9e94-ebf168c24ba3",
+            "containerId": "",
+            "name": "fetch user details",
+            "url": "http://localhost:5000/api/users/64e26e8e0c7e7a14328206f9",
+            "method": "GET",
+            "sortNum": 50000,
+            "created": "2023-08-20T20:13:02.762Z",
+            "modified": "2023-08-21T02:33:05.560Z",
+            "headers": [],
+            "params": [],
+            "tests": []
+        },
+        {
+            "_id": "e918ddf9-d0bd-4b43-b10d-7407a273826c",
+            "colId": "ccf920c3-aad4-44eb-9e94-ebf168c24ba3",
+            "containerId": "",
+            "name": "fetch user details with posts",
+            "url": "http://localhost:5000/api/users/profile/64e2f43288536335a34600d1",
+            "method": "GET",
+            "sortNum": 60000,
+            "created": "2023-08-20T20:16:59.516Z",
+            "modified": "2023-08-21T09:44:49.801Z",
+            "headers": [],
+            "params": [],
+            "auth": {
+                "type": "bearer",
+                "bearer": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0ZTI2ZThlMGM3ZTdhMTQzMjgyMDZmOSIsImlhdCI6MTY5MjU2MTUzNywiZXhwIjoxNjkzNDI1NTM3fQ.f9PZWvK_q8muBw3q9idSnKHzSFZfqFfmxu4phv0JFQE"
+            },
+            "tests": []
+        },
+        {
+            "_id": "ddce07e1-a8b0-4f36-9422-4d13fa7e02ce",
+            "colId": "ccf920c3-aad4-44eb-9e94-ebf168c24ba3",
+            "containerId": "",
+            "name": "update user info",
+            "url": "http://localhost:5000/api/users/64e26e8e0c7e7a14328206f9",
+            "method": "PUT",
+            "sortNum": 70000,
+            "created": "2023-08-20T20:18:18.557Z",
+            "modified": "2023-08-21T02:34:23.823Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\r\n    \"firstName\": \"precious\",\r\n    \"lastName\": \"chibugo\",\r\n   \r\n    \"bio\" : \"im studying node js backend now\",\r\n     \"email\": \"pascalazubike0143@gmail.com\"\r\n\r\n  }",
+                "form": []
+            },
+            "auth": {
+                "type": "bearer",
+                "bearer": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0ZTI2ZThlMGM3ZTdhMTQzMjgyMDZmOSIsImlhdCI6MTY5MjU2MTUzNywiZXhwIjoxNjkzNDI1NTM3fQ.f9PZWvK_q8muBw3q9idSnKHzSFZfqFfmxu4phv0JFQE"
+            },
+            "tests": []
+        },
+        {
+            "_id": "10f181af-dae2-4927-8470-1ba9c6dfcf75",
+            "colId": "ccf920c3-aad4-44eb-9e94-ebf168c24ba3",
+            "containerId": "",
+            "name": "update password ",
+            "url": "http://localhost:5000/api/users/updatePassword",
+            "method": "PUT",
+            "sortNum": 80000,
+            "created": "2023-08-21T02:18:21.268Z",
+            "modified": "2023-08-21T02:35:16.207Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"email\": \"pascalazubike0143@gmail.com\",\n  \"password\": \"123\"\n}",
+                "form": []
+            },
+            "auth": {
+                "type": "bearer",
+                "bearer": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0ZTI2ZThlMGM3ZTdhMTQzMjgyMDZmOSIsImlhdCI6MTY5MjU4NDU0NywiZXhwIjoxNjkzNDQ4NTQ3fQ.Oc4d9vupeH3YwU2K-xP4NuGeBd_z-pie32uGiI_wYQs"
+            },
+            "tests": []
+        },
+        {
+            "_id": "6fec6bec-0662-40d4-884f-4aa4059d550c",
+            "colId": "ccf920c3-aad4-44eb-9e94-ebf168c24ba3",
+            "containerId": "",
+            "name": "follow user",
+            "url": "http://localhost:5000/api/users/follow",
+            "method": "POST",
+            "sortNum": 90000,
+            "created": "2023-08-21T02:26:25.232Z",
+            "modified": "2023-08-21T02:36:29.420Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"userToFollowId\": \"43335533\"\n}",
+                "form": []
+            },
+            "auth": {
+                "type": "bearer",
+                "bearer": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0ZTI2ZThlMGM3ZTdhMTQzMjgyMDZmOSIsImlhdCI6MTY5MjU4NDU0NywiZXhwIjoxNjkzNDQ4NTQ3fQ.Oc4d9vupeH3YwU2K-xP4NuGeBd_z-pie32uGiI_wYQs"
+            },
+            "tests": []
+        },
+        {
+            "_id": "35a08fd6-876d-45dd-aa33-49fc9e4f00f6",
+            "colId": "ccf920c3-aad4-44eb-9e94-ebf168c24ba3",
+            "containerId": "",
+            "name": "unfollowing user",
+            "url": "http://localhost:5000/api/users//unfollow",
+            "method": "POST",
+            "sortNum": 100000,
+            "created": "2023-08-21T02:28:37.751Z",
+            "modified": "2023-08-21T02:45:26.476Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"userToUnFollowId\": \"43335533\"\n}",
+                "form": []
+            },
+            "auth": {
+                "type": "bearer",
+                "bearer": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0ZTI2ZThlMGM3ZTdhMTQzMjgyMDZmOSIsImlhdCI6MTY5MjU4NDU0NywiZXhwIjoxNjkzNDQ4NTQ3fQ.Oc4d9vupeH3YwU2K-xP4NuGeBd_z-pie32uGiI_wYQs"
+            },
+            "tests": []
+        },
+        {
+            "_id": "fa2d72e7-63d4-46a2-8693-502a31b51190",
+            "colId": "ccf920c3-aad4-44eb-9e94-ebf168c24ba3",
+            "containerId": "",
+            "name": "send user verification email",
+            "url": "http://localhost:5000/api/users/send-email",
+            "method": "POST",
+            "sortNum": 110000,
+            "created": "2023-08-21T02:38:13.922Z",
+            "modified": "2023-08-21T02:38:36.770Z",
+            "headers": [],
+            "params": [],
+            "auth": {
+                "type": "bearer",
+                "bearer": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0ZTI2ZThlMGM3ZTdhMTQzMjgyMDZmOSIsImlhdCI6MTY5MjU4NDU0NywiZXhwIjoxNjkzNDQ4NTQ3fQ.Oc4d9vupeH3YwU2K-xP4NuGeBd_z-pie32uGiI_wYQs"
+            },
+            "tests": []
+        },
+        {
+            "_id": "cd041970-f09b-42be-8ce0-0665a9486b51",
+            "colId": "ccf920c3-aad4-44eb-9e94-ebf168c24ba3",
+            "containerId": "",
+            "name": "very email",
+            "url": "http://localhost:5000/api/users/verify-Account",
+            "method": "POST",
+            "sortNum": 120000,
+            "created": "2023-08-21T02:39:03.298Z",
+            "modified": "2023-08-21T02:48:10.839Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"verificationToken\": \"7e56721a868ee267aea253167063dffa427455e21f4cf995a69a7ef444f478bf\"\n}",
+                "form": []
+            },
+            "auth": {
+                "type": "bearer",
+                "bearer": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0ZTI2ZThlMGM3ZTdhMTQzMjgyMDZmOSIsImlhdCI6MTY5MjU4NDU0NywiZXhwIjoxNjkzNDQ4NTQ3fQ.Oc4d9vupeH3YwU2K-xP4NuGeBd_z-pie32uGiI_wYQs"
+            },
+            "tests": []
+        },
+        {
+            "_id": "6251e8ea-297e-453c-a90b-90e31f3a9b7d",
+            "colId": "ccf920c3-aad4-44eb-9e94-ebf168c24ba3",
+            "containerId": "",
+            "name": "forget password",
+            "url": "http://localhost:5000/api/users/forget-password",
+            "method": "POST",
+            "sortNum": 130000,
+            "created": "2023-08-21T02:40:47.003Z",
+            "modified": "2023-08-21T03:07:15.884Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"userEmail\": \"pascalazubike0143@gmail.com\"\n}",
+                "form": []
+            },
+            "auth": {
+                "type": "bearer",
+                "bearer": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0ZTI2ZThlMGM3ZTdhMTQzMjgyMDZmOSIsImlhdCI6MTY5MjU4NDU0NywiZXhwIjoxNjkzNDQ4NTQ3fQ.Oc4d9vupeH3YwU2K-xP4NuGeBd_z-pie32uGiI_wYQs"
+            },
+            "tests": []
+        },
+        {
+            "_id": "e269aeab-5908-4c89-8fff-8b9fe7b36801",
+            "colId": "ccf920c3-aad4-44eb-9e94-ebf168c24ba3",
+            "containerId": "",
+            "name": "Reset password",
+            "url": "http://localhost:5000/api/users/forget-password",
+            "method": "POST",
+            "sortNum": 140000,
+            "created": "2023-08-21T02:49:37.620Z",
+            "modified": "2023-08-21T02:49:37.620Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\r\n    \"userEmail\": \"pascalazubike0143@gmail.com\"\r\n}",
+                "form": []
+            },
+            "auth": {
+                "type": "bearer",
+                "bearer": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0ZTI2ZThlMGM3ZTdhMTQzMjgyMDZmOSIsImlhdCI6MTY5MjU4NDU0NywiZXhwIjoxNjkzNDQ4NTQ3fQ.Oc4d9vupeH3YwU2K-xP4NuGeBd_z-pie32uGiI_wYQs"
+            },
+            "tests": []
+        },
+        {
+            "_id": "e72c3ac8-e611-44ca-a830-edd6fff1f653",
+            "colId": "ccf920c3-aad4-44eb-9e94-ebf168c24ba3",
+            "containerId": "",
+            "name": "profile picture upload",
+            "url": "http://localhost:5000/api/users/profile-picture-upload",
+            "method": "POST",
+            "sortNum": 150000,
+            "created": "2023-08-21T02:52:09.504Z",
+            "modified": "2023-08-21T04:04:22.701Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "formdata",
+                "raw": "",
+                "form": [],
+                "files": [
+                    {
+                        "name": "image",
+                        "value": "c:\\Users\\Admin\\Desktop\\xbox-acquisition-upsell.jpg"
+                    }
+                ]
+            },
+            "auth": {
+                "type": "bearer",
+                "bearer": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0ZTI2ZThlMGM3ZTdhMTQzMjgyMDZmOSIsImlhdCI6MTY5MjU4NDU0NywiZXhwIjoxNjkzNDQ4NTQ3fQ.Oc4d9vupeH3YwU2K-xP4NuGeBd_z-pie32uGiI_wYQs"
+            },
+            "tests": []
+        }
+    ]
+}

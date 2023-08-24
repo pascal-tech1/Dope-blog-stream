@@ -1,0 +1,109 @@
+{
+    "client": "Thunder Client",
+    "collectionName": "Post Category",
+    "dateExported": "2023-08-23T23:57:35.599Z",
+    "version": "1.1",
+    "folders": [],
+    "requests": [
+        {
+            "_id": "8c587e30-6498-45f0-a238-7c79d9f5cce3",
+            "colId": "9eeb4768-83e5-4a92-ac7c-79a5ee69adab",
+            "containerId": "",
+            "name": "create post Category",
+            "url": "http://localhost:5000/api/categorys",
+            "method": "POST",
+            "sortNum": 10000,
+            "created": "2023-08-23T18:56:47.798Z",
+            "modified": "2023-08-23T20:29:21.476Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n    \n    \"title\": \"General\"\n}",
+                "form": []
+            },
+            "auth": {
+                "type": "bearer",
+                "bearer": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0ZTJmNDNjODg1MzYzMzVhMzQ2MDBkNCIsImlhdCI6MTY5MjczNjgwNiwiZXhwIjoxNjkzNjAwODA2fQ.U3cyjDahqJKOqu6v5YLBxT09BBwNIN8Kkrk10rpc5m4"
+            },
+            "tests": []
+        },
+        {
+            "_id": "f1d0c896-1c86-4567-bb65-527f6acf3435",
+            "colId": "9eeb4768-83e5-4a92-ac7c-79a5ee69adab",
+            "containerId": "",
+            "name": "fetch all Categorys",
+            "url": "http://localhost:5000/api/categorys",
+            "method": "GET",
+            "sortNum": 20000,
+            "created": "2023-08-23T19:26:23.927Z",
+            "modified": "2023-08-23T19:26:45.703Z",
+            "headers": [],
+            "params": [],
+            "auth": {
+                "type": "bearer",
+                "bearer": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0ZTJmNDNjODg1MzYzMzVhMzQ2MDBkNCIsImlhdCI6MTY5MjczNjgwNiwiZXhwIjoxNjkzNjAwODA2fQ.U3cyjDahqJKOqu6v5YLBxT09BBwNIN8Kkrk10rpc5m4"
+            },
+            "tests": []
+        },
+        {
+            "_id": "21ee543f-aed9-4352-9b9e-3d8608c55934",
+            "colId": "9eeb4768-83e5-4a92-ac7c-79a5ee69adab",
+            "containerId": "",
+            "name": "fetch single category",
+            "url": "http://localhost:5000/api/categorys/64e65de88cd3a0ce27155207",
+            "method": "GET",
+            "sortNum": 30000,
+            "created": "2023-08-23T19:58:57.231Z",
+            "modified": "2023-08-23T20:47:24.988Z",
+            "headers": [],
+            "params": [],
+            "auth": {
+                "type": "bearer",
+                "bearer": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0ZTJmNDNjODg1MzYzMzVhMzQ2MDBkNCIsImlhdCI6MTY5MjczNjgwNiwiZXhwIjoxNjkzNjAwODA2fQ.U3cyjDahqJKOqu6v5YLBxT09BBwNIN8Kkrk10rpc5m4"
+            },
+            "tests": []
+        },
+        {
+            "_id": "23bdee88-b7e7-439b-bdff-064eeac64fe3",
+            "colId": "9eeb4768-83e5-4a92-ac7c-79a5ee69adab",
+            "containerId": "",
+            "name": "update category",
+            "url": "http://localhost:5000/api/categorys/64e65de88cd3a0ce27155207",
+            "method": "PUT",
+            "sortNum": 40000,
+            "created": "2023-08-23T20:31:34.533Z",
+            "modified": "2023-08-23T20:50:03.251Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n    \n    \"title\": \"Social Medials\"\n}",
+                "form": []
+            },
+            "auth": {
+                "type": "bearer",
+                "bearer": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0ZTJmNDNjODg1MzYzMzVhMzQ2MDBkNCIsImlhdCI6MTY5MjczNjgwNiwiZXhwIjoxNjkzNjAwODA2fQ.U3cyjDahqJKOqu6v5YLBxT09BBwNIN8Kkrk10rpc5m4"
+            },
+            "tests": []
+        },
+        {
+            "_id": "116f68bb-6909-449f-a684-698c905a3487",
+            "colId": "9eeb4768-83e5-4a92-ac7c-79a5ee69adab",
+            "containerId": "",
+            "name": "delete category",
+            "url": "http://localhost:5000/api/categorys/64e65de88cd3a0ce27155207",
+            "method": "DELETE",
+            "sortNum": 50000,
+            "created": "2023-08-23T20:58:53.791Z",
+            "modified": "2023-08-23T20:59:27.368Z",
+            "headers": [],
+            "params": [],
+            "auth": {
+                "type": "bearer",
+                "bearer": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0ZTJmNDNjODg1MzYzMzVhMzQ2MDBkNCIsImlhdCI6MTY5MjczNjgwNiwiZXhwIjoxNjkzNjAwODA2fQ.U3cyjDahqJKOqu6v5YLBxT09BBwNIN8Kkrk10rpc5m4"
+            },
+            "tests": []
+        }
+    ]
+}
