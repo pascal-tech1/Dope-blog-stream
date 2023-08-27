@@ -4,9 +4,11 @@ import { articles } from "../utils/data";
 import { MdOutlineCalendarMonth } from "react-icons/md";
 
 const Home = () => {
+
+	const theme = 'dark'
 	const category = ["design", "developtment", "ux", "marketing"];
 	return (
-		<div className=" font-helvetica">
+		<div className={`bg-${theme}-background font-helvetic `}>
 			<NavBar />
 
 			<div className=" md:grid grid-cols-3 mt-[4rem] mx-10 ">

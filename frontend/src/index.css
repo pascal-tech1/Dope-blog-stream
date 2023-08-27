@@ -5,7 +5,7 @@
 
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -25,7 +25,27 @@
   min-width: 320px;
   min-height: 100vh;
 }
+  background-color: #242424;
  */
  @tailwind base;
  @tailwind components;
  @tailwind utilities;
+
+
+
+ .form-label{
+  @apply text-sm text-gray-400;
+ }
+
+ .form-input{
+  @apply my-2  rounded-lg py-1 border border-gray-200 focus:outline-none focus:border focus:border-b-blue-400 w-full;
+ }
+
+ .form-container{
+  @apply flex flex-col 
+ }
+
+
+ .form-btn{
+  @apply bg-blue-600 w-full py-1 rounded-lg text-white hover:bg-blue-500 transition-all 
+ }
