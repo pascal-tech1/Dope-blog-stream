@@ -54,13 +54,13 @@ const Login = () => {
 					</form>
 					<div className=" mt-8">
 						<h3 className=" font-light font-helvetica text-gray-500">
-							Have an account?
+							Don't Have an account?
 							<span>
 								<a
 									className=" text-blue-600 ml-2 hover:text-blue-400 transition-all"
 									href="#"
 								>
-									Login
+									Register
 								</a>
 							</span>
 						</h3>

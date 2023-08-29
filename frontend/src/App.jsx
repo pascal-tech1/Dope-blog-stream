@@ -1,14 +1,38 @@
-import { Home, Login, Register } from "./pages";
+import React from "react";
 
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
-function App() {
+import { Home, Login } from "./pages";
+import {
+	Comments,
+	Dashboard,
+	Followers,
+	Layout,
+	Messages,
+	Post,
+	Profile,
+} from "./pages/Dashboard";
+
+const App = () => {
 	return (
-		<>
-			<Home />
-			{/* <Login/> */}
-			{/* <Register/> */}
-		</>
+		<BrowserRouter>
+			<Routes>
+				<Route path="/" element={<Layout />}>
+					<Route path="dashboard" element={<Dashboard />} />
+					<Route path="profile" element={<Profile />} />
+					<Route path="post" element={<Post />} />
+					<Route path="followers" element={<Followers />} />
+					<Route path="messages" element={<Messages />} />
+					<Route path="comments" element={<Comments />} />
+				</Route>
+				{/* <Route path="pages" element={<Pages />}>
+					
+				</Route> */}
+				<Route path="home" element={<Home />} />
+				<Route path="*" element={<Error />} />
+			</Routes>
+		</BrowserRouter>
 	);
-}
+};
 
 export default App;
