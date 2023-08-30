@@ -15,6 +15,9 @@ export default {
 			fontFamily: {
 				helvetica: ['"Geologica"'],
 			},
+			fontFamily: {
+				inter: ['"Inter"'],
+			},
 			colors: {
 				dark: {
 					background: "#242424",

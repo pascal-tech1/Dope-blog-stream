@@ -1,5 +1,5 @@
 import React from "react";
-import NavBar from "./NavBar";
+import { NavBar } from "../components";
 import { articles } from "../utils/data";
 import { MdOutlineCalendarMonth } from "react-icons/md";
 

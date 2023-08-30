@@ -1,32 +1,25 @@
 import React from "react";
-import { NavLink, Outlet } from "react-router-dom";
+import { useState } from "react";
+import { Outlet } from "react-router-dom";
+import { useRef } from "react";
 
-import NavBar from "../NavBar";
-import { DashboardSideBar } from "../../components";
+
+import { DashboardSideBar,DashboardNavBAr } from "../../components";
+
 
 const Layout = () => {
-	const sideBarItems = [
-		{
-			title: "dashboard",
-			icon: "dashboard.png",
-		},
-
-		{ title: "profile", icon: "person.png" },
-		{ title: "post", icon: "petition.png" },
-		{ title: "followers", icon: "user.png" },
-
-		{ title: "messages", icon: "message.png" },
-		{ title: "comments", icon: "feedback.png" },
-	];
-
+	const [isDrpDownOpen, setIsDropDownOpen] = useState(false);
+	const width = useRef(window.innerWidth);
+	console.log(width);
 	return (
-		<div className=" md:grid grid-cols-12 grid-rows-1 font-helvetica text-gray-600 relative">
-			<section className=" col-start-3 col-span-9   h-screen overflow-hidden">
-				<NavBar />
+		<div className="grid grid-cols-12 grid-rows-1 gap-8 font-inter font-extralight  text-sm text-gray-600 relative bg-[#f8f8f8] ">
+			<section className=" md:col-start-3 col-span-full  h-screen overflow-hidden">
+				<DashboardNavBAr />
 				<Outlet />
 			</section>
-			<section className=" col-start-1 col-span-2 h-screen  overflow-hidden min-w-full shadow-lg row-start-1 ">
-				<DashboardSideBar/>
+			<section className=" bg-[#ffffff] absolute w-max h-max mr-9 md:ml-0 mt-16 md:mt-0 col-start-1 col-span-2 md:h-screen  overflow-hidden min-w-full shadow-sm row-start-1 ">
+			
+				<DashboardSideBar />
 			</section>
 		</div>
 	);

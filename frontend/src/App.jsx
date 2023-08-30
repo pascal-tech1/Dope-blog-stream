@@ -8,27 +8,33 @@ import {
 	Dashboard,
 	Followers,
 	Layout,
-	Messages,
+	MessagesSend,
+	MessagesView,
 	Post,
-	Profile,
+	ProfileEdit,
+	ProfileView,
 } from "./pages/Dashboard";
 
 const App = () => {
 	return (
 		<BrowserRouter>
 			<Routes>
-				<Route path="/" element={<Layout />}>
-					<Route path="dashboard" element={<Dashboard />} />
-					<Route path="profile" element={<Profile />} />
+			<Route path="/" element={<Home />} />
+				<Route path="/dashboard" element={<Layout />}>
+					<Route index path="dashboard" element={<Dashboard />} />
+					<Route path="profile-view" element={<ProfileView />} />
+					<Route path="profile-edit" element={<ProfileEdit />} />
 					<Route path="post" element={<Post />} />
 					<Route path="followers" element={<Followers />} />
-					<Route path="messages" element={<Messages />} />
+					<Route path="messages-view" element={<MessagesView />} />
+					<Route path="messages-send" element={<MessagesSend />} />
+
 					<Route path="comments" element={<Comments />} />
 				</Route>
 				{/* <Route path="pages" element={<Pages />}>
 					
 				</Route> */}
-				<Route path="home" element={<Home />} />
+				
 				<Route path="*" element={<Error />} />
 			</Routes>
 		</BrowserRouter>
