@@ -1,14 +1,25 @@
-import React from "react";
+import React, { useState } from "react";
 import { FiMenu } from "react-icons/fi";
-import {  IoMdNotificationsOutline } from "react-icons/io";
+import { IoMdNotificationsOutline } from "react-icons/io";
 import { BsPencilSquare } from "react-icons/bs";
 import { BiMessageRoundedDots } from "react-icons/bi";
 
-const DashboardNavBAr = () => {
+const DashboardNavBAr = ({ toggleSideMenu }) => {
+	const [isSideBarMenuopen, setIsSideBarmenuOpen] = useState(true);
+
+	const handleOnclick = (e) => {
+		e.preventDefault();
+		setIsSideBarmenuOpen(!isSideBarMenuopen);
+		toggleSideMenu(isSideBarMenuopen);
+	};
+
 	return (
 		<div className=" text-xs md:text-sm grid  bg-white bg-opacity-20 backdrop-blur">
 			<div className=" flex justify-between my-4">
-				<FiMenu className=" md:hidden text-xl ml-6  text-gray-900" />
+				<FiMenu
+					onClick={handleOnclick}
+					className=" md:hidden text-xl ml-6  text-gray-900"
+				/>
 				<input
 					type="search"
 					name="search"
@@ -26,7 +37,11 @@ const DashboardNavBAr = () => {
 					</button>
 				</div>
 				<h3 className=" border-l pl-4  pr-1 md:hidden">Hello, Onyeka</h3>
-				<img src="win1.jpg" alt="" className=" w-8 h-8  rounded-full mr-4" />
+				<img
+					src="../assets/person.png"
+					alt=""
+					className=" w-8 h-8  rounded-full mr-4"
+				/>
 			</div>
 		</div>
 	);

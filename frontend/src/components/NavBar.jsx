@@ -13,7 +13,7 @@ const NavBar = () => {
 					<IoMdNotificationsOutline className="text-2xl md:text-3xl antialiased text-blue-400" />
 					<img
 						className=" w-6 h-6 md:w-8 md:h-8 rounded-full"
-						src="avatar.jpg"
+						src="person.png"
 						alt=""
 					/>
 					<Link
