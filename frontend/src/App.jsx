@@ -2,7 +2,7 @@ import React from "react";
 
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
-import { Home, Login } from "./pages";
+import { Home, Login, Register } from "./pages";
 import {
 	Comments,
 	Dashboard,
@@ -19,7 +19,7 @@ const App = () => {
 	return (
 		<BrowserRouter>
 			<Routes>
-			<Route path="/" element={<Home />} />
+				<Route path="/" element={<Home />} />
 				<Route path="/dashboard" element={<Layout />}>
 					<Route index path="dashboard" element={<Dashboard />} />
 					<Route path="profile-view" element={<ProfileView />} />
@@ -31,10 +31,8 @@ const App = () => {
 
 					<Route path="comments" element={<Comments />} />
 				</Route>
-				{/* <Route path="pages" element={<Pages />}>
-					
-				</Route> */}
-				
+				<Route path="login" element={<Login/>} />
+
 				<Route path="*" element={<Error />} />
 			</Routes>
 		</BrowserRouter>

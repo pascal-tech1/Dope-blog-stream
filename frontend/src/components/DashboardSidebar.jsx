@@ -104,23 +104,26 @@ const DashboardSideBar = () => {
 						IconComponent = AiOutlineComment; // Default icon
 				}
 				return (
-					<div className=" flex gap-3 ml-5 pr-2 mt-3">
+					<div 
+					key={index}
+					className=" flex gap-3 ml-5 pr-2 mt-3">
 						{sideBarItem.hasSubMenu ? (
 							<div className="flex flex-col">
 								<div
 									onClick={() => {
 										toggleMenuOption(sideBarItem.title);
 									}}
-									className="  flex gap-2 items-center pl-[0.35rem] cursor-pointer py-2 w-full rounded-lg"
+									className=" hover:bg-blue-400 hover:text-white flex gap-2 items-center pl-[0.35rem] cursor-pointer py-2 w-full rounded-lg"
 								>
-									<IconComponent className="text-blue-400 text-lg" />
+									<IconComponent className=" text-lg" />
 									<span className=" ">{sideBarItem.title}</span>
 									<IoMdArrowDropdown />
 								</div>
 
-								{sideBarItem.submenu?.map((submenuItem) => {
+								{sideBarItem.submenu?.map((submenuItem, index) => {
 									return (
 										<NavLink
+										key={index}
 											onClick={() => {
 												closeMenu(sideBarItem.title);
 											}}
@@ -143,7 +146,7 @@ const DashboardSideBar = () => {
 								className="flex gap-2 items-center  pl-[0.35rem] hover:text-white hover:bg-blue-400 py-2 w-full rounded-lg aria-[current=page]:text-white aria-[current=page]:bg-blue-400"
 							>
 								<IconComponent className="  text-lg "></IconComponent>
-								<span className=" font-inter font-bold">
+								<span className=" font-inter">
 									{sideBarItem.title}
 								</span>
 							</NavLink>

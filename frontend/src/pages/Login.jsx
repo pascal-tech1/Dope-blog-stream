@@ -1,17 +1,42 @@
 import React from "react";
 import { NavBar } from "../components";
+import { useFormik } from "formik";
+import * as Yup from "yup";
 
 const Login = () => {
+	const formSchema = Yup.object().shape({
+		email: Yup.string().email().required("Email is Required."),
+		password: Yup.string()
+			.required("No password provided.")
+			.min(8, "Password is too short - should be 8 chars minimum."),
+	});
+
+	const formik = useFormik({
+		initialValues: {
+			email: "",
+			password: "",
+		},
+
+		onSubmit: (values) => {
+			console.log("im here");
+			const user = {
+				email: values.email,
+				password: values.password,
+			};
+			console.log(values);
+			console.log(values);
+		},
+		validationSchema: formSchema,
+	});
+
 	return (
 		<div>
-			<NavBar />
-			<div className="h-screen flex justify-center md:grid items-center  px-8 grid-cols-2 md:p-8 shadow-lg font-helvetica font-light">
+			<div className="h-screen mt-8  md:grid place-items-center px-8 grid-cols-2 md:p-8  font-helvetica font-light">
 				<div className=" hidden md:flex flex-col p-9 bg-gray-100 mr-6 shadow-md justify-center items-center">
-					<h1 className=" font-medium">
-                    Get Ready to Be Inspired
-					</h1>
+					<h1 className=" font-medium">Get Ready to Be Inspired</h1>
 					<p className=" font-light text-gray-400 text-xs mt-5 mb-[3.5rem] max-w-md">
-                    Explore our latest blog posts and embark on a journey of discovery
+						Explore our latest blog posts and embark on a journey of
+						discovery
 					</p>
 					<img
 						className=" w-[22rem] h-[11rem] rounded-lg"
@@ -20,16 +45,17 @@ const Login = () => {
 					/>
 				</div>
 
-				<div className="s">
+				<div className="">
 					<div>
 						<div className="flex flex-col justify-center items-center mb-6">
 							<p className=" text-lg font-medium mb-3">Welcome Back</p>
 							<p className=" text-gray-400 text-sm">
-                            Login to access your personalized journey
+								Login to access your personalized journey
 							</p>
 						</div>
 					</div>
-					<form className="">
+					{/* form starts here */}
+					<form onSubmit={formik.handleSubmit} className="">
 						<div className=" max-w-md">
 							<label className=" form-label" htmlFor="email">
 								Email
@@ -38,16 +64,31 @@ const Login = () => {
 								aria-label="Enter your email"
 								type="email"
 								className=" form-input"
+								value={formik.values.email}
+								onChange={formik.handleChange("email")}
+								onBlur={formik.handleBlur("email")}
 							/>
+							<div className=" relative mb-2">
+								<h1 className=" absolute top-[-0.9rem] left-0 bg-red-200 rounded-lg pl-3">
+									{formik.touched.email && formik.errors.email}
+								</h1>
+							</div>
 							<label className=" form-label" htmlFor="password">
 								Password
 							</label>
 							<input
-								aria-label="Enter you password"
 								type="password"
 								className="form-input"
+								value={formik.values.password}
+								onChange={formik.handleChange("password")}
+								onBlur={formik.handleBlur("password")}
 							/>
-							<button type="submit" className="form-btn">
+							<div className=" relative mb-2">
+								<h1 className=" absolute top-[-0.9rem] left-0 bg-red-200 rounded-lg pl-3">
+									{formik.touched.password && formik.errors.password}
+								</h1>
+							</div>
+							<button type="submit" className="form-btn mt-4">
 								Login
 							</button>
 						</div>

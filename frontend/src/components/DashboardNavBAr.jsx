@@ -38,7 +38,7 @@ const DashboardNavBAr = ({ toggleSideMenu }) => {
 				</div>
 				<h3 className=" border-l pl-4  pr-1 md:hidden">Hello, Onyeka</h3>
 				<img
-					src="../assets/person.png"
+					src="../../public/person.png"
 					alt=""
 					className=" w-8 h-8  rounded-full mr-4"
 				/>
