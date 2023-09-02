@@ -4,24 +4,17 @@ import { articles } from "../utils/data";
 import { MdOutlineCalendarMonth } from "react-icons/md";
 
 const Home = () => {
-
-	const theme = 'dark'
+	const theme = "dark";
 	const category = ["design", "developtment", "ux", "marketing"];
 	return (
-		<div className={`bg-${theme}-background font-helvetic `}>
-			<NavBar />
-
-			<div className=" md:grid grid-cols-3 mt-[4rem] mx-10 ">
-				<main className=" col-span-2 md:border-r-2 px-6 py-6 ">
+		<div className={`bg-${theme}-background font-inter font-lights `}>
+			<NavBar/>
+			{/* right section */}
+			<div className=" md:grid grid-cols-3 mt-[2rem] ">
+				<main className=" col-span-2 md:border-r-2 px-6 py-6  lg:px-20 ">
 					<div className="">
 						<div className="flex justify-between py-6 flex-wrap">
-							<input
-								className=" font-sm py-1 border rounded-xl border-blue-200 text-center focus:outline-none focus:border-blue-400 delay-75  justify-center items-center"
-								type="search"
-								name="search"
-								id="seearch"
-								placeholder="Search"
-							/>
+							
 							{category.map((category) => {
 								return (
 									<button className=" text-sm delay-75 mt-2 mx-2 flex f bg-gray-100 hover:bg-gray-200 rounded-xl  py-[0.35rem] px-4">
@@ -43,35 +36,40 @@ const Home = () => {
 								<option value="Highest-Read">Highest Read</option>
 							</select>
 						</div>
-						{articles.slice(0,2).map((article) => {
+						{articles.slice(0, -1).map((article) => {
 							return (
-								<div className=" border-t my-5">
-									<div className="flex flex-row mt-3 mb-2 justify-self-center items-center">
-										<img
-											className=" w-8 h-8 rounded-full"
-											src={article.imageUrl}
-											alt=""
-										/>
-										<div className="flex flex-col text-xs text-gray-400 ml-2">
-											<div className="flex">
-												<h3>{article.user.name}</h3>
-												<h3 className="">{article.date}</h3>
+								<div className=" border-t my-6 flex flex-col md:flex-row gap-4">
+									<div className="flex flex-col mt-3 mb-2 justify-self-center">
+										<div className="flex mb-4">
+											<img
+												className=" w-8 h-8 rounded-full"
+												src={article.imageUrl}
+												alt=""
+											/>
+											<div className="flex flex-col text-xs text-gray-400 ml-2">
+												<div className="flex">
+													<h3>{article.user.name}</h3>
+													<h3 className="">{article.date}</h3>
+												</div>
+												<h3>{article.user.profession}</h3>
 											</div>
-											<h3>{article.user.profession}</h3>
+										</div>
+										<div className="flex  flex-col md:flex-row justify-centers gap-8">
+											<div className="">
+												<h3 className=" font-semibold text-lg ">
+													{article.title}
+												</h3>
+												<div className=" text-xs">
+													<h3>{article.content.substring(1, 230)}</h3>
+													<button className="text-blue-300 hover:text-blue-400 transition-all cursor-pointer">
+														Read more
+													</button>
+												</div>
+											</div>
 										</div>
 									</div>
-									<div className="flex  flex-col md:flex-row justify-centers items-center gap-8">
-										<div className="">
-											<h3 className=" font-semibold text-lg ">
-												{article.title}
-											</h3>
-											<div className=" text-xs">
-												{article.content.substring(1, 230)}
-												<button className="text-blue-300 hover:text-blue-400 delay-100 cursor-pointer mx-1">
-													Read more
-												</button>
-											</div>
-										</div>
+
+									<div className=" self-center">
 										<img
 											className=" max-w-xs w-52"
 											src={article.imageUrl}
@@ -83,9 +81,11 @@ const Home = () => {
 						})}
 					</div>
 				</main>
-				<main className=" grid-cols-2 col-span-1 mb-8 px-6 py-6">
-					<div className=" fixed">
-						<div className="flex gap-5 bg-gray-100 p-4 m-4 h-max place-self-center">
+				{/* left section */}
+				<main className=" grid-cols-2 col-span-1 py-6 ">
+					<div className="-z-10 fixed">
+					<div className=" m-4 mr-14">
+						<div className="flex gap-5 bg-gray-100 p-4 h-max place-self-center">
 							<div>
 								<h3 className=" font-medium text-sm ">
 									Get unlimited access to everything on Reader
@@ -99,8 +99,9 @@ const Home = () => {
 							</div>
 							<MdOutlineCalendarMonth className=" text-8xl font-normal  text-gray-400 " />
 						</div>
-						<section>
-							<h2 className="mx-4 text-center text-sm font-medium my-5">
+						{/* followers section */}
+						<section className="">
+							<h2 className=" text-center text-sm font-medium my-5 place-self-center">
 								People you might be interested in
 							</h2>
 
@@ -146,6 +147,7 @@ const Home = () => {
 								})}
 							</div>
 						</section>
+					</div>
 					</div>
 				</main>
 			</div>

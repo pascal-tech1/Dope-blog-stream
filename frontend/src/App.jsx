@@ -14,11 +14,15 @@ import {
 	ProfileEdit,
 	ProfileView,
 } from "./pages/Dashboard";
+import Carousel from "./utils/carousel";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const App = () => {
 	return (
 		<BrowserRouter>
 			<Routes>
+			
 				<Route path="/" element={<Home />} />
 				<Route path="/dashboard" element={<Layout />}>
 					<Route index path="dashboard" element={<Dashboard />} />
@@ -32,9 +36,10 @@ const App = () => {
 					<Route path="comments" element={<Comments />} />
 				</Route>
 				<Route path="login" element={<Login/>} />
-
+				<Route path="register" element={<Register/>} />
 				<Route path="*" element={<Error />} />
 			</Routes>
+			<ToastContainer position="top-center" />
 		</BrowserRouter>
 	);
 };

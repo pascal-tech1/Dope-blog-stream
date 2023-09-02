@@ -75,9 +75,14 @@ const DashboardSideBar = () => {
 
 	return (
 		<aside className=" flex flex-col  mb-4 font-medium">
-			<div className=" hidden md:flex font-bold text-blue-400 p-3  mx-2 pl-3 pt-4 text-xl">
-				<h1>Dope blog</h1>
-			</div>
+			<Link to="/" className="mt-4 mb-6 ml-10 hidden md:flex">
+				<img
+					src="../../public/blogvana.png"
+					alt=""
+					className="w-14 border h-14 border-blue-400"
+				/>
+			</Link>
+
 			{sideBarItems.map((sideBarItem, index) => {
 				let IconComponent;
 
@@ -104,9 +109,7 @@ const DashboardSideBar = () => {
 						IconComponent = AiOutlineComment; // Default icon
 				}
 				return (
-					<div 
-					key={index}
-					className=" flex gap-3 ml-5 pr-2 mt-3">
+					<div key={index} className=" flex gap-3 ml-5 pr-2 mt-3">
 						{sideBarItem.hasSubMenu ? (
 							<div className="flex flex-col">
 								<div
@@ -123,7 +126,7 @@ const DashboardSideBar = () => {
 								{sideBarItem.submenu?.map((submenuItem, index) => {
 									return (
 										<NavLink
-										key={index}
+											key={index}
 											onClick={() => {
 												closeMenu(sideBarItem.title);
 											}}
@@ -146,9 +149,7 @@ const DashboardSideBar = () => {
 								className="flex gap-2 items-center  pl-[0.35rem] hover:text-white hover:bg-blue-400 py-2 w-full rounded-lg aria-[current=page]:text-white aria-[current=page]:bg-blue-400"
 							>
 								<IconComponent className="  text-lg "></IconComponent>
-								<span className=" font-inter">
-									{sideBarItem.title}
-								</span>
+								<span className=" font-inter">{sideBarItem.title}</span>
 							</NavLink>
 						)}
 					</div>
