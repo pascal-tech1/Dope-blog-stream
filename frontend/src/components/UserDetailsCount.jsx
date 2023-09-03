@@ -4,7 +4,7 @@ import { HiUserGroup } from "react-icons/hi";
 const UserDetailsCount = (props) => {
    
 	return (
-		<div className="bg-white shadow-sms flex py-2 space-x-8 px-2 items-center rounded-md ">
+		<div className="bg-white justify-center flex py-2 space-x-8  px-2 items-center rounded-md ">
 			<HiUserGroup
 				className={`${props.textColor} font-bold text-2xl ${props.bgColor} rounded-md py-1 px-1 `}
 			/>

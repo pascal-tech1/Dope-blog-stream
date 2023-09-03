@@ -74,8 +74,8 @@ const DashboardSideBar = () => {
 	];
 
 	return (
-		<aside className=" flex flex-col  mb-4 font-medium">
-			<Link to="/" className="mt-4 mb-6 ml-10 hidden md:flex">
+		<aside className=" flex flex-col  font-medium">
+			<Link to="/" className="mt-10 mb-6 ml-10 hidden md:flex">
 				<img
 					src="../../public/blogvana.png"
 					alt=""

@@ -1,11 +1,11 @@
-const imageUrl = "../../public/avatar.jpg"
+const imageUrl = "../../public/avatar.jpg";
 
 export const articles = [
 	{
 		title: "The Power of Positive Thinking",
 		category: "Node Js",
 		imageUrl: "win1.jpg",
-        
+
 		detail:
 			"Learn how cultivating a positive mindset can lead to better outcomes in various aspects of life.",
 		user: {
@@ -246,5 +246,32 @@ export const articles = [
     
           In conclusion, the power of positive thinking is a tool that anyone can harness to improve their well-being and overall quality of life. By cultivating an optimistic outlook, you can navigate life's twists and turns with resilience and grace.
         `,
+	},
+];
+
+export const messages = [
+	{
+		image: "avatar.jpg",
+		name: "Pak Irul",
+		message:
+			"Im Really looking forward to the presence of ios 15, i hopw you get ",
+	},
+	{
+		image: "avatar.jpg",
+		name: "Pak Irul",
+		message:
+			"Im Really looking forward to the presence of ios 15, i hopw you get ",
+	},
+	{
+		image: "avatar.jpg",
+		name: "Pak Irul",
+		message:
+			"Im Really looking forward to the presence of ios 15, i hopw you get ",
+	},
+	{
+		image: "avatar.jpg",
+		name: "Pak Irul",
+		message:
+			"Im Really looking forward to the presence of ios 15, i hopw you get ",
 	},
 ];
