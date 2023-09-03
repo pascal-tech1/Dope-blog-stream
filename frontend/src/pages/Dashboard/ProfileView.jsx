@@ -13,11 +13,11 @@ import {} from "react-icons/md";
 const ProfileView = () => {
 	const dispatch = useDispatch();
 	const { user } = useSelector((store) => store.userSlice);
-	console.log(user);
+	const category = ["design", "developtment", "ux", "marketing"];
 	return (
-		<div className=" flex flex-col gap-6 lg:grid grid-cols-6 ml-8 mr-8 font-inter mt-20">
-			<div className=" col-start-1 col-span-4 pr-10">
-				<div className="w-full relative pb-6 shadow-sm" >
+		<div className=" flex flex-col row-span-2 lg:grid grid-cols-6 pcol-start-1 col-span-4 rounded-xl mx-4 lg:mb-6 pt-4 lg:shadow-sm lg:rounded-md lg:ml-0  font-inter mt-10 gap-5 bg-white lg:bg-transparent">
+			<div className=" col-start-1 col-span-4  bg-white lg:shadow-sm lg:rounded-md">
+				<div className="w-full relative ">
 					<div className=" w-full ">
 						<img
 							src={user?.profilePhoto}
@@ -28,9 +28,9 @@ const ProfileView = () => {
 					<img
 						src={user?.profilePhoto}
 						alt=""
-						className="absolute top-1/3 left-8 w-16 h-16 rounded-full"
+						className="absolute top-1/4 left-8 w-16 h-16 md:w-32 md:h-32 rounded-full"
 					/>
-					<div className=" relative flex flex-col gap-2 items-center mt-4">
+					<div className=" relative flex flex-col gap-2 items-center mt-4 ">
 						<h1 className=" font-bold text-xs md:text-lg">{`${user?.firstName} ${user?.lastName}`}</h1>
 						<h3 className=" font-bold text-gray-500 text-xs">{`Profession : ${user?.profession}`}</h3>
 						<h3 className="font-bold text-gray-500 text-xs">{`Location : ${user?.location}`}</h3>
@@ -42,8 +42,17 @@ const ProfileView = () => {
 						</Link>
 					</div>
 				</div>
-				<div className=" py-8 px-8 shadow-sm rounded-xl">
-					<h1 className=" font-bold text-gray-900 mb-4 ">Summary</h1>
+				{/* summary */}
+				<div className="  rounded-xl flex flex-col px-4  mt-8">
+					<div className=" flex justify-between mr-4 ">
+						<h1 className=" font-bold text-gray-900 ">Summary</h1>
+						<Link className="flex gap-1">
+							<MdEdit className=" text-blue-500" />
+							<h3 className="font-bold text-gray-600 hover:text-gray-900 text-xs">
+								Edits
+							</h3>
+						</Link>
+					</div>
 					<p>
 						Lorem ipsum dolor sit amet consectetur, adipisicing elit.
 						Exercitationem, illo nemo! Harum quae architecto mollitia cum
@@ -52,13 +61,19 @@ const ProfileView = () => {
 						cupiditate suscipit blanditiis! Id.
 					</p>
 				</div>
+				
+				
 			</div>
+
 			{/* profile Additional details */}
-			<div className=" shadow-sm col-start-5 col-span-2 px-4">
-				<div className=" flex justify-between mr-4s ">
+			<div className=" col-start-5 col-span-2 px-4 bg-white py-4 row-start-1 lg:shadow-sm lg:rounded-md">
+				<div className=" flex justify-between mr-4 ">
 					<h1 className=" font-bold text-gray-900 ">Additional Details</h1>
-					<Link className="border border-blue-400 hover:bg-blue-400 hover:text-white  px-2 rounded-md ">
-						Edit
+					<Link className="flex gap-1">
+						<MdEdit className=" text-blue-500" />
+						<h3 className="font-bold text-gray-600 hover:text-gray-900 text-xs">
+							Edits
+						</h3>
 					</Link>
 				</div>
 				<div className="flex flex-col gap-8 mt-5">
@@ -99,8 +114,26 @@ const ProfileView = () => {
 					</div>
 				</div>
 			</div>
-			<div className=" shadow-sm  mx-10 px-4 col-start-5 col-span-2">
-				user category
+			{/* category */}
+			<div className="px-4 col-start-5 col-span-2 bg-white lg:shadow-sm lg:rounded-md py-3 mb-6 ">
+				<div className=" flex justify-between mr-4 ">
+					<h1 className=" font-bold text-gray-900 ">Your Category</h1>
+					<Link className="flex gap-1">
+						<MdEdit className=" text-blue-500" />
+						<h3 className="font-bold text-gray-600 hover:text-gray-900 text-xs">
+							Edits
+						</h3>
+					</Link>
+				</div>
+				<div className="flex justify-between py-6 flex-wrap">
+					{category.map((category) => {
+						return (
+							<button className=" text-sm delay-75 mt-2 mx-2 flex f bg-gray-100 hover:bg-gray-200 rounded-xl  py-[0.35rem] px-4">
+								{category}
+							</button>
+						);
+					})}
+				</div>
 			</div>
 		</div>
 	);

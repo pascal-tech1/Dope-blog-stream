@@ -16,7 +16,7 @@ const Home = () => {
 	useEffect(() => {
 		dispatch(fetchAllPost());
 	}, []);
-	console.log(allPost);
+	
 
 	return (
 		<div className={`bg-${theme}-background font-inter font-lights `}>
@@ -49,7 +49,7 @@ const Home = () => {
 						</div>
 						{allPost?.map((post) => {
 							return (
-								<div className=" border-t my-6 flex flex-col md:flex-row gap-4 justify-between items-center">
+								<div className=" border-t my-6 flex flex-col md:flex-row gap-4 justify-between items-centers">
 									<div className="flex flex-col mt-3 mb-2 justify-self-center">
 										<div className="flex text-xs gap-3 text-gray-400">
 											<img
@@ -61,7 +61,7 @@ const Home = () => {
 											<div>
 												<h3 className="">{post?.createdAt}</h3>
 												<h3>
-													{` ${post.user.firstName} ${post.user.lastName}  `}{" "}
+													{` ${post?.user?.firstName} ${post?.user?.lastName}  `}{" "}
 												</h3>
 											</div>
 										</div>
@@ -69,7 +69,7 @@ const Home = () => {
 										<div className="flex  flex-col md:flex-row justify-centers gap-8">
 											<div className="">
 												<h3 className=" font-semibold text-lg ">
-													{post.title}
+													{post?.title}
 												</h3>
 												<div className=" text-xs">
 													<h3>{post?.description}</h3>
@@ -84,7 +84,7 @@ const Home = () => {
 									<div className=" self-center">
 										<img
 											className=" max-w-xs w-52"
-											src={post.image}
+											src={post?.image}
 											alt=""
 										/>
 									</div>
@@ -124,16 +124,16 @@ const Home = () => {
 												{" "}
 												<img
 													className=" w-8 h-8 rounded-full"
-													src={article.imageUrl}
+													src={article?.imageUrl}
 													alt=""
 												/>
 											</div>
 											<div>
 												<h3 className=" text-xs text-gray-900">
-													{article.user.name}
+													{article?.user?.name}
 												</h3>
 												<h3 className=" text-xs text-gray-4s00">
-													{article.user.profession}
+													{article?.user?.profession}
 												</h3>
 											</div>
 											<div>

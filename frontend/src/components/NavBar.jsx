@@ -3,12 +3,17 @@ import { IoMdNotificationsOutline } from "react-icons/io";
 import { BsPencilSquare } from "react-icons/bs";
 import { Link } from "react-router-dom";
 import { MdOutlineArrowDropDown } from "react-icons/md";
+import {logOutUser} from "../redux/user/userSlice.js"
 
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 
 const NavBar = () => {
 	const user = useSelector((store) => store?.userSlice);
 	const [showLogOut, setShowLogOut] = useState(true);
+	const dispatch = useDispatch()
+	const handleLogOut = ()=>{
+		dispatch(logOutUser('user'))
+	}
 	return (
 		<div className="fixed top-0 w-full border-b bg-white bg-opacity-20 backdrop-blur z-50">
 			<div className=" flex justify-between my-2 mx-4 md:mx-10 items-center lg:ml-20">
@@ -52,7 +57,7 @@ const NavBar = () => {
 							<Link to='/dashboard/dashboard' className="bg-blue-400 px-2 rounded-md text-white hover:shadow-md transition-all hover:bg-blue-300">
 								User Profile
 							</Link>
-							<button className="bg-red-500 px-2 rounded-md text-white hover:shadow-md transition-all hover:bg-red-400">
+							<button onClick={handleLogOut} className="bg-red-500 px-2 rounded-md text-white hover:shadow-md transition-all hover:bg-red-400">
 								Log Out
 							</button>
 							
