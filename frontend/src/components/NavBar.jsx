@@ -8,9 +8,9 @@ import { useSelector } from "react-redux";
 
 const NavBar = () => {
 	const user = useSelector((store) => store?.userSlice);
-	const [showLogOut, setShowLogOut] = useState(false);
+	const [showLogOut, setShowLogOut] = useState(true);
 	return (
-		<div className="fixed top-0 w-full border-b bg-white bg-opacity-20 backdrop-blur">
+		<div className="fixed top-0 w-full border-b bg-white bg-opacity-20 backdrop-blur z-50">
 			<div className=" flex justify-between my-2 mx-4 md:mx-10 items-center lg:ml-20">
 				<Link to="/" className=" border">
 					<img

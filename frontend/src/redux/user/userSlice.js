@@ -74,7 +74,6 @@ const userSlice = createSlice({
 		},
 		[RegisterUser.rejected]: (state, action) => {
 			state.isLoading = false;
-			console.log(action);
 			state.appErr = action?.payload?.message;
 			state.serverErr = action?.error?.message;
 			state?.appErr ? toast(state?.appErr) : toast(state?.serverErr);

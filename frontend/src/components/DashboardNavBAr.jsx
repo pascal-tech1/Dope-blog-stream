@@ -14,8 +14,8 @@ const DashboardNavBAr = ({ toggleSideMenu }) => {
 	};
 
 	return (
-		<div className=" text-xs md:text-sm grid  bg-white bg-opacity-20 backdrop-blur">
-			<div className=" flex justify-between my-4">
+		<div className="w-full fixed ">
+			<div className=" flex justify-between my-1 backdrop-blur   ">
 				<FiMenu
 					onClick={handleOnclick}
 					className=" md:hidden text-xl ml-6  text-gray-900"
