@@ -17,10 +17,12 @@ const Layout = () => {
 				<Outlet />
 			</div>
 			<section
+			
 				className={`${
-					isDrpDownOpen ? "hidden md:flex" : ""
+					isDrpDownOpen ? "" : "hidden md:flex"
 				}   absolute bg-[#ffff]  w-max h-max top-8 md:top-0 md:ml-0 md:mt-0 col-start-1 col-span-2 md:h-screen min-w-full shadow-sm row-start-1`}
 			>
+				
 				<DashboardSideBar />
 			</section>
 		</div>

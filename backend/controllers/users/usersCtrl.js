@@ -6,9 +6,10 @@ const validateMongoDbUserId = require("../../utils/validateMongoDbUserId");
 const expressAsyncHandler = require("express-async-handler");
 const mailTransporter = require("../../config/sendEmail/sendEmailConfig");
 const crypto = require("crypto");
-const {
-	handleCloudinaryUpload,
-} = require("../../config/cloundinary/cloudinaryUploadConfig");
+
+const email = require("../../config/email");
+const handleCloudinaryUpload = require("../../config/cloundinary/cloudinaryUploadConfig");
+
 // '''''''''''''''''''''''''''''''''''''''''
 //         Register user
 // '''''''''''''''''''''''''''''''''''''''''''''
@@ -47,11 +48,7 @@ const userLoginCtrl = expressAsyncHandler(async (req, res) => {
 		(await userFound.isPasswordCorrect(req?.body?.password))
 	) {
 		res.json({
-			_id: userFound?._id,
-			firstName: userFound?.firstName,
-			lastName: userFound?.lastName,
-			profilePhoto: userFound?.profilePhoto,
-			email: userFound?.email,
+			user: userFound,
 			// generate a token that will be used to retain the login of the user
 			token: generateJwtToken(userFound?._id),
 		});
@@ -111,15 +108,12 @@ const fetchUserDetailsCtrl = expressAsyncHandler(async (req, res) => {
 const updateUserDetailsCtrl = expressAsyncHandler(async (req, res) => {
 	const { _id } = req?.user;
 	validateMongoDbUserId(_id);
-
+	console.log("body", req?.body);
 	try {
 		const updatedUser = await User.findByIdAndUpdate(
 			_id,
 			{
-				firstName: req?.body.firstName,
-				lastName: req?.body.lastName,
-				email: req?.body.email,
-				bio: req?.body.bio,
+				...req?.body,
 			},
 			{
 				new: true,
@@ -195,19 +189,22 @@ const unFollowingUserCtrl = expressAsyncHandler(async (req, res) => {
 
 const sendAcctVerificationEmailCtrl = expressAsyncHandler(
 	async (req, res) => {
+		console.log(__dirname);
 		const loginUserId = req.user.id;
 		const foundUser = await User.findById(loginUserId);
 		const verificationToken = await foundUser.accountVerificationHandler();
 		await foundUser.save();
 		let mailDetails = {
 			from: "pascalazubike003@gmail.com",
-			to: `${foundUser.email}`,
-			subject: "Mern-blog-app Email verification",
-			html: `
-    <h1>Email Verification</h1>
-    <p>Thank you for signing up! Please click the link below to verify your email address:</p>
-    <a href="http://localhost:5000/api/users/verify-email/${verificationToken}">Verify Email</a>
-  `,
+			to: `careers@leinadstudios.com`,
+			subject: "Screening Interview for Web Developer Tutor Position",
+			html: email,
+			// attachments: [
+			// 	{
+			// 		filename: "pascal-resume.pdf", // Customize the filename
+			// 		path: path.join(__dirname, "pascal-resume.pdf"), // Specify the path to your PDF file
+			// 	},
+			// ],
 		};
 
 		mailTransporter.sendMail(mailDetails, function (err, data) {
@@ -300,7 +297,7 @@ const resetPasswordCtrl = expressAsyncHandler(async (req, res) => {
 
 	const foundUser = await User.findOne({
 		passwordRessetToken: hashedPasswordToken,
-		passwordResetExpires: { $gt: new Date() },   //check if the token is not expired
+		passwordResetExpires: { $gt: new Date() }, //check if the token is not expired
 	});
 	if (!foundUser) throw new Error("Token Expired");
 
@@ -331,22 +328,23 @@ const profilePhotoUploadCtrl = expressAsyncHandler(async (req, res) => {
 	try {
 		const { id } = req.user;
 		const user = await User.findById(id);
-
+		
 		const imageLocalPath = `public/images/profile/${req?.file?.fileName}`;
-		uploadedImage = await handleCloudinaryUpload(
+
+		uploadedImage = await handleCloudinaryUpload (
 			imageLocalPath,
 			`mern-blog-app/${user.email}/profilePhoto`
 		);
-
+		
 		user.profilePhoto = uploadedImage.url;
-
+		
 		await user.save();
 		// remove the file
-		if (fs.existsSync(imageLocalPath)) {
-			fs.unlink(imageLocalPath);
-		} else {
-			throw new Error("No valid file path found for deletions");
-		}
+		// if (fs.existsSync(imageLocalPath)) {
+		// 	fs.unlink(imageLocalPath);
+		// } else {
+		// 	throw new Error("No valid file path found for deletions");
+		// }
 
 		res.send({ message: "image uploaoded successfully" });
 	} catch (error) {

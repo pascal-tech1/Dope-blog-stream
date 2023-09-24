@@ -3,12 +3,10 @@ const Post = require("../../model/post/Post");
 
 const validateMongoDbUserId = require("../../utils/validateMongoDbUserId");
 const fs = require("fs");
-const {
-	handleCloudinaryUpload,
-} = require("../../config/cloundinary/cloudinaryUploadConfig");
+const handleCloudinaryUpload = require("../../config/cloundinary/cloudinaryUploadConfig");
 const User = require("../../model/user/User");
 const checkProfanity = require("../../utils/profanWords");
-
+console.log("im here");
 // '''''''''''''''''''''''''''''''''''''''''
 //   Create Post conttoller
 // '''''''''''''''''''''''''''''''''''''''''''''
@@ -29,7 +27,7 @@ const createPostCtrl = expressAsyncHandler(async (req, res) => {
 		user.isBlocked = true;
 		await user.save();
 		throw new Error(
-			"post creation failed, account has been block for using profan words"
+			"post creation failed, account has been block for using profane words"
 		);
 	}
 	try {
@@ -38,12 +36,14 @@ const createPostCtrl = expressAsyncHandler(async (req, res) => {
 			imageLocalPath,
 			`mern-blog-app/${user?.email}/postImage`
 		);
+
+		// remove the file
 		// if (fs.existsSync(imageLocalPath)) {
 		// 	fs.unlink(imageLocalPath);
 		// } else {
 		// 	throw new Error("No valid file path found for deletions");
 		// }
-
+	
 		const post = await Post.create({
 			...req.body,
 			user: id,
@@ -52,7 +52,7 @@ const createPostCtrl = expressAsyncHandler(async (req, res) => {
 
 		res.json(post);
 	} catch (error) {
-		console.log(error);
+		
 		res.status(500).json({ message: error.message });
 	}
 });
@@ -66,7 +66,8 @@ const fetchAllPostsCtrl = expressAsyncHandler(async (req, res) => {
 		const allPosts = await Post.find({}).populate("user");
 		res.json(allPosts);
 	} catch (error) {
-		res.json({ message: error.message });
+		
+		throw new Error('fetch all Post failed')
 	}
 });
 

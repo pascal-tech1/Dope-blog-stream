@@ -1,26 +1,25 @@
 const express = require("express");
+const expressAsyncHandler = require("express-async-handler");
 
 // '''''''''''''''''''''''''''''''''''''''''
 //         Not Found Error Handing
 // '''''''''''''''''''''''''''''''''''''''''''''
-const NotFoundErrorhandler = (req, res, next) => {
- console.log(req)
-  const error = new Error(`${req.originalUrl} NOT FOUND`);
-  console.log(error)
-  res.status(404);
-  next(error);
-};
+const NotFoundErrorhandler = expressAsyncHandler((req, res, next) => {
+	const error = new Error(`${req.originalUrl} NOT FOUND`);
+
+	next(error);
+});
 
 // '''''''''''''''''''''''''''''''''''''''''
 //         General Error Handling
 // '''''''''''''''''''''''''''''''''''''''''''''
 const generalErrorHandle = (err, req, res, next) => {
-  const statusCode = res.statusCode === 200 ? 500 : res.statusCode;
-  res.status(statusCode);
-  res.json({
-    message: err.message,
-    stack: process.env.NODE_ENV === "production" ? null : err.stack,
-  });
+	const statusCode = res.statusCode === 200 ? 500 : res.statusCode;
+	res.status(statusCode);
+	res.json({
+		message: err.message,
+		stack: process.env.NODE_ENV === "production" ? null : err.stack,
+	});
 };
 
 module.exports = { NotFoundErrorhandler, generalErrorHandle };

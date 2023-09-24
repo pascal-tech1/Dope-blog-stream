@@ -5,10 +5,9 @@ import { BsPencilSquare } from "react-icons/bs";
 import { BiMessageRoundedDots } from "react-icons/bi";
 
 const DashboardNavBAr = ({ toggleSideMenu }) => {
-	const [isSideBarMenuopen, setIsSideBarmenuOpen] = useState(false);
+	const [isSideBarMenuopen, setIsSideBarmenuOpen] = useState(true);
 
 	const handleOnclick = (e) => {
-		console.log("clicked");
 		e.preventDefault();
 		setIsSideBarmenuOpen(!isSideBarMenuopen);
 		toggleSideMenu(isSideBarMenuopen);

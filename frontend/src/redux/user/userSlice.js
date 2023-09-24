@@ -31,6 +31,29 @@ export const RegisterUser = createAsyncThunk(
 	async (user, { rejectWithValue, getState, dispatch }) => {
 		try {
 			const resp = await customFetch.post("/users/register", user);
+
+			return resp.data;
+		} catch (error) {
+			if (!error.response) {
+				throw new Error();
+			}
+			return rejectWithValue(error?.response?.data);
+		}
+	}
+);
+
+export const updateUser = createAsyncThunk(
+	"user/UpdateUser",
+	async (user, { rejectWithValue, getState, dispatch }) => {
+		const userId = getState().userSlice.user._id;
+
+		try {
+			const resp = await customFetch.put(`/users/${userId}`, user, {
+				headers: {
+					authorization: `Bearer ${getState().userSlice?.user?.token}`,
+				},
+			});
+
 			return resp.data;
 		} catch (error) {
 			if (!error.response) {
@@ -46,9 +69,10 @@ const userSlice = createSlice({
 	initialState,
 	reducers: {
 		logOutUser: (state, action) => {
-
-			state.user = null,
-			removeUserFromLocalStorage(action.payload)
+			(state.user = null), removeUserFromLocalStorage(action.payload);
+		},
+		setUserState: (state, action) => {
+			state.user = action.payload;
 		},
 	},
 	extraReducers: {
@@ -58,14 +82,14 @@ const userSlice = createSlice({
 		[loginUser.fulfilled]: (state, { payload }) => {
 			state.isLoading = false;
 			state.user = payload;
-			addUserToLocalStorage(state.user);
+			addUserToLocalStorage(payload);
 			state.appErr = undefined;
 			state.serverErr = undefined;
 			toast("login successfull");
 		},
 		[loginUser.rejected]: (state, action) => {
 			state.isLoading = false;
-			console.log(action);
+
 			state.appErr = action?.payload?.message;
 			state.serverErr = action?.error?.message;
 			toast(state.appErr);
@@ -75,6 +99,8 @@ const userSlice = createSlice({
 		},
 		[RegisterUser.fulfilled]: (state, { payload }) => {
 			state.isLoading = false;
+			console.log(payload);
+			addUserToLocalStorage(payload);
 			state.appErr = undefined;
 			state.serverErr = undefined;
 			toast("registered successfully");
@@ -85,8 +111,29 @@ const userSlice = createSlice({
 			state.serverErr = action?.error?.message;
 			state?.appErr ? toast(state?.appErr) : toast(state?.serverErr);
 		},
+		[updateUser.pending]: (state) => {
+			state.isLoading = true;
+		},
+		[updateUser.fulfilled]: (state, { payload }) => {
+			state.isLoading = false;
+			state.appErr = undefined;
+			state.serverErr = undefined;
+
+			const user = getUserFromLocalStorage("user");
+			user.user = payload;
+			state.user = user;
+			addUserToLocalStorage(user);
+
+			toast("profile updated successfully");
+		},
+		[updateUser.rejected]: (state, action) => {
+			state.isLoading = false;
+			state.appErr = action?.payload?.message;
+			state.serverErr = action?.error?.message;
+			state?.appErr ? toast(state?.appErr) : toast(state?.serverErr);
+		},
 	},
 });
 
 export default userSlice.reducer;
-export const {logOutUser}  = userSlice.actions
+export const { logOutUser, setUserState } = userSlice.actions;

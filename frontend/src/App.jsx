@@ -1,8 +1,8 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
-import { Home, Login, Register } from "./pages";
+import { Home, Login, Register, SinglePost, UserPage } from "./pages";
 import {
 	Comments,
 	Dashboard,
@@ -17,13 +17,15 @@ import {
 import Carousel from "./utils/carousel";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { getUserFromLocalStorage } from "./utils/localStorage";
+
 
 const App = () => {
 	return (
 		<BrowserRouter>
 			<Routes>
-			
 				<Route path="/" element={<Home />} />
+				<Route path="/single-post/:id" element={<SinglePost />} />
 				<Route path="/dashboard" element={<Layout />}>
 					<Route index path="dashboard" element={<Dashboard />} />
 					<Route path="profile-view" element={<ProfileView />} />
@@ -35,9 +37,10 @@ const App = () => {
 
 					<Route path="comments" element={<Comments />} />
 				</Route>
-				<Route path="login" element={<Login/>} />
-				<Route path="register" element={<Register/>} />
-				<Route path="*" element={<Error />} />
+				<Route path="login" element={<Login />} />
+				<Route path="register" element={<Register />} />
+				<Route path="/user-profile" element={<UserPage />} />
+				{/* <Route path="*" element={<Error />} /> */}
 			</Routes>
 			<ToastContainer position="top-center" />
 		</BrowserRouter>

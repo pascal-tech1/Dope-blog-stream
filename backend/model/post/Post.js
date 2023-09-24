@@ -4,14 +4,18 @@ const postSchema = new mongoose.Schema(
     {
       title: {
         type: String,
-        required: [true, "Post title is required"],
+        // required: [true, "Post title is required"],
         trim: true,
       },
       //Created by only category
       category: {
         type: String,
-        required: [true, "Post category is required"],
+        // required: [true, "Post category is required"],
         default: "All",
+      },
+      description: {
+        type: String,
+        required:[true, "Description is Required"]
       },
       isLiked: {
         type: Boolean,
@@ -42,15 +46,17 @@ const postSchema = new mongoose.Schema(
         ref: "User",
         required: [true, "Please user is required"],
       },
-      description: {
+    
+      content: {
         type: String,
-        required: [true, "Post description is required"],
+        // required: [true, "Post content is required"],
       },
       image: {
         type: String,
         default:
           "https://cdn.pixabay.com/photo/2020/10/25/09/23/seagull-5683637_960_720.jpg",
       },
+
     },
     {
       toJSON: {

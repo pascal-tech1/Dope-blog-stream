@@ -9,6 +9,7 @@ import { GiShadowFollower } from "react-icons/gi";
 import { IoMdArrowDropdown } from "react-icons/io";
 
 const DashboardSideBar = () => {
+	
 	const [isMenuOpen, setIsMenuOpen] = useState({
 		profile: false,
 		messages: false,
@@ -16,7 +17,7 @@ const DashboardSideBar = () => {
 	});
 
 	const toggleMenuOption = (title) => {
-		console.log(title);
+		
 		setIsMenuOpen((prev) => ({
 			...prev,
 			[title]: !prev[title],

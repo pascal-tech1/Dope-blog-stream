@@ -19,7 +19,7 @@ const NavBar = () => {
 			<div className=" flex justify-between my-2 mx-4 md:mx-10 items-center lg:ml-20">
 				<Link to="/" className=" border">
 					<img
-						src="blogvana.png"
+						src="../../public/blogvana.png"
 						alt=""
 						className="w-8 md:w-14 border border-blue-400"
 					/>
@@ -42,7 +42,7 @@ const NavBar = () => {
 								<div className="border border-blue-400 rounded-full py-1 px-1 ">
 									<img
 										className=" w-6 h-6 md:w-8 md:h-8 rounded-full"
-										src="person.png"
+										src="../../public/person.png"
 										alt=""
 									/>
 								</div>
@@ -64,10 +64,10 @@ const NavBar = () => {
 						</div>
 						<Link
 							to="/dashboard/post"
-							className=" text-xs md:text-sm flex hover:border-gray-300 place-items-center gap-[0.3rem] border border-blue-200 px-1 py-1 md:px-2 rounded-md hover:bg-gray-100 transition-all"
+							className=" mr-4 text-xs md:text-sm flex hover:border-gray-300 place-items-center gap-[0.3rem] border border-blue-200 px-1 py-1 md:px-2 rounded-md hover:bg-gray-100 transition-all"
 						>
 							<BsPencilSquare />
-							<h3>write</h3>
+							<h3 className=" hidden md:flex">write</h3>
 						</Link>
 					</div>
 				) : (
