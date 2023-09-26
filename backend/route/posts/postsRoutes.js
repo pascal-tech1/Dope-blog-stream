@@ -7,6 +7,7 @@ const {
 	deletePostCtrl,
 	likePostCtrl,
 	disLikingPostCtrl,
+	searchPostCtrl,
 } = require("../../controllers/posts/postsCtrl");
 const authMiddleWare = require("../../middlewares/authentication/authMiddleWare");
 const {
@@ -23,6 +24,7 @@ postsRoutes.post(
 	postImageResize,
 	createPostCtrl
 );
+postsRoutes.get("/search", searchPostCtrl);
 postsRoutes.put("/like", authMiddleWare, likePostCtrl);
 postsRoutes.put("/dislike", authMiddleWare, disLikingPostCtrl);
 postsRoutes.get("/", fetchAllPostsCtrl);

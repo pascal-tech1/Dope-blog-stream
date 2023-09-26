@@ -1,38 +1,62 @@
 import React from "react";
-import { fetchAllPost, fetchSinglePost } from "../redux/post/postSlice";
+import {
+	fetchAllPost,
+	fetchSinglePost,
+	searchPost,
+	setSearchPage,
+} from "../redux/post/postSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import { Link } from "react-router-dom";
 import { formatDate } from "../utils/dataFormatter";
+import { Spinner } from "../components";
 
 const AllPost = () => {
 	const dispatch = useDispatch();
-	const { allPost, isLoading } = useSelector(
+	const { allPost, isLoading, searchQuery, hasMore, page } = useSelector(
 		(store) => store.allPostSlice
 	);
 	useEffect(() => {
 		dispatch(fetchAllPost());
 	}, []);
 
-	return (
-		<div>
-			{allPost?.map((post, index) => {
-				if (!allPost) {
-					return (
-						<div>
-							{allPost?.appErr ? (
-								<h1>{allPost.appErr}</h1>
-							) : (
-								<h1>{allPost.serverErr}</h1>
-							)}
-						</div>
-					);
+	const observer = useRef();
+	const lastBookElementRef = useCallback(
+		(node) => {
+			if (isLoading) return;
+			if (observer.current) observer.current.disconnect();
+			observer.current = new IntersectionObserver((entries) => {
+				if (entries[0].isIntersecting && hasMore) {
+					dispatch(setSearchPage());
+					if (searchQuery) {
+						dispatch(searchPost());
+					} else {
+						dispatch(fetchAllPost());
+					}
 				}
+			});
+			if (node) observer.current.observe(node);
+		},
+		[isLoading, hasMore]
+	);
 
+	// if (isLoading) {
+	// 	return (
+	// 		<div className=" grid place-content-center text-4xl text-blue-800 font-extrabold">
+	// 			loading ...
+	// 		</div>
+	// 	);
+	// }
+
+	return (
+		<>
+			{allPost.map((post, index) => {
+				allPost.length === index + 1;
 				return (
 					<div
 						key={index}
-						className=" border-t my-6 flex flex-col md:flex-row gap-4 justify-between items-centers"
+						ref={allPost.length === index + 1 ? lastBookElementRef : null}
+						className=" border-t my-6 flex  flex-col md:flex-row gap-4 justify-between items-centers"
 					>
 						<div className="flex flex-col mt-3 mb-2 justify-self-center">
 							{/* user who created the post  */}
@@ -83,8 +107,13 @@ const AllPost = () => {
 						</div>
 					</div>
 				);
+				//
 			})}
-		</div>
+			<div className=" grid place-content-center">
+				{isLoading && <Spinner />}
+			</div>
+			<div>{!hasMore && <h3>No more Post</h3>}</div>
+		</>
 	);
 };
 

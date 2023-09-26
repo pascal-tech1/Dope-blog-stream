@@ -6,6 +6,7 @@ const fs = require("fs");
 const handleCloudinaryUpload = require("../../config/cloundinary/cloudinaryUploadConfig");
 const User = require("../../model/user/User");
 const checkProfanity = require("../../utils/profanWords");
+const { query } = require("express");
 console.log("im here");
 // '''''''''''''''''''''''''''''''''''''''''
 //   Create Post conttoller
@@ -43,7 +44,7 @@ const createPostCtrl = expressAsyncHandler(async (req, res) => {
 		// } else {
 		// 	throw new Error("No valid file path found for deletions");
 		// }
-	
+
 		const post = await Post.create({
 			...req.body,
 			user: id,
@@ -52,7 +53,6 @@ const createPostCtrl = expressAsyncHandler(async (req, res) => {
 
 		res.json(post);
 	} catch (error) {
-		
 		res.status(500).json({ message: error.message });
 	}
 });
@@ -62,12 +62,24 @@ const createPostCtrl = expressAsyncHandler(async (req, res) => {
 // '''''''''''''''''''''''''''''''''''''''''''''
 
 const fetchAllPostsCtrl = expressAsyncHandler(async (req, res) => {
+	const page = parseInt(req?.query?.page) || 1; // Current page,
+
+	const postNumberPerPage = parseInt(req?.query?.postNumberPerPage) || 10; // Number of items per page
+	console.log(req?.query);
+	// Calculate the skip value to skip items on previous pages
+	const skip = (page - 1) * postNumberPerPage;
 	try {
-		const allPosts = await Post.find({}).populate("user");
-		res.json(allPosts);
+		// Use MongoDB's find method with skip and limit
+
+		const posts = await Post.find({})
+			.skip(skip)
+			.limit(postNumberPerPage)
+			.populate("user"); // Use the query parameter
+
+		res.status(200).json(posts);
 	} catch (error) {
-		
-		throw new Error('fetch all Post failed')
+		console.error("Error:", error);
+		res.status(500).json({ error: "Internal Server Error" });
 	}
 });
 
@@ -220,6 +232,29 @@ const disLikingPostCtrl = expressAsyncHandler(async (req, res) => {
 		res.json(error);
 	}
 });
+
+const searchPostCtrl = expressAsyncHandler(async (req, res) => {
+	const page = parseInt(req?.query?.page) || 1; // Current page,
+	const searchQuery = req?.query?.searchQuery;
+	const postNumberPerPage = parseInt(req?.query?.postNumberPerPage) || 10; // Number of items per page
+	console.log(req?.query);
+	// Calculate the skip value to skip items on previous pages
+	const skip = (page - 1) * postNumberPerPage;
+	try {
+		// Use MongoDB's find method with skip and limit
+
+		const posts = await Post.find({ $text: { $search: searchQuery } })
+			.skip(skip)
+			.limit(postNumberPerPage)
+			.populate("user"); // Use the query parameter
+
+		res.status(200).json(posts);
+	} catch (error) {
+		console.error("Error:", error);
+		res.status(500).json({ error: "Internal Server Error" });
+	}
+});
+
 module.exports = {
 	createPostCtrl,
 	fetchAllPostsCtrl,
@@ -228,4 +263,5 @@ module.exports = {
 	deletePostCtrl,
 	likePostCtrl,
 	disLikingPostCtrl,
+	searchPostCtrl,
 };

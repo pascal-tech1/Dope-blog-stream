@@ -2,18 +2,35 @@ import React, { useState } from "react";
 import { IoMdNotificationsOutline } from "react-icons/io";
 import { BsPencilSquare } from "react-icons/bs";
 import { Link } from "react-router-dom";
-import { MdOutlineArrowDropDown } from "react-icons/md";
-import {logOutUser} from "../redux/user/userSlice.js"
-
+import { MdOutlineArrowDropDown, MdOutlineSearch } from "react-icons/md";
+import { logOutUser } from "../redux/user/userSlice.js";
+import { useFormik } from "formik";
+import * as Yup from "yup";
 import { useSelector, useDispatch } from "react-redux";
+import { searchPost, setFirstSearch } from "../redux/post/postSlice.js";
 
 const NavBar = () => {
 	const user = useSelector((store) => store?.userSlice);
 	const [showLogOut, setShowLogOut] = useState(true);
-	const dispatch = useDispatch()
-	const handleLogOut = ()=>{
-		dispatch(logOutUser('user'))
-	}
+	const dispatch = useDispatch();
+	const handleLogOut = () => {
+		dispatch(logOutUser("user"));
+	};
+	const formSchema = Yup.object().shape({
+		search: Yup.string().required("Search is Required."),
+	});
+
+	const formik = useFormik({
+		initialValues: {
+			search: "",
+		},
+
+		onSubmit: (values) => {
+			dispatch(setFirstSearch(values.search));
+			dispatch(searchPost());
+		},
+		validationSchema: formSchema,
+	});
 	return (
 		<div className="fixed top-0 w-full border-b bg-white bg-opacity-20 backdrop-blur z-50">
 			<div className=" flex justify-between my-2 mx-4 md:mx-10 items-center lg:ml-20">
@@ -24,13 +41,20 @@ const NavBar = () => {
 						className="w-8 md:w-14 border border-blue-400"
 					/>
 				</Link>
-				<input
-					className=" font-sm  border rounded-lg border-blue-200 text-center focus:outline-none focus:border-blue-400 w-1/3 justify-center bg-transparent items-center"
-					type="search"
-					name="search"
-					id="seearch"
-					placeholder="Search"
-				/>
+				<form
+					onSubmit={formik.handleSubmit}
+					className="relative w-1/3 justify-center  items-center"
+				>
+					<input
+						className=" px-1 font-sm py-1  border rounded-lg border-blue-200 text-center focus:outline-none focus:border-blue-400  w-full bg-transparent "
+						type="search"
+						name="search"
+						id="seearch"
+						placeholder="Search"
+						value={formik.values.search}
+						onChange={formik.handleChange("search")}
+					/>
+				</form>
 				{user?.user?.token ? (
 					<div className=" flex place-content-between gap-1 md:gap-4 place-items-center">
 						<IoMdNotificationsOutline className="text-2xl md:text-3xl antialiased text-blue-400" />
@@ -54,13 +78,18 @@ const NavBar = () => {
 								showLogOut ? "hidden" : ""
 							} flex flex-col gap-3 absolute top-14 z-50 right-11 md:right-20 border bg-slate-50 rounded-md px-6 py-6  transition-all`}
 						>
-							<Link to='/dashboard/dashboard' className="bg-blue-400 px-2 rounded-md text-white hover:shadow-md transition-all hover:bg-blue-300">
+							<Link
+								to="/dashboard/dashboard"
+								className="bg-blue-400 px-2 rounded-md text-white hover:shadow-md transition-all hover:bg-blue-300"
+							>
 								User Profile
 							</Link>
-							<button onClick={handleLogOut} className="bg-red-500 px-2 rounded-md text-white hover:shadow-md transition-all hover:bg-red-400">
+							<button
+								onClick={handleLogOut}
+								className="bg-red-500 px-2 rounded-md text-white hover:shadow-md transition-all hover:bg-red-400"
+							>
 								Log Out
 							</button>
-							
 						</div>
 						<Link
 							to="/dashboard/post"

@@ -3,7 +3,6 @@ import { NavBar } from "../components";
 import { articles } from "../utils/data";
 import { MdOutlineCalendarMonth } from "react-icons/md";
 
-import { Link } from "react-router-dom";
 import AllPost from "./AllPost";
 
 const Home = () => {
@@ -21,7 +20,10 @@ const Home = () => {
 						<div className="flex justify-between py-6 flex-wrap">
 							{category.map((category, index) => {
 								return (
-									<button key={index} className=" text-sm delay-75 mt-2 mx-2 flex f bg-gray-100 hover:bg-gray-200 rounded-xl  py-[0.35rem] px-4">
+									<button
+										key={index}
+										className=" text-sm delay-75 mt-2 mx-2 flex f bg-gray-100 hover:bg-gray-200 rounded-xl  py-[0.35rem] px-4"
+									>
 										{category}
 									</button>
 								);
@@ -41,11 +43,11 @@ const Home = () => {
 							</select>
 						</div>
 
-						<AllPost/>
+						<AllPost />
 					</div>
 				</main>
 				{/* left section */}
-				<main className=" grid-cols-2 col-span-1 py-6 hidden md:grid">
+				<main className=" grid-cols-2 col-span-1 py-6 hidden md:grid h-max ">
 					<div className=" fixed">
 						<div className=" m-4 mr-14">
 							<div className="flex gap-2  bg-gray-100 p-4 h-max place-self-center">
@@ -56,7 +58,7 @@ const Home = () => {
 									<h4 className=" text-gray-400 text-xs mt-2 mb-4">
 										plans starting at $/week
 									</h4>
-									<button className= " whitespace-nowrap flex bg-gray-200 py-1 px-2 rounded-lg">
+									<button className=" whitespace-nowrap flex bg-gray-200 py-1 px-2 rounded-lg">
 										Get unlimeted access
 									</button>
 								</div>
@@ -64,7 +66,7 @@ const Home = () => {
 							</div>
 							{/* followers section */}
 							<section className="">
-								<h2 className= " whitespace-nowrap text-center text-sm font-medium my-4 place-self-center">
+								<h2 className=" whitespace-nowrap text-center text-sm font-medium my-4 place-self-center">
 									People you might be interested in
 								</h2>
 
@@ -101,10 +103,13 @@ const Home = () => {
 								<h2 className=" text-gray-900 font-medium mb-4 text-center">
 									More interesting topics
 								</h2>
-								<div className=" flex justify-between gap-4 flex-wrap">
-									{articles.map((article,index) => {
+								<div className=" flex justify-between gap-1 flex-wrap">
+									{articles.map((article, index) => {
 										return (
-											<button key={index} className=" text-sm border border-blue-300 hover:border-gray-300 hover:bg-gray-300 rounded-xl px-3 py-[0.15rem] ">
+											<button
+												key={index}
+												className=" text-sm border border-blue-300 hover:border-gray-300 hover:bg-gray-300 rounded-xl px-3 py-[0.15rem] "
+											>
 												{article.category}
 											</button>
 										);
