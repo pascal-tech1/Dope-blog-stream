@@ -148,38 +148,75 @@ const updatePasswordCtrl = expressAsyncHandler(async (req, res) => {
 // '''''''''''''''''''''''''''''''''''''''''''''
 const followingUserCtrl = expressAsyncHandler(async (req, res) => {
 	const loginUserId = req?.user.id;
-	const { userToFollowId } = req?.body;
+	const userToFollowId = req?.body.userToFollowOrUnfollowId;
+
 	validateMongoDbUserId(userToFollowId);
-	const userToFollow = await User.findById(userToFollowId);
+	let userToFollow = await User.findById(userToFollowId);
 	const allreadyFollowing = await userToFollow?.followers?.find(
 		(user) => user?.toString() === loginUserId.toString()
 	);
-	if (allreadyFollowing)
-		throw new Error("you are already following this users");
-	await User.findByIdAndUpdate(userToFollowId, {
-		$push: { followers: loginUserId },
+	if (allreadyFollowing) {
+		throw new Error("You are already following this user");
+	}
+	userToFollow = await User.findByIdAndUpdate(
+		userToFollowId,
+		{
+			$push: { followers: loginUserId },
+		},
+		{
+			new: true,
+			runValidators: true,
+		}
+	);
+
+	const user = await User.findByIdAndUpdate(
+		loginUserId,
+		{
+			$push: { following: userToFollowId },
+		},
+		{
+			new: true,
+			runValidators: true,
+		}
+	).select("-password");
+
+	res.json({
+		message: `you have successfully follow ${userToFollow?.firstName} ${userToFollow?.lastName}`,
+		newUser: user,
 	});
-	await User.findByIdAndUpdate(loginUserId, {
-		$push: { following: userToFollowId },
-	});
-	res.json({ message: "success you have successfully follow this user" });
 });
 // '''''''''''''''''''''''''''''''''''''''''
 //        unfollowing a user controller
 // '''''''''''''''''''''''''''''''''''''''''''''
 const unFollowingUserCtrl = expressAsyncHandler(async (req, res) => {
 	const loginUserId = req?.user.id;
-	const { userToUnFollowId } = req?.body;
+	const userToUnFollowId = req?.body?.userToFollowOrUnfollowId;
 	validateMongoDbUserId(userToUnFollowId);
 
-	await User.findByIdAndUpdate(userToUnFollowId, {
-		$pull: { followers: loginUserId },
-	});
-	await User.findByIdAndUpdate(loginUserId, {
-		$pull: { following: userToUnFollowId },
-	});
+	const userToUnFollow = await User.findByIdAndUpdate(
+		userToUnFollowId,
+		{
+			$pull: { followers: loginUserId },
+		},
+		{
+			new: true,
+			runValidators: true,
+		}
+	);
+	const user = await User.findByIdAndUpdate(
+		loginUserId,
+		{
+			$pull: { following: userToUnFollowId },
+		},
+		{
+			new: true,
+			runValidators: true,
+		}
+	);
+
 	res.json({
-		message: "success you have successfully unfollow this user",
+		message: `you have successfully unfollow ${userToUnFollow?.firstName} ${userToUnFollow?.lastName}`,
+		newUser: user,
 	});
 });
 
@@ -328,16 +365,16 @@ const profilePhotoUploadCtrl = expressAsyncHandler(async (req, res) => {
 	try {
 		const { id } = req.user;
 		const user = await User.findById(id);
-		
+
 		const imageLocalPath = `public/images/profile/${req?.file?.fileName}`;
 
-		uploadedImage = await handleCloudinaryUpload (
+		uploadedImage = await handleCloudinaryUpload(
 			imageLocalPath,
 			`mern-blog-app/${user.email}/profilePhoto`
 		);
-		
+
 		user.profilePhoto = uploadedImage.url;
-		
+
 		await user.save();
 		// remove the file
 		// if (fs.existsSync(imageLocalPath)) {

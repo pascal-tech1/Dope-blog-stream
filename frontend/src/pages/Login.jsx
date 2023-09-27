@@ -11,7 +11,7 @@ const Login = () => {
 		email: Yup.string().email().required("Email is Required."),
 		password: Yup.string()
 			.required("No password provided.")
-			.min(2, "Password is too short - should be 8 chars minimum."),
+			.min(8, "Password is too short - should be 8 chars minimum."),
 	});
 
 	const formik = useFormik({

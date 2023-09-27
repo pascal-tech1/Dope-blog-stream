@@ -6,6 +6,7 @@ import UserProfile from "./UserProfile";
 import AdditionalUserProfile from "./AdditionalUserProfile";
 import UserBio from "./UserBio";
 import Spinner from "./spinner";
+import { FollowingBtn, EditPostBtn } from "./FollowingBtn";
 
 export {
 	DashboardSideBar,
@@ -16,4 +17,6 @@ export {
 	AdditionalUserProfile,
 	UserBio,
 	Spinner,
+	FollowingBtn,
+	EditPostBtn,
 };

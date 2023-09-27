@@ -1,51 +1,52 @@
 import React, { useEffect } from "react";
-
 import { useDispatch, useSelector } from "react-redux";
 import { fetchSinglePost } from "../redux/post/postSlice";
 import { Link, useParams } from "react-router-dom";
 import NavBar from "../components/NavBar";
 import { formatDate } from "../utils/dataFormatter";
+import { FollowingBtn, EditPostBtn } from "../components";
+import CategoryandLikes from "../components/CategoryandLikes";
 
 const SinglePost = () => {
 	const { id } = useParams();
 	const { post } = useSelector((store) => store.allPostSlice);
 	const dispatch = useDispatch();
-	console.log(post);
+	const user = useSelector((store) => store?.userSlice?.user?.user);
+
 	useEffect(() => {
 		dispatch(fetchSinglePost(id));
 	}, []);
 
 	return (
-		<div className=" mt-16 ">
+		<div className="">
 			<NavBar />
-			<div className=" mx-6 mt-8 font-inter flex flex-col  lg:mx-auto max-w-[50rem] gap-[0.5rem]">
+			<div className=" mt-16 mx-6 font-inter flex flex-col  lg:mx-auto max-w-[50rem] gap-[0.5rem]">
 				<div>
 					<h1 className=" font-bold text-2xl my-4">{post?.title}</h1>
 				</div>
 				{/* about the user who created the post */}
-				<div className="flex flex-wrap">
+				<div className="flex flex-wrap   flex-col">
 					<div className="flex text-xs gap-3 text-gray-400 ">
-					<Link
-					to="/user-profile"
-					 className="flex gap-2">
-					<img
-							src={post?.user?.profilePhoto}
-							alt=""
-							className="w-8 h-8 rounded-full "
-						/>
+						<Link to="/user-profile" className="flex gap-2">
+							<img
+								src={post?.user?.profilePhoto}
+								alt=""
+								className="w-8 h-8 rounded-full "
+							/>
 
-						<div>
-							<h3 className="">{formatDate(post?.createdAt)}</h3>
-							<h3>{` ${post?.user?.firstName} ${post?.user?.lastName}  `}</h3>
-						</div>
-					</Link>
-						<button className=" self-center py-1 border hover:bg-gray-600 text-md outline-none bg-gray-900 transition-all rounded-full  px-2">
-							following
-						</button>
+							<div>
+								<h3 className="">{formatDate(post?.createdAt)}</h3>
+								<h3>{` ${post?.user?.firstName} ${post?.user?.lastName}  `}</h3>
+							</div>
+						</Link>
+						{/* if its not the user that created the post render the follow button else render theedit button */}
+						{user?._id !== post?.user?._id ? (
+							<FollowingBtn userToFollowOrUnfollow={post?.user} />
+						) : (
+							<EditPostBtn post={post} postId={post?._id} />
+						)}
 					</div>
-					<button className="  hover:bg-gray-100 hover:border mt-3 md:mt-0 py-1 hover:border-gray-300 transition-all md:ml-auto px-2 text-black outline-none rounded-full border border-blue-400">
-						{post?.category}
-					</button>
+					<CategoryandLikes post={post} />
 				</div>
 				<div className=" rounded-md my-4">
 					<img

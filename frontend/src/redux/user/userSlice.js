@@ -64,6 +64,39 @@ export const updateUser = createAsyncThunk(
 	}
 );
 
+export const followOrUnfollowUser = createAsyncThunk(
+	"followOrUnfollow/User",
+	async (
+		userToFollowOrUnfollowId,
+		{ getState, rejectWithValue, dispatch }
+	) => {
+		const isfollowing =
+			getState().userSlice?.user?.user?.following.includes(
+				userToFollowOrUnfollowId
+			);
+		const followOrUnFollow = isfollowing ? "unfollow" : "follow";
+		console.log(followOrUnFollow);
+		try {
+			const resp = await customFetch.post(
+				`users/${followOrUnFollow}`,
+				{ userToFollowOrUnfollowId },
+				{
+					headers: {
+						authorization: `Bearer ${getState().userSlice?.user?.token}`,
+					},
+				}
+			);
+
+			return resp.data;
+		} catch (error) {
+			if (!error.response) {
+				throw new Error(error);
+			}
+			return rejectWithValue(error?.response?.data);
+		}
+	}
+);
+
 const userSlice = createSlice({
 	name: "userSlice",
 	initialState,
@@ -131,6 +164,27 @@ const userSlice = createSlice({
 			state.appErr = action?.payload?.message;
 			state.serverErr = action?.error?.message;
 			state?.appErr ? toast(state?.appErr) : toast(state?.serverErr);
+		},
+		[followOrUnfollowUser.pending]: (state) => {
+			state.isLoading = true;
+		},
+		[followOrUnfollowUser.fulfilled]: (state, action) => {
+			state.isLoading = false;
+			state.appErr = undefined;
+			state.serverErr = undefined;
+			let user = getUserFromLocalStorage("user");
+			user.user = action.payload?.newUser;
+			state.user = user;
+			addUserToLocalStorage(user);
+			toast.success(action.payload?.message);
+		},
+		[followOrUnfollowUser.rejected]: (state, action) => {
+			state.isLoading = false;
+			state.appErr = action?.payload?.message;
+			state.serverErr = action?.error?.message;
+			state?.appErr
+				? toast.warn(state?.appErr)
+				: toast.error(state?.serverErr);
 		},
 	},
 });

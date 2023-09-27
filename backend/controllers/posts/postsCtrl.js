@@ -152,6 +152,7 @@ const deletePostCtrl = expressAsyncHandler(async (req, res) => {
 
 const likePostCtrl = expressAsyncHandler(async (req, res) => {
 	const { postId } = req?.body;
+
 	const loginUserId = req?.user?.id;
 	try {
 		const post = await Post.findById(postId);
@@ -161,9 +162,12 @@ const likePostCtrl = expressAsyncHandler(async (req, res) => {
 				postId,
 				{
 					$pull: { disLikes: loginUserId },
+					$push: { likes: loginUserId },
 				},
 				{ new: true }
 			);
+			res.json({ likes: newPost.likes, disLikes: newPost.disLikes });
+			return;
 		}
 		const alreadyLiked = post.likes.includes(loginUserId);
 		if (alreadyLiked) {
@@ -174,7 +178,8 @@ const likePostCtrl = expressAsyncHandler(async (req, res) => {
 				},
 				{ new: true }
 			);
-			res.json(newPost);
+			res.json({ likes: newPost.likes, disLikes: newPost.disLikes });
+			return;
 		} else {
 			const newPost = await Post.findByIdAndUpdate(
 				postId,
@@ -183,7 +188,8 @@ const likePostCtrl = expressAsyncHandler(async (req, res) => {
 				},
 				{ new: true }
 			);
-			res.json(newPost);
+			res.json({ likes: newPost.likes, disLikes: newPost.disLikes });
+			return;
 		}
 	} catch (error) {
 		res.json(error);
@@ -204,9 +210,12 @@ const disLikingPostCtrl = expressAsyncHandler(async (req, res) => {
 				postId,
 				{
 					$pull: { likes: loginUserId },
+					$push: { disLikes: loginUserId },
 				},
 				{ new: true }
 			);
+			res.json({ likes: newPost.likes, disLikes: newPost.disLikes });
+			return;
 		}
 		const alreadyDisliked = post.disLikes.includes(loginUserId);
 		if (alreadyDisliked) {
@@ -217,7 +226,8 @@ const disLikingPostCtrl = expressAsyncHandler(async (req, res) => {
 				},
 				{ new: true }
 			);
-			res.json(newPost);
+			res.json({ likes: newPost.likes, disLikes: newPost.disLikes });
+			return;
 		} else {
 			const newPost = await Post.findByIdAndUpdate(
 				postId,
@@ -226,7 +236,8 @@ const disLikingPostCtrl = expressAsyncHandler(async (req, res) => {
 				},
 				{ new: true }
 			);
-			res.json(newPost);
+			res.json({ likes: newPost.likes, disLikes: newPost.disLikes });
+			return;
 		}
 	} catch (error) {
 		res.json(error);
@@ -250,7 +261,6 @@ const searchPostCtrl = expressAsyncHandler(async (req, res) => {
 
 		res.status(200).json(posts);
 	} catch (error) {
-		console.error("Error:", error);
 		res.status(500).json({ error: "Internal Server Error" });
 	}
 });

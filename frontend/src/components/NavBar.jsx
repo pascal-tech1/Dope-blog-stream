@@ -26,6 +26,7 @@ const NavBar = () => {
 		},
 
 		onSubmit: (values) => {
+	
 			dispatch(setFirstSearch(values.search));
 			dispatch(searchPost());
 		},

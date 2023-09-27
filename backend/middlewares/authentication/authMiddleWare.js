@@ -7,12 +7,11 @@ const jwt = require("jsonwebtoken");
 // '''''''''''''''''''''''''''''''''''''''''''''
 
 const authMiddleWare = expressAsyncHandler(async (req, res, next) => {
-	console.log('auth',req?.body)
 	// checking if the user entered header for authorization
 	const enteredHeader = req?.headers.authorization;
 
 	try {
-		if (!enteredHeader) throw new Error("Request aunthorize");
+		if (!enteredHeader) throw new Error("Request unAuthorize");
 		if (!enteredHeader?.startsWith("Bearer"))
 			throw new Error("Request header must start with Bearer");
 
@@ -24,6 +23,7 @@ const authMiddleWare = expressAsyncHandler(async (req, res, next) => {
 		const userId = decodedToken?.id;
 		// found the user with the enterd token and return it without the password
 		const foundUser = await User.findById(userId).select("-password");
+
 		req.user = foundUser;
 
 		next();

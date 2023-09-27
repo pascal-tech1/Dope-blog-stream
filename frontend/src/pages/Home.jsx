@@ -22,7 +22,7 @@ const Home = () => {
 								return (
 									<button
 										key={index}
-										className=" text-sm delay-75 mt-2 mx-2 flex f bg-gray-100 hover:bg-gray-200 rounded-xl  py-[0.35rem] px-4"
+										className=" text-sm delay-75 mt-2 mx-2 flex  bg-gray-100 hover:bg-gray-200 rounded-xl  py-[0.35rem] px-4"
 									>
 										{category}
 									</button>
