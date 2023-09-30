@@ -3,7 +3,7 @@ import {
 	fetchAllPost,
 	searchPost,
 	setSearchPage,
-} from "../redux/post/postSlice";
+} from "../redux/post/allPostSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useRef, useCallback } from "react";
 import { Link } from "react-router-dom";
@@ -18,7 +18,7 @@ const AllPost = () => {
 	const user = useSelector((store) => store?.userSlice?.user?.user);
 
 	useEffect(() => {
-		dispatch(fetchAllPost());
+		allPost && dispatch(fetchAllPost());
 	}, []);
 
 	const observer = useRef();

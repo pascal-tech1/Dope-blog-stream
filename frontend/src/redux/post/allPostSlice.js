@@ -1,10 +1,11 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { toast } from "react-toastify";
-
 import customFetch from "../../utils/axios";
+import { updatePostLikesAndDisLikes } from "./singlePostSlice";
+import { number } from "yup";
 
 export const fetchAllPost = createAsyncThunk(
-	"fetch/Post",
+	"fetchAll/Post",
 	async (_, { getState, rejectWithValue, dispatch }) => {
 		const { page, postNumberPerPage, searchQuery } =
 			getState().allPostSlice;
@@ -16,41 +17,6 @@ export const fetchAllPost = createAsyncThunk(
 		} catch (error) {
 			if (!error?.response) {
 				throw new Error();
-			}
-			return rejectWithValue(error?.response?.data);
-		}
-	}
-);
-export const fetchSinglePost = createAsyncThunk(
-	"fetchSingle/Post",
-	async (id, { getState, rejectWithValue, dispatch }) => {
-		try {
-			const resp = await customFetch(`/posts/${id}`);
-			return resp.data;
-		} catch (error) {
-			if (!error?.response) {
-				throw new Error();
-			}
-			return rejectWithValue(error?.response?.data);
-		}
-	}
-);
-
-export const createPost = createAsyncThunk(
-	"create/Post",
-	async (post, { getState, rejectWithValue, dispatch }) => {
-		try {
-			const resp = await customFetch.post("/posts", post, {
-				headers: {
-					"Content-Type": "multipart/form-data",
-					authorization: `Bearer ${getState().userSlice?.user?.token}`,
-				},
-			});
-
-			return resp.data;
-		} catch (error) {
-			if (!error?.response) {
-				throw new Error(error);
 			}
 			return rejectWithValue(error?.response?.data);
 		}
@@ -80,19 +46,30 @@ export const searchPost = createAsyncThunk(
 export const likeOrDislikePost = createAsyncThunk(
 	"like/DislikePost",
 	async (data, { getState, rejectWithValue, dispatch }) => {
-		const id = data.id;
+		const { postId, choice } = data;
+
 		try {
-			const resp = await customFetch.put(`/posts/${data.choice}`, id, {
-				headers: {
-					authorization: `Bearer ${getState().userSlice?.user?.token}`,
-				},
-			});
+			const resp = await customFetch.put(
+				`/posts/${choice}`,
+				{ postId },
+				{
+					headers: {
+						authorization: `Bearer ${getState().userSlice?.user?.token}`,
+					},
+				}
+			);
+			let singlePost = getState().singlePostSlice?.post;
+			const disLikes = resp.data.disLikes;
+			const likes = resp.data.likes;
+			if (singlePost && singlePost?._id === postId) {
+				dispatch(updatePostLikesAndDisLikes({ likes, disLikes }));
+			}
 
 			return {
-				id: id.postId,
-				disLikes: resp.data.disLikes,
-				likes: resp.data.likes,
-				choice: data.choice,
+				postId,
+				disLikes,
+				likes,
+				choice,
 			};
 		} catch (error) {
 			if (!error?.response) {
@@ -100,20 +77,6 @@ export const likeOrDislikePost = createAsyncThunk(
 			}
 			return rejectWithValue(error?.response?.data);
 		}
-	}
-);
-
-const updatePost = createAsyncThunk(
-	"update/post",
-	async (post, { getState, rejectWithValue, dispatch }) => {
-		try {
-			const resp = await customFetch.put(`posts/64e2f4e4e311f9de74f09421`, psot, {
-				headers: {
-					authorization: `Bearer ${getState().userSlice?.user?.token}`,
-				},
-			});
-			return resp.data
-		} catch (error) {}
 	}
 );
 
@@ -140,9 +103,33 @@ const allPostSlice = createSlice({
 		setSearchPage: (state, { payload }) => {
 			state.page = state.page + 1;
 		},
+		updateNumbOfPostView: (state, { payload }) => {
+			state.allPost.map((post) => {
+				if (post._id === payload.id) {
+					post.numViews = payload.numViews;
+				}
+			});
+		},
+		updateSinglePost: (state, { payload }) => {
+			// const newAllPost = state.allPost.map((post, index) => {
+			// 	if (post._id === payload.id) {
+			// 		console.log("allpostslice", index);
+			// 		post.title = payload.title,
+			// 		post.category= payload.category,
+			// 		post.description = payload.description
+			// 	}
+			// });
+			const index = state.allPost.findIndex(
+				(post) => post.id === payload.id
+			);
+			const post = state.allPost[index];
+
+			state.allPost[index] = { ...post, ...payload.post };
+		},
 	},
 
 	extraReducers: {
+		// fetch all post
 		[fetchAllPost.pending]: (state, action) => {
 			state.isLoading = true;
 		},
@@ -163,40 +150,8 @@ const allPostSlice = createSlice({
 				(state.serverErr = action?.error?.message);
 			state.appErr = action?.payload?.message;
 		},
-		[createPost.pending]: (state, action) => {
-			state.isLoading = true;
-		},
-		[createPost.fulfilled]: (state, action) => {
-			state.isLoading = false;
-			state.serverErr = undefined;
-			state.appErr = undefined;
-			toast.success("post created successfully");
-		},
-		[createPost.rejected]: (state, action) => {
-			(state.isLoading = false),
-				(state.serverErr = action?.error?.message);
-			state.appErr = action?.payload?.message;
-			state.appErr
-				? toast.error(state.appErr)
-				: toast.error(state.serverErr);
-		},
-		[fetchSinglePost.pending]: (state, action) => {
-			state.isLoading = true;
-		},
-		[fetchSinglePost.fulfilled]: (state, action) => {
-			state.isLoading = false;
-			state.post = action.payload;
-			state.serverErr = undefined;
-			state.appErr = undefined;
-		},
-		[fetchSinglePost.rejected]: (state, action) => {
-			(state.isLoading = false),
-				(state.serverErr = action?.error?.message);
-			state.appErr = action?.payload?.message;
-			state.appErr
-				? toast.error(state.appErr)
-				: toast.error(state.serverErr);
-		},
+
+		// search post
 		[searchPost.pending]: (state, action) => {
 			state.isLoading = true;
 		},
@@ -221,28 +176,20 @@ const allPostSlice = createSlice({
 				? toast.error(state.appErr)
 				: toast.error(state.serverErr);
 		},
+
+		// like or dislike post
 		[likeOrDislikePost.pending]: (state, action) => {
 			state.isLoading = true;
 		},
 		[likeOrDislikePost.fulfilled]: (state, action) => {
 			state.isLoading = false;
-			const allPost = state.allPost;
-			const singlePost = state.post;
-			allPost.map((post) => {
-				const { id, likes, disLikes } = action?.payload;
-				if (post?._id === id) {
+			state.allPost?.map((post) => {
+				const { postId, likes, disLikes } = action?.payload;
+				if (post?._id === postId) {
 					post.likes = likes;
 					post.disLikes = disLikes;
 				}
 			});
-
-			const { id, likes, disLikes } = action?.payload;
-			if (singlePost?._id === id) {
-				singlePost.likes = likes;
-				singlePost.disLikes = disLikes;
-			}
-
-			state.isLoading = false;
 			state.serverErr = undefined;
 			state.appErr = undefined;
 		},
@@ -253,9 +200,13 @@ const allPostSlice = createSlice({
 			state.appErr
 				? toast.error(state.appErr)
 				: toast.error(state.serverErr);
-			console.log(action.payload);
 		},
 	},
 });
-export const { setSearchPage, setFirstSearch } = allPostSlice.actions;
+export const {
+	setSearchPage,
+	setFirstSearch,
+	updateNumbOfPostView,
+	updateSinglePost,
+} = allPostSlice.actions;
 export default allPostSlice.reducer;

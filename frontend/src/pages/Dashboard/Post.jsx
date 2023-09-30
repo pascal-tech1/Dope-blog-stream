@@ -1,21 +1,29 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { modules } from "../../utils/quil";
 import { useDispatch, useSelector } from "react-redux";
-import { createPost } from "../../redux/post/postSlice";
+import {
+	createPost,
+	setIsEditingPost,
+	setSinglePostStatus,
+	updatePost,
+} from "../../redux/post/singlePostSlice";
 import { LoadingSpinner } from "../../utils/Spinner";
 import { useFormik } from "formik";
 
 import * as Yup from "yup";
+import { Spinner } from "../../components";
 
 const Post = () => {
 	const dispatch = useDispatch();
 
 	const [postImage, setPostImage] = useState(null);
 	const url = postImage ? URL.createObjectURL(postImage) : "";
-	const { isLoading } = useSelector((store) => store.allPostSlice);
-	const { post } = useSelector((store) => store.allPostSlice);
+	const { post, status, isEditing, isLoading } = useSelector(
+		(store) => store.singlePostSlice
+	);
+	dispatch(setSinglePostStatus("idle"));
 
 	const formSchema = Yup.object().shape({
 		title: Yup.string()
@@ -36,19 +44,26 @@ const Post = () => {
 
 	const formik = useFormik({
 		initialValues: {
-			title: post?.title || "",
-			description: post?.description || "",
-			category: post?.category || "",
+			title: (isEditing && post?.title) || "",
+			description: (isEditing && post?.description) || "",
+			category: (isEditing && post?.category) || "",
 			image: null,
-			content: post?.content || "",
+			content: (isEditing && post?.content) || "",
 		},
 		validationSchema: formSchema,
 		onSubmit: (values) => {
 			console.log(values);
-			dispatch(createPost(values));
+			dispatch(updatePost(values));
+			// dispatch(createPost(values));
 		},
 	});
-
+	if (status === "loading") {
+		return (
+			<div className="flex justify-center items-center mt-8">
+				<Spinner />
+			</div>
+		);
+	}
 	return (
 		<div className=" font-inter font-medium mt-16  gap-7 px-10">
 			<form
@@ -150,26 +165,33 @@ const Post = () => {
 					/>
 
 					<div className=" flex gap-2  mt-[9rem] md:mt-[6rem] items-center justify-center ">
-						<button
-							type="submit"
-							className={`self-start  border border-blue-400  py-1 px-2 hover:bg-blue-400 transition-all hover:text-white ${
-								isLoading && "bg-blue-400"
-							} rounded-md`}
-						>
-							{isLoading ? <LoadingSpinner text="loading" /> : "Post"}
-						</button>
-						<button
-							type="submit"
-							className={`self-start border border-blue-400  py-1 px-2 hover:bg-blue-400 transition-all hover:text-white ${
-								isLoading && "bg-blue-400"
-							} rounded-md`}
-						>
-							{isLoading ? (
-								<LoadingSpinner text="loading" />
-							) : (
-								"Update Post"
-							)}
-						</button>
+						{isEditing ? (
+							<button
+								type="submit"
+								className={`self-start border border-blue-400  py-1 px-2 hover:bg-blue-400 transition-all hover:text-white ${
+									isLoading && "bg-blue-400"
+								} rounded-md`}
+							>
+								{isLoading ? (
+									<LoadingSpinner text="loading" />
+								) : (
+									"Update Post"
+								)}
+							</button>
+						) : (
+							<button
+								type="submit"
+								className={`self-start  border border-blue-400  py-1 px-2 hover:bg-blue-400 transition-all hover:text-white ${
+									isLoading && "bg-blue-400"
+								} rounded-md`}
+							>
+								{isLoading ? (
+									<LoadingSpinner text="loading" />
+								) : (
+									"Create Post"
+								)}
+							</button>
+						)}
 					</div>
 				</div>
 			</form>

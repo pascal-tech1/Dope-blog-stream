@@ -24,12 +24,20 @@ postsRoutes.post(
 	postImageResize,
 	createPostCtrl
 );
+
+postsRoutes.put(
+	"/update/:id",
+	authMiddleWare,
+	postImageUpload.single("image"),
+	postImageResize,
+	updatePostCtrl
+);
 postsRoutes.get("/search", searchPostCtrl);
 postsRoutes.put("/like", authMiddleWare, likePostCtrl);
 postsRoutes.put("/dislike", authMiddleWare, disLikingPostCtrl);
 postsRoutes.get("/", fetchAllPostsCtrl);
 postsRoutes.get("/:id", fetchSinglePostsCtrl);
-postsRoutes.put("/:id", authMiddleWare, updatePostCtrl);
+
 postsRoutes.delete("/:id", authMiddleWare, deletePostCtrl);
 
 module.exports = postsRoutes;

@@ -1,16 +1,17 @@
 import React from "react";
 import { AiOutlineDislike, AiOutlineLike } from "react-icons/ai";
-import { likeOrDislikePost } from "../redux/post/postSlice";
+import { likeOrDislikePost } from "../redux/post/allPostSlice";
 import { useDispatch } from "react-redux";
 import { formatDate } from "../utils/dataFormatter";
 
 const CategoryandLikes = ({ post }) => {
 	const dispatch = useDispatch();
 	const handleLikes = (id) => {
-		dispatch(likeOrDislikePost({ choice: "like", id: { postId: id } }));
+		console.log(id);
+		dispatch(likeOrDislikePost({ choice: "like", postId: id }));
 	};
 	const handleDislikes = (id) => {
-		dispatch(likeOrDislikePost({ choice: "disLike", id: { postId: id } }));
+		dispatch(likeOrDislikePost({ choice: "disLike", postId: id }));
 	};
 	return (
 		<div className=" flex gap-2 items-center mt-3 font-light flex-wrap justify-start  ">
@@ -31,7 +32,7 @@ const CategoryandLikes = ({ post }) => {
 				>
 					<AiOutlineDislike className="" />
 				</button>
-				<span>{post?.disLikes.length}</span>
+				<span>{post?.disLikes?.length}</span>
 			</span>
 
 			<h3 className="flex gap-1 items-center flex-nowrap">

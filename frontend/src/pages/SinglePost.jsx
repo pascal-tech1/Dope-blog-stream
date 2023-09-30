@@ -1,22 +1,38 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchSinglePost } from "../redux/post/postSlice";
+import { fetchSinglePost } from "../redux/post/singlePostSlice";
 import { Link, useParams } from "react-router-dom";
 import NavBar from "../components/NavBar";
 import { formatDate } from "../utils/dataFormatter";
-import { FollowingBtn, EditPostBtn } from "../components";
+import { FollowingBtn, EditPostBtn, Spinner } from "../components";
 import CategoryandLikes from "../components/CategoryandLikes";
+import { LoadingSpinner } from "../utils/Spinner";
 
 const SinglePost = () => {
 	const { id } = useParams();
-	const { post } = useSelector((store) => store.allPostSlice);
+	const { post, status } = useSelector((store) => store.singlePostSlice);
 	const dispatch = useDispatch();
 	const user = useSelector((store) => store?.userSlice?.user?.user);
 
 	useEffect(() => {
-		dispatch(fetchSinglePost(id));
-	}, []);
-
+		if (!post) {
+			dispatch(fetchSinglePost(id));
+		} else if (post.id !== id) {
+			dispatch(fetchSinglePost(id));
+		}
+	}, [id]);
+	if (status === "loading") {
+		return (
+			<div className=" grid place-content-center mt-8">
+				<Spinner />
+			</div>
+		);
+	}
+	if (status === "error") {
+		return (
+			<div className=" text-red-600">failed to fetch Post try again</div>
+		);
+	}
 	return (
 		<div className="">
 			<NavBar />

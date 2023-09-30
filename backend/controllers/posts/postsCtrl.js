@@ -22,7 +22,7 @@ const createPostCtrl = expressAsyncHandler(async (req, res) => {
 		"" +
 		req?.body?.description +
 		"" +
-		req?.body?.category;
+		req?.body?.content;
 
 	if (checkProfanity(enteredDetails)) {
 		user.isBlocked = true;
@@ -112,24 +112,51 @@ const fetchSinglePostsCtrl = expressAsyncHandler(async (req, res) => {
 //   update post controller
 // '''''''''''''''''''''''''''''''''''''''''''''
 const updatePostCtrl = expressAsyncHandler(async (req, res) => {
-	// const { loginUserId } = req?.user;
-	const { id } = req?.params;
-	validateMongoDbUserId(id);
-	console.log(id);
+	const postId = req?.params?.id;
+	const loginUserId = req?.user?._id;
+	validateMongoDbUserId(postId);
+	validateMongoDbUserId(loginUserId);
+
 	try {
-		const post = await Post.findByIdAndUpdate(
-			id,
+		let user = await User.findById(loginUserId);
+		let post = await Post.findById(postId);
+
+		if (user?._id.toString() !== post?.user?._id.toString())
+			throw new Error("only User who created post can Edit it");
+		const enteredDetails =
+			req?.body?.title +
+			"" +
+			req?.body?.description +
+			"" +
+			req?.body?.content;
+
+		if (checkProfanity(enteredDetails)) {
+			user.isBlocked = true;
+			await user.save();
+			throw new Error(
+				"post updpate failed, account has been block for using profane words"
+			);
+		}
+
+		const imageLocalPath = `public/images/posts/${req?.file?.fileName}`;
+		uploadedImage = await handleCloudinaryUpload(
+			imageLocalPath,
+			`mern-blog-app/${user?.email}/postImage`
+		);
+		post = await Post.findByIdAndUpdate(
+			postId,
 			{
 				...req.body,
+				image: uploadedImage?.url,
 			},
 			{
 				new: true,
 			}
-		);
-		console.log(post);
+		).populate("user");
 		res.json(post);
 	} catch (error) {
-		res.json({ message: error.stack });
+		console.log(error.message);
+		res.status(500).json({ message: error.message });
 	}
 });
 
@@ -152,7 +179,7 @@ const deletePostCtrl = expressAsyncHandler(async (req, res) => {
 
 const likePostCtrl = expressAsyncHandler(async (req, res) => {
 	const { postId } = req?.body;
-
+	console.log("im here likepost");
 	const loginUserId = req?.user?.id;
 	try {
 		const post = await Post.findById(postId);

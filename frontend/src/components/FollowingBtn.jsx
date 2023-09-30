@@ -2,7 +2,13 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { followOrUnfollowUser } from "../redux/user/userSlice";
 import { Link, useNavigate } from "react-router-dom";
-import { fetchSinglePost } from "../redux/post/postSlice";
+import {
+	fetchSinglePost,
+	setIsEditingPost,
+	setSinglePostStatus,
+} from "../redux/post/singlePostSlice";
+import Spinner from "./spinner";
+import { LoadingSpinner } from "../utils/Spinner";
 
 export const FollowingBtn = ({ userToFollowOrUnfollow }) => {
 	const user = useSelector((store) => store?.userSlice?.user?.user);
@@ -26,17 +32,23 @@ export const FollowingBtn = ({ userToFollowOrUnfollow }) => {
 };
 
 export const EditPostBtn = ({ postId }) => {
-	const { post } = useSelector((store) => store.allPostSlice);
-
+	const { post, status, isEditing } = useSelector(
+		(store) => store.singlePostSlice
+	);
+	useEffect(() => {
+		if (status === "success" && isEditing) navigate("/dashboard/post");
+		return () => {
+			dispatch(setSinglePostStatus("idle"));
+		};
+	}, [status]);
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 	const handleEditPost = () => {
-		dispatch(fetchSinglePost(postId));
-		console.log(post);
-		console.log(post?._id);
-		console.log(postId);
-		if (post?._id === postId) {
+		dispatch(setIsEditingPost(true));
+		if (post?.id === postId) {
 			navigate("/dashboard/post");
+		} else {
+			dispatch(fetchSinglePost(postId));
 		}
 	};
 	return (
@@ -44,9 +56,7 @@ export const EditPostBtn = ({ postId }) => {
 			onClick={handleEditPost}
 			className="border self-center px-1 hover:bg-blue-400 text-center py-[0.1rem] hover:text-white rounded-md transition-all delay-75 border-blue-400 "
 		>
-			Edit post
+			{status === "loading" ? <LoadingSpinner /> : <h3>Edit Post</h3>}
 		</button>
 	);
 };
-
-

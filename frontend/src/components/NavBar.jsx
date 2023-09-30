@@ -7,7 +7,7 @@ import { logOutUser } from "../redux/user/userSlice.js";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useSelector, useDispatch } from "react-redux";
-import { searchPost, setFirstSearch } from "../redux/post/postSlice.js";
+import { searchPost, setFirstSearch } from "../redux/post/allPostSlice.js";
 
 const NavBar = () => {
 	const user = useSelector((store) => store?.userSlice);

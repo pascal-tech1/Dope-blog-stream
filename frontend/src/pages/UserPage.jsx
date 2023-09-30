@@ -15,7 +15,7 @@ const UserPage = () => {
 				<svg
 					class="w-4 h-4 ml-2"
 					xmlns="http://www.w3.org/2000/svg"
-					viewBox="0 0 20 20"
+					viewBox="0 0 20 z20"
 					fill="currentColor"
 				>
 					<path

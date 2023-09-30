@@ -47,6 +47,8 @@ const ProfilePhotResize = async (req, res, next) => {
 	}
 };
 const postImageResize = async (req, res, next) => {
+	console.log('im here postImage')
+	console.log(req.url)
 	try {
 		if (!req.file) throw new Error("no file to resize");
 		req.file.fileName = `user-${Date.now()} - ${req?.file?.originalname}`;
