@@ -61,7 +61,6 @@ const userLoginCtrl = expressAsyncHandler(async (req, res) => {
 	}
 });
 const userLoginWithTokenCtrl = expressAsyncHandler(async (req, res) => {
-	console.log(req?.user);
 	res.status(200).json({
 		status: "success",
 		user: req?.user,
@@ -119,7 +118,7 @@ const fetchUserDetailsCtrl = expressAsyncHandler(async (req, res) => {
 const updateUserDetailsCtrl = expressAsyncHandler(async (req, res) => {
 	const { _id } = req?.user;
 	validateMongoDbUserId(_id);
-	console.log("body", req?.body);
+
 	try {
 		const updatedUser = await User.findByIdAndUpdate(
 			_id,
@@ -159,7 +158,6 @@ const updatePasswordCtrl = expressAsyncHandler(async (req, res) => {
 // '''''''''''''''''''''''''''''''''''''''''''''
 const followingUserCtrl = expressAsyncHandler(async (req, res) => {
 	const loginUserId = req?.user.id;
-	console.log(loginUserId);
 
 	const userToFollowId = req?.body.userToFollowOrUnfollowId;
 

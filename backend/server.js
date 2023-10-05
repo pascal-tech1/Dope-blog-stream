@@ -17,8 +17,6 @@ const {
 
 const app = express();
 // mongodb config init
- const dbStatus = connectDB();
- console.log('dbstatus', dbStatus)
 
 // defaut middleware
 app.use(express.json());

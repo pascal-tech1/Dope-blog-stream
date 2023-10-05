@@ -81,7 +81,6 @@ const fetchAllPostsCtrl = expressAsyncHandler(async (req, res) => {
 			.select("-content"); // Use the query parameter
 		res.status(200).json(posts);
 	} catch (error) {
-		console.error("Error:", error);
 		res.status(500).json({ error: "Internal Server Error" });
 	}
 });
@@ -168,7 +167,6 @@ const updatePostCtrl = expressAsyncHandler(async (req, res) => {
 		).populate("user");
 		res.json(post);
 	} catch (error) {
-		console.log(error);
 		res.status(500).json({ message: error.message });
 	}
 });
@@ -192,7 +190,7 @@ const deletePostCtrl = expressAsyncHandler(async (req, res) => {
 
 const likePostCtrl = expressAsyncHandler(async (req, res) => {
 	const { postId } = req?.body;
-	console.log("im here likepost");
+
 	const loginUserId = req?.user?.id;
 	try {
 		const post = await Post.findById(postId);
@@ -288,7 +286,7 @@ const searchPostCtrl = expressAsyncHandler(async (req, res) => {
 	const page = parseInt(req?.query?.page) || 1; // Current page,
 	const searchQuery = req?.query?.searchQuery;
 	const postNumberPerPage = parseInt(req?.query?.postNumberPerPage) || 10; // Number of items per page
-	console.log(req?.query);
+
 	// Calculate the skip value to skip items on previous pages
 	const skip = (page - 1) * postNumberPerPage;
 	try {
