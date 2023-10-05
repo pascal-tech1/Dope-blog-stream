@@ -16,7 +16,7 @@ import {
 } from "react-icons/md";
 
 const AdditionalUserProfile = () => {
-	const { user } = useSelector((store) => store?.userSlice?.user);
+	const user = useSelector((store) => store?.userSlice?.user);
 	const [isUserProfileClicked, setIsUserProfileClicked] = useState(false);
 
 	const dispatch = useDispatch();

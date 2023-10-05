@@ -8,7 +8,7 @@ import { MdEdit } from "react-icons/md";
 
 const UserBio = () => {
 	const [isUserProfileClicked, setIsUserProfileClicked] = useState(false);
-	const { user } = useSelector((store) => store?.userSlice?.user);
+	const user = useSelector((store) => store?.userSlice?.user);
 	const dispatch = useDispatch();
 	// yup Schema
 	const formSchema = Yup.object().shape({
@@ -59,12 +59,11 @@ const UserBio = () => {
 					className=" border border-blue-400 outline-none focus:border-blue-800 px-2 py-2 mt-2"
 				></textarea>
 			) : (
-				<p>
-					{user?.bio}
-				
-				</p>
+				<p>{user?.bio}</p>
 			)}
-            <div className=" text-red-500">{formik.touched.bio && formik.errors.bio}</div>
+			<div className=" text-red-500">
+				{formik.touched.bio && formik.errors.bio}
+			</div>
 		</form>
 	);
 };

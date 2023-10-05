@@ -18,9 +18,16 @@ import Carousel from "./utils/carousel";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { getUserFromLocalStorage } from "./utils/localStorage";
-
+import { useDispatch } from "react-redux";
+import { loginUserWithToken } from "./redux/user/userSlice";
 
 const App = () => {
+	const dispatch = useDispatch();
+	const userToken = getUserFromLocalStorage();
+	if (userToken) {
+		dispatch(loginUserWithToken());
+	}
+
 	return (
 		<BrowserRouter>
 			<Routes>

@@ -2,41 +2,47 @@ const express = require("express");
 const authMiddleWare = require("../../middlewares/authentication/authMiddleWare");
 
 const {
-  userRegisterCtrl,
-  userLoginCtrl,
-  fetchAllUserCtrl,
-  deleteUserCtrl,
-  fetchUserDetailsCtrl,
-  updateUserDetailsCtrl,
-  updatePasswordCtrl,
-  followingUserCtrl,
-  unFollowingUserCtrl,
-  sendAcctVerificationEmailCtrl,
-  AcctVerificationCtrl,
-  sendPasswordResetEmailCtrl,
-  resetPasswordCtrl,
-  profilePhotoUploadCtrl,
+	userRegisterCtrl,
+	userLoginCtrl,
+	fetchAllUserCtrl,
+	deleteUserCtrl,
+	fetchUserDetailsCtrl,
+	updateUserDetailsCtrl,
+	updatePasswordCtrl,
+	followingUserCtrl,
+	unFollowingUserCtrl,
+	sendAcctVerificationEmailCtrl,
+	AcctVerificationCtrl,
+	sendPasswordResetEmailCtrl,
+	resetPasswordCtrl,
+	profilePhotoUploadCtrl,
+	userLoginWithTokenCtrl,
 } = require("../../controllers/users/usersCtrl");
 const {
-  profilePhotoUpload,
-  ProfilePhotResize,
+	profilePhotoUpload,
+	ProfilePhotResize,
 } = require("../../middlewares/uploads/PhotoUpload");
 
 const userRoutes = express.Router();
 
 userRoutes.post("/register", userRegisterCtrl);
+userRoutes.get("/loginWithToken", authMiddleWare, userLoginWithTokenCtrl);
 userRoutes.post("/login", userLoginCtrl);
 userRoutes.get("/", authMiddleWare, fetchAllUserCtrl);
 userRoutes.delete("/delete/:USERID", deleteUserCtrl);
 userRoutes.get("/:USERID", fetchUserDetailsCtrl);
 userRoutes.post(
-  "/profile-picture-upload",
-  authMiddleWare,
-  profilePhotoUpload.single("image"),
-  ProfilePhotResize,
-  profilePhotoUploadCtrl
+	"/profile-picture-upload",
+	authMiddleWare,
+	profilePhotoUpload.single("image"),
+	ProfilePhotResize,
+	profilePhotoUploadCtrl
 );
-userRoutes.post("/send-email", authMiddleWare, sendAcctVerificationEmailCtrl);
+userRoutes.post(
+	"/send-email",
+	authMiddleWare,
+	sendAcctVerificationEmailCtrl
+);
 userRoutes.post("/verify-Account", authMiddleWare, AcctVerificationCtrl);
 userRoutes.post("/forget-password", sendPasswordResetEmailCtrl);
 userRoutes.put("/reset-password", resetPasswordCtrl);

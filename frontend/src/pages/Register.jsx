@@ -55,7 +55,7 @@ const Register = () => {
 			{/* form starts here */}
 			<form
 				onSubmit={formik.handleSubmit}
-				className="flex flex-col w-full  items-center px-8 py-6 lg:px-20 shadow-md"
+				className="flex flex-col w-full  items-center px-8 py-6 lg:px-20"
 			>
 				<div className=" items-center flex flex-col  mb-6">
 					<p className=" text-lg font-medium mb-3">Get Started</p>

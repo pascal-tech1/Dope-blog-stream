@@ -32,16 +32,15 @@ const userSchema = new mongoose.Schema(
 		},
 		language: {
 			type: String,
-			default: "your languages"
-
+			default: "your languages",
 		},
 		nickName: {
 			type: String,
-			default: "your Nick name"
+			default: "your Nick name",
 		},
-		education:{
+		education: {
 			type: String,
-			default: 'your Education'
+			default: "your Education",
 		},
 		bio: {
 			type: String,
@@ -104,6 +103,22 @@ const userSchema = new mongoose.Schema(
 				{
 					type: mongoose.Schema.Types.ObjectId,
 					ref: "User",
+				},
+			],
+		},
+		postViewHistory: {
+			type: [
+				{
+					type: mongoose.Schema.Types.ObjectId,
+					ref: "Post",
+				},
+			],
+		},
+		savedPost: {
+			type: [
+				{
+					type: mongoose.Schema.Types.ObjectId,
+					ref: "Post",
 				},
 			],
 		},

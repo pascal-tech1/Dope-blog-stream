@@ -36,7 +36,7 @@ postsRoutes.get("/search", searchPostCtrl);
 postsRoutes.put("/like", authMiddleWare, likePostCtrl);
 postsRoutes.put("/dislike", authMiddleWare, disLikingPostCtrl);
 postsRoutes.get("/", fetchAllPostsCtrl);
-postsRoutes.get("/:id", fetchSinglePostsCtrl);
+postsRoutes.put("/:id", fetchSinglePostsCtrl);
 
 postsRoutes.delete("/:id", authMiddleWare, deletePostCtrl);
 

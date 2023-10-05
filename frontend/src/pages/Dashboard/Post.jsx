@@ -17,13 +17,12 @@ import { Spinner } from "../../components";
 
 const Post = () => {
 	const dispatch = useDispatch();
-
-	const [postImage, setPostImage] = useState(null);
-	const url = postImage ? URL.createObjectURL(postImage) : "";
 	const { post, status, isEditing, isLoading } = useSelector(
 		(store) => store.singlePostSlice
 	);
-	dispatch(setSinglePostStatus("idle"));
+
+	const [postImage, setPostImage] = useState(null);
+	const url = postImage ? URL.createObjectURL(postImage) : post?.image;
 
 	const formSchema = Yup.object().shape({
 		title: Yup.string()
@@ -48,14 +47,18 @@ const Post = () => {
 			description: (isEditing && post?.description) || "",
 			category: (isEditing && post?.category) || "",
 			image: null,
-			content: (isEditing && post?.content) || "",
+			content:
+				(isEditing && post?.content) ||
+				"Enter your post content here, Creativity is your limit",
+		},
+
+		onSubmit: (values, { resetForm }) => {
+			isEditing
+				? dispatch(updatePost(values))
+				: dispatch(createPost(values));
+				formik.resetForm();
 		},
 		validationSchema: formSchema,
-		onSubmit: (values) => {
-			console.log(values);
-			dispatch(updatePost(values));
-			// dispatch(createPost(values));
-		},
 	});
 	if (status === "loading") {
 		return (
@@ -165,33 +168,18 @@ const Post = () => {
 					/>
 
 					<div className=" flex gap-2  mt-[9rem] md:mt-[6rem] items-center justify-center ">
-						{isEditing ? (
-							<button
-								type="submit"
-								className={`self-start border border-blue-400  py-1 px-2 hover:bg-blue-400 transition-all hover:text-white ${
-									isLoading && "bg-blue-400"
-								} rounded-md`}
-							>
-								{isLoading ? (
-									<LoadingSpinner text="loading" />
-								) : (
-									"Update Post"
-								)}
-							</button>
-						) : (
-							<button
-								type="submit"
-								className={`self-start  border border-blue-400  py-1 px-2 hover:bg-blue-400 transition-all hover:text-white ${
-									isLoading && "bg-blue-400"
-								} rounded-md`}
-							>
-								{isLoading ? (
-									<LoadingSpinner text="loading" />
-								) : (
-									"Create Post"
-								)}
-							</button>
-						)}
+						<button
+							type="submit"
+							className={`self-start border border-blue-400  py-1 px-2 hover:bg-blue-400 transition-all hover:text-white ${
+								isLoading && "bg-blue-400"
+							} rounded-md`}
+						>
+							{isLoading ? (
+								<LoadingSpinner text="loading" />
+							) : (
+								<h3>{isEditing ? "Update Post" : "Create Post"}</h3>
+							)}
+						</button>
 					</div>
 				</div>
 			</form>

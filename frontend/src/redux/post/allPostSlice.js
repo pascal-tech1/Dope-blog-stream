@@ -54,7 +54,7 @@ export const likeOrDislikePost = createAsyncThunk(
 				{ postId },
 				{
 					headers: {
-						authorization: `Bearer ${getState().userSlice?.user?.token}`,
+						authorization: `Bearer ${getState().userSlice?.token}`,
 					},
 				}
 			);
@@ -111,14 +111,6 @@ const allPostSlice = createSlice({
 			});
 		},
 		updateSinglePost: (state, { payload }) => {
-			// const newAllPost = state.allPost.map((post, index) => {
-			// 	if (post._id === payload.id) {
-			// 		console.log("allpostslice", index);
-			// 		post.title = payload.title,
-			// 		post.category= payload.category,
-			// 		post.description = payload.description
-			// 	}
-			// });
 			const index = state.allPost.findIndex(
 				(post) => post.id === payload.id
 			);
@@ -134,6 +126,7 @@ const allPostSlice = createSlice({
 			state.isLoading = true;
 		},
 		[fetchAllPost.fulfilled]: (state, action) => {
+			console.log(action.payload);
 			if (action.payload.length < 10) {
 				state.hasMore = false;
 				state.allPost = [...state.allPost, ...action.payload];

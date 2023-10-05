@@ -47,14 +47,25 @@ const userLoginCtrl = expressAsyncHandler(async (req, res) => {
 		userFound &&
 		(await userFound.isPasswordCorrect(req?.body?.password))
 	) {
-		res.json({
+		res.status(200).json({
+			status: "success",
 			user: userFound,
 			// generate a token that will be used to retain the login of the user
 			token: generateJwtToken(userFound?._id),
 		});
 	} else {
-		throw new Error("invlalid login credentials");
+		res.status(500).json({
+			status: "failed",
+			error: "invalid Login credentials Try again",
+		});
 	}
+});
+const userLoginWithTokenCtrl = expressAsyncHandler(async (req, res) => {
+	console.log(req?.user);
+	res.status(200).json({
+		status: "success",
+		user: req?.user,
+	});
 });
 
 // '''''''''''''''''''''''''''''''''''''''''
@@ -132,7 +143,7 @@ const updateUserDetailsCtrl = expressAsyncHandler(async (req, res) => {
 const updatePasswordCtrl = expressAsyncHandler(async (req, res) => {
 	const { _id } = req?.user;
 	validateMongoDbUserId(_id);
-	console.log(req.body);
+
 	const { password } = req?.body;
 
 	const foundUser = await User.findById(_id);
@@ -148,6 +159,8 @@ const updatePasswordCtrl = expressAsyncHandler(async (req, res) => {
 // '''''''''''''''''''''''''''''''''''''''''''''
 const followingUserCtrl = expressAsyncHandler(async (req, res) => {
 	const loginUserId = req?.user.id;
+	console.log(loginUserId);
+
 	const userToFollowId = req?.body.userToFollowOrUnfollowId;
 
 	validateMongoDbUserId(userToFollowId);
@@ -182,7 +195,7 @@ const followingUserCtrl = expressAsyncHandler(async (req, res) => {
 
 	res.json({
 		message: `you have successfully follow ${userToFollow?.firstName} ${userToFollow?.lastName}`,
-		newUser: user,
+		user,
 	});
 });
 // '''''''''''''''''''''''''''''''''''''''''
@@ -214,9 +227,9 @@ const unFollowingUserCtrl = expressAsyncHandler(async (req, res) => {
 		}
 	);
 
-	res.json({
+	res.status(200).json({
 		message: `you have successfully unfollow ${userToUnFollow?.firstName} ${userToUnFollow?.lastName}`,
-		newUser: user,
+		user,
 	});
 });
 
@@ -392,6 +405,7 @@ const profilePhotoUploadCtrl = expressAsyncHandler(async (req, res) => {
 module.exports = {
 	userRegisterCtrl,
 	userLoginCtrl,
+	userLoginWithTokenCtrl,
 	fetchAllUserCtrl,
 	deleteUserCtrl,
 	fetchUserDetailsCtrl,

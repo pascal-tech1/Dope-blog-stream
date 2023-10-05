@@ -1,13 +1,13 @@
 const expressAsyncHandler = require("express-async-handler");
 const Post = require("../../model/post/Post");
-
+const seedrandom = require("seedrandom");
 const validateMongoDbUserId = require("../../utils/validateMongoDbUserId");
 const fs = require("fs");
 const handleCloudinaryUpload = require("../../config/cloundinary/cloudinaryUploadConfig");
 const User = require("../../model/user/User");
 const checkProfanity = require("../../utils/profanWords");
-const { query } = require("express");
-console.log("im here");
+const decodeToken = require("../../utils/DecodeLoginUser");
+
 // '''''''''''''''''''''''''''''''''''''''''
 //   Create Post conttoller
 // '''''''''''''''''''''''''''''''''''''''''''''
@@ -62,20 +62,23 @@ const createPostCtrl = expressAsyncHandler(async (req, res) => {
 // '''''''''''''''''''''''''''''''''''''''''''''
 
 const fetchAllPostsCtrl = expressAsyncHandler(async (req, res) => {
-	const page = parseInt(req?.query?.page) || 1; // Current page,
-
+	let page = parseInt(req?.query?.page) || 1; // Current page,ipco
+	// const seed = req?.query?.seed;
 	const postNumberPerPage = parseInt(req?.query?.postNumberPerPage) || 10; // Number of items per page
-	console.log(req?.query);
+
 	// Calculate the skip value to skip items on previous pages
-	const skip = (page - 1) * postNumberPerPage;
+	let skip = (page - 1) * postNumberPerPage;
 	try {
 		// Use MongoDB's find method with skip and limit
 
 		const posts = await Post.find({})
 			.skip(skip)
 			.limit(postNumberPerPage)
-			.populate("user"); // Use the query parameter
-
+			.populate({
+				path: "user",
+				select: "-password", // Exclude the "password" field
+			})
+			.select("-content"); // Use the query parameter
 		res.status(200).json(posts);
 	} catch (error) {
 		console.error("Error:", error);
@@ -87,6 +90,8 @@ const fetchAllPostsCtrl = expressAsyncHandler(async (req, res) => {
 //   fetch single post controller
 // '''''''''''''''''''''''''''''''''''''''''''''
 const fetchSinglePostsCtrl = expressAsyncHandler(async (req, res) => {
+	const userToken = req?.body?.userToken;
+
 	const { id } = req.params;
 	validateMongoDbUserId(id);
 	try {
@@ -94,14 +99,17 @@ const fetchSinglePostsCtrl = expressAsyncHandler(async (req, res) => {
 		// updating number of views of post
 		post.numViews++;
 		await post.save();
-		// or you can also do this
-		// await Post.findByIdAndUpdate(
-		// 	id,
-		// 	{
-		// 		$inc: { numViews: 1 },s
-		// 	},
-		// 	{ new: true }
-		// );
+
+		if (userToken) {
+			const loginUser = await decodeToken(userToken);
+			await User.findByIdAndUpdate(
+				loginUser._id,
+				{
+					$push: { postViewHistory: post._id },
+				},
+				{ new: true }
+			);
+		}
 		res.json(post);
 	} catch (error) {
 		res.json(error);
@@ -137,17 +145,22 @@ const updatePostCtrl = expressAsyncHandler(async (req, res) => {
 				"post updpate failed, account has been block for using profane words"
 			);
 		}
-
 		const imageLocalPath = `public/images/posts/${req?.file?.fileName}`;
-		uploadedImage = await handleCloudinaryUpload(
-			imageLocalPath,
-			`mern-blog-app/${user?.email}/postImage`
-		);
+
+		if (req?.file) {
+			uploadedImage = await handleCloudinaryUpload(
+				imageLocalPath,
+				`mern-blog-app/${user?.email}/postImage`
+			);
+		}
+		let imageUrl;
+		req?.file ? (imageUrl = uploadedImage?.url) : (imageUrl = post.image);
+
 		post = await Post.findByIdAndUpdate(
 			postId,
 			{
 				...req.body,
-				image: uploadedImage?.url,
+				image: imageUrl,
 			},
 			{
 				new: true,
@@ -155,7 +168,7 @@ const updatePostCtrl = expressAsyncHandler(async (req, res) => {
 		).populate("user");
 		res.json(post);
 	} catch (error) {
-		console.log(error.message);
+		console.log(error);
 		res.status(500).json({ message: error.message });
 	}
 });

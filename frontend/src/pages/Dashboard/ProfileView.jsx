@@ -1,11 +1,15 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import { AdditionalUserProfile, UserBio, UserProfile } from "../../components";
+import {
+	AdditionalUserProfile,
+	UserBio,
+	UserProfile,
+} from "../../components";
 
 import { MdEdit } from "react-icons/md";
 
 const ProfileView = () => {
-	const { user } = useSelector((store) => store?.userSlice?.user);
+	const user = useSelector((store) => store?.userSlice?.user);
 	const category = ["design", "developtment", "ux", "marketing"];
 
 	return (
@@ -27,7 +31,7 @@ const ProfileView = () => {
 					<UserProfile />
 				</div>
 				{/* summary */}
-			<UserBio/>
+				<UserBio />
 			</div>
 
 			{/* profile Additional details */}
@@ -44,9 +48,12 @@ const ProfileView = () => {
 					</button>
 				</div>
 				<div className="flex justify-between py-6 flex-wrap">
-					{category.map((category) => {
+					{category.map((category, index) => {
 						return (
-							<button className=" text-sm delay-75 mt-2 mx-2 flex f bg-gray-100 hover:bg-gray-200 rounded-xl  py-[0.35rem] px-4">
+							<button
+								key={index}
+								className=" text-sm delay-75 mt-2 mx-2 flex f bg-gray-100 hover:bg-gray-200 rounded-xl  py-[0.35rem] px-4"
+							>
 								{category}
 							</button>
 						);

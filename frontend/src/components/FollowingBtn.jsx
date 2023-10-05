@@ -10,19 +10,26 @@ import {
 import Spinner from "./spinner";
 import { LoadingSpinner } from "../utils/Spinner";
 
-export const FollowingBtn = ({ userToFollowOrUnfollow }) => {
-	const user = useSelector((store) => store?.userSlice?.user?.user);
+export const FollowingBtn = ({ userToFollowOrUnfollow, className }) => {
+	const navigate = useNavigate();
 	const dispatch = useDispatch();
+
+	const user = useSelector((store) => store?.userSlice?.user);
+	console.log(userToFollowOrUnfollow?._id);
 	const handleFollowUser = () => {
+		if (!user) {
+			navigate("/login");
+			return;
+		}
 		dispatch(followOrUnfollowUser(userToFollowOrUnfollow?._id));
 	};
+	className = className
+		? className
+		: ` border self-center hover:bg-blue-800 text-center py-[0.2rem] px-2 bg-blue-900 text-white hover:text-white rounded-lg transition-all delay-75`;
 
 	return (
-		<button
-			onClick={handleFollowUser}
-			className=" border self-center hover:bg-blue-800 text-center py-[0.1rem] bg-blue-900 text-white hover:text-white rounded-md transition-all delay-75  px-1"
-		>
-			{user.following.includes(userToFollowOrUnfollow?._id) ? (
+		<button onClick={handleFollowUser} className={className}>
+			{user?.following?.includes(userToFollowOrUnfollow?._id) ? (
 				<h3>unfollow</h3>
 			) : (
 				<h3>follow</h3>

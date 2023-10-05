@@ -10,7 +10,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { searchPost, setFirstSearch } from "../redux/post/allPostSlice.js";
 
 const NavBar = () => {
-	const user = useSelector((store) => store?.userSlice);
+	const user = useSelector((store) => store?.userSlice.user);
 	const [showLogOut, setShowLogOut] = useState(true);
 	const dispatch = useDispatch();
 	const handleLogOut = () => {
@@ -19,14 +19,13 @@ const NavBar = () => {
 	const formSchema = Yup.object().shape({
 		search: Yup.string().required("Search is Required."),
 	});
-
+	console.log("i have rendered");
 	const formik = useFormik({
 		initialValues: {
 			search: "",
 		},
 
 		onSubmit: (values) => {
-	
 			dispatch(setFirstSearch(values.search));
 			dispatch(searchPost());
 		},
@@ -56,7 +55,7 @@ const NavBar = () => {
 						onChange={formik.handleChange("search")}
 					/>
 				</form>
-				{user?.user?.token ? (
+				{user ? (
 					<div className=" flex place-content-between gap-1 md:gap-4 place-items-center">
 						<IoMdNotificationsOutline className="text-2xl md:text-3xl antialiased text-blue-400" />
 						<button
@@ -67,7 +66,7 @@ const NavBar = () => {
 								<div className="border border-blue-400 rounded-full py-1 px-1 ">
 									<img
 										className=" w-6 h-6 md:w-8 md:h-8 rounded-full"
-										src="../../public/person.png"
+										src={user?.profilePhoto}
 										alt=""
 									/>
 								</div>

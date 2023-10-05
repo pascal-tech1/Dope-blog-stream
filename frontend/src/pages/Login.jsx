@@ -1,12 +1,17 @@
 import React from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { loginUser } from "../redux/user/userSlice";
 import { LoadingSpinner } from "../utils/Spinner";
 
 const Login = () => {
+	const dispatch = useDispatch();
+	const navigate = useNavigate();
+
+	const { user, isLoading } = useSelector((store) => store.userSlice);
+
 	const formSchema = Yup.object().shape({
 		email: Yup.string().email().required("Email is Required."),
 		password: Yup.string()
@@ -26,12 +31,12 @@ const Login = () => {
 				password: values.password,
 			};
 			dispatch(loginUser(user));
+			if (user) {
+				navigate("/");
+			}
 		},
 		validationSchema: formSchema,
 	});
-	const dispatch = useDispatch();
-	const isLoading = useSelector((store) => store.userSlice.isLoading);
-	
 
 	return (
 		<div className="h-screen flex justify-center md:grid place-items-center place-content-center px-3 grid-cols-2 md:p-8  font-helvetica font-light">
@@ -51,7 +56,7 @@ const Login = () => {
 			{/* form starts here */}
 			<form
 				onSubmit={formik.handleSubmit}
-				className="flex flex-col w-full  items-center px-8 py-6 lg:px-20 shadow-md"
+				className="flex flex-col w-full  items-center px-8 py-6 lg:px-20"
 			>
 				<div className=" items-center flex flex-col  mb-6">
 					<p className=" text-lg font-medium mb-3">Welcome Back</p>

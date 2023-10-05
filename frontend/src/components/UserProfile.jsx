@@ -1,21 +1,17 @@
 import React from "react";
 import { useState } from "react";
-import {useSelector, useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { updateUser } from "../redux/user/userSlice";
 
-import {
-	MdEdit,
-	
-} from "react-icons/md";
-
+import { MdEdit } from "react-icons/md";
 
 const UserProfile = () => {
 	const [isUserProfileClicked, setIsUserProfileClicked] = useState(false);
-	const { user } = useSelector((store) => store?.userSlice?.user);
- const dispatch = useDispatch()
-    // yup Schema
+	const user = useSelector((store) => store?.userSlice?.user);
+	const dispatch = useDispatch();
+	// yup Schema
 	const formSchema = Yup.object().shape({
 		fullName: Yup.string()
 			.required("First Name is Required.")

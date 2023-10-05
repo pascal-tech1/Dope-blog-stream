@@ -6,10 +6,12 @@ import { updateNumbOfPostView, updateSinglePost } from "./allPostSlice";
 export const fetchSinglePost = createAsyncThunk(
 	"fetchSingle/Post",
 	async (id, { getState, rejectWithValue, dispatch }) => {
-		const allPost = getState().allPostSlice.allPost;
+		const userToken = getState().userSlice?.token;
 
 		try {
-			const resp = await customFetch(`/posts/${id}`);
+			const resp = await customFetch.put(`/posts/${id}`, {
+				userToken,
+			});
 			dispatch(
 				updateNumbOfPostView({ id: id, numViews: resp.data.numViews })
 			);
@@ -31,7 +33,7 @@ export const createPost = createAsyncThunk(
 			const resp = await customFetch.post("/posts", post, {
 				headers: {
 					"Content-Type": "multipart/form-data",
-					authorization: `Bearer ${getState().userSlice?.user?.token}`,
+					authorization: `Bearer ${getState().userSlice?.token}`,
 				},
 			});
 
@@ -47,13 +49,13 @@ export const createPost = createAsyncThunk(
 export const updatePost = createAsyncThunk(
 	"update/post",
 	async (post, { getState, rejectWithValue, dispatch }) => {
-		const postId = getState().singlePostSlice?.post?._id;
+		const postId = getState().singlePostSlice.post?._id;
 
 		try {
 			const resp = await customFetch.put(`/posts/update/${postId}`, post, {
 				headers: {
 					"Content-Type": "multipart/form-data",
-					authorization: `Bearer ${getState().userSlice?.user?.token}`,
+					authorization: `Bearer ${getState().userSlice?.token}`,
 				},
 			});
 
@@ -71,6 +73,7 @@ const initialState = {
 	post: null,
 	status: "idle",
 	isEditing: false,
+	editingPost: null,
 };
 const singlePostSlice = createSlice({
 	name: "singlePostSlice",
@@ -134,10 +137,9 @@ const singlePostSlice = createSlice({
 			state.isEditing = false;
 			state.post = action.payload;
 			state.isLoading = false;
-
 			state.serverErr = undefined;
 			state.appErr = undefined;
-			state.post = null;
+			toast.success("Post Updated Successfully");
 		},
 		[updatePost.rejected]: (state, action) => {
 			(state.isLoading = false),

@@ -15,12 +15,12 @@ const AllPost = () => {
 	const { allPost, isLoading, searchQuery, hasMore } = useSelector(
 		(store) => store.allPostSlice
 	);
-	const user = useSelector((store) => store?.userSlice?.user?.user);
+	const user = useSelector((store) => store?.userSlice?.user);
 
 	useEffect(() => {
-		allPost && dispatch(fetchAllPost());
+		allPost.length == 0 && dispatch(fetchAllPost());
 	}, []);
-
+	console.log(allPost.length);
 	const observer = useRef();
 	const lastBookElementRef = useCallback(
 		(node) => {
@@ -40,7 +40,7 @@ const AllPost = () => {
 		},
 		[isLoading, hasMore]
 	);
-
+	console.log(allPost);
 	return (
 		<>
 			{allPost.map((post, index) => {

@@ -7,7 +7,7 @@ const jwt = require("jsonwebtoken");
 // '''''''''''''''''''''''''''''''''''''''''''''
 
 const authMiddleWare = expressAsyncHandler(async (req, res, next) => {
-	console.log('im here')
+	console.log("im here");
 	// checking if the user entered header for authorization
 	const enteredHeader = req?.headers.authorization;
 
@@ -29,7 +29,11 @@ const authMiddleWare = expressAsyncHandler(async (req, res, next) => {
 
 		next();
 	} catch (error) {
-		res.json({ message: error.message });
+		console.log(error);
+		res.status(500).json({
+			status: "failed",
+			error: "invalid token or Expired login Again",
+		});
 	}
 });
 
