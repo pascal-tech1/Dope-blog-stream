@@ -1,7 +1,8 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import customFetch from "../../utils/axios";
 import { toast } from "react-toastify";
-import { updateNumbOfPostView, updateSinglePost } from "./allPostSlice";
+import { updateNumbPostViewInAllPostSlice, updateSinglePost } from "./allPostSlice";
+import { updateNumbPostViewInMorePostSlice } from "./morePostSlice";
 
 export const fetchSinglePost = createAsyncThunk(
 	"fetchSingle/Post",
@@ -13,9 +14,40 @@ export const fetchSinglePost = createAsyncThunk(
 				userToken,
 			});
 			dispatch(
-				updateNumbOfPostView({ id: id, numViews: resp.data.numViews })
+				updateNumbPostViewInAllPostSlice({
+					id: id,
+					numViews: resp.data.numViews,
+				})
+			);
+			dispatch(
+				updateNumbPostViewInMorePostSlice({
+					id: id,
+					numViews: resp.data.numViews,
+				})
 			);
 
+			return resp.data;
+		} catch (error) {
+			console.log(error);
+			if (!error?.response) {
+				throw new Error();
+			}
+			return rejectWithValue(error?.response?.data);
+		}
+	}
+);
+export const fetchPostToBeEdited = createAsyncThunk(
+	"fetchPostToBeEdited/Post",
+	async (id, { getState, rejectWithValue, dispatch }) => {
+		const userToken = getState().userSlice?.token;
+
+		try {
+			const resp = await customFetch.put(`/posts/${id}`, {
+				userToken,
+			});
+			dispatch(
+				updateNumbOfPostView({ id: id, numViews: resp.data.numViews })
+			);
 			return resp.data;
 		} catch (error) {
 			if (!error?.response) {
@@ -74,15 +106,20 @@ const initialState = {
 	status: "idle",
 	isEditing: false,
 	editingPost: null,
+	postToBeEdited: [],
+	postEditingStatus: "idle",
 };
 const singlePostSlice = createSlice({
 	name: "singlePostSlice",
 	initialState,
 
 	reducers: {
-		updatePostLikesAndDisLikes: (state, { payload }) => {
-			state.post.likes = payload.likes;
-			state.post.disLikes = payload.disLikes;
+		togleSinglePostLikesAndDisLikes: (state, { payload }) => {
+			const { postId, likes, disLikes } = payload;
+			if (state.post?._id === postId) {
+				state.post.likes = likes;
+				state.post.disLikes = disLikes;
+			}
 		},
 		setIsEditingPost: (state, { payload }) => {
 			state.isEditing = payload;
@@ -110,6 +147,17 @@ const singlePostSlice = createSlice({
 			state.appErr
 				? toast.error(state.appErr)
 				: toast.error(state.serverErr);
+		},
+		[fetchPostToBeEdited.pending]: (state, action) => {
+			state.postEditingStatus = "loading";
+		},
+		[fetchPostToBeEdited.fulfilled]: (state, action) => {
+			state.postEditingStatus = "success";
+			state.postToBeEdited = action.payload;
+		},
+		[fetchPostToBeEdited.rejected]: (state, action) => {
+			state.postEditingStatus = "success";
+			toast.error("failed to fetch Post");
 		},
 		// create post
 		[createPost.pending]: (state, action) => {
@@ -152,7 +200,7 @@ const singlePostSlice = createSlice({
 	},
 });
 export const {
-	updatePostLikesAndDisLikes,
+	togleSinglePostLikesAndDisLikes,
 	setIsEditingPost,
 	setSinglePostStatus,
 } = singlePostSlice.actions;

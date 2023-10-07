@@ -8,6 +8,7 @@ const {
 	likePostCtrl,
 	disLikingPostCtrl,
 	searchPostCtrl,
+	fetchUserPostCtrl,
 } = require("../../controllers/posts/postsCtrl");
 const authMiddleWare = require("../../middlewares/authentication/authMiddleWare");
 const {
@@ -33,6 +34,7 @@ postsRoutes.put(
 	updatePostCtrl
 );
 postsRoutes.get("/search", searchPostCtrl);
+postsRoutes.put("/user-post", fetchUserPostCtrl);
 postsRoutes.put("/like", authMiddleWare, likePostCtrl);
 postsRoutes.put("/dislike", authMiddleWare, disLikingPostCtrl);
 postsRoutes.get("/", fetchAllPostsCtrl);

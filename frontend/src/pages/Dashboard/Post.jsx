@@ -1,14 +1,9 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useState } from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { modules } from "../../utils/quil";
 import { useDispatch, useSelector } from "react-redux";
-import {
-	createPost,
-	setIsEditingPost,
-	setSinglePostStatus,
-	updatePost,
-} from "../../redux/post/singlePostSlice";
+import { createPost, updatePost } from "../../redux/post/singlePostSlice";
 import { LoadingSpinner } from "../../utils/Spinner";
 import { useFormik } from "formik";
 
@@ -56,7 +51,7 @@ const Post = () => {
 			isEditing
 				? dispatch(updatePost(values))
 				: dispatch(createPost(values));
-				formik.resetForm();
+			formik.resetForm();
 		},
 		validationSchema: formSchema,
 	});

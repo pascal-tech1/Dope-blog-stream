@@ -1,21 +1,21 @@
 import React from "react";
 import { AiOutlineDislike, AiOutlineLike } from "react-icons/ai";
-import { likeOrDislikePost } from "../redux/post/allPostSlice";
+
 import { useDispatch } from "react-redux";
 import { formatDate } from "../utils/dataFormatter";
+import { likeOrDislikePost } from "../redux/post/generalPostSlice";
 
 const CategoryandLikes = ({ post }) => {
 	const dispatch = useDispatch();
 	const handleLikes = (id) => {
-		console.log(id);
 		dispatch(likeOrDislikePost({ choice: "like", postId: id }));
 	};
 	const handleDislikes = (id) => {
 		dispatch(likeOrDislikePost({ choice: "disLike", postId: id }));
 	};
 	return (
-		<div className=" flex gap-2 items-center mt-3 font-light flex-wrap justify-start  ">
-			<h3 className="">{formatDate(post?.createdAt)}</h3>
+		<div className=" text-sm flex gap-2 items-center mt-3 font-light flex-wrap justify-start  ">
+			<h3 className=" ">{formatDate(post?.createdAt)}</h3>
 			<span className="flex gap-1 items-center">
 				<button
 					onClick={() => handleLikes(post?._id)}
@@ -36,7 +36,7 @@ const CategoryandLikes = ({ post }) => {
 			</span>
 
 			<h3 className="flex gap-1 items-center flex-nowrap">
-				<span>{post?.numViews}</span>
+				<span className="  ">{post?.numViews}</span>
 				{post?.numViews > 1 ? "views" : "view"}
 			</h3>
 

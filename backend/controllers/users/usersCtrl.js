@@ -41,7 +41,9 @@ const userRegisterCtrl = expressAsyncHandler(async (req, res) => {
 const userLoginCtrl = expressAsyncHandler(async (req, res) => {
 	// finding if user exist in mongoDb database using the mongodb findOne method
 
-	const userFound = await User.findOne({ email: req?.body?.email });
+	const userFound = await User.findOne({
+		email: req?.body?.email,
+	}).populate("Posts");
 
 	if (
 		userFound &&

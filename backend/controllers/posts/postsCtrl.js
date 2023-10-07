@@ -76,11 +76,44 @@ const fetchAllPostsCtrl = expressAsyncHandler(async (req, res) => {
 			.limit(postNumberPerPage)
 			.populate({
 				path: "user",
-				select: "-password", // Exclude the "password" field
+				select: ["_id", "firstName", "lastName", "profilePhoto"], // Exclude the "password" field
 			})
-			.select("-content"); // Use the query parameter
+			.select("-content"); // Use the query
+	
+		console.log(posts);
+		console.log("skip", skip);
 		res.status(200).json(posts);
 	} catch (error) {
+		console.log(error);
+		res.status(500).json({ error: "Internal Server Error" });
+	}
+});
+
+// '''''''''''''''''''''''''''''''''''''''''
+//   fetch single post controller
+// '''''''''''''''''''''''''''''''''''''''''''''
+
+const fetchUserPostCtrl = expressAsyncHandler(async (req, res) => {
+	const { userId, postId } = req.body;
+
+	const postNumberPerPage = parseInt(req?.query?.postNumberPerPage) || 10; // Number of items per page
+
+	try {
+		const user = await User.findById(userId).populate({
+			path: "Posts",
+			select: "-content",
+		});
+
+		const posts = await user.get("Posts");
+
+		const randomPosts = posts
+			.filter((post) => post._id !== postId)
+			.sort(() => Math.random() - 0.5)
+			.slice(0, postNumberPerPage);
+		console.log(randomPosts);
+		res.json(randomPosts);
+	} catch (error) {
+		console.log(error);
 		res.status(500).json({ error: "Internal Server Error" });
 	}
 });
@@ -306,6 +339,7 @@ const searchPostCtrl = expressAsyncHandler(async (req, res) => {
 module.exports = {
 	createPostCtrl,
 	fetchAllPostsCtrl,
+	fetchUserPostCtrl,
 	fetchSinglePostsCtrl,
 	updatePostCtrl,
 	deletePostCtrl,
