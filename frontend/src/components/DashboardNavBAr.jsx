@@ -3,10 +3,16 @@ import { FiMenu } from "react-icons/fi";
 import { IoMdNotificationsOutline } from "react-icons/io";
 import { BsPencilSquare } from "react-icons/bs";
 import { BiMessageRoundedDots } from "react-icons/bi";
+import { Link } from "react-router-dom";
+import {
+	setIsEditingPost,
+	setPostToBeEdited,
+} from "../redux/post/singlePostSlice";
+import { useDispatch } from "react-redux";
 
 const DashboardNavBAr = ({ toggleSideMenu }) => {
 	const [isSideBarMenuopen, setIsSideBarmenuOpen] = useState(true);
-
+	const dispatch = useDispatch();
 	const handleOnclick = (e) => {
 		e.preventDefault();
 		setIsSideBarmenuOpen(!isSideBarMenuopen);
@@ -32,10 +38,19 @@ const DashboardNavBAr = ({ toggleSideMenu }) => {
 				<h3 className=" hidden md:flex text-xs border-l pl-4  pr-1">
 					Hello, Onyeka
 				</h3>
-				<button className=" flex hover:border-gray-300 place-items-center gap-[0.3rem] border border-blue-300 px-1 py-1 md:px-2 rounded-md hover:bg-gray-100 transition-all">
+				<Link
+					onClick={(e) => {
+						console.log(e);
+						e.preventDefault();
+						dispatch(setPostToBeEdited(null));
+						dispatch(setIsEditingPost(false));
+					}}
+					to={"/dashboard/post"}
+					className=" flex hover:border-gray-300 place-items-center gap-[0.3rem] border border-blue-300 px-1 py-1 md:px-2 rounded-md hover:bg-gray-100 transition-all"
+				>
 					<BsPencilSquare className=" text-inherit" />
-					<h3 className="hidden md:flex text-xs">write</h3>
-				</button>
+					<h3 className="hidden md:flex text-xs">new</h3>
+				</Link>
 				<img
 					src="../../public/person.png"
 					alt=""

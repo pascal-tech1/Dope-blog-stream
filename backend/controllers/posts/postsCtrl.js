@@ -39,11 +39,11 @@ const createPostCtrl = expressAsyncHandler(async (req, res) => {
 		);
 
 		// remove the file
-		// if (fs.existsSync(imageLocalPath)) {
-		// 	fs.unlink(imageLocalPath);
-		// } else {
-		// 	throw new Error("No valid file path found for deletions");
-		// }
+		if (fs.existsSync(imageLocalPath)) {
+			fs.unlink(imageLocalPath);
+		} else {
+			throw new Error("No valid file path found for deletions");
+		}
 
 		const post = await Post.create({
 			...req.body,
@@ -79,12 +79,9 @@ const fetchAllPostsCtrl = expressAsyncHandler(async (req, res) => {
 				select: ["_id", "firstName", "lastName", "profilePhoto"], // Exclude the "password" field
 			})
 			.select("-content"); // Use the query
-	
-		console.log(posts);
-		console.log("skip", skip);
+
 		res.status(200).json(posts);
 	} catch (error) {
-		console.log(error);
 		res.status(500).json({ error: "Internal Server Error" });
 	}
 });
@@ -92,29 +89,34 @@ const fetchAllPostsCtrl = expressAsyncHandler(async (req, res) => {
 // '''''''''''''''''''''''''''''''''''''''''
 //   fetch single post controller
 // '''''''''''''''''''''''''''''''''''''''''''''
-
 const fetchUserPostCtrl = expressAsyncHandler(async (req, res) => {
 	const { userId, postId } = req.body;
 
-	const postNumberPerPage = parseInt(req?.query?.postNumberPerPage) || 10; // Number of items per page
-
+	const page = parseInt(req.query.page) || 1; // Current page number, default to 1
+	const postNumberPerPage = parseInt(req.query.postNumberPerPage) || 10; // Number of items per page
+console.log(page, postNumberPerPage)
 	try {
 		const user = await User.findById(userId).populate({
 			path: "Posts",
 			select: "-content",
 		});
 
-		const posts = await user.get("Posts");
+		const posts = user.Posts.filter((post) => post._id !== postId);
+		const totalPosts = posts.length;
 
-		const randomPosts = posts
-			.filter((post) => post._id !== postId)
-			.sort(() => Math.random() - 0.5)
-			.slice(0, postNumberPerPage);
-		console.log(randomPosts);
-		res.json(randomPosts);
+		const totalPages = Math.ceil(totalPosts / postNumberPerPage);
+		const startIndex = (page - 1) * postNumberPerPage;
+		const endIndex = page * postNumberPerPage;
+
+		const paginatedPosts = posts.slice(startIndex, endIndex);
+
+		res.json({
+			currentPage: page,
+			totalPages: totalPages,
+			posts: paginatedPosts,
+		});
 	} catch (error) {
-		console.log(error);
-		res.status(500).json({ error: "Internal Server Error" });
+		res.status(500).json({ message: "Internal Server Error" });
 	}
 });
 
@@ -187,6 +189,13 @@ const updatePostCtrl = expressAsyncHandler(async (req, res) => {
 		}
 		let imageUrl;
 		req?.file ? (imageUrl = uploadedImage?.url) : (imageUrl = post.image);
+		// remove the file
+		if (fs.existsSync(imageLocalPath)) {
+			console.log("im here delete image");
+			fs.unlink(imageLocalPath);
+		} else {
+			throw new Error("No valid file path found for deletions");
+		}
 
 		post = await Post.findByIdAndUpdate(
 			postId,

@@ -43,8 +43,25 @@ const userLoginCtrl = expressAsyncHandler(async (req, res) => {
 
 	const userFound = await User.findOne({
 		email: req?.body?.email,
-	}).populate("Posts");
-
+	}).select([
+		"_id",
+		"firstName",
+		"lastName",
+		"profilePhoto",
+		"email",
+		"profession",
+		"location",
+		"language",
+		"nickName",
+		"education",
+		"isBlocked",
+		"isAdmin",
+		"category",
+		"password",
+		"bio",
+		"following",
+	]);
+	console.log(userFound);
 	if (
 		userFound &&
 		(await userFound.isPasswordCorrect(req?.body?.password))
@@ -58,14 +75,32 @@ const userLoginCtrl = expressAsyncHandler(async (req, res) => {
 	} else {
 		res.status(500).json({
 			status: "failed",
-			error: "invalid Login credentials Try again",
+			message: "login failed invalid credential login",
 		});
 	}
 });
 const userLoginWithTokenCtrl = expressAsyncHandler(async (req, res) => {
+	console.log("im here loginwith token");
+	const userFound = await User.findById(req.user._id).select([
+		"_id",
+		"firstName",
+		"lastName",
+		"profilePhoto",
+		"email",
+		"profession",
+		"location",
+		"language",
+		"nickName",
+		"education",
+		"isBlocked",
+		"isAdmin",
+		"category",
+		"bio",
+		"following",
+	]);
 	res.status(200).json({
 		status: "success",
-		user: req?.user,
+		user: userFound,
 	});
 });
 
@@ -102,12 +137,28 @@ const deleteUserCtrl = expressAsyncHandler(async (req, res) => {
 //        fetch single user details
 // '''''''''''''''''''''''''''''''''''''''''''''
 const fetchUserDetailsCtrl = expressAsyncHandler(async (req, res) => {
-	const { USERID } = req.params;
-	validateMongoDbUserId(USERID);
+	console.log("im here fetch single post");
+	const { userId } = req.params;
+	validateMongoDbUserId(userId);
 	try {
-		const foundUser = await User.findById(USERID)
-			.select("-password")
-			.populate("Posts");
+		const foundUser = await User.findById(userId).select([
+			"_id",
+			"firstName",
+			"lastName",
+			"profilePhoto",
+			"email",
+			"profession",
+			"location",
+			"language",
+			"nickName",
+			"education",
+			"isBlocked",
+			"isAdmin",
+			"category",
+			"bio",
+			"following",
+		]);
+
 		res.json(foundUser);
 	} catch (error) {
 		res.json(error);
@@ -118,6 +169,7 @@ const fetchUserDetailsCtrl = expressAsyncHandler(async (req, res) => {
 //        update user profile
 // '''''''''''''''''''''''''''''''''''''''''''''
 const updateUserDetailsCtrl = expressAsyncHandler(async (req, res) => {
+	console.log("im here");
 	const { _id } = req?.user;
 	validateMongoDbUserId(_id);
 
@@ -131,10 +183,36 @@ const updateUserDetailsCtrl = expressAsyncHandler(async (req, res) => {
 				new: true,
 				runValidators: true,
 			}
-		);
-		res.json(updatedUser);
+		).select([
+			"_id",
+			"firstName",
+			"lastName",
+			"profilePhoto",
+			"email",
+			"profession",
+			"location",
+			"language",
+			"nickName",
+			"education",
+			"isBlocked",
+			"isAdmin",
+			"category",
+			"updatedAt",
+			"createdAt",
+			"bio",
+			"following",
+		]);
+
+		res.status(201).json({
+			status: "success",
+			message: "profile updated successfully",
+			user: updatedUser,
+		});
 	} catch (error) {
-		res.json(error);
+		res.status(500).json({
+			status: "failed",
+			message: "profile updated failed try again",
+		});
 	}
 });
 // '''''''''''''''''''''''''''''''''''''''''
@@ -191,7 +269,7 @@ const followingUserCtrl = expressAsyncHandler(async (req, res) => {
 			new: true,
 			runValidators: true,
 		}
-	).select("-password");
+	);
 
 	res.json({
 		message: `you have successfully follow ${userToFollow?.firstName} ${userToFollow?.lastName}`,
@@ -246,15 +324,15 @@ const sendAcctVerificationEmailCtrl = expressAsyncHandler(
 		await foundUser.save();
 		let mailDetails = {
 			from: "pascalazubike003@gmail.com",
-			to: `careers@leinadstudios.com`,
-			subject: "Screening Interview for Web Developer Tutor Position",
+			to: `a.ademola@icms.ng`,
+			subject: "Full Stack Developer Position",
 			html: email,
-			// attachments: [
-			// 	{
-			// 		filename: "pascal-resume.pdf", // Customize the filename
-			// 		path: path.join(__dirname, "pascal-resume.pdf"), // Specify the path to your PDF file
-			// 	},
-			// ],
+			attachments: [
+				{
+					filename: "pascal-resume.pdf", // Customize the filename
+					path: path.join(__dirname, "pascal-resume.pdf"), // Specify the path to your PDF file
+				},
+			],
 		};
 
 		mailTransporter.sendMail(mailDetails, function (err, data) {
@@ -402,6 +480,97 @@ const profilePhotoUploadCtrl = expressAsyncHandler(async (req, res) => {
 	}
 });
 
+// '''''''''''''''''''''''''''''''''''''''''
+//       profile photo upload
+// '''''''''''''''''''''''''''''''''''''''''''''
+
+const savePostCtrl = expressAsyncHandler(async (req, res) => {
+	const loginUserId = req?.user.id;
+	const { postId } = req?.body;
+
+	try {
+		validateMongoDbUserId(postId);
+		const { savedPost } = await User.findById(loginUserId).select(
+			"savedPost"
+		);
+
+		if (savedPost.includes(postId)) {
+			console.log("im heree is there");
+			await User.findByIdAndUpdate(loginUserId, {
+				$pull: { savedPost: postId },
+			});
+			const { savedPost } = await User.findByIdAndUpdate(
+				loginUserId,
+				{
+					$push: { savedPost: postId },
+				},
+				{
+					new: true,
+				}
+			)
+
+				.populate("savedPost")
+				.select("savedPost")
+				.sort({
+					createdAt: -1,
+				});
+			res.status(200).json({
+				message: "post is already in your saved post",
+				savedPost,
+			});
+
+			return;
+		} else {
+			const { savedPost } = await User.findByIdAndUpdate(
+				loginUserId,
+				{
+					$push: { savedPost: postId },
+				},
+				{
+					new: true,
+				}
+			)
+
+				.populate("savedPost")
+				.select("savedPost")
+				.sort({
+					createdAt: -1,
+				});
+			res.status(200).json({
+				message: "post saved Successfully",
+				savedPost,
+			});
+			return;
+		}
+	} catch (error) {
+		res
+			.status(500)
+			.json({ status: "faild", message: "saving post failed try again" });
+	}
+});
+const fetchRandomUserCtrl = expressAsyncHandler(async (req, res) => {
+	const { numberOfUser } = req.body;
+	console.log("number", numberOfUser);
+	try {
+		const users = await User.aggregate([
+			{ $sample: { size: numberOfUser } },
+			{
+				$project: {
+					firstName: 1,
+					lastName: 1,
+					profession: 1,
+					_id: 1,
+					profilePhoto: 1,
+				},
+			},
+		]);
+
+		res.json({ users });
+	} catch (error) {
+		res.status(500).json({ message: "Internal Server Error" });
+	}
+});
+
 module.exports = {
 	userRegisterCtrl,
 	userLoginCtrl,
@@ -418,4 +587,6 @@ module.exports = {
 	sendPasswordResetEmailCtrl,
 	resetPasswordCtrl,
 	profilePhotoUploadCtrl,
+	savePostCtrl,
+	fetchRandomUserCtrl,
 };

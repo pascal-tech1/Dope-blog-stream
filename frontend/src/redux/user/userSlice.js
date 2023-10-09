@@ -101,6 +101,31 @@ export const followOrUnfollowUser = createAsyncThunk(
 					},
 				}
 			);
+			console.log(resp.data);
+			return resp.data;
+		} catch (error) {
+			console.log(error);
+			if (!error.response) {
+				throw new Error(error);
+			}
+			return rejectWithValue(error?.response?.data);
+		}
+	}
+);
+
+export const savePost = createAsyncThunk(
+	"save/Post",
+	async (postId, { getState, rejectWithValue, dispatch }) => {
+		try {
+			const resp = await customFetch.post(
+				`users/save-post`,
+				{ postId },
+				{
+					headers: {
+						authorization: `Bearer ${getState().userSlice?.token}`,
+					},
+				}
+			);
 
 			return resp.data;
 		} catch (error) {
@@ -111,9 +136,29 @@ export const followOrUnfollowUser = createAsyncThunk(
 		}
 	}
 );
+export const fetchRandomUser = createAsyncThunk(
+	"fetch/randomUsers",
+	async (numberOfUser, { rejectWithValue }) => {
+		try {
+			const resp = await customFetch.post("/users/random-users", {
+				numberOfUser,
+			});
+			console.log(resp.data)
+			return resp.data;
+		} catch (error) {
+			
+			if (!error.response) {
+				throw new Error();
+			}
+			return rejectWithValue(error?.response?.data);
+		}
+	}
+);
+
 const initialState = {
 	user: null,
 	token: getUserFromLocalStorage(),
+	randomUsers: [],
 };
 const userSlice = createSlice({
 	name: "userSlice",
@@ -132,23 +177,15 @@ const userSlice = createSlice({
 			state.isLoading = true;
 		},
 		[loginUser.fulfilled]: (state, { payload }) => {
-			console.log("im here");
-			console.log(payload);
 			state.isLoading = false;
 			state.user = payload.user;
 			state.status = payload.status;
 			addUserToLocalStorage(payload.token);
-			state.appErr = undefined;
-			state.serverErr = undefined;
-			toast.success("login successfull");
+			toast.success(payload.message);
 		},
-		[loginUser.rejected]: (state, action) => {
+		[loginUser.rejected]: (state, { payload }) => {
 			state.isLoading = false;
-
-			state.status = action.payload.status;
-			state.appErr = action?.payload?.error;
-			state.serverErr = action?.error?.message;
-			toast(state.appErr);
+			toast.error(payload.message);
 		},
 		[loginUserWithToken.pending]: (state) => {
 			state.isLoading = true;
@@ -171,7 +208,7 @@ const userSlice = createSlice({
 		},
 		[RegisterUser.fulfilled]: (state, { payload }) => {
 			state.isLoading = false;
-			console.log(payload);
+
 			addUserToLocalStorage(payload);
 			state.appErr = undefined;
 			state.serverErr = undefined;
@@ -191,13 +228,11 @@ const userSlice = createSlice({
 			state.appErr = undefined;
 			state.serverErr = undefined;
 			state.user = payload.user;
-			toast("profile updated successfully");
+			toast.success(payload.message);
 		},
-		[updateUser.rejected]: (state, action) => {
+		[updateUser.rejected]: (state, { payload }) => {
 			state.isLoading = false;
-			state.appErr = action?.payload?.message;
-			state.serverErr = action?.error?.message;
-			state?.appErr ? toast(state?.appErr) : toast(state?.serverErr);
+			toast.error(payload.message);
 		},
 		[followOrUnfollowUser.pending]: (state) => {
 			state.isLoading = true;
@@ -216,6 +251,35 @@ const userSlice = createSlice({
 			state?.appErr
 				? toast.warn(state?.appErr)
 				: toast.error(state?.serverErr);
+		},
+		[savePost.pending]: (state) => {
+			state.isLoading = true;
+		},
+		[savePost.fulfilled]: (state, { payload }) => {
+			state.isLoading = false;
+			state.user.savedPost = payload.savedPost;
+			toast.success(payload?.message);
+		},
+		[savePost.rejected]: (state, action) => {
+			state.isLoading = false;
+
+			state.appErr = action?.payload?.message;
+			state.serverErr = action?.error?.message;
+			toast.error(action?.payload?.message);
+		},
+		[fetchRandomUser.pending]: (state) => {
+			state.isLoading = true;
+		},
+		[fetchRandomUser.fulfilled]: (state, { payload }) => {
+			state.isLoading = false;
+			state.randomUsers = payload.users;
+			toast.success(payload?.message);
+		},
+		[fetchRandomUser.rejected]: (state, action) => {
+			state.isLoading = false;
+			state.appErr = action?.payload?.message;
+			state.serverErr = action?.error?.message;
+			toast.error(action?.payload?.message);
 		},
 	},
 });

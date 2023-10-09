@@ -52,13 +52,7 @@ const initialState = {
 const allPostSlice = createSlice({
 	name: "allPostSlice",
 	initialState,
-	// state.allPost?.map((post) => {
-	// 	const { postId, likes, disLikes } = action?.payload;
-	// 	if (post?._id === postId) {
-	// 		post.likes = likes;
-	// 		post.disLikes = disLikes;
-	// 	}
-	// });
+
 	reducers: {
 		setFirstSearch: (state, { payload }) => {
 			state.searchQuery = payload;

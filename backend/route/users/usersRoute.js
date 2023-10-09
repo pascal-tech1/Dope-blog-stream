@@ -17,6 +17,8 @@ const {
 	resetPasswordCtrl,
 	profilePhotoUploadCtrl,
 	userLoginWithTokenCtrl,
+	savePostCtrl,
+	fetchRandomUserCtrl
 } = require("../../controllers/users/usersCtrl");
 const {
 	profilePhotoUpload,
@@ -26,11 +28,13 @@ const {
 const userRoutes = express.Router();
 
 userRoutes.post("/register", userRegisterCtrl);
+userRoutes.post("/random-users", fetchRandomUserCtrl);
 userRoutes.get("/loginWithToken", authMiddleWare, userLoginWithTokenCtrl);
 userRoutes.post("/login", userLoginCtrl);
 userRoutes.get("/", authMiddleWare, fetchAllUserCtrl);
 userRoutes.delete("/delete/:USERID", deleteUserCtrl);
 userRoutes.get("/:USERID", fetchUserDetailsCtrl);
+userRoutes.post("/save-post", authMiddleWare, savePostCtrl);
 userRoutes.post(
 	"/profile-picture-upload",
 	authMiddleWare,
@@ -50,6 +54,6 @@ userRoutes.post("/follow", authMiddleWare, followingUserCtrl);
 userRoutes.post("/unfollow", authMiddleWare, unFollowingUserCtrl);
 userRoutes.put("/updatePassword", authMiddleWare, updatePasswordCtrl);
 userRoutes.put("/:USERID", authMiddleWare, updateUserDetailsCtrl);
-userRoutes.get("/profile/:USERID", authMiddleWare, fetchUserDetailsCtrl);
+userRoutes.get("/profile/:userId", fetchUserDetailsCtrl);
 
 module.exports = userRoutes;

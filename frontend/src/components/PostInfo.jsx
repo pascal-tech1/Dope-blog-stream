@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 import CategoryandLikes from "./CategoryandLikes";
 import PostUserInfo from "./PostUserInfo";
 
+
 const PostInfo = ({ post }) => {
 	const user = useSelector((store) => store?.userSlice?.user);
 	return (

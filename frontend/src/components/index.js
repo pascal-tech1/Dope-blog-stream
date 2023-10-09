@@ -11,6 +11,7 @@ import PostInfo from "./PostInfo";
 import CategoryandLikes from "./CategoryandLikes";
 import { MorePost } from "./MorPOst";
 import PostUserInfo from "./PostUserInfo";
+import UserToFollow from "./UserToFollow";
 
 export {
 	DashboardSideBar,
@@ -27,4 +28,5 @@ export {
 	CategoryandLikes,
 	MorePost,
 	PostUserInfo,
+	UserToFollow,
 };

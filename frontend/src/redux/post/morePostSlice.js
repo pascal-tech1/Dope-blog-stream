@@ -77,17 +77,16 @@ const morePostSlice = createSlice({
 		},
 	},
 	extraReducers: {
-		// fetch single post
+		// fetch  user creator Post
 		[fetchUserPost.pending]: (state, action) => {
 			state.userPostStatus = "loading";
 		},
-		[fetchUserPost.fulfilled]: (state, action) => {
+		[fetchUserPost.fulfilled]: (state, { payload }) => {
 			state.userPostStatus = "success";
 
-			state.userPost = action.payload;
+			state.userPost = payload.posts;
 		},
 		[fetchUserPost.rejected]: (state, action) => {
-			console.log(action.payload);
 			state.userPostStatus = "error";
 		},
 		[fetchMorePost.pending]: (state, action) => {

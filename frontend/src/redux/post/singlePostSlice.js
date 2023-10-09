@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import customFetch from "../../utils/axios";
 import { toast } from "react-toastify";
-import { updateNumbPostViewInAllPostSlice, updateSinglePost } from "./allPostSlice";
+import { updateSinglePost } from "./allPostSlice";
 import { updateNumbPostViewInMorePostSlice } from "./morePostSlice";
 
 export const fetchSinglePost = createAsyncThunk(
@@ -13,12 +13,7 @@ export const fetchSinglePost = createAsyncThunk(
 			const resp = await customFetch.put(`/posts/${id}`, {
 				userToken,
 			});
-			dispatch(
-				updateNumbPostViewInAllPostSlice({
-					id: id,
-					numViews: resp.data.numViews,
-				})
-			);
+
 			dispatch(
 				updateNumbPostViewInMorePostSlice({
 					id: id,
@@ -45,11 +40,10 @@ export const fetchPostToBeEdited = createAsyncThunk(
 			const resp = await customFetch.put(`/posts/${id}`, {
 				userToken,
 			});
-			dispatch(
-				updateNumbOfPostView({ id: id, numViews: resp.data.numViews })
-			);
+
 			return resp.data;
 		} catch (error) {
+			console.log(error);
 			if (!error?.response) {
 				throw new Error();
 			}
@@ -60,7 +54,6 @@ export const fetchPostToBeEdited = createAsyncThunk(
 export const createPost = createAsyncThunk(
 	"create/Post",
 	async (post, { getState, rejectWithValue, dispatch }) => {
-		console.log("im heree today");
 		try {
 			const resp = await customFetch.post("/posts", post, {
 				headers: {
@@ -127,6 +120,9 @@ const singlePostSlice = createSlice({
 		setSinglePostStatus: (state, { payload }) => {
 			state.status = payload;
 		},
+		setPostToBeEdited: (state, { payload }) => {
+			state.postToBeEdited = payload;
+		},
 	},
 
 	extraReducers: {
@@ -144,9 +140,6 @@ const singlePostSlice = createSlice({
 			state.status = "error";
 			state.serverErr = action?.error?.message;
 			state.appErr = action?.payload?.message;
-			state.appErr
-				? toast.error(state.appErr)
-				: toast.error(state.serverErr);
 		},
 		[fetchPostToBeEdited.pending]: (state, action) => {
 			state.postEditingStatus = "loading";
@@ -203,5 +196,7 @@ export const {
 	togleSinglePostLikesAndDisLikes,
 	setIsEditingPost,
 	setSinglePostStatus,
+
+	setPostToBeEdited,
 } = singlePostSlice.actions;
 export default singlePostSlice.reducer;

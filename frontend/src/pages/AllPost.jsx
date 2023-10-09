@@ -16,9 +16,9 @@ const AllPost = () => {
 
 	useEffect(() => {
 		allPost.length === 0 && dispatch(fetchAllPost(10));
-		console.log("im here fetch all post");
+		
 	}, []);
-	console.log(allPost.length);
+	
 	const observer = useRef();
 	const lastPostRef = useCallback(
 		(node) => {
@@ -38,7 +38,7 @@ const AllPost = () => {
 		},
 		[isLoading, hasMore]
 	);
-	console.log(allPost);
+	
 	return (
 		<>
 			{allPost.map((post, index) => {

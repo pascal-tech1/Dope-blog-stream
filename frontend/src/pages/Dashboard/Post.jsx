@@ -1,10 +1,15 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { modules } from "../../utils/quil";
 import { useDispatch, useSelector } from "react-redux";
-import { createPost, updatePost } from "../../redux/post/singlePostSlice";
-import { LoadingSpinner } from "../../utils/Spinner";
+
+import {
+	createPost,
+	setIsEditingPost,
+	updatePost,
+} from "../../redux/post/singlePostSlice";
+
 import { useFormik } from "formik";
 
 import * as Yup from "yup";
@@ -12,12 +17,14 @@ import { Spinner } from "../../components";
 
 const Post = () => {
 	const dispatch = useDispatch();
-	const { post, status, isEditing, isLoading } = useSelector(
+	const { status, isEditing, isLoading, postToBeEdited } = useSelector(
 		(store) => store.singlePostSlice
 	);
 
 	const [postImage, setPostImage] = useState(null);
-	const url = postImage ? URL.createObjectURL(postImage) : post?.image;
+	const url = postImage
+		? URL.createObjectURL(postImage)
+		: isEditing && postToBeEdited?.image;
 
 	const formSchema = Yup.object().shape({
 		title: Yup.string()
@@ -38,23 +45,24 @@ const Post = () => {
 
 	const formik = useFormik({
 		initialValues: {
-			title: (isEditing && post?.title) || "",
-			description: (isEditing && post?.description) || "",
-			category: (isEditing && post?.category) || "",
+			title: (isEditing && postToBeEdited?.title) || "",
+			description: (isEditing && postToBeEdited?.description) || "",
+			category: (isEditing && postToBeEdited?.category) || "",
 			image: null,
 			content:
-				(isEditing && post?.content) ||
+				(isEditing && postToBeEdited?.content) ||
 				"Enter your post content here, Creativity is your limit",
 		},
 
 		onSubmit: (values, { resetForm }) => {
-			isEditing
-				? dispatch(updatePost(values))
-				: dispatch(createPost(values));
-			formik.resetForm();
+			resetForm({ initialValues });
+			// isEditing
+			// 	? dispatch(updatePost(values))
+			// 	: dispatch(createPost(values));
 		},
 		validationSchema: formSchema,
 	});
+
 	if (status === "loading") {
 		return (
 			<div className="flex justify-center items-center mt-8">
@@ -62,6 +70,7 @@ const Post = () => {
 			</div>
 		);
 	}
+
 	return (
 		<div className=" font-inter font-medium mt-16  gap-7 px-10">
 			<form
@@ -170,7 +179,7 @@ const Post = () => {
 							} rounded-md`}
 						>
 							{isLoading ? (
-								<LoadingSpinner text="loading" />
+								<Spinner />
 							) : (
 								<h3>{isEditing ? "Update Post" : "Create Post"}</h3>
 							)}
@@ -178,7 +187,6 @@ const Post = () => {
 					</div>
 				</div>
 			</form>
-			{/* <img src={url} alt="" /> */}
 		</div>
 	);
 };

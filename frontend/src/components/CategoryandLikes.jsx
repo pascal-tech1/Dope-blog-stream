@@ -5,6 +5,9 @@ import { useDispatch } from "react-redux";
 import { formatDate } from "../utils/dataFormatter";
 import { likeOrDislikePost } from "../redux/post/generalPostSlice";
 
+import { MdOutlineBookmarkAdd } from "react-icons/md";
+import { savePost } from "../redux/user/userSlice";
+
 const CategoryandLikes = ({ post }) => {
 	const dispatch = useDispatch();
 	const handleLikes = (id) => {
@@ -39,7 +42,9 @@ const CategoryandLikes = ({ post }) => {
 				<span className="  ">{post?.numViews}</span>
 				{post?.numViews > 1 ? "views" : "view"}
 			</h3>
-
+			<button onClick={() => dispatch(savePost(post?._id))}>
+				<MdOutlineBookmarkAdd />
+			</button>
 			<h3 className="whitespace-nowrap  text-sm delay-75 cursor-pointer flex  bg-gray-200 hover:bg-gray-200 rounded-xl  py-[0.35rem] px-4">
 				{post?.category}
 			</h3>

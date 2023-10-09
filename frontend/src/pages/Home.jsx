@@ -1,11 +1,20 @@
 import React, { useEffect } from "react";
-import { NavBar } from "../components";
+import { NavBar, UserToFollow } from "../components";
 import { articles } from "../utils/data";
 import { MdOutlineCalendarMonth } from "react-icons/md";
 
 import AllPost from "./AllPost";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchRandomUser } from "../redux/user/userSlice";
 
 const Home = () => {
+	const dispatch = useDispatch();
+	useEffect(() => {
+		dispatch(fetchRandomUser(3));
+	},[]);
+
+	const { randomUsers } = useSelector((store) => store.userSlice);
+
 	const theme = "dark";
 	const category = ["design", "developtment", "ux", "marketing"];
 
@@ -70,32 +79,8 @@ const Home = () => {
 									People you might be interested in
 								</h2>
 
-								{articles.slice(0, 3).map((article, index) => {
-									return (
-										<div key={index} className="flex  gap-3 lg:mx-6 my-5">
-											<div>
-												{" "}
-												<img
-													className=" w-8 h-8 rounded-full"
-													src={article?.imageUrl}
-													alt=""
-												/>
-											</div>
-											<div>
-												<h3 className=" text-xs text-gray-900">
-													{article?.user?.name}
-												</h3>
-												<h3 className=" text-xs text-gray-4s00">
-													{article?.user?.profession}
-												</h3>
-											</div>
-											<div>
-												<button className="  ml-6 flex hover:border-gray-300 place-items-center  border border-blue-200 px-1 py-[0.1.5rem] md:px-2 rounded-lg hover:bg-gray-100 delay-200s">
-													follow
-												</button>
-											</div>
-										</div>
-									);
+								{randomUsers?.map((user, index) => {
+									return <UserToFollow user={user} index={index} />;
 								})}
 								{/* more interesting topic */}
 							</section>

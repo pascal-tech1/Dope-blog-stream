@@ -13,7 +13,7 @@ const PostUserInfo = ({ post }) => {
 		<>
 			{user?.firstName && (
 				<div className="flex text-xs gap-3 text-gray-400 ">
-					<Link to="/user-profile" className="flex gap-2">
+					<Link to={`/profile/${post?.user?._id}`} className="flex gap-2">
 						<img
 							src={post?.user?.profilePhoto}
 							alt=""
