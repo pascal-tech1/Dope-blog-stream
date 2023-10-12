@@ -8,7 +8,6 @@ import {
 	Register,
 	SinglePost,
 	UserPage,
-	PostCatgory,
 	Error,
 } from "./pages";
 import {
@@ -22,7 +21,7 @@ import {
 	ProfileEdit,
 	ProfileView,
 } from "./pages/Dashboard";
-import Carousel from "./utils/carousel";
+
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { getUserFromLocalStorage } from "./utils/localStorage";
@@ -41,7 +40,7 @@ const App = () => {
 			<Routes>
 				<Route path="/" element={<Home />} />
 				<Route path="/single-post/:id" element={<SinglePost />} />
-				<Route path="/post-category" element={<PostCatgory />} />
+
 				<Route path="/dashboard" element={<Layout />}>
 					<Route index path="dashboard" element={<Dashboard />} />
 					<Route path="profile-view" element={<ProfileView />} />

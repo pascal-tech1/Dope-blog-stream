@@ -8,6 +8,11 @@ import { MdOutlineBookmarkAdd } from "react-icons/md";
 import { savePost } from "../redux/user/userSlice";
 import { Category } from "../components";
 import { Link } from "react-router-dom";
+import {
+	fetchPostByCategory,
+	setActiveCategory,
+	setFetchFirstCategory,
+} from "../redux/post/allPostSlice";
 
 const LikesSaveViews = ({ post }) => {
 	const dispatch = useDispatch();
@@ -46,7 +51,12 @@ const LikesSaveViews = ({ post }) => {
 				<MdOutlineBookmarkAdd />
 			</button>
 			<Link
-				to={"/post-category"}
+				to={"/"}
+				onClick={(e) => {
+					dispatch(setActiveCategory(post?.category));
+					dispatch(setFetchFirstCategory(post?.category));
+					dispatch(fetchPostByCategory());
+				}}
 				className="whitespace-nowrap gap-2 mt-1 text-sm delay-75 cursor-pointer flex bg-gray-200 hover:bg-gray-300 rounded-xl py-[0.2rem] px-4"
 			>
 				{post?.category?.charAt(0).toUpperCase() +

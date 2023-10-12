@@ -82,9 +82,7 @@ const allPostSlice = createSlice({
 			state.displayedCategory.pop();
 			state.displayedCategory.push(payload);
 		},
-		addundisplayedCategoryToState: (state, { payload }) => {
-			state.undisplayedCategory = payload;
-		},
+		
 
 		updateNumbPostViewInAllPostSlice: (state, { payload }) => {
 			state.allPost.map((post) => {
@@ -173,6 +171,6 @@ export const {
 	setFetchFirstCategory,
 	setActiveCategory,
 	toggleDisplayedCategory,
-	addundisplayedCategoryToState,
+	
 } = allPostSlice.actions;
 export default allPostSlice.reducer;

@@ -10,14 +10,13 @@ import {
 
 const AllPost = () => {
 	const dispatch = useDispatch();
-	const { allPost, isLoading, searchQuery, hasMore, } = useSelector(
+	const { allPost, isLoading, searchQuery, hasMore } = useSelector(
 		(store) => store.allPostSlice
 	);
 
 	useEffect(() => {
-		allPost.length === 0 && dispatch(fetchPostByCategory());
+		dispatch(fetchPostByCategory());
 	}, []);
-	console.log(allPost);
 
 	const observer = useRef();
 	const lastPostRef = useCallback(
@@ -31,7 +30,6 @@ const AllPost = () => {
 					if (searchQuery) {
 						dispatch(searchPost());
 					} else {
-						console.log("fetchPostb");
 						dispatch(fetchPostByCategory());
 					}
 				}

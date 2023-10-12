@@ -19,17 +19,21 @@ export const fetchUserPost = createAsyncThunk(
 
 export const fetchMorePost = createAsyncThunk(
 	"fetchMore/Post",
-	async (postNumberPerPage, { getState, rejectWithValue, dispatch }) => {
+	async (postNumberPerPage, { rejectWithValue }) => {
 		const page = 1;
+		const activeCategory = "all";
+
 		try {
 			const resp = await customFetch(
-				`/posts?page=${page}&postNumberPerPage=${postNumberPerPage}`
+				`/posts/?page=${page}&postNumberPerPage=${postNumberPerPage}&category=${activeCategory}`
 			);
-
+			return resp.data;
+			console.log(resp.data);
 			return resp.data;
 		} catch (error) {
+			console.log(error);
 			if (!error?.response) {
-				throw new Error();
+				throw new Error(error);
 			}
 			return rejectWithValue(error?.response?.data);
 		}

@@ -1,10 +1,10 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchSinglePost } from "../redux/post/singlePostSlice";
-import {  useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import NavBar from "../components/NavBar";
 
-import {LikesSaveViews} from "../components";
+import { LikesSaveViews } from "../components";
 import { AiOutlineMessage } from "react-icons/ai";
 import { useInView } from "react-intersection-observer";
 import { fetchMorePost, fetchUserPost } from "../redux/post/morePostSlice";
@@ -15,6 +15,7 @@ import {
 	MorePost,
 	PostUserInfo,
 } from "../components";
+import { fetchPostByCategory } from "../redux/post/allPostSlice";
 
 const SinglePost = () => {
 	const { id } = useParams();
@@ -35,7 +36,7 @@ const SinglePost = () => {
 			dispatch(
 				fetchUserPost({ postId: post?._id, userId: post?.user?._id })
 			);
-			dispatch(fetchMorePost(6));
+			dispatch(fetchMorePost(10));
 		}
 	}, [inView]);
 	if (status === "loading")
