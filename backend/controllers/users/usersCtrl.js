@@ -61,7 +61,7 @@ const userLoginCtrl = expressAsyncHandler(async (req, res) => {
 		"bio",
 		"following",
 	]);
-	console.log(userFound);
+
 	if (
 		userFound &&
 		(await userFound.isPasswordCorrect(req?.body?.password))
@@ -79,8 +79,12 @@ const userLoginCtrl = expressAsyncHandler(async (req, res) => {
 		});
 	}
 });
+
+// '''''''''''''''''''''''''''''''''''''''''
+//         login user with token
+// '''''''''''''''''''''''''''''''''''''''''''''
+
 const userLoginWithTokenCtrl = expressAsyncHandler(async (req, res) => {
-	console.log("im here loginwith token");
 	const userFound = await User.findById(req.user._id).select([
 		"_id",
 		"firstName",
@@ -137,27 +141,31 @@ const deleteUserCtrl = expressAsyncHandler(async (req, res) => {
 //        fetch single user details
 // '''''''''''''''''''''''''''''''''''''''''''''
 const fetchUserDetailsCtrl = expressAsyncHandler(async (req, res) => {
-	console.log("im here fetch single post");
 	const { userId } = req.params;
 	validateMongoDbUserId(userId);
 	try {
-		const foundUser = await User.findById(userId).select([
-			"_id",
-			"firstName",
-			"lastName",
-			"profilePhoto",
-			"email",
-			"profession",
-			"location",
-			"language",
-			"nickName",
-			"education",
-			"isBlocked",
-			"isAdmin",
-			"category",
-			"bio",
-			"following",
-		]);
+		const foundUser = await User.findById(userId)
+			.select([
+				"_id",
+				"firstName",
+				"lastName",
+				"profilePhoto",
+				"email",
+				"profession",
+				"location",
+				"language",
+				"nickName",
+				"education",
+				"isBlocked",
+				"isAdmin",
+				"category",
+				"bio",
+				"following",
+			])
+			.populate({
+				path: "following",
+				select: ["_id", "firstName", "lastName", "profilePhoto"], // Exclude the "password" field
+			});
 
 		res.json(foundUser);
 	} catch (error) {

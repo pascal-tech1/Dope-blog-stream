@@ -1,7 +1,7 @@
 import React from "react";
 import Spinner from "./spinner";
 import { Link } from "react-router-dom";
-import CategoryandLikes from "./CategoryandLikes";
+import LikesSaveViews from "./LikesSaveViews";
 import PostUserInfo from "./PostUserInfo";
 
 export const MorePost = ({ post, status }) => {
@@ -22,7 +22,7 @@ export const MorePost = ({ post, status }) => {
 						</Link>
 						<h3 className=" text font-bold ">{post?.title}</h3>
 						<PostUserInfo post={post} />
-						<CategoryandLikes post={post} />
+						<LikesSaveViews post={post} />
 					</div>
 				))}
 				<div className=" grid place-content-center">

@@ -3,22 +3,22 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useRef, useCallback } from "react";
 import { PostInfo, Spinner } from "../components";
 import {
-	fetchAllPost,
+	IncreasePageNumber,
+	fetchPostByCategory,
 	searchPost,
-	setSearchPage,
 } from "../redux/post/allPostSlice";
 
 const AllPost = () => {
 	const dispatch = useDispatch();
-	const { allPost, isLoading, searchQuery, hasMore } = useSelector(
+	const { allPost, isLoading, searchQuery, hasMore, } = useSelector(
 		(store) => store.allPostSlice
 	);
 
 	useEffect(() => {
-		allPost.length === 0 && dispatch(fetchAllPost(10));
-		
+		allPost.length === 0 && dispatch(fetchPostByCategory());
 	}, []);
-	
+	console.log(allPost);
+
 	const observer = useRef();
 	const lastPostRef = useCallback(
 		(node) => {
@@ -26,11 +26,13 @@ const AllPost = () => {
 			if (observer.current) observer.current.disconnect();
 			observer.current = new IntersectionObserver((entries) => {
 				if (entries[0].isIntersecting && hasMore) {
-					dispatch(setSearchPage());
+					console.log("im here scroll end");
+					dispatch(IncreasePageNumber());
 					if (searchQuery) {
 						dispatch(searchPost());
 					} else {
-						dispatch(fetchAllPost());
+						console.log("fetchPostb");
+						dispatch(fetchPostByCategory());
 					}
 				}
 			});
@@ -38,7 +40,7 @@ const AllPost = () => {
 		},
 		[isLoading, hasMore]
 	);
-	
+
 	return (
 		<>
 			{allPost.map((post, index) => {

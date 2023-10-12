@@ -101,10 +101,10 @@ export const followOrUnfollowUser = createAsyncThunk(
 					},
 				}
 			);
-			console.log(resp.data);
+
 			return resp.data;
 		} catch (error) {
-			console.log(error);
+			console.log(error)
 			if (!error.response) {
 				throw new Error(error);
 			}
@@ -143,12 +143,11 @@ export const fetchRandomUser = createAsyncThunk(
 			const resp = await customFetch.post("/users/random-users", {
 				numberOfUser,
 			});
-			console.log(resp.data)
+
 			return resp.data;
 		} catch (error) {
-			
 			if (!error.response) {
-				throw new Error();
+				throw new Error(error);
 			}
 			return rejectWithValue(error?.response?.data);
 		}

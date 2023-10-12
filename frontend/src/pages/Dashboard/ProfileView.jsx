@@ -1,5 +1,5 @@
-import React from "react";
-import { useSelector } from "react-redux";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import {
 	AdditionalUserProfile,
 	UserBio,
@@ -7,12 +7,16 @@ import {
 } from "../../components";
 
 import { MdEdit } from "react-icons/md";
+import { fetchAllCategorys } from "../../redux/category/categorySlice";
+import Dropdown from "../../components/Dropdown";
 
 const ProfileView = () => {
 	const user = useSelector((store) => store?.userSlice?.user);
-	const category = ["design", "developtment", "ux", "marketing"];
-	console.log(user)
-
+	const { allCategory } = useSelector((store) => store?.categorySlice);
+	const dispatch = useDispatch();
+	useEffect(() => {
+		dispatch(fetchAllCategorys());
+	}, []);
 	return (
 		<div className=" flex flex-col md:ml-14 row-span-2 lg:grid grid-cols-6 pcol-start-1 col-span-4 rounded-xl mx-4 lg:mb-6 pt-4 lg:shadow-sm lg:rounded-md lg:ml-0  font-inter mt-10 gap-5 bg-white lg:bg-transparent">
 			<div className=" col-start-1 col-span-4  bg-white lg:shadow-sm lg:rounded-md">
@@ -48,18 +52,24 @@ const ProfileView = () => {
 						</h3>
 					</button>
 				</div>
-				<div className="flex justify-between py-6 flex-wrap">
-					{category.map((category, index) => {
-						return (
-							<button
-								key={index}
-								className=" text-sm delay-75 mt-2 mx-2 flex f bg-gray-100 hover:bg-gray-200 rounded-xl  py-[0.35rem] px-4"
-							>
-								{category}
-							</button>
-						);
-					})}
+				<div className=" py-6">
+					<h3>All Category</h3>
+					
+					<div className="flex justify-between  flex-wrap">
+						{allCategory?.map((category, index) => {
+							if (category.title === "All") return;
+							return (
+								<button
+									key={index}
+									className=" text-sm delay-75 mt-2 mx-2 flex f bg-gray-100 hover:bg-gray-200 rounded-xl  py-[0.35rem] px-4"
+								>
+									{category.title}
+								</button>
+							);
+						})}
+					</div>
 				</div>
+				<Dropdown />
 			</div>
 		</div>
 	);

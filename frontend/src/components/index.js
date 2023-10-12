@@ -8,10 +8,12 @@ import UserBio from "./UserBio";
 import Spinner from "./spinner";
 import { FollowingBtn, EditPostBtn } from "./FollowingBtn";
 import PostInfo from "./PostInfo";
-import CategoryandLikes from "./CategoryandLikes";
+import LikesSaveViews from "./LikesSaveViews";
 import { MorePost } from "./MorPOst";
 import PostUserInfo from "./PostUserInfo";
 import UserToFollow from "./UserToFollow";
+import Category from "./Category";
+import CustomDropdown from "./Dropdown";
 
 export {
 	DashboardSideBar,
@@ -25,8 +27,10 @@ export {
 	FollowingBtn,
 	EditPostBtn,
 	PostInfo,
-	CategoryandLikes,
 	MorePost,
 	PostUserInfo,
 	UserToFollow,
+	LikesSaveViews,
+	Category,
+	CustomDropdown,
 };

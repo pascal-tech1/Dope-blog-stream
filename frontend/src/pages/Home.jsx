@@ -1,22 +1,46 @@
-import React, { useEffect } from "react";
-import { NavBar, UserToFollow } from "../components";
-import { articles } from "../utils/data";
+import React, { useEffect, useState } from "react";
+import {
+	Category,
+	CustomDropdown,
+	NavBar,
+	UserToFollow,
+} from "../components";
 import { MdOutlineCalendarMonth } from "react-icons/md";
-
 import AllPost from "./AllPost";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchRandomUser } from "../redux/user/userSlice";
+import { fetchAllCategorys } from "../redux/category/categorySlice";
+import { toggleDisplayedCategory } from "../redux/post/allPostSlice";
 
 const Home = () => {
 	const dispatch = useDispatch();
+
+	const { allCategory } = useSelector((store) => store.categorySlice);
+	const { randomUsers } = useSelector((store) => store.userSlice);
+	const { displayedCategory, activeCategory } = useSelector(
+		(store) => store.allPostSlice
+	);
+
+	let allCategoryLeft = allCategory.filter(
+		(category) => !displayedCategory.includes(category.title)
+	);
+	allCategoryLeft = allCategoryLeft.map((category) => category.title);
+
 	useEffect(() => {
 		dispatch(fetchRandomUser(3));
-	},[]);
+		dispatch(fetchAllCategorys());
+	}, []);
 
-	const { randomUsers } = useSelector((store) => store.userSlice);
+	useEffect(() => {
+		allCategoryLeft = allCategory.filter(
+			(category) => !displayedCategory.includes(category.title)
+		);
+		allCategoryLeft = allCategoryLeft.map((category) => category.title);
+		if (!displayedCategory.includes(activeCategory))
+			dispatch(toggleDisplayedCategory(activeCategory));
+	}, [displayedCategory, activeCategory]);
 
 	const theme = "dark";
-	const category = ["design", "developtment", "ux", "marketing"];
 
 	return (
 		<div className={`bg-${theme}-background font-inter font-lights `}>
@@ -26,37 +50,27 @@ const Home = () => {
 				{/* right section */}
 				<main className=" col-span-2 md:border-r-2 px-6 py-6  lg:px-20 ">
 					<div className="">
-						<div className="flex justify-between py-6 flex-wrap">
-							{category.map((category, index) => {
-								return (
-									<button
-										key={index}
-										className=" text-sm delay-75 mt-2 mx-2 flex  bg-gray-100 hover:bg-gray-200 rounded-xl  py-[0.35rem] px-4"
-									>
-										{category}
-									</button>
-								);
-							})}
+						<div className="pt-6 mb-6">
+							<Category
+								allCategory={displayedCategory}
+								initialActive={"All"}
+							/>
 						</div>
 						<div className="flex justify-between flex-wrap items-center mb-5 ">
 							<h2 className=" font-medium text-gray-500  text">
 								Articles
 							</h2>
-							<select
-								className=" text-sm border rounded-lg py-[0.3rem] px-2 focus:outline-none  cursor-pointer"
-								name="sort"
-								id=""
-							>
-								<option value="Popular">Most Popular</option>
-								<option value="Highest-Read">Highest Read</option>
-							</select>
+
+							<div className=" text-sm border ml-6 rounded-lg py-[0.3rem] px-2 focus:outline-none  cursor-pointer md:hidden ">
+								<CustomDropdown allCategory={allCategoryLeft} />
+							</div>
 						</div>
 
 						<AllPost />
 					</div>
 				</main>
 				{/* left section */}
-				<main className=" grid-cols-2 col-span-1 py-6 hidden md:grid h-max ">
+				<main className=" grid-cols-2 col-span-1 py-6 hidden md:grid h-max border border-l ">
 					<div className=" fixed">
 						<div className=" m-4 mr-14">
 							<div className="flex gap-2  bg-gray-100 p-4 h-max place-self-center">
@@ -88,18 +102,7 @@ const Home = () => {
 								<h2 className=" text-gray-900 font-medium mb-4 text-center">
 									More interesting topics
 								</h2>
-								<div className=" flex justify-between gap-1 flex-wrap">
-									{articles.map((article, index) => {
-										return (
-											<button
-												key={index}
-												className=" text-sm border border-blue-300 hover:border-gray-300 hover:bg-gray-300 rounded-xl px-3 py-[0.15rem] "
-											>
-												{article.category}
-											</button>
-										);
-									})}
-								</div>
+								<Category allCategory={allCategoryLeft} />
 							</section>
 						</div>
 					</div>

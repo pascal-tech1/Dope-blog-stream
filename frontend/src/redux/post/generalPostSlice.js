@@ -35,6 +35,7 @@ export const likeOrDislikePost = createAsyncThunk(
 				choice,
 			};
 		} catch (error) {
+			console.log(error)
 			if (!error?.response) {
 				throw new Error(error);
 			}
@@ -127,6 +128,7 @@ const generalPostSlice = createSlice({
 			state.postCreatorProfileStatus = "loading";
 		},
 		[fetchPostCreatorProfile.fulfilled]: (state, { payload }) => {
+		
 			state.postCreatorProfileStatus = "success";
 			state.postCreatorProfile = payload;
 		},

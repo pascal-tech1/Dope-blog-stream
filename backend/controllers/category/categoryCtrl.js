@@ -19,10 +19,10 @@ const createCategoryCtrl = expressAsyncHandler(async (req, res) => {
 			user: loginAdmin?._id,
 			title,
 		});
-		console.log(category);
-		res.json(category);
+
+		res.status(201).json(category);
 	} catch (error) {
-		res.json(error);
+		res.json({ message: "faliled to create Category" });
 	}
 });
 
@@ -31,10 +31,12 @@ const createCategoryCtrl = expressAsyncHandler(async (req, res) => {
 // ''''''''''''''''''''''''''''''''''''''''''''
 const fetchAllCategorysCtrl = expressAsyncHandler(async (req, res) => {
 	try {
-		const allCategory = await Category.find({});
-		res.json(allCategory);
+		const allCategory = await Category.find({}).select("title");
+		res.status(200).json({ status: "success", allCategory });
 	} catch (error) {
-		res.json(error);
+		res
+			.status(500)
+			.json({ message: "faliled to fetch All Category try again" });
 	}
 });
 // '''''''''''''''''''''''''''''''''''''''''
@@ -64,8 +66,7 @@ const updateCategoryCtrl = expressAsyncHandler(async (req, res) => {
 		throw new Error("category already exist");
 	}
 	validateMongoDbUserId(categoryId);
-	console.log(categoryId);
-	console.log(title);
+
 	try {
 		const category = await Category.findByIdAndUpdate(
 			categoryId,
@@ -77,7 +78,6 @@ const updateCategoryCtrl = expressAsyncHandler(async (req, res) => {
 
 		res.json(category);
 	} catch (error) {
-		console.log(error);
 		res.json(error);
 	}
 });

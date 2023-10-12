@@ -19,7 +19,7 @@ const NavBar = () => {
 	const formSchema = Yup.object().shape({
 		search: Yup.string().required("Search is Required."),
 	});
-	console.log("i have rendered");
+	
 	const formik = useFormik({
 		initialValues: {
 			search: "",

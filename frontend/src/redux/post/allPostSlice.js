@@ -2,24 +2,6 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { toast } from "react-toastify";
 import customFetch from "../../utils/axios";
 
-export const fetchAllPost = createAsyncThunk(
-	"fetchAll/Post",
-	async (postNumberPerPage, { getState, rejectWithValue, dispatch }) => {
-		const { page } = getState().allPostSlice;
-		try {
-			const resp = await customFetch(
-				`/posts?page=${page}&postNumberPerPage=${postNumberPerPage}`
-			);
-			return resp.data;
-		} catch (error) {
-			if (!error?.response) {
-				throw new Error();
-			}
-			return rejectWithValue(error?.response?.data);
-		}
-	}
-);
-
 export const searchPost = createAsyncThunk(
 	"search/Post",
 	async (_, { getState, rejectWithValue, dispatch }) => {
@@ -39,6 +21,25 @@ export const searchPost = createAsyncThunk(
 		}
 	}
 );
+export const fetchPostByCategory = createAsyncThunk(
+	"fetch/PostByCategory",
+	async (_, { getState, rejectWithValue, dispatch }) => {
+		const { page, postNumberPerPage, activeCategory } =
+			getState().allPostSlice;
+
+		try {
+			const resp = await customFetch(
+				`/posts/?page=${page}&postNumberPerPage=${postNumberPerPage}&category=${activeCategory}`
+			);
+			return resp.data;
+		} catch (error) {
+			if (!error?.response) {
+				throw new Error(error);
+			}
+			return rejectWithValue(error?.response?.data);
+		}
+	}
+);
 
 const initialState = {
 	isLoading: false,
@@ -47,6 +48,9 @@ const initialState = {
 	postNumberPerPage: 10,
 	searchQuery: null,
 	hasMore: true,
+	activeCategory: "all",
+	displayedCategory: ["all", "react", "javascript"],
+	undisplayedCategory: [],
 };
 
 const allPostSlice = createSlice({
@@ -60,9 +64,28 @@ const allPostSlice = createSlice({
 			state.page = 1;
 			state.hasMore = true;
 		},
-		setSearchPage: (state, { payload }) => {
+		IncreasePageNumber: (state, { payload }) => {
 			state.page = state.page + 1;
 		},
+		setFetchFirstCategory: (state, { payload }) => {
+			state.activeCategory = payload;
+			state.allPost = [];
+			state.page = 1;
+			state.hasMore = true;
+		},
+
+		setActiveCategory: (state, { payload }) => {
+			state.activeCategory = payload;
+		},
+		toggleDisplayedCategory: (state, { payload }) => {
+			console.log("im here");
+			state.displayedCategory.pop();
+			state.displayedCategory.push(payload);
+		},
+		addundisplayedCategoryToState: (state, { payload }) => {
+			state.undisplayedCategory = payload;
+		},
+
 		updateNumbPostViewInAllPostSlice: (state, { payload }) => {
 			state.allPost.map((post) => {
 				if (post._id === payload.id) {
@@ -90,28 +113,6 @@ const allPostSlice = createSlice({
 	},
 
 	extraReducers: {
-		// fetch all post
-		[fetchAllPost.pending]: (state, action) => {
-			state.isLoading = true;
-		},
-		[fetchAllPost.fulfilled]: (state, action) => {
-			if (action.payload.length < 10) {
-				state.hasMore = false;
-				state.allPost = [...state.allPost, ...action.payload];
-			} else {
-				state.allPost = [...state.allPost, ...action.payload];
-			}
-			state.isLoading = false;
-
-			state.serverErr = undefined;
-			state.appErr = undefined;
-		},
-		[fetchAllPost.rejected]: (state, action) => {
-			(state.isLoading = false),
-				(state.serverErr = action?.error?.message);
-			state.appErr = action?.payload?.message;
-		},
-
 		// search post
 		[searchPost.pending]: (state, action) => {
 			state.isLoading = true;
@@ -136,13 +137,42 @@ const allPostSlice = createSlice({
 				? toast.error(state.appErr)
 				: toast.error(state.serverErr);
 		},
+
+		// fetch post by category
+		[fetchPostByCategory.pending]: (state, action) => {
+			state.isLoading = true;
+		},
+		[fetchPostByCategory.fulfilled]: (state, action) => {
+			if (action.payload.length < 10) {
+				state.hasMore = false;
+				state.allPost = [...state.allPost, ...action.payload];
+			} else {
+				state.allPost = [...state.allPost, ...action.payload];
+			}
+			state.isLoading = false;
+
+			state.serverErr = undefined;
+			state.appErr = undefined;
+		},
+		[fetchPostByCategory.rejected]: (state, action) => {
+			(state.isLoading = false),
+				(state.serverErr = action?.error?.message);
+			state.appErr = action?.payload?.message;
+			state.appErr
+				? toast.error(state.appErr)
+				: toast.error(state.serverErr);
+		},
 	},
 });
 export const {
 	togleAllPostLikesAndDisLikes,
-	setSearchPage,
+	IncreasePageNumber,
 	setFirstSearch,
 	updateNumbPostViewInAllPostSlice,
 	updateSinglePost,
+	setFetchFirstCategory,
+	setActiveCategory,
+	toggleDisplayedCategory,
+	addundisplayedCategoryToState,
 } = allPostSlice.actions;
 export default allPostSlice.reducer;

@@ -55,10 +55,9 @@ const Post = () => {
 		},
 
 		onSubmit: (values, { resetForm }) => {
-			resetForm({ initialValues });
-			// isEditing
-			// 	? dispatch(updatePost(values))
-			// 	: dispatch(createPost(values));
+			isEditing
+				? dispatch(updatePost(values))
+				: dispatch(createPost(values));
 		},
 		validationSchema: formSchema,
 	});

@@ -2,13 +2,14 @@ import React from "react";
 import { AiOutlineDislike, AiOutlineLike } from "react-icons/ai";
 
 import { useDispatch } from "react-redux";
-import { formatDate } from "../utils/dataFormatter";
-import { likeOrDislikePost } from "../redux/post/generalPostSlice";
 
+import { likeOrDislikePost } from "../redux/post/generalPostSlice";
 import { MdOutlineBookmarkAdd } from "react-icons/md";
 import { savePost } from "../redux/user/userSlice";
+import { Category } from "../components";
+import { Link } from "react-router-dom";
 
-const CategoryandLikes = ({ post }) => {
+const LikesSaveViews = ({ post }) => {
 	const dispatch = useDispatch();
 	const handleLikes = (id) => {
 		dispatch(likeOrDislikePost({ choice: "like", postId: id }));
@@ -18,7 +19,6 @@ const CategoryandLikes = ({ post }) => {
 	};
 	return (
 		<div className=" text-sm flex gap-2 items-center mt-3 font-light flex-wrap justify-start  ">
-			<h3 className=" ">{formatDate(post?.createdAt)}</h3>
 			<span className="flex gap-1 items-center">
 				<button
 					onClick={() => handleLikes(post?._id)}
@@ -45,11 +45,15 @@ const CategoryandLikes = ({ post }) => {
 			<button onClick={() => dispatch(savePost(post?._id))}>
 				<MdOutlineBookmarkAdd />
 			</button>
-			<h3 className="whitespace-nowrap  text-sm delay-75 cursor-pointer flex  bg-gray-200 hover:bg-gray-200 rounded-xl  py-[0.35rem] px-4">
-				{post?.category}
-			</h3>
+			<Link
+				to={"/post-category"}
+				className="whitespace-nowrap gap-2 mt-1 text-sm delay-75 cursor-pointer flex bg-gray-200 hover:bg-gray-300 rounded-xl py-[0.2rem] px-4"
+			>
+				{post?.category?.charAt(0).toUpperCase() +
+					post?.category?.slice(1).toLowerCase()}
+			</Link>
 		</div>
 	);
 };
 
-export default CategoryandLikes;
+export default LikesSaveViews;

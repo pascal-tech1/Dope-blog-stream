@@ -4,14 +4,14 @@ const {
 	fetchAllCategorysCtrl,
 	fetchSingleCategorysCtrl,
 	updateCategoryCtrl,
-    deleteCategoryCtrl,
+	deleteCategoryCtrl,
 } = require("../../controllers/category/categoryCtrl");
 const authMiddleWare = require("../../middlewares/authentication/authMiddleWare");
 
 const categoryRoutes = express.Router();
-
+categoryRoutes.get("/", fetchAllCategorysCtrl);
 categoryRoutes.post("/", authMiddleWare, createCategoryCtrl);
-categoryRoutes.get("/", authMiddleWare, fetchAllCategorysCtrl);
+
 categoryRoutes.get(
 	"/:categoryId",
 	authMiddleWare,

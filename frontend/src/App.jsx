@@ -2,7 +2,15 @@ import React, { useEffect } from "react";
 
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
-import { Home, Login, Register, SinglePost, UserPage } from "./pages";
+import {
+	Home,
+	Login,
+	Register,
+	SinglePost,
+	UserPage,
+	PostCatgory,
+	Error,
+} from "./pages";
 import {
 	Comments,
 	Dashboard,
@@ -33,6 +41,7 @@ const App = () => {
 			<Routes>
 				<Route path="/" element={<Home />} />
 				<Route path="/single-post/:id" element={<SinglePost />} />
+				<Route path="/post-category" element={<PostCatgory />} />
 				<Route path="/dashboard" element={<Layout />}>
 					<Route index path="dashboard" element={<Dashboard />} />
 					<Route path="profile-view" element={<ProfileView />} />
@@ -47,7 +56,7 @@ const App = () => {
 				<Route path="login" element={<Login />} />
 				<Route path="register" element={<Register />} />
 				<Route path="/profile/:userId" element={<UserPage />} />
-				{/* <Route path="*" element={<Error />} /> */}
+				<Route path="*" element={<Error />} />
 			</Routes>
 			<ToastContainer position="top-center" />
 		</BrowserRouter>

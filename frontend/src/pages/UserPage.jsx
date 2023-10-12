@@ -1,5 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { FollowingBtn, MorePost, NavBar, Spinner } from "../components";
+import {
+	FollowingBtn,
+	MorePost,
+	NavBar,
+	Spinner,
+	UserToFollow,
+} from "../components";
 import { useDispatch, useSelector } from "react-redux";
 import { articles } from "../utils/data";
 
@@ -21,6 +27,7 @@ const UserPage = () => {
 	const dispatch = useDispatch();
 	const { userId } = useParams();
 	const [page, setPage] = useState(1);
+	const [viewAll, setViewAll] = useState(1);
 
 	useEffect(() => {
 		dispatch(clearCreatorAllPost());
@@ -57,7 +64,7 @@ const UserPage = () => {
 								<img
 									src={postCreatorProfile?.profilePhoto}
 									alt=""
-									className=" h-32 object-cover w-full rounded-lg"
+									className=" h-32 md:h-48 object-cover w-full rounded-lg"
 								/>
 								<img
 									src={postCreatorProfile?.profilePhoto}
@@ -78,7 +85,12 @@ const UserPage = () => {
 								{`Posts By ${postCreatorProfile?.firstName} ${postCreatorProfile.lastName}`}
 							</h1>
 							<MorePost post={creatorAllPost} status={creatorPostStatus} />
-							{creatorPostStatus === "success" && (
+							{creatorAllPostTotalPages === page ||
+							creatorAllPostTotalPages === 0 ? (
+								<div className=" text-yellow-600 my-4">
+									No more Post from this user
+								</div>
+							) : (
 								<button
 									onClick={(event) => {
 										event.preventDefault();
@@ -113,33 +125,25 @@ const UserPage = () => {
 							</h1>
 
 							<div className="-mt-4">
-								{articles.slice(0, 5).map((article, index) => {
-									return (
-										<div key={index} className="flex  gap-3 my-5">
-											<div>
-												<img
-													className=" w-8 h-8 rounded-full"
-													src={article?.imageUrl}
-													alt=""
-												/>
-											</div>
-											<div>
-												<h3 className=" text-xs text-gray-900">
-													{article?.postCreatorProfile?.name}
-												</h3>
-												<h3 className=" text-xs text-gray-4s00">
-													{article?.postCreatorProfile?.profession}
-												</h3>
-											</div>
-											<div>
-												<button className="  flex hover:border-gray-300 place-items-center  border border-blue-200 px-1 py-[0.1.5rem] md:px-2 rounded-lg hover:bg-gray-100 delay-200">
-													follow
-												</button>
-											</div>
-										</div>
-									);
-								})}
-								<button className="  text-sm b rounded-lg px-2 text-black border border-gray-300 hover:bg-gray-300 transition-all delay-75">{`see all ${89}`}</button>
+								{postCreatorProfile?.following
+									?.slice(0, viewAll)
+									.map((user, index) => {
+										return <UserToFollow user={user} index={index} />;
+									})}
+								{postCreatorProfile.following.length > viewAll && (
+									<button
+										onClick={(e) => {
+											e.preventDefault();
+											setViewAll(postCreatorProfile.length);
+										}}
+										className="text-sm b rounded-lg px-2 text-black border border-gray-300 hover:bg-gray-300 transition-all delay-75"
+									>
+										{`see all${postCreatorProfile.following.length}`}
+									</button>
+								)}
+								{postCreatorProfile.following.length === 0 && (
+									<h1>{`${postCreatorProfile.lastName} following list is empty`}</h1>
+								)}
 							</div>
 						</div>
 					</div>
@@ -150,7 +154,12 @@ const UserPage = () => {
 
 						<MorePost post={creatorAllPost} status={creatorPostStatus} />
 
-						{creatorAllPostTotalPages !== page ? (
+						{creatorAllPostTotalPages === page ||
+						creatorAllPostTotalPages === 0 ? (
+							<div className=" text-yellow-600 my-4">
+								No more Post from this user
+							</div>
+						) : (
 							<button
 								onClick={(event) => {
 									event.preventDefault();
@@ -160,10 +169,6 @@ const UserPage = () => {
 							>
 								load more
 							</button>
-						) : (
-							<div className=" text-yellow-600 my-4">
-								No more Post from this user
-							</div>
 						)}
 					</div>
 				</div>

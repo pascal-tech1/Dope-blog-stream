@@ -1,9 +1,8 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
-import CategoryandLikes from "./CategoryandLikes";
+import LikesSaveViews from "./LikesSaveViews";
 import PostUserInfo from "./PostUserInfo";
-
 
 const PostInfo = ({ post }) => {
 	const user = useSelector((store) => store?.userSlice?.user);
@@ -14,7 +13,9 @@ const PostInfo = ({ post }) => {
 
 			<div className="flex  flex-col md:flex-row justify-centers gap-4 mt-3">
 				<div className=" self-start">
-					<h3 className=" font-semibold text-lg mb-2 ">{post?.title}</h3>
+					<Link to={`/single-post/${post?._id}`}>
+						<h3 className=" font-semibold text-lg mb-2 ">{post?.title}</h3>
+					</Link>
 					<div className=" text-xs flex ">
 						<p>
 							{post?.description}
@@ -28,16 +29,19 @@ const PostInfo = ({ post }) => {
 						</p>
 					</div>
 					<div className="text-md md:text-sm ">
-						<CategoryandLikes post={post} />
+						<LikesSaveViews post={post} />
 					</div>
 				</div>
-				<div className=" self-center md:self-start ">
+				<Link
+					to={`/single-post/${post?._id}`}
+					className=" self-center md:self-start "
+				>
 					<img
 						className=" max-w-xs w-52  md:w-40  rounded-md"
 						src={post?.image}
 						alt=""
 					/>
-				</div>
+				</Link>
 			</div>
 		</div>
 	);

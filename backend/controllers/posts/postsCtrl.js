@@ -61,40 +61,39 @@ const createPostCtrl = expressAsyncHandler(async (req, res) => {
 //   fetch all post and populate with the user that created it Post conttoller
 // '''''''''''''''''''''''''''''''''''''''''''''
 
-const fetchAllPostsCtrl = expressAsyncHandler(async (req, res) => {
-	let page = parseInt(req?.query?.page) || 1; // Current page,ipco
-	// const seed = req?.query?.seed;
-	const postNumberPerPage = parseInt(req?.query?.postNumberPerPage) || 10; // Number of items per page
+// const fetchAllPostsCtrl = expressAsyncHandler(async (req, res) => {
+// 	let page = parseInt(req?.query?.page) || 1;
 
-	// Calculate the skip value to skip items on previous pages
-	let skip = (page - 1) * postNumberPerPage;
-	try {
-		// Use MongoDB's find method with skip and limit
+// 	const postNumberPerPage = parseInt(req?.query?.postNumberPerPage) || 10; // Number of items per page
 
-		const posts = await Post.find({})
-			.skip(skip)
-			.limit(postNumberPerPage)
-			.populate({
-				path: "user",
-				select: ["_id", "firstName", "lastName", "profilePhoto"], // Exclude the "password" field
-			})
-			.select("-content"); // Use the query
+// 	// Calculate the skip value to skip items on previous pages
+// 	let skip = (page - 1) * postNumberPerPage;
+// 	try {
+// 		// Use MongoDB's find method with skip and limit
 
-		res.status(200).json(posts);
-	} catch (error) {
-		res.status(500).json({ error: "Internal Server Error" });
-	}
-});
+// 		const posts = await Post.find({})
+// 			.skip(skip)
+// 			.limit(postNumberPerPage)
+// 			.populate({
+// 				path: "user",
+// 				select: ["_id", "firstName", "lastName", "profilePhoto"],
+// 			})
+// 			.select("-content");
+// 		res.status(200).json(posts);
+// 	} catch (error) {
+// 		res.status(500).json({ error: "Internal Server Error" });
+// 	}
+// });
 
 // '''''''''''''''''''''''''''''''''''''''''
-//   fetch single post controller
+//   fetch All the  user post controller
 // '''''''''''''''''''''''''''''''''''''''''''''
 const fetchUserPostCtrl = expressAsyncHandler(async (req, res) => {
 	const { userId, postId } = req.body;
 
 	const page = parseInt(req.query.page) || 1; // Current page number, default to 1
 	const postNumberPerPage = parseInt(req.query.postNumberPerPage) || 10; // Number of items per page
-console.log(page, postNumberPerPage)
+
 	try {
 		const user = await User.findById(userId).populate({
 			path: "Posts",
@@ -191,7 +190,6 @@ const updatePostCtrl = expressAsyncHandler(async (req, res) => {
 		req?.file ? (imageUrl = uploadedImage?.url) : (imageUrl = post.image);
 		// remove the file
 		if (fs.existsSync(imageLocalPath)) {
-			console.log("im here delete image");
 			fs.unlink(imageLocalPath);
 		} else {
 			throw new Error("No valid file path found for deletions");
@@ -345,9 +343,45 @@ const searchPostCtrl = expressAsyncHandler(async (req, res) => {
 	}
 });
 
+const fetchPostByCategoryCtrl = expressAsyncHandler(async (req, res) => {
+	console.log("im here category");
+	let page = parseInt(req?.query?.page) || 1; // Current page,ipco
+	const postNumberPerPage = parseInt(req?.query?.postNumberPerPage) || 10; // Number of items per page
+	const category = req.query?.category;
+	console.log(page, postNumberPerPage, category);
+	// Calculate the skip value to skip items on previous pages
+	let skip = (page - 1) * postNumberPerPage;
+	try {
+		if (category === "all") {
+			const posts = await Post.find({})
+				.skip(skip)
+				.limit(postNumberPerPage)
+				.populate({
+					path: "user",
+					select: ["_id", "firstName", "lastName", "profilePhoto"],
+				})
+				.select("-content");
+			res.status(200).json(posts);
+			return;
+		} else {
+			const posts = await Post.find({ category: category })
+				.skip(skip)
+				.limit(postNumberPerPage)
+				.populate({
+					path: "user",
+					select: ["_id", "firstName", "lastName", "profilePhoto"],
+				})
+				.select("-content");
+			res.status(200).json(posts);
+			return;
+		}
+	} catch (error) {
+		res.status(500).json({ error: "Internal Server Error" });
+	}
+});
+
 module.exports = {
 	createPostCtrl,
-	fetchAllPostsCtrl,
 	fetchUserPostCtrl,
 	fetchSinglePostsCtrl,
 	updatePostCtrl,
@@ -355,4 +389,5 @@ module.exports = {
 	likePostCtrl,
 	disLikingPostCtrl,
 	searchPostCtrl,
+	fetchPostByCategoryCtrl,
 };

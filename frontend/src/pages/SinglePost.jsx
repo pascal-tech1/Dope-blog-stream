@@ -1,10 +1,10 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchSinglePost } from "../redux/post/singlePostSlice";
-import { Link, useParams } from "react-router-dom";
+import {  useParams } from "react-router-dom";
 import NavBar from "../components/NavBar";
 
-import CategoryandLikes from "../components/CategoryandLikes";
+import {LikesSaveViews} from "../components";
 import { AiOutlineMessage } from "react-icons/ai";
 import { useInView } from "react-intersection-observer";
 import { fetchMorePost, fetchUserPost } from "../redux/post/morePostSlice";
@@ -60,7 +60,7 @@ const SinglePost = () => {
 					{/* about the user who created the post */}
 					<div className="flex flex-wrap   flex-col">
 						<PostUserInfo post={post} />
-						<CategoryandLikes post={post} />
+						<LikesSaveViews post={post} />
 					</div>
 					<div className=" rounded-md flex items-center justify-center">
 						<img
@@ -122,7 +122,7 @@ const SinglePost = () => {
 
 					{/* more post from blogvana */}
 					<div className=" my-6">
-						<h1 className=" flex items-center gap-3  justify-center font-bold text-xl">
+						<h1 className=" flex items-center gap-3  justify-center font-bold text-xl mb-4">
 							More Posts from Blogvana{" "}
 							<span>
 								<img
