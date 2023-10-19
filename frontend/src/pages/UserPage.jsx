@@ -7,8 +7,6 @@ import {
 	UserToFollow,
 } from "../components";
 import { useDispatch, useSelector } from "react-redux";
-import { articles } from "../utils/data";
-
 import { useParams } from "react-router-dom";
 import {
 	clearCreatorAllPost,
@@ -23,6 +21,7 @@ const UserPage = () => {
 		creatorPostStatus,
 		creatorAllPost,
 		creatorAllPostTotalPages,
+		hasMore,
 	} = useSelector((store) => store.generalPostSlice);
 	const dispatch = useDispatch();
 	const { userId } = useParams();
@@ -34,9 +33,15 @@ const UserPage = () => {
 		dispatch(fetchPostCreatorProfile(userId));
 		setPage(1);
 	}, [userId]);
+
 	useEffect(() => {
-		dispatch(fetchCreatorPosts({ postId: 123456, userId, page }));
+		if (userId) {
+			page === 1 && dispatch(clearCreatorAllPost(userId));
+
+			dispatch(fetchCreatorPosts({ userId: userId, page }));
+		}
 	}, [page, userId]);
+
 	if (postCreatorProfileStatus === "loading") {
 		return (
 			<div className=" grid place-content-center">
@@ -53,6 +58,7 @@ const UserPage = () => {
 			</div>
 		);
 	}
+	console.log(hasMore, page, creatorAllPost);
 	if (postCreatorProfileStatus === "success") {
 		return (
 			<>
@@ -85,12 +91,11 @@ const UserPage = () => {
 								{`Posts By ${postCreatorProfile?.firstName} ${postCreatorProfile.lastName}`}
 							</h1>
 							<MorePost post={creatorAllPost} status={creatorPostStatus} />
-							{creatorAllPostTotalPages === page ||
-							creatorAllPostTotalPages === 0 ? (
-								<div className=" text-yellow-600 my-4">
-									No more Post from this user
-								</div>
-							) : (
+							{creatorAllPost.length === 0 ? (
+								<h1 className=" text-yellow-600 my-4">
+									This user have no Post
+								</h1>
+							) : hasMore ? (
 								<button
 									onClick={(event) => {
 										event.preventDefault();
@@ -100,6 +105,10 @@ const UserPage = () => {
 								>
 									load more
 								</button>
+							) : (
+								<h1 className=" text-yellow-600 my-4">
+									No More Post from this user
+								</h1>
 							)}
 						</div>
 					</div>
@@ -151,15 +160,13 @@ const UserPage = () => {
 						<h1 className="max-w-max font-semibold py-4 ">
 							{`Posts By ${postCreatorProfile?.firstName} ${postCreatorProfile.lastName}`}
 						</h1>
-
 						<MorePost post={creatorAllPost} status={creatorPostStatus} />
 
-						{creatorAllPostTotalPages === page ||
-						creatorAllPostTotalPages === 0 ? (
-							<div className=" text-yellow-600 my-4">
-								No more Post from this user
-							</div>
-						) : (
+						{creatorAllPost.length === 0 ? (
+							<h1 className=" text-yellow-600 my-4">
+								This user have no Post
+							</h1>
+						) : hasMore ? (
 							<button
 								onClick={(event) => {
 									event.preventDefault();
@@ -169,6 +176,10 @@ const UserPage = () => {
 							>
 								load more
 							</button>
+						) : (
+							<h1 className=" text-yellow-600 my-4">
+								{/* No More Post from this user */}
+							</h1>
 						)}
 					</div>
 				</div>

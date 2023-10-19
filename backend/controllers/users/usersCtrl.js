@@ -177,7 +177,6 @@ const fetchUserDetailsCtrl = expressAsyncHandler(async (req, res) => {
 //        update user profile
 // '''''''''''''''''''''''''''''''''''''''''''''
 const updateUserDetailsCtrl = expressAsyncHandler(async (req, res) => {
-	console.log("im here");
 	const { _id } = req?.user;
 	validateMongoDbUserId(_id);
 
@@ -248,9 +247,11 @@ const followingUserCtrl = expressAsyncHandler(async (req, res) => {
 	const loginUserId = req?.user.id;
 
 	const userToFollowId = req?.body.userToFollowOrUnfollowId;
-
+	if (userToFollowId === loginUserId)
+		throw new Error("sorry you can't follow yourself");
 	validateMongoDbUserId(userToFollowId);
 	let userToFollow = await User.findById(userToFollowId);
+
 	const allreadyFollowing = await userToFollow?.followers?.find(
 		(user) => user?.toString() === loginUserId.toString()
 	);
@@ -266,7 +267,7 @@ const followingUserCtrl = expressAsyncHandler(async (req, res) => {
 			new: true,
 			runValidators: true,
 		}
-	);
+	).select(["_id", "firstName", "lastName", "profilePhoto"]);
 
 	const user = await User.findByIdAndUpdate(
 		loginUserId,
@@ -282,6 +283,7 @@ const followingUserCtrl = expressAsyncHandler(async (req, res) => {
 	res.json({
 		message: `you have successfully follow ${userToFollow?.firstName} ${userToFollow?.lastName}`,
 		user,
+		userToFollow,
 	});
 });
 // '''''''''''''''''''''''''''''''''''''''''
@@ -316,6 +318,7 @@ const unFollowingUserCtrl = expressAsyncHandler(async (req, res) => {
 	res.status(200).json({
 		message: `you have successfully unfollow ${userToUnFollow?.firstName} ${userToUnFollow?.lastName}`,
 		user,
+		userToUnFollowId,
 	});
 });
 
@@ -489,7 +492,7 @@ const profilePhotoUploadCtrl = expressAsyncHandler(async (req, res) => {
 });
 
 // '''''''''''''''''''''''''''''''''''''''''
-//       profile photo upload
+//       save post
 // '''''''''''''''''''''''''''''''''''''''''''''
 
 const savePostCtrl = expressAsyncHandler(async (req, res) => {
@@ -503,7 +506,6 @@ const savePostCtrl = expressAsyncHandler(async (req, res) => {
 		);
 
 		if (savedPost.includes(postId)) {
-			console.log("im heree is there");
 			await User.findByIdAndUpdate(loginUserId, {
 				$pull: { savedPost: postId },
 			});
@@ -558,7 +560,7 @@ const savePostCtrl = expressAsyncHandler(async (req, res) => {
 });
 const fetchRandomUserCtrl = expressAsyncHandler(async (req, res) => {
 	const { numberOfUser } = req.body;
-	console.log("number", numberOfUser);
+
 	try {
 		const users = await User.aggregate([
 			{ $sample: { size: numberOfUser } },
@@ -579,6 +581,75 @@ const fetchRandomUserCtrl = expressAsyncHandler(async (req, res) => {
 	}
 });
 
+const fetchUserFollowingListCtrl = expressAsyncHandler(
+	async (req, res) => {
+		const { userId, startIndex, endIndex } = req.body;
+
+		try {
+			const userfollowinglist = await User.findById(userId)
+				.populate({
+					path: "following",
+					select: [
+						"_id",
+						"firstName",
+						"lastName",
+						"profilePhoto",
+						"profession",
+					],
+				})
+				.select("following");
+
+			const followinglistTotalNumber = userfollowinglist.following.length;
+
+			const paginatedFollowingList = userfollowinglist.following
+				.slice(startIndex, endIndex)
+				.reverse();
+
+			console.log(paginatedFollowingList);
+			res.status(200).json({
+				followinglistTotalNumber,
+				userfollowinglist: paginatedFollowingList,
+			});
+		} catch (error) {
+			res.status(500).json({ message: "Internal Server Error" });
+		}
+	}
+);
+const fetchUserFollowersListCtrl = expressAsyncHandler(
+	async (req, res) => {
+		const { userId, startIndex, endIndex } = req.body;
+
+		try {
+			const userFollowerList = await User.findById(userId)
+				.select("followers")
+				.populate({
+					path: "followers",
+					select: [
+						"_id",
+						"firstName",
+						"lastName",
+						"profilePhoto",
+						"profession",
+					],
+				});
+
+			const followerslistTotalNumber = userFollowerList.followers.length;
+
+			const paginatedFollowerList = userFollowerList.followers
+
+				.slice(startIndex, endIndex)
+				.reverse();
+
+			res.status(200).json({
+				followerslistTotalNumber,
+				userfollowerlist: paginatedFollowerList,
+			});
+		} catch (error) {
+			console.log(error);
+			res.status(500).json({ message: "Internal Server Error" });
+		}
+	}
+);
 module.exports = {
 	userRegisterCtrl,
 	userLoginCtrl,
@@ -597,4 +668,6 @@ module.exports = {
 	profilePhotoUploadCtrl,
 	savePostCtrl,
 	fetchRandomUserCtrl,
+	fetchUserFollowingListCtrl,
+	fetchUserFollowersListCtrl,
 };

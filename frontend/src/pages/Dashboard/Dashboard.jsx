@@ -1,11 +1,32 @@
-import React from "react";
-import { UserDetailsCount } from "../../components";
+import React, { useEffect } from "react";
+import {
+	PostDashboard,
+	Spinner,
+	UserDetailsCount,
+} from "../../components";
 import { useDispatch, useSelector } from "react-redux";
 import { articles, messages } from "../../utils/data";
+import {
+	fetchUserPostHistory,
+	fetchUserSavedPost,
+} from "../../redux/post/morePostSlice";
+import { Link } from "react-router-dom";
 
 const Dashboard = () => {
 	const dispatch = useDispatch();
-	const user = useSelector((store) => store?.userSlice);
+	// const user = useSelector((store) => store?.userSlice);
+	const {
+		userPostHistory,
+		userPostHistoryStatus,
+		userSavedPost,
+		userSavedPostStatus,
+	} = useSelector((store) => store?.morePostSlice);
+	console.log(userPostHistory);
+
+	useEffect(() => {
+		dispatch(fetchUserPostHistory());
+		dispatch(fetchUserSavedPost());
+	}, []);
 	return (
 		<div className=" flex flex-col sfont-inter lg:grid grid-cols-6 lg:gap-8 mt-16 mx-4">
 			<div className=" col-start-1 col-span-4 grid grid-cols-4 gap-6  row-start-1">
@@ -61,8 +82,22 @@ const Dashboard = () => {
 					})}
 				</div>
 			</div>
-			<div className="col-start-1  col-span-full row-start-2 bg-blue-400 mb-10  px-3">
-				<h1 className=" font-bold text-gray-800 mb-3">Recent Mesaages</h1>
+
+			<div className=" col-start-1 col-span-full  border-t py-4 flex gap-8 flex-col ">
+				<PostDashboard
+					posts={userPostHistory}
+					status={userPostHistoryStatus}
+					title={"Post View History"}
+					page={"/dashboard/post-History"}
+				/>
+			</div>
+			<div className=" col-start-1 col-span-full mb-6 border-y py-4 flex gap-8 flex-col ">
+				<PostDashboard
+					posts={userSavedPost}
+					status={userSavedPostStatus}
+					title={"Saved Post"}
+					page={"/dashboard/post-Saved"}
+				/>
 			</div>
 		</div>
 	);

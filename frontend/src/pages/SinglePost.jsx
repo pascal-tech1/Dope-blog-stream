@@ -56,7 +56,7 @@ const SinglePost = () => {
 				<NavBar />
 				<div className=" mt-16 mx-6 font-inter flex flex-col  lg:mx-auto max-w-[50rem] gap-[0.5rem]">
 					<div>
-						<h1 className=" font-bold text-2xl my-4">{post?.title}</h1>
+						<h1 className=" font-bold text-sm md:text-2xl my-4">{post?.title}</h1>
 					</div>
 					{/* about the user who created the post */}
 					<div className="flex flex-wrap   flex-col">

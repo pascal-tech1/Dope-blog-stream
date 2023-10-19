@@ -11,6 +11,8 @@ const {
 	fetchUserPostCtrl,
 
 	fetchPostByCategoryCtrl,
+	fetchUserPostHistoryCtrl,
+	fetchUserSavedPostCtrl,
 } = require("../../controllers/posts/postsCtrl");
 const authMiddleWare = require("../../middlewares/authentication/authMiddleWare");
 const {
@@ -20,6 +22,9 @@ const {
 
 const postsRoutes = express.Router();
 postsRoutes.get("/", fetchPostByCategoryCtrl);
+postsRoutes.get("/user-history", authMiddleWare, fetchUserPostHistoryCtrl);
+postsRoutes.get("/user-savedPost", authMiddleWare, fetchUserSavedPostCtrl);
+
 postsRoutes.post(
 	"/",
 	authMiddleWare,

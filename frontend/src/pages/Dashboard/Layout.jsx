@@ -11,7 +11,7 @@ const Layout = () => {
 		setIsDropDownOpen(data);
 	};
 	return (
-		<div className="grid grid-cols-12 font-inter font-extralight  text-sm text-gray-600 relative bg-[#fffbfb] ">
+		<div className="grid grid-cols-12 font-inter font-extralight  text-sm  relative  ">
 			<div className=" md:col-start-3 col-span-full row-start-1 md:relative">
 				<DashboardNavBAr toggleSideMenu={handleToggleSideBarMenu} />
 				<Outlet />

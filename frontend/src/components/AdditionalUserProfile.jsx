@@ -22,9 +22,6 @@ const AdditionalUserProfile = () => {
 	const dispatch = useDispatch();
 	// yup Schema
 	const formSchema = Yup.object().shape({
-		email: Yup.string()
-			.required("Email is Required")
-			.email("invalid Email"),
 		language: Yup.string().min(3, "language is Too Short."),
 		nickName: Yup.string().min(3, "Nick Name is Too Short."),
 		education: Yup.string().min(3, "education is too short"),
@@ -32,7 +29,6 @@ const AdditionalUserProfile = () => {
 
 	const formik = useFormik({
 		initialValues: {
-			email: user?.email,
 			language: user?.language,
 			nickName: user?.nickName,
 			education: user?.education,
@@ -132,13 +128,6 @@ const AdditionalUserProfile = () => {
 				</div>
 			) : (
 				<div className="flex flex-col gap-4 mt-5">
-					<div className=" flex gap-3 items-center ">
-						<MdOutlineEmail className=" text-gray-400 font-medium text-xl" />
-						<div>
-							<h2 className=" text-gray-400">Email</h2>
-							<h3 className=" text-blue-400 text-xs">{user?.email}</h3>
-						</div>
-					</div>
 					<div className=" flex gap-3 items-center">
 						<MdOutlineLanguage className=" text-gray-400 font-medium text-lg" />
 						<div>

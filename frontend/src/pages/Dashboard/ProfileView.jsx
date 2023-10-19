@@ -1,22 +1,53 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
 	AdditionalUserProfile,
+	FollowUsersList,
+	Spinner,
 	UserBio,
 	UserProfile,
 } from "../../components";
-
-import { MdEdit } from "react-icons/md";
-import { fetchAllCategorys } from "../../redux/category/categorySlice";
-import Dropdown from "../../components/Dropdown";
+import {
+	fetchUserFollowingList,
+	fetchUserFollowersList,
+} from "../../redux/user/userSlice";
 
 const ProfileView = () => {
-	const user = useSelector((store) => store?.userSlice?.user);
-	const { allCategory } = useSelector((store) => store?.categorySlice);
+	const {
+		user,
+		userfollowinglist,
+		followinglistTotalNumber,
+		fetchingFollowingListStatus,
+		userFollowerslist,
+		followerslistTotalNumber,
+		fetchingFollowersListStatus,
+	} = useSelector((store) => store?.userSlice);
+	const initialFollowingListNumber = 1;
 	const dispatch = useDispatch();
+
+	const _id = user?.id;
 	useEffect(() => {
-		dispatch(fetchAllCategorys());
-	}, []);
+		if (!_id) return;
+		if (userFollowerslist?.length > 0) return;
+		dispatch(
+			fetchUserFollowingList({
+				startIndex: 0,
+				endIndex: initialFollowingListNumber,
+				userId: _id,
+			})
+		);
+		dispatch(
+			fetchUserFollowersList({
+				startIndex: 0,
+				endIndex: initialFollowingListNumber,
+				userId: _id,
+			})
+		);
+	}, [_id]);
+
+	if (!user) {
+		return <h3 className=" text-black text-3xl">Loading ....</h3>;
+	}
 	return (
 		<div className=" flex flex-col md:ml-14 row-span-2 lg:grid grid-cols-6 pcol-start-1 col-span-4 rounded-xl mx-4 lg:mb-6 pt-4 lg:shadow-sm lg:rounded-md lg:ml-0  font-inter mt-10 gap-5 bg-white lg:bg-transparent">
 			<div className=" col-start-1 col-span-4  bg-white lg:shadow-sm lg:rounded-md">
@@ -41,35 +72,30 @@ const ProfileView = () => {
 
 			{/* profile Additional details */}
 			<AdditionalUserProfile />
-			{/* category */}
-			<div className="px-4 col-start-5 col-span-2 bg-white lg:shadow-sm lg:rounded-md py-3 mb-6 ">
-				<div className=" flex justify-between mr-4 ">
-					<h1 className=" font-bold text-gray-900 ">Your Category</h1>
-					<button className="flex gap-1">
-						<MdEdit className=" text-blue-500" />
-						<h3 className="font-bold text-gray-600 hover:text-gray-900 text-xs">
-							Edits
-						</h3>
-					</button>
-				</div>
-				<div className=" py-6">
-					<h3>All Category</h3>
-					
-					<div className="flex justify-between  flex-wrap">
-						{allCategory?.map((category, index) => {
-							if (category.title === "All") return;
-							return (
-								<button
-									key={index}
-									className=" text-sm delay-75 mt-2 mx-2 flex f bg-gray-100 hover:bg-gray-200 rounded-xl  py-[0.35rem] px-4"
-								>
-									{category.title}
-								</button>
-							);
-						})}
-					</div>
-				</div>
-				<Dropdown />
+
+			{/* following  */}
+			<div className=" lg:col-start-1 col-span-3">
+				<h1 className="font-semibold  max-w-max pt-3 pb-1 ">following</h1>
+
+				<FollowUsersList
+					list={userfollowinglist}
+					listTotalNumber={followinglistTotalNumber}
+					fetchingListStatus={fetchingFollowingListStatus}
+					fetchAction={fetchUserFollowingList}
+					_id={_id}
+				/>
+			</div>
+			{/* followers  */}
+			<div className=" lg:col-start-4 col-span-full">
+				<h1 className="font-semibold  max-w-max pt-3 pb-1 ">followers</h1>
+
+				<FollowUsersList
+					list={userFollowerslist}
+					listTotalNumber={followerslistTotalNumber}
+					fetchingListStatus={fetchingFollowersListStatus}
+					fetchAction={fetchUserFollowersList}
+					_id={_id}
+				/>
 			</div>
 		</div>
 	);

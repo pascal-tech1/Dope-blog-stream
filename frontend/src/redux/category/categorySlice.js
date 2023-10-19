@@ -34,11 +34,10 @@ const categorySlice = createSlice({
 		[fetchAllCategorys.fulfilled]: (state, { payload }) => {
 			state.status = "success";
 			state.allCategory = payload.allCategory;
-			console.log(state.allCategory);
 		},
 		[fetchAllCategorys.rejected]: (state, { payload }) => {
 			state.status = "failed";
-			toast.error(payload.message);
+			toast.error(payload?.message);
 		},
 	},
 });

@@ -18,7 +18,10 @@ const {
 	profilePhotoUploadCtrl,
 	userLoginWithTokenCtrl,
 	savePostCtrl,
-	fetchRandomUserCtrl
+	fetchRandomUserCtrl,
+	fetchUserFollowersListCtrl,
+	fetchUserFollowingListCtrl,
+	
 } = require("../../controllers/users/usersCtrl");
 const {
 	profilePhotoUpload,
@@ -28,6 +31,7 @@ const {
 const userRoutes = express.Router();
 
 userRoutes.post("/register", userRegisterCtrl);
+
 userRoutes.post("/random-users", fetchRandomUserCtrl);
 userRoutes.get("/loginWithToken", authMiddleWare, userLoginWithTokenCtrl);
 userRoutes.post("/login", userLoginCtrl);
@@ -55,5 +59,7 @@ userRoutes.post("/unfollow", authMiddleWare, unFollowingUserCtrl);
 userRoutes.put("/updatePassword", authMiddleWare, updatePasswordCtrl);
 userRoutes.put("/:USERID", authMiddleWare, updateUserDetailsCtrl);
 userRoutes.get("/profile/:userId", fetchUserDetailsCtrl);
+userRoutes.post("/followers", fetchUserFollowersListCtrl);
+userRoutes.post("/following", fetchUserFollowingListCtrl);
 
 module.exports = userRoutes;

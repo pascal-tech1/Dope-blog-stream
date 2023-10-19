@@ -5,7 +5,7 @@ import Home from "./Home";
 import SinglePost from "./SinglePost";
 import AllPost from "./AllPost";
 import UserPage from "./userPage";
-import PostCatgory from "./PostCatgory";
+
 import Error from "./Error";
 
 export {
@@ -16,6 +16,5 @@ export {
 	SinglePost,
 	AllPost,
 	UserPage,
-	PostCatgory,
-    Error
+	Error,
 };

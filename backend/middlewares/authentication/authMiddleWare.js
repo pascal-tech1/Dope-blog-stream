@@ -9,15 +9,14 @@ const jwt = require("jsonwebtoken");
 const authMiddleWare = expressAsyncHandler(async (req, res, next) => {
 	// checking if the user entered header for authorization
 	const enteredHeader = req?.headers.authorization;
+	if (!enteredHeader)
+		throw new Error("Request unAuthorize Enter a valid Token");
+	if (!enteredHeader?.startsWith("Bearer"))
+		throw new Error("Request header must start with Bearer");
 
+	const enteredToken = enteredHeader?.split(" ")[1];
+	if (!enteredToken) throw new Error("Request must contain a valid token");
 	try {
-		if (!enteredHeader) throw new Error("Request unAuthorize");
-		if (!enteredHeader?.startsWith("Bearer"))
-			throw new Error("Request header must start with Bearer");
-
-		const enteredToken = enteredHeader?.split(" ")[1];
-		if (!enteredToken)
-			throw new Error("Request must contain a valid token");
 		//   verify the user entered token with jwt
 		const decodedToken = jwt.verify(enteredToken, process.env.JWT_KEY);
 		const userId = decodedToken?.id;
@@ -30,7 +29,7 @@ const authMiddleWare = expressAsyncHandler(async (req, res, next) => {
 	} catch (error) {
 		res.status(500).json({
 			status: "failed",
-			error: "invalid token or Expired login Again",
+			messsage: "invalid token or Expired login Again",
 		});
 	}
 });

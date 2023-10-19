@@ -9,7 +9,6 @@ import { GiShadowFollower } from "react-icons/gi";
 import { IoMdArrowDropdown } from "react-icons/io";
 
 const DashboardSideBar = () => {
-	
 	const [isMenuOpen, setIsMenuOpen] = useState({
 		profile: false,
 		messages: false,
@@ -17,7 +16,6 @@ const DashboardSideBar = () => {
 	});
 
 	const toggleMenuOption = (title) => {
-		
 		setIsMenuOpen((prev) => ({
 			...prev,
 			[title]: !prev[title],
@@ -55,7 +53,27 @@ const DashboardSideBar = () => {
 				},
 			],
 		},
-		{ title: "post", icon: "MdOutlineSignpost" },
+
+		{
+			title: "post",
+			icon: "MdOutlineSignpost",
+			menuOpen: isMenuOpen.post,
+			hasSubMenu: true,
+			submenu: [
+				{
+					title: "My Posts",
+				},
+				{
+					title: "Create",
+				},
+				{
+					title: "History",
+				},
+				{
+					title: "Saved",
+				},
+			],
+		},
 		{ title: "followers", icon: "GiShadowFollower" },
 		{
 			title: "messages",
@@ -75,7 +93,7 @@ const DashboardSideBar = () => {
 	];
 
 	return (
-		<aside className=" flex flex-col  font-medium">
+		<aside className=" flex flex-col  font-medium fixed bg-white">
 			<Link to="/" className="mt-10 mb-6 ml-10 hidden md:flex">
 				<img
 					src="../../public/blogvana.png"
@@ -124,22 +142,24 @@ const DashboardSideBar = () => {
 									<IoMdArrowDropdown />
 								</div>
 
-								{sideBarItem.submenu?.map((submenuItem, index) => {
-									return (
-										<NavLink
-											key={index}
-											onClick={() => {
-												closeMenu(sideBarItem.title);
-											}}
-											to={`${sideBarItem.title}-${submenuItem?.title}`}
-											className={`${
-												sideBarItem.menuOpen ? "flex" : "hidden"
-											}  flex mt-1 ml-4 py-1 px-5 hover:text-white hover:bg-blue-400  w-max aria-[current=page]:text-white rounded-lg aria-[current=page]:bg-blue-400`}
-										>
-											<h3 className="">{submenuItem.title}</h3>
-										</NavLink>
-									);
-								})}
+								<div className=" flex flex-col items-center justify-start border-l ">
+									{sideBarItem.submenu?.map((submenuItem, index) => {
+										return (
+											<NavLink
+												key={index}
+												onClick={() => {
+													closeMenu(sideBarItem.title);
+												}}
+												to={`${sideBarItem.title}-${submenuItem?.title}`}
+												className={`${
+													sideBarItem.menuOpen ? "" : "hidden"
+												}  flex mt-1   py-1 px-2 hover:text-white hover:bg-blue-400   w-max aria-[current=page]:text-white rounded-lg aria-[current=page]:bg-blue-400`}
+											>
+												<h3 className="">{submenuItem.title}</h3>
+											</NavLink>
+										);
+									})}
+								</div>
 							</div>
 						) : (
 							<NavLink

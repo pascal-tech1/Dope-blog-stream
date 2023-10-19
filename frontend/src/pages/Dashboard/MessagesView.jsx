@@ -1,9 +1,8 @@
-import React from 'react'
+import React from "react";
+import PostTable from "../../components/PostTable";
 
 const MessagesView = () => {
-  return (
-    <div>MessagesView</div>
-  )
-}
+	return <PostTable />;
+};
 
-export default MessagesView
+export default MessagesView;

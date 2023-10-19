@@ -13,34 +13,30 @@ const UserProfile = () => {
 	const dispatch = useDispatch();
 	// yup Schema
 	const formSchema = Yup.object().shape({
-		fullName: Yup.string()
+		firstName: Yup.string()
 			.required("First Name is Required.")
-			.min(1, "First Name is Too Short."),
+			.min(2, "First Name is Too Short."),
+		lastName: Yup.string()
+			.required("Last Name is Required.")
+			.min(2, "Last Name is Too Short."),
 		profession: Yup.string().min(3, "profession is Too Short."),
 		location: Yup.string().min(3, "location is Too Short."),
 	});
 
 	const formik = useFormik({
 		initialValues: {
-			fullName: user?.firstName + " " + user?.lastName,
+			firstName: user?.firstName,
+			lastName: user?.lastName,
 			profession: user?.profession,
 			location: user?.location,
 		},
 
 		onSubmit: (values) => {
-			setIsUserProfileClicked(!isUserProfileClicked);
-			if (!isUserProfileClicked) return;
-
-			const firstName = values.fullName.split(" ")[0];
-			const lastName = values.fullName.split(" ")[1];
-
-			const location = values.location || "None";
-			const profession = values.profession || "none";
 			const user = {
-				firstName: firstName,
-				lastName: lastName,
-				profession: profession,
-				location: location,
+				firstName: values.firstName,
+				lastName: values.lastName,
+				location: values.location || "None",
+				profession: values.profession || "none",
 			};
 			dispatch(updateUser(user));
 		},
@@ -56,14 +52,27 @@ const UserProfile = () => {
 					<div className=" relative">
 						<input
 							className=" text-center px-1 py-1 outline-none focus:border-b-blue-800 border border-blue-400 rounded-md"
-							value={formik.values.fullName}
-							onChange={formik.handleChange("fullName")}
-							onBlur={formik.handleBlur("fullName")}
+							value={formik.values.firstName}
+							onChange={formik.handleChange("firstName")}
+							onBlur={formik.handleBlur("firstName")}
 							type="text"
-							placeholder="firstName space lastName"
+							placeholder="firstName"
 						/>
 						<p className="  bottom-[-0.5rem] text-red-400">
-							{formik.touched.fullName && formik.errors.fullName}
+							{formik.touched.firstName && formik.errors.firstName}
+						</p>
+					</div>
+					<div className=" relative">
+						<input
+							className=" text-center px-1 py-1 outline-none focus:border-b-blue-800 border border-blue-400 rounded-md"
+							value={formik.values.lastName}
+							onChange={formik.handleChange("lastName")}
+							onBlur={formik.handleBlur("lastName")}
+							type="text"
+							// placeholder="lastName"
+						/>
+						<p className="  bottom-[-0.5rem] text-red-400">
+							{formik.touched.lastName && formik.errors.lastName}
 						</p>
 					</div>
 					<div className=" relative">
@@ -73,7 +82,6 @@ const UserProfile = () => {
 							onChange={formik.handleChange("profession")}
 							onBlur={formik.handleBlur("profession")}
 							type="text"
-							placeholder="profession"
 						/>
 						<p className=" bottom-0 text-red-400">
 							{formik.touched.profession && formik.errors.profession}
@@ -103,6 +111,7 @@ const UserProfile = () => {
 			)}
 
 			<button
+				onClick={() => setIsUserProfileClicked(!isUserProfileClicked)}
 				type="submit"
 				className="absolute top-0 right-3 flex items-center text-sm transition-all "
 			>

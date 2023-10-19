@@ -89,11 +89,11 @@ export const followOrUnfollowUser = createAsyncThunk(
 			userToFollowOrUnfollowId
 		);
 
-		const followOrUnFollow = isfollowing ? "unfollow" : "follow";
+		const action = isfollowing ? "unfollow" : "follow";
 
 		try {
 			const resp = await customFetch.post(
-				`users/${followOrUnFollow}`,
+				`users/${action}`,
 				{ userToFollowOrUnfollowId },
 				{
 					headers: {
@@ -102,9 +102,8 @@ export const followOrUnfollowUser = createAsyncThunk(
 				}
 			);
 
-			return resp.data;
+			return { data: resp.data, action };
 		} catch (error) {
-			console.log(error)
 			if (!error.response) {
 				throw new Error(error);
 			}
@@ -154,10 +153,47 @@ export const fetchRandomUser = createAsyncThunk(
 	}
 );
 
+export const fetchUserFollowingList = createAsyncThunk(
+	"user/followingList",
+	async (user, { getState, rejectWithValue }) => {
+		try {
+			const resp = await customFetch.post("/users/following", user);
+
+			return resp.data;
+		} catch (error) {
+			console.log(error);
+			if (!error.response) {
+				throw new Error();
+			}
+			return rejectWithValue(error?.response?.data);
+		}
+	}
+);
+export const fetchUserFollowersList = createAsyncThunk(
+	"user/followersList",
+	async (user, { getState, rejectWithValue }) => {
+		try {
+			const resp = await customFetch.post("/users/followers", user);
+
+			return resp.data;
+		} catch (error) {
+			if (!error.response) {
+				throw new Error();
+			}
+			return rejectWithValue(error?.response?.data);
+		}
+	}
+);
 const initialState = {
 	user: null,
 	token: getUserFromLocalStorage(),
 	randomUsers: [],
+	userfollowinglist: [],
+	followinglistTotalNumber: 0,
+	userFollowerslist: [],
+	followerslistTotalNumber: 0,
+	fetchingFollowersListStatus: "idle",
+	fetchingFollowingListStatus: "idle",
 };
 const userSlice = createSlice({
 	name: "userSlice",
@@ -165,7 +201,15 @@ const userSlice = createSlice({
 	reducers: {
 		logOutUser: (state, action) => {
 			state.user = null;
-			removeUserFromLocalStorage(action.payload);
+			state.token = getUserFromLocalStorage();
+			state.randomUsers = [];
+			state.userfollowinglist = [];
+			state.followinglistTotalNumber = 0;
+			state.userFollowerslist = [];
+			state.followerslistTotalNumber = 0;
+			state.fetchingFollowersListStatus = "idle";
+			(state.fetchingFollowingListStatus = "idle"),
+				removeUserFromLocalStorage(action.payload);
 		},
 		setUserState: (state, action) => {
 			state.user = action.payload;
@@ -234,17 +278,30 @@ const userSlice = createSlice({
 			toast.error(payload.message);
 		},
 		[followOrUnfollowUser.pending]: (state) => {
-			state.isLoading = true;
+			state.follwoingIsLoading = true;
 		},
-		[followOrUnfollowUser.fulfilled]: (state, action) => {
-			state.isLoading = false;
-			state.appErr = undefined;
-			state.serverErr = undefined;
-			state.user = action.payload.user;
-			toast.success(action.payload?.message);
+		[followOrUnfollowUser.fulfilled]: (state, { payload }) => {
+			state.follwoingIsLoading = false;
+			state.user = payload.data.user;
+
+			toast.success(payload.data.message);
+
+			if (payload.action === "unfollow") {
+				state.userfollowinglist = state.userfollowinglist.filter(
+					(user) => user._id !== payload.data.userToUnFollowId
+				);
+				state.followinglistTotalNumber -= 1;
+			}
+			if (payload.action === "follow") {
+				state.userfollowinglist = [
+					payload.data.userToFollow,
+					...state.userfollowinglist,
+				];
+				state.followinglistTotalNumber += 1;
+			}
 		},
 		[followOrUnfollowUser.rejected]: (state, action) => {
-			state.isLoading = false;
+			state.follwoingIsLoading = false;
 			state.appErr = action?.payload?.message;
 			state.serverErr = action?.error?.message;
 			state?.appErr
@@ -276,6 +333,35 @@ const userSlice = createSlice({
 		},
 		[fetchRandomUser.rejected]: (state, action) => {
 			state.isLoading = false;
+			state.appErr = action?.payload?.message;
+			state.serverErr = action?.error?.message;
+			toast.error(action?.payload?.message);
+		},
+		[fetchUserFollowingList.pending]: (state) => {
+			state.fetchingFollowingListStatus = "loading";
+		},
+		[fetchUserFollowingList.fulfilled]: (state, { payload }) => {
+			state.fetchingFollowingListStatus = "success";
+			state.userfollowinglist = payload.userfollowinglist;
+			state.followinglistTotalNumber = payload.followinglistTotalNumber;
+		},
+		[fetchUserFollowingList.rejected]: (state, action) => {
+			state.fetchingFollowingListStatus = "failed";
+			state.appErr = action?.payload?.message;
+			state.serverErr = action?.error?.message;
+			toast.error(action?.payload?.message);
+		},
+		[fetchUserFollowersList.pending]: (state) => {
+			state.fetchingFollowersListStatus = "loading";
+		},
+		[fetchUserFollowersList.fulfilled]: (state, { payload }) => {
+			state.fetchingFollowersListStatus = "success";
+			console.log(payload.userfollowerlist);
+			state.userFollowerslist = payload.userfollowerlist;
+			state.followerslistTotalNumber = payload.followerslistTotalNumber;
+		},
+		[fetchUserFollowersList.rejected]: (state, action) => {
+			state.fetchingFollowersListStatus = "failed";
 			state.appErr = action?.payload?.message;
 			state.serverErr = action?.error?.message;
 			toast.error(action?.payload?.message);

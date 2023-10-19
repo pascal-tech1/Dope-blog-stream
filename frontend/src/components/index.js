@@ -14,6 +14,8 @@ import PostUserInfo from "./PostUserInfo";
 import UserToFollow from "./UserToFollow";
 import Category from "./Category";
 import CustomDropdown from "./Dropdown";
+import PostDashboard from "./PostDashboard";
+import FollowUsersList from "./FollowUsersList";
 
 export {
 	DashboardSideBar,
@@ -33,4 +35,6 @@ export {
 	LikesSaveViews,
 	Category,
 	CustomDropdown,
+	PostDashboard,
+	FollowUsersList,
 };

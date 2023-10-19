@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { followOrUnfollowUser } from "../redux/user/userSlice";
 import { Link, useNavigate } from "react-router-dom";
@@ -40,32 +40,30 @@ export const EditPostBtn = ({ postId }) => {
 	const { postEditingStatus } = useSelector(
 		(store) => store.singlePostSlice
 	);
+	const [clickId, setClickId] = useState();
 
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 	const handleEditPost = async () => {
 		dispatch(setIsEditingPost(true));
+		setClickId(postId);
 		const isPostFetch = await dispatch(fetchPostToBeEdited(postId));
 		if (isPostFetch) {
-			navigate("/dashboard/post");
+			navigate("/dashboard/post-Create");
 		}
 	};
 	return (
-		<button
-			onClick={handleEditPost}
-			className="border self-center px-1 hover:bg-blue-400 text-center py-[0.1rem] hover:text-white rounded-md transition-all delay-75 border-blue-400 "
-		>
-			<h3>
-				{postEditingStatus === "loading" ? (
-					<Spinner
-						className={
-							"w-4 h-4 mr-2 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600"
-						}
-					/>
+		<div>
+			<button
+				onClick={handleEditPost}
+				className="border self-center px-1 hover:bg-blue-400 text-center py-[0.1rem] hover:text-white rounded-md transition-all delay-75 border-blue-400 "
+			>
+				{postEditingStatus === "loading" && clickId === postId ? (
+					<Spinner className="h-[1.2rem] w-[1.2rem] text-gray-200 animate-spin dark:text-gray-600 fill-blue-600" />
 				) : (
-					"Edit Post"
+					"Edit"
 				)}
-			</h3>
-		</button>
+			</button>
+		</div>
 	);
 };

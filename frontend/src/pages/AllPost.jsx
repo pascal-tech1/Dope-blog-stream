@@ -15,9 +15,9 @@ const AllPost = () => {
 	);
 
 	useEffect(() => {
-		dispatch(fetchPostByCategory());
+		allPost.length === 0 && dispatch(fetchPostByCategory());
 	}, []);
-
+	console.log(allPost);
 	const observer = useRef();
 	const lastPostRef = useCallback(
 		(node) => {
@@ -42,7 +42,6 @@ const AllPost = () => {
 	return (
 		<>
 			{allPost.map((post, index) => {
-				allPost.length === index + 1;
 				return (
 					<div
 						key={index}

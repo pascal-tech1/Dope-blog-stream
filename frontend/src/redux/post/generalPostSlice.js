@@ -35,7 +35,6 @@ export const likeOrDislikePost = createAsyncThunk(
 				choice,
 			};
 		} catch (error) {
-			console.log(error)
 			if (!error?.response) {
 				throw new Error(error);
 			}
@@ -47,7 +46,6 @@ export const likeOrDislikePost = createAsyncThunk(
 export const fetchPostCreatorProfile = createAsyncThunk(
 	"fetch/postcreatorProfile",
 	async (userId, { rejectWithValue, getState, dispatch }) => {
-		console.log(userId);
 		try {
 			const resp = await customFetch(`/users/profile/${userId}`);
 			return resp.data;
@@ -62,13 +60,12 @@ export const fetchPostCreatorProfile = createAsyncThunk(
 
 export const fetchCreatorPosts = createAsyncThunk(
 	"fetch/creatorPost",
-	async (postAndUserId, { getState, rejectWithValue }) => {
-		const { page } = postAndUserId;
+	async (params, { getState, rejectWithValue }) => {
 		const postNumberPerPage = 10;
 		try {
 			const resp = await customFetch.put(
-				`/posts/user-post?page=${page}&postNumberPerPage=${postNumberPerPage}`,
-				postAndUserId
+				`/posts/user-post?page=${params.page}&postNumberPerPage=${postNumberPerPage}`,
+				params
 			);
 
 			return resp.data;
@@ -85,7 +82,9 @@ const initialState = {
 	postCreatorProfile: null,
 	postCreatorProfileStatus: "idle",
 	creatorAllPost: [],
-	creatorAllPostTotalPages: 1,
+	creatorAllPostTotalPages: null,
+	creatoPostTotalNumber: null,
+	hasMore: true,
 };
 
 const generalPostSlice = createSlice({
@@ -104,10 +103,7 @@ const generalPostSlice = createSlice({
 		},
 		[likeOrDislikePost.fulfilled]: (state, { payload }) => {
 			state.creatorAllPost.map((post) => {
-				
 				if (post?._id === payload?.postId) {
-					
-					console.log("im here liking or dislii post");
 					post.likes = payload.likes;
 					post.disLikes = payload.disLikes;
 				}
@@ -128,7 +124,6 @@ const generalPostSlice = createSlice({
 			state.postCreatorProfileStatus = "loading";
 		},
 		[fetchPostCreatorProfile.fulfilled]: (state, { payload }) => {
-		
 			state.postCreatorProfileStatus = "success";
 			state.postCreatorProfile = payload;
 		},
@@ -140,12 +135,14 @@ const generalPostSlice = createSlice({
 		},
 		[fetchCreatorPosts.fulfilled]: (state, { payload }) => {
 			state.creatorPostStatus = "success";
-
+			state.creatoPostTotalNumber = payload.totalNumber;
 			state.creatorAllPost = [...state.creatorAllPost, ...payload.posts];
 			state.creatorAllPostTotalPages = payload.totalPages;
+
+			if (payload.posts.length < 10) state.hasMore = false;
+			else state.hasMore = true;
 		},
 		[fetchCreatorPosts.rejected]: (state, action) => {
-			console.log(action.payload);
 			state.creatorPostStatus = "failed";
 			state.appErr = action?.payload?.message;
 			state.serverErr = action?.error?.message;

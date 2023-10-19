@@ -58,34 +58,6 @@ const createPostCtrl = expressAsyncHandler(async (req, res) => {
 });
 
 // '''''''''''''''''''''''''''''''''''''''''
-//   fetch all post and populate with the user that created it Post conttoller
-// '''''''''''''''''''''''''''''''''''''''''''''
-
-// const fetchAllPostsCtrl = expressAsyncHandler(async (req, res) => {
-// 	let page = parseInt(req?.query?.page) || 1;
-
-// 	const postNumberPerPage = parseInt(req?.query?.postNumberPerPage) || 10; // Number of items per page
-
-// 	// Calculate the skip value to skip items on previous pages
-// 	let skip = (page - 1) * postNumberPerPage;
-// 	try {
-// 		// Use MongoDB's find method with skip and limit
-
-// 		const posts = await Post.find({})
-// 			.skip(skip)
-// 			.limit(postNumberPerPage)
-// 			.populate({
-// 				path: "user",
-// 				select: ["_id", "firstName", "lastName", "profilePhoto"],
-// 			})
-// 			.select("-content");
-// 		res.status(200).json(posts);
-// 	} catch (error) {
-// 		res.status(500).json({ error: "Internal Server Error" });
-// 	}
-// });
-
-// '''''''''''''''''''''''''''''''''''''''''
 //   fetch All the  user post controller
 // '''''''''''''''''''''''''''''''''''''''''''''
 const fetchUserPostCtrl = expressAsyncHandler(async (req, res) => {
@@ -106,13 +78,14 @@ const fetchUserPostCtrl = expressAsyncHandler(async (req, res) => {
 		const totalPages = Math.ceil(totalPosts / postNumberPerPage);
 		const startIndex = (page - 1) * postNumberPerPage;
 		const endIndex = page * postNumberPerPage;
-
+		console.log(page, startIndex, endIndex);
 		const paginatedPosts = posts.slice(startIndex, endIndex);
 
 		res.json({
 			currentPage: page,
 			totalPages: totalPages,
 			posts: paginatedPosts,
+			totalNumber: totalPosts,
 		});
 	} catch (error) {
 		res.status(500).json({ message: "Internal Server Error" });
@@ -344,11 +317,10 @@ const searchPostCtrl = expressAsyncHandler(async (req, res) => {
 });
 
 const fetchPostByCategoryCtrl = expressAsyncHandler(async (req, res) => {
-	console.log("im here category");
 	let page = parseInt(req?.query?.page) || 1; // Current page,ipco
 	const postNumberPerPage = parseInt(req?.query?.postNumberPerPage) || 10; // Number of items per page
 	const category = req.query?.category;
-	console.log(page, postNumberPerPage, category);
+
 	// Calculate the skip value to skip items on previous pages
 	let skip = (page - 1) * postNumberPerPage;
 	try {
@@ -380,6 +352,70 @@ const fetchPostByCategoryCtrl = expressAsyncHandler(async (req, res) => {
 	}
 });
 
+const fetchUserPostHistoryCtrl = expressAsyncHandler(async (req, res) => {
+	const { _id } = req.user;
+
+	const page = parseInt(req.query.page) || 1; // Current page number, default to 1
+	const postNumberPerPage = parseInt(req.query.postNumberPerPage) || 10; // Number of items per page
+
+	try {
+		const { postViewHistory } = await User.findById(_id)
+			.populate({
+				path: "postViewHistory",
+				select: ["image", "title", "createdAt"],
+			})
+			.select("postViewHistory");
+
+		const totalPages = Math.ceil(
+			postViewHistory.length / postNumberPerPage
+		);
+		const startIndex = (page - 1) * postNumberPerPage;
+		const endIndex = page * postNumberPerPage;
+
+		const paginatedPosts = postViewHistory
+			.reverse()
+			.slice(startIndex, endIndex);
+
+		res.json({
+			currentPage: page,
+			totalPages: totalPages,
+			posts: paginatedPosts,
+		});
+	} catch (error) {
+		res.status(500).json({ message: "failed to fetch post history" });
+	}
+});
+
+const fetchUserSavedPostCtrl = expressAsyncHandler(async (req, res) => {
+	const { _id } = req.user;
+
+	const page = parseInt(req.query.page) || 1; // Current page number, default to 1
+	const postNumberPerPage = parseInt(req.query.postNumberPerPage) || 10; // Number of items per page
+
+	try {
+		const { savedPost } = await User.findById(_id)
+			.populate({
+				path: "savedPost",
+				select: ["image", "title", "createdAt"],
+			})
+			.sort({ _id: -1 })
+			.select("savedPost");
+
+		const totalPages = Math.ceil(savedPost.length / postNumberPerPage);
+		const startIndex = (page - 1) * postNumberPerPage;
+		const endIndex = page * postNumberPerPage;
+
+		const paginatedPosts = savedPost.reverse().slice(startIndex, endIndex);
+		res.json({
+			currentPage: page,
+			totalPages: totalPages,
+			posts: paginatedPosts,
+		});
+	} catch (error) {
+		res.status(500).json({ message: "failed to fetch post history" });
+	}
+});
+
 module.exports = {
 	createPostCtrl,
 	fetchUserPostCtrl,
@@ -390,4 +426,6 @@ module.exports = {
 	disLikingPostCtrl,
 	searchPostCtrl,
 	fetchPostByCategoryCtrl,
+	fetchUserPostHistoryCtrl,
+	fetchUserSavedPostCtrl,
 };

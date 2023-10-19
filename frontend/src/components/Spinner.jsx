@@ -23,7 +23,6 @@ const Spinner = ({ className }) => {
 					fill="currentFill"
 				/>
 			</svg>
-			<h1>loading...</h1>
 		</div>
 	);
 	S;

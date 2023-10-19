@@ -28,10 +28,54 @@ export const fetchMorePost = createAsyncThunk(
 				`/posts/?page=${page}&postNumberPerPage=${postNumberPerPage}&category=${activeCategory}`
 			);
 			return resp.data;
+		} catch (error) {
+			console.log(error);
+			if (!error?.response) {
+				throw new Error(error);
+			}
+			return rejectWithValue(error?.response?.data);
+		}
+	}
+);
+export const fetchUserPostHistory = createAsyncThunk(
+	"fetch/userPostHistory",
+	async (historyPageNumber, { getState, rejectWithValue }) => {
+		const { postNumberPerPage } = getState().morePostSlice;
+
+		try {
+			const resp = await customFetch(
+				`/posts/user-history?page=${historyPageNumber}&postNumberPerPage=${postNumberPerPage}`,
+				{
+					headers: {
+						Authorization: `Bearer ${getState().userSlice.token}`,
+					},
+				}
+			);
+			return resp.data;
+		} catch (error) {
+			if (!error?.response) {
+				throw new Error(error);
+			}
+			return rejectWithValue(error?.response?.data);
+		}
+	}
+);
+export const fetchUserSavedPost = createAsyncThunk(
+	"fetch/savedPost",
+	async (savedPostPageNumber, { getState, rejectWithValue }) => {
+		const { postNumberPerPage } = getState().morePostSlice;
+		try {
+			const resp = await customFetch(
+				`/posts/user-savedPost?page=${savedPostPageNumber}&postNumberPerPage=${postNumberPerPage}`,
+				{
+					headers: {
+						Authorization: `Bearer ${getState().userSlice.token}`,
+					},
+				}
+			);
 			console.log(resp.data);
 			return resp.data;
 		} catch (error) {
-			console.log(error);
 			if (!error?.response) {
 				throw new Error(error);
 			}
@@ -46,6 +90,15 @@ const initialState = {
 	isLoading: false,
 	morePost: [],
 	morePostStatus: "idle",
+	userPostHistoryStatus: "idle",
+	userPostHistory: [],
+	userSavedPost: [],
+	postNumberPerPage: 10,
+	userSavedPostStatus: "idle",
+	savedPostPageNumber: 1,
+	historyPageNumber: 1,
+	historyHasMore: true,
+	savedPostHasMore: true,
 };
 
 const morePostSlice = createSlice({
@@ -79,6 +132,22 @@ const morePostSlice = createSlice({
 				}
 			});
 		},
+		IncreaseHistoryPageNumber: (state) => {
+			state.historyPageNumber = state.historyPageNumber + 1;
+		},
+		IncreaseSavedPostPageNumber: (state) => {
+			state.savedPostPageNumber = state.savedPostPageNumber + 1;
+		},
+		setHistoryFirstSearch: (state) => {
+			state.userPostHistory = [];
+			state.historyPageNumber;
+			state.historyHasMore = true;
+		},
+		setSavedPostFirstSearch: (state) => {
+			state.userSavedPost = [];
+			state.savedPostPageNumber = 1;
+			state.savedPostHasMore = true;
+		},
 	},
 	extraReducers: {
 		// fetch  user creator Post
@@ -103,6 +172,37 @@ const morePostSlice = createSlice({
 		[fetchMorePost.rejected]: (state, action) => {
 			state.morePostStatus = "failed";
 		},
+		[fetchUserPostHistory.pending]: (state, action) => {
+			state.userPostHistoryStatus = "loading";
+		},
+		[fetchUserPostHistory.fulfilled]: (state, { payload }) => {
+			console.log(payload.posts);
+			state.userPostHistoryStatus = "success";
+			if (payload.posts.length < 10) {
+				state.historyHasMore = false;
+			} else {
+				state.historyHasMore = true;
+			}
+			state.userPostHistory = [...state.userPostHistory, ...payload.posts];
+		},
+		[fetchUserPostHistory.rejected]: (state, action) => {
+			state.userPostHistoryStatus = "failed";
+		},
+		[fetchUserSavedPost.pending]: (state, action) => {
+			state.userSavedPostStatus = "loading";
+		},
+		[fetchUserSavedPost.fulfilled]: (state, { payload }) => {
+			state.userSavedPostStatus = "success";
+			if (payload.posts.length < 10) {
+				state.savedPostHasMore = false;
+			} else {
+				state.savedPostHasMore = true;
+			}
+			state.userSavedPost = [...state.userSavedPost, ...payload.posts];
+		},
+		[fetchUserSavedPost.rejected]: (state, action) => {
+			state.userSavedPostStatus = "failed";
+		},
 	},
 });
 
@@ -110,4 +210,8 @@ export default morePostSlice.reducer;
 export const {
 	togleMorePostLikesAndDisLikes,
 	updateNumbPostViewInMorePostSlice,
+	IncreaseHistoryPageNumber,
+	IncreaseSavedPostPageNumber,
+	setHistoryFirstSearch,
+	setSavedPostFirstSearch,
 } = morePostSlice.actions;
