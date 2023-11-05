@@ -49,15 +49,15 @@ const Saved = () => {
 							ref={userSavedPost.length === index + 1 ? lastPostRef : null}
 							className=" mx-auto"
 						>
-							<Link to={`/single-post/${post?._id}`} className=" mx-auto">
+							<Link to={`/single-post/${post?._id}`} className=" flex max-w-[15rem] gap-4 items-center md:items-center">
 								<div className=" hover:cursor-pointer">
 									<img
 										src={post?.image}
 										alt=""
-										className="rounded-lg w-48 object-cover mb-3 self-center border border-gray-300"
+										className="rounded-lg max-w-[5rem] object-cover mb-3 self-center border border-gray-300"
 									/>
 								</div>
-								<h3 className=" font-medium text-xs w-[9rem]">
+								<h3 className=" font-medium text-xs ">
 									{post?.title}
 								</h3>
 							</Link>

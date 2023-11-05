@@ -46,8 +46,13 @@ export const likeOrDislikePost = createAsyncThunk(
 export const fetchPostCreatorProfile = createAsyncThunk(
 	"fetch/postcreatorProfile",
 	async (userId, { rejectWithValue, getState, dispatch }) => {
+		console.log('imn hhhh')
 		try {
-			const resp = await customFetch(`/users/profile/${userId}`);
+			const resp = await customFetch(`/users/profile/${userId}`, {
+				headers: {
+					authorization: `Bearer ${getState().userSlice?.token}`,
+				},
+			});
 			return resp.data;
 		} catch (error) {
 			if (!error.response) {
@@ -64,7 +69,7 @@ export const fetchCreatorPosts = createAsyncThunk(
 		const postNumberPerPage = 10;
 		try {
 			const resp = await customFetch.put(
-				`/posts/user-post?page=${params.page}&postNumberPerPage=${postNumberPerPage}`,
+				`/posts/user-post?page=${params.page}&postNumberPerPage=${postNumberPerPage}&filter=${params.filter}`,
 				params
 			);
 
@@ -72,6 +77,29 @@ export const fetchCreatorPosts = createAsyncThunk(
 		} catch (error) {
 			if (!error.response) {
 				throw new Error();
+			}
+			return rejectWithValue(error?.response?.data);
+		}
+	}
+);
+export const deletePost = createAsyncThunk(
+	"delete/Post",
+	async (postIds, { getState, rejectWithValue, dispatch }) => {
+		try {
+			const resp = await customFetch.post(
+				`/posts/delete`,
+				{ postIds },
+				{
+					headers: {
+						authorization: `Bearer ${getState().userSlice?.token}`,
+					},
+				}
+			);
+
+			return resp.data;
+		} catch (error) {
+			if (!error?.response) {
+				throw new Error(error);
 			}
 			return rejectWithValue(error?.response?.data);
 		}
@@ -85,6 +113,7 @@ const initialState = {
 	creatorAllPostTotalPages: null,
 	creatoPostTotalNumber: null,
 	hasMore: true,
+	MyPostSelectedFilter: "A-Z",
 };
 
 const generalPostSlice = createSlice({
@@ -92,7 +121,11 @@ const generalPostSlice = createSlice({
 	initialState,
 	reducers: {
 		clearCreatorAllPost: (state) => {
+			state.hasMore = true;
 			state.creatorAllPost = [];
+		},
+		setMyPostSelectedFilter: (state, { payload }) => {
+			state.MyPostSelectedFilter = payload;
 		},
 	},
 
@@ -124,8 +157,9 @@ const generalPostSlice = createSlice({
 			state.postCreatorProfileStatus = "loading";
 		},
 		[fetchPostCreatorProfile.fulfilled]: (state, { payload }) => {
+			console.log(payload)
 			state.postCreatorProfileStatus = "success";
-			state.postCreatorProfile = payload;
+			state.postCreatorProfile = payload.foundUser;
 		},
 		[fetchPostCreatorProfile.rejected]: (state, action) => {
 			state.postCreatorProfileStatus = "failed";
@@ -135,6 +169,7 @@ const generalPostSlice = createSlice({
 		},
 		[fetchCreatorPosts.fulfilled]: (state, { payload }) => {
 			state.creatorPostStatus = "success";
+
 			state.creatoPostTotalNumber = payload.totalNumber;
 			state.creatorAllPost = [...state.creatorAllPost, ...payload.posts];
 			state.creatorAllPostTotalPages = payload.totalPages;
@@ -148,8 +183,26 @@ const generalPostSlice = createSlice({
 			state.serverErr = action?.error?.message;
 			toast.error(action?.payload?.message);
 		},
+		// user delete posts
+		[deletePost.pending]: (state) => {
+			state.deletingPostStatus = "loading";
+		},
+		[deletePost.fulfilled]: (state, { payload }) => {
+			state.deletingPostStatus = "success";
+			const { postIds } = payload;
+			state.creatoPostTotalNumber -= 1;
+			state.creatorAllPost = state.creatorAllPost.filter(
+				(post) => !postIds.includes(post._id)
+			);
+			toast.success(payload.message);
+		},
+		[deletePost.rejected]: (state, action) => {
+			state.deletingPostStatus = "falied";
+			toast.error(payload.message);
+		},
 	},
 });
 
 export default generalPostSlice.reducer;
-export const { clearCreatorAllPost } = generalPostSlice.actions;
+export const { clearCreatorAllPost, setMyPostSelectedFilter } =
+	generalPostSlice.actions;

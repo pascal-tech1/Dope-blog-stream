@@ -1,0 +1,78 @@
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import customFetch from "../../utils/axios";
+import { toast } from "react-toastify";
+
+export const sendMsg = createAsyncThunk(
+	"send/message",
+	async (sendingData, { getState, rejectWithValue, dispatch }) => {
+		try {
+			const resp = await customFetch.post("/message", sendingData, {
+				headers: {
+					authorization: `Bearer ${getState().userSlice?.token}`,
+				},
+			});
+
+			return resp.data;
+		} catch (error) {
+			if (!error.response) throw new Error(error);
+			return rejectWithValue(error.response.data);
+		}
+	}
+);
+export const fetchMsg = createAsyncThunk(
+	"fetch/message",
+	async (data, { getState, rejectWithValue, dispatch }) => {
+		try {
+			const resp = await customFetch(
+				`/message?page=${data.page}&numberPerPage=${data.limit}`,
+				{
+					headers: {
+						authorization: `Bearer ${getState().userSlice?.token}`,
+					},
+				}
+			);
+			console.log(resp.data);
+			return resp.data;
+		} catch (error) {
+			if (!error.response) throw new Error(error);
+			return rejectWithValue(error.response.data);
+		}
+	}
+);
+
+const initialState = {
+	msg: [],
+};
+
+const messageSlice = createSlice({
+	name: "messageSlice",
+	initialState,
+
+	reducers: {},
+	extraReducers: {
+		[sendMsg.pending]: (state) => {
+			state.SendingMessageStatus = "loading";
+		},
+		[sendMsg.fulfilled]: (state, { payload }) => {
+			state.SendingMessageStatus = "success";
+			toast.success(payload.message);
+		},
+		[sendMsg.rejected]: (state, { payload }) => {
+			console.log(payload);
+			state.SendingMessageStatus = "failed";
+			toast.error(payload.message);
+		},
+		[fetchMsg.pending]: (state) => {
+			state.fetchMessageStatus = "loading";
+		},
+		[fetchMsg.fulfilled]: (state, { payload }) => {
+			state.fetchMessageStatus = "success";
+			state.msg = payload.receivedMessages;
+		},
+		[fetchMsg.rejected]: (state) => {
+			state.fetchMessageStatus = "failed";
+		},
+	},
+});
+
+export default messageSlice.reducer;

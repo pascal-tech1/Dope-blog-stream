@@ -5,7 +5,7 @@ import { PostInfo, Spinner } from "../components";
 import {
 	IncreasePageNumber,
 	fetchPostByCategory,
-	searchPost,
+	setEmptySearch,
 } from "../redux/post/allPostSlice";
 
 const AllPost = () => {
@@ -15,9 +15,11 @@ const AllPost = () => {
 	);
 
 	useEffect(() => {
-		allPost.length === 0 && dispatch(fetchPostByCategory());
+		allPost.length === 0 &&
+			searchQuery.length === 0 &&
+			dispatch(fetchPostByCategory());
 	}, []);
-	console.log(allPost);
+
 	const observer = useRef();
 	const lastPostRef = useCallback(
 		(node) => {
@@ -25,13 +27,8 @@ const AllPost = () => {
 			if (observer.current) observer.current.disconnect();
 			observer.current = new IntersectionObserver((entries) => {
 				if (entries[0].isIntersecting && hasMore) {
-					console.log("im here scroll end");
 					dispatch(IncreasePageNumber());
-					if (searchQuery) {
-						dispatch(searchPost());
-					} else {
-						dispatch(fetchPostByCategory());
-					}
+					dispatch(fetchPostByCategory());
 				}
 			});
 			if (node) observer.current.observe(node);
@@ -41,12 +38,30 @@ const AllPost = () => {
 
 	return (
 		<>
+			{searchQuery.length !== 0 && (
+				<div className="flex gap-2 my-2">
+					<h3>
+						All Post found for
+						<span className=" ml-1 text-blue-400">{searchQuery}</span>
+					</h3>
+					<button
+						onClick={(e) => {
+							e.preventDefault();
+							dispatch(setEmptySearch());
+							dispatch(fetchPostByCategory());
+						}}
+						className=" bg-red-400 px-1 text-white rounded-lg hover:bg-red-300 transition-all delay-75"
+					>
+						clear search
+					</button>
+				</div>
+			)}
 			{allPost.map((post, index) => {
 				return (
 					<div
 						key={index}
 						ref={allPost.length === index + 1 ? lastPostRef : null}
-						className=" border-t my-6 flex  flex-col md:flex-row gap-4 justify-between items-centers"
+						className=" border-t pt-2 mt-4 mb-6 "
 					>
 						<PostInfo post={post} />
 					</div>
@@ -56,7 +71,9 @@ const AllPost = () => {
 			<div className=" grid place-content-center">
 				{isLoading && <Spinner />}
 			</div>
-			<div>{!hasMore && <h3>No more Post</h3>}</div>
+			<div>
+				{!hasMore && <h3 className=" text-yellow-300">No more Post</h3>}
+			</div>
 		</>
 	);
 };

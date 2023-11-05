@@ -41,6 +41,7 @@ const Register = () => {
 
 	return (
 		<div className="h-screen flex justify-center md:grid place-items-center place-content-center px-3 grid-cols-2 md:p-8  font-helvetica font-light">
+			<NavBar/>
 			<div className=" hidden md:flex flex-col p-9 bg-gray-100 mr-6 shadow-sm justify-center items-center">
 				<h1 className=" font-medium">
 					Join Our Community and Start Sharing Your Story!

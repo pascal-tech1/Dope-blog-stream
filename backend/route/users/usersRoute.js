@@ -21,7 +21,8 @@ const {
 	fetchRandomUserCtrl,
 	fetchUserFollowersListCtrl,
 	fetchUserFollowingListCtrl,
-	
+	fetchUserCountsCtrl,
+	fetchWhoViewedUserProfileCtrl,
 } = require("../../controllers/users/usersCtrl");
 const {
 	profilePhotoUpload,
@@ -30,14 +31,16 @@ const {
 
 const userRoutes = express.Router();
 
+userRoutes.get("/user-details-Count", authMiddleWare, fetchUserCountsCtrl);
+userRoutes.get("/viewedBy", authMiddleWare, fetchWhoViewedUserProfileCtrl);
 userRoutes.post("/register", userRegisterCtrl);
-
 userRoutes.post("/random-users", fetchRandomUserCtrl);
 userRoutes.get("/loginWithToken", authMiddleWare, userLoginWithTokenCtrl);
 userRoutes.post("/login", userLoginCtrl);
 userRoutes.get("/", authMiddleWare, fetchAllUserCtrl);
 userRoutes.delete("/delete/:USERID", deleteUserCtrl);
-userRoutes.get("/:USERID", fetchUserDetailsCtrl);
+// userRoutes.get("/:USERID", authMiddleWare, fetchUserDetailsCtrl);
+userRoutes.get("/profile/:userId", authMiddleWare, fetchUserDetailsCtrl);
 userRoutes.post("/save-post", authMiddleWare, savePostCtrl);
 userRoutes.post(
 	"/profile-picture-upload",
@@ -58,7 +61,7 @@ userRoutes.post("/follow", authMiddleWare, followingUserCtrl);
 userRoutes.post("/unfollow", authMiddleWare, unFollowingUserCtrl);
 userRoutes.put("/updatePassword", authMiddleWare, updatePasswordCtrl);
 userRoutes.put("/:USERID", authMiddleWare, updateUserDetailsCtrl);
-userRoutes.get("/profile/:userId", fetchUserDetailsCtrl);
+
 userRoutes.post("/followers", fetchUserFollowersListCtrl);
 userRoutes.post("/following", fetchUserFollowingListCtrl);
 

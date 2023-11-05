@@ -1,17 +1,12 @@
 import React from "react";
-import { HiUserGroup } from "react-icons/hi";
 
-const UserDetailsCount = (props) => {
-   
+const UserDetailsCount = ({ count, text, children }) => {
 	return (
-		<div className="bg-white justify-center flex py-2 space-x-8  px-2 items-center rounded-md ">
-			<HiUserGroup
-				className={`${props.textColor} font-bold text-2xl ${props.bgColor} rounded-md py-1 px-1 `}
-			/>
-
+		<div className=" bg-gray-50 shadow-sm self-center justify-center flex py-2 space-x-4  px-2 items-center rounded-md ">
+			{children}
 			<div>
-				<h1 className=" font-semibold text-sm">14,320</h1>
-				<h3 className=" font-light text-[0.6rem]">followers</h3>
+				<h1 className=" font-bold">{count}</h1>
+				<h3 className=" font-light text-[0.7rem]">{text}</h3>
 			</div>
 		</div>
 	);

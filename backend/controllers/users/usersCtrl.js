@@ -9,6 +9,8 @@ const crypto = require("crypto");
 
 const email = require("../../config/email");
 const handleCloudinaryUpload = require("../../config/cloundinary/cloudinaryUploadConfig");
+const UserProfileView = require("../../model/userProfileView/userProfileView");
+const { default: mongoose } = require("mongoose");
 
 // '''''''''''''''''''''''''''''''''''''''''
 //         Register user
@@ -141,8 +143,11 @@ const deleteUserCtrl = expressAsyncHandler(async (req, res) => {
 //        fetch single user details
 // '''''''''''''''''''''''''''''''''''''''''''''
 const fetchUserDetailsCtrl = expressAsyncHandler(async (req, res) => {
+	console.log("im here");
 	const { userId } = req.params;
+	const loginUserId = req.user._id;
 	validateMongoDbUserId(userId);
+
 	try {
 		const foundUser = await User.findById(userId)
 			.select([
@@ -167,9 +172,35 @@ const fetchUserDetailsCtrl = expressAsyncHandler(async (req, res) => {
 				select: ["_id", "firstName", "lastName", "profilePhoto"], // Exclude the "password" field
 			});
 
-		res.json(foundUser);
+		if (loginUserId.toString() !== userId.toString()) {
+			let allreadyViewed = await UserProfileView.findOne({
+				viewedUser: {
+					$elemMatch: { $eq: new mongoose.Types.ObjectId(userId) },
+				},
+				$and: [{ viewedBy: { $elemMatch: { $eq: loginUserId } } }],
+			});
+
+			if (allreadyViewed === null) {
+				await UserProfileView.create({
+					viewedUser: userId,
+					viewedBy: loginUserId,
+				
+				});
+			} else {
+				await UserProfileView.findByIdAndUpdate(
+					allreadyViewed._id,
+					{
+						$inc: { numberOfView: 1 },
+					},
+					{ new: true }
+				);
+			}
+		}
+
+		res.status(200).json({ foundUser });
 	} catch (error) {
-		res.json(error);
+		console.log(error);
+		res.status(500).json(error);
 	}
 });
 
@@ -335,7 +366,7 @@ const sendAcctVerificationEmailCtrl = expressAsyncHandler(
 		await foundUser.save();
 		let mailDetails = {
 			from: "pascalazubike003@gmail.com",
-			to: `a.ademola@icms.ng`,
+			to: `pascalazubike003@gmail.com`,
 			subject: "Full Stack Developer Position",
 			html: email,
 			attachments: [
@@ -605,7 +636,6 @@ const fetchUserFollowingListCtrl = expressAsyncHandler(
 				.slice(startIndex, endIndex)
 				.reverse();
 
-			console.log(paginatedFollowingList);
 			res.status(200).json({
 				followinglistTotalNumber,
 				userfollowinglist: paginatedFollowingList,
@@ -645,11 +675,81 @@ const fetchUserFollowersListCtrl = expressAsyncHandler(
 				userfollowerlist: paginatedFollowerList,
 			});
 		} catch (error) {
-			console.log(error);
 			res.status(500).json({ message: "Internal Server Error" });
 		}
 	}
 );
+const fetchUserCountsCtrl = expressAsyncHandler(async (req, res) => {
+	try {
+		const userFound = await User.findById(req.user._id).populate("Posts");
+
+		const followersCount = userFound?.followers?.length;
+		const followingCount = userFound.following.length;
+		const postCount = userFound?.Posts.length;
+
+		const Posts = userFound?.Posts;
+
+		let likesCount = 0;
+		let viewsCount = 0;
+		let disLikesCount = 0;
+		for (const post of Posts) {
+			viewsCount += post.numViews;
+			likesCount += post.likes.length;
+			disLikesCount += post.disLikes.length;
+		}
+
+		res.status(200).json({
+			status: "success",
+			followersCount,
+			postCount,
+			likesCount,
+			disLikesCount,
+			viewsCount,
+			followingCount,
+		});
+	} catch (error) {
+		console.log(error);
+		res.status(500).json({
+			status: "failed",
+			message: "fetching User details count failed try again",
+		});
+	}
+});
+
+const fetchWhoViewedUserProfileCtrl = expressAsyncHandler(
+	async (req, res) => {
+		const { _id } = req.user;
+		if (!_id) throw new Error("User Id is Required");
+
+		try {
+			const { userWhoViewProfile } = await User.findById(_id).populate({
+				path: "userWhoViewProfile",
+
+				populate: {
+					path: "viewedBy",
+					select: [
+						"_id",
+						"firstName",
+						"lastName",
+						"profilePhoto",
+						"profession",
+					],
+				},
+			});
+			console.log(userWhoViewProfile);
+			res.status(200).json({ status: "success", userWhoViewProfile });
+		} catch (error) {
+			console.log(error);
+			res.status(500).json({ status: "failed", message: error.message });
+		}
+		// const deleted = await User.updateMany({}, { $unset: { viewedBy: 1 } });
+		// console.log(deleted);
+		// res.status(200).json({
+		// 	message: `successfully deleted ${deleted}`,
+		// });
+	}
+);
+
 module.exports = {
 	userRegisterCtrl,
 	userLoginCtrl,
@@ -670,4 +770,6 @@ module.exports = {
 	fetchRandomUserCtrl,
 	fetchUserFollowingListCtrl,
 	fetchUserFollowersListCtrl,
+	fetchUserCountsCtrl,
+	fetchWhoViewedUserProfileCtrl,
 };

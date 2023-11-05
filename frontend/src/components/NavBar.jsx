@@ -1,18 +1,23 @@
 import React, { useState } from "react";
 import { IoMdNotificationsOutline } from "react-icons/io";
 import { BsPencilSquare } from "react-icons/bs";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { MdOutlineArrowDropDown, MdOutlineSearch } from "react-icons/md";
 import { logOutUser } from "../redux/user/userSlice.js";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useSelector, useDispatch } from "react-redux";
-import { searchPost, setFirstSearch } from "../redux/post/allPostSlice.js";
+import {
+	fetchPostByCategory,
+	setFirstSearch,
+} from "../redux/post/allPostSlice.js";
 
 const NavBar = () => {
 	const user = useSelector((store) => store?.userSlice.user);
 	const [showLogOut, setShowLogOut] = useState(true);
 	const dispatch = useDispatch();
+	const navigate = useNavigate();
+
 	const handleLogOut = () => {
 		dispatch(logOutUser("user"));
 	};
@@ -25,9 +30,11 @@ const NavBar = () => {
 			search: "",
 		},
 
-		onSubmit: (values) => {
+		onSubmit: (values, { resetForm }) => {
 			dispatch(setFirstSearch(values.search));
-			dispatch(searchPost());
+			navigate("/");
+			resetForm();
+			dispatch(fetchPostByCategory());
 		},
 		validationSchema: formSchema,
 	});

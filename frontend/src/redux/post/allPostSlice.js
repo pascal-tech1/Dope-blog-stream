@@ -2,34 +2,15 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { toast } from "react-toastify";
 import customFetch from "../../utils/axios";
 
-export const searchPost = createAsyncThunk(
-	"search/Post",
-	async (_, { getState, rejectWithValue, dispatch }) => {
-		const { page, postNumberPerPage, searchQuery } =
-			getState().allPostSlice;
-
-		try {
-			const resp = await customFetch(
-				`/posts/search?page=${page}&postNumberPerPage=${postNumberPerPage}&searchQuery=${searchQuery}`
-			);
-			return resp.data;
-		} catch (error) {
-			if (!error?.response) {
-				throw new Error(error);
-			}
-			return rejectWithValue(error?.response?.data);
-		}
-	}
-);
 export const fetchPostByCategory = createAsyncThunk(
 	"fetch/PostByCategory",
 	async (_, { getState, rejectWithValue, dispatch }) => {
-		const { page, postNumberPerPage, activeCategory } =
+		const { page, postNumberPerPage, activeCategory, searchQuery } =
 			getState().allPostSlice;
-
+		console.log(searchQuery);
 		try {
 			const resp = await customFetch(
-				`/posts/?page=${page}&postNumberPerPage=${postNumberPerPage}&category=${activeCategory}`
+				`/posts/?page=${page}&postNumberPerPage=${postNumberPerPage}&category=${activeCategory}&searchQuery=${searchQuery}`
 			);
 			return resp.data;
 		} catch (error) {
@@ -46,7 +27,7 @@ const initialState = {
 	allPost: [],
 	page: 1,
 	postNumberPerPage: 10,
-	searchQuery: null,
+	searchQuery: "",
 	hasMore: true,
 	activeCategory: "all",
 	displayedCategory: ["all", "react", "javascript"],
@@ -60,6 +41,12 @@ const allPostSlice = createSlice({
 	reducers: {
 		setFirstSearch: (state, { payload }) => {
 			state.searchQuery = payload;
+			state.allPost = [];
+			state.page = 1;
+			state.hasMore = true;
+		},
+		setEmptySearch: (state, { payload }) => {
+			state.searchQuery = "";
 			state.allPost = [];
 			state.page = 1;
 			state.hasMore = true;
@@ -82,7 +69,6 @@ const allPostSlice = createSlice({
 			state.displayedCategory.pop();
 			state.displayedCategory.push(payload);
 		},
-		
 
 		updateNumbPostViewInAllPostSlice: (state, { payload }) => {
 			state.allPost.map((post) => {
@@ -111,32 +97,6 @@ const allPostSlice = createSlice({
 	},
 
 	extraReducers: {
-		// search post
-		[searchPost.pending]: (state, action) => {
-			state.isLoading = true;
-		},
-		[searchPost.fulfilled]: (state, action) => {
-			if (action.payload.length < 10) {
-				state.hasMore = false;
-				state.allPost = [...state.allPost, ...action.payload];
-			} else {
-				state.allPost = [...state.allPost, ...action.payload];
-			}
-			state.isLoading = false;
-
-			state.serverErr = undefined;
-			state.appErr = undefined;
-		},
-		[searchPost.rejected]: (state, action) => {
-			(state.isLoading = false),
-				(state.serverErr = action?.error?.message);
-			state.appErr = action?.payload?.message;
-			state.appErr
-				? toast.error(state.appErr)
-				: toast.error(state.serverErr);
-		},
-
-		// fetch post by category
 		[fetchPostByCategory.pending]: (state, action) => {
 			state.isLoading = true;
 		},
@@ -171,6 +131,6 @@ export const {
 	setFetchFirstCategory,
 	setActiveCategory,
 	toggleDisplayedCategory,
-	
+	setEmptySearch,
 } = allPostSlice.actions;
 export default allPostSlice.reducer;

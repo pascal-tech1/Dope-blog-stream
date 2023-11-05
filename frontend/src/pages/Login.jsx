@@ -5,6 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { loginUser } from "../redux/user/userSlice";
 import { LoadingSpinner } from "../utils/Spinner";
+import { NavBar } from "../components";
 
 const Login = () => {
 	const dispatch = useDispatch();
@@ -40,6 +41,7 @@ const Login = () => {
 
 	return (
 		<div className="h-screen flex justify-center md:grid place-items-center place-content-center px-3 grid-cols-2 md:p-8  font-helvetica font-light">
+			<NavBar />
 			<div className=" hidden md:flex flex-col p-9 bg-gray-100 mr-6 shadow-sm justify-center items-center">
 				<h1 className=" font-medium">Get Ready to Be Inspired</h1>
 				<p className=" font-light text-gray-400 text-xs mt-5 mb-[3.5rem] max-w-md">

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, {  useEffect} from "react";
 import {
 	Category,
 	CustomDropdown,
@@ -46,22 +46,16 @@ const Home = () => {
 		<div className={`bg-${theme}-background font-inter font-lights `}>
 			<NavBar />
 
-			<div className=" md:grid grid-cols-3 mt-[2rem] ">
+			<div className=" md:grid grid-cols-3 mt-7 md:mt-16 text-sm   ">
 				{/* right section */}
-				<main className=" col-span-2 md:border-r-2 px-6 py-6  lg:px-20 ">
+				<main className=" col-span-2  px-6 py-6  lg:px-20  ">
 					<div className="">
-						<div className="pt-6 mb-6">
+						<div className="flex flex-wrap  items-center justify-center">
 							<Category
 								allCategory={displayedCategory}
 								initialActive={"All"}
 							/>
-						</div>
-						<div className="flex justify-between flex-wrap items-center mb-5 ">
-							<h2 className=" font-medium text-gray-500  text">
-								Articles
-							</h2>
-
-							<div className=" text-sm border ml-6 rounded-lg py-[0.3rem] px-2 focus:outline-none  cursor-pointer md:hidden ">
+							<div className="mt-2 ml-6 md:hidden">
 								<CustomDropdown allCategory={allCategoryLeft} />
 							</div>
 						</div>
@@ -70,13 +64,13 @@ const Home = () => {
 					</div>
 				</main>
 				{/* left section */}
-				<main className=" grid-cols-2 col-span-1 py-6 hidden md:grid h-max border border-l ">
+				<main className=" grid-cols-2 col-span-1 hidden md:grid h-max ">
 					<div className=" fixed">
-						<div className=" m-4 mr-14">
+						<div className=" m-4 mr-14 px-2 h-screen border-l">
 							<div className="flex gap-2  bg-gray-100 p-4 h-max place-self-center">
 								<div>
 									<h3 className=" font-medium text-sm ">
-										Get unlimited access to everything on Reader
+										Get unlimited access to everything on BlogVana
 									</h3>
 									<h4 className=" text-gray-400 text-xs mt-2 mb-4">
 										plans starting at $/week
@@ -94,8 +88,11 @@ const Home = () => {
 								</h2>
 
 								{randomUsers?.map((user, index) => {
-									return <UserToFollow user={user} index={index} />;
+									return (
+										<UserToFollow key={index} user={user} index={index} />
+									);
 								})}
+
 								{/* more interesting topic */}
 							</section>
 							<section className="flex justify-center flex-col py-3">

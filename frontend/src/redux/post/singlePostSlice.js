@@ -74,7 +74,7 @@ export const createPost = createAsyncThunk(
 export const updatePost = createAsyncThunk(
 	"update/post",
 	async (post, { getState, rejectWithValue, dispatch }) => {
-		const postId = getState().singlePostSlice.post?._id;
+		const postId = getState().singlePostSlice.postToBeEdited?._id;
 
 		try {
 			const resp = await customFetch.put(`/posts/update/${postId}`, post, {
@@ -123,6 +123,10 @@ const singlePostSlice = createSlice({
 		setPostToBeEdited: (state, { payload }) => {
 			state.postToBeEdited = payload;
 		},
+		clearSinglesliceState: (state, { payload }) => {
+			state.isEditing = false;
+			state.postEditingStatus = "idle";
+		},
 	},
 
 	extraReducers: {
@@ -154,41 +158,33 @@ const singlePostSlice = createSlice({
 		},
 		// create post
 		[createPost.pending]: (state, action) => {
-			state.isLoading = true;
+			state.postEditingStatus = "loading";
 		},
 		[createPost.fulfilled]: (state, action) => {
-			state.isLoading = false;
-			state.serverErr = undefined;
-			state.appErr = undefined;
+			state.postEditingStatus = "success";
+
 			toast.success("post created successfully");
 		},
 		[createPost.rejected]: (state, action) => {
-			(state.isLoading = false),
-				(state.serverErr = action?.error?.message);
-			state.appErr = action?.payload?.message;
-			state.appErr
-				? toast.error(state.appErr)
-				: toast.error(state.serverErr);
+			state.postEditingStatus = "failed";
+			toast.error(action?.payload?.message);
 		},
 		// update post
 		[updatePost.pending]: (state, action) => {
+			state.postEditingStatus = "loading";
 			state.isLoading = true;
 		},
 		[updatePost.fulfilled]: (state, action) => {
-			state.isEditing = false;
+			console.log("updating success");
+			state.postEditingStatus = "success";
 			state.post = action.payload;
 			state.isLoading = false;
-			state.serverErr = undefined;
-			state.appErr = undefined;
 			toast.success("Post Updated Successfully");
 		},
 		[updatePost.rejected]: (state, action) => {
-			(state.isLoading = false),
-				(state.serverErr = action?.error?.message);
-			state.appErr = action?.payload?.message;
-			state.appErr
-				? toast.error(state.appErr)
-				: toast.error(state.serverErr);
+			console.log("updating failed");
+			state.postEditingStatus = "failed";
+			toast.error(action.payload.message);
 		},
 	},
 });
@@ -196,7 +192,7 @@ export const {
 	togleSinglePostLikesAndDisLikes,
 	setIsEditingPost,
 	setSinglePostStatus,
-
+	clearSinglesliceState,
 	setPostToBeEdited,
 } = singlePostSlice.actions;
 export default singlePostSlice.reducer;

@@ -12,6 +12,7 @@ import ProfileEdit from "./ProfileEdit";
 import SavedPost from "./SavedPost";
 import PostHistory from "./PostHistory";
 import MyPosts from "./MyPosts";
+import DashboardCustomDropdown from "../../components/DashboardCustomDropdown";
 
 export {
 	Layout,
@@ -27,5 +28,6 @@ export {
 	MessagesView,
 	SavedPost,
 	PostHistory,
-	MyPosts
+	MyPosts,
+	DashboardCustomDropdown
 };

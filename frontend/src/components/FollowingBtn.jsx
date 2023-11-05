@@ -37,9 +37,7 @@ export const FollowingBtn = ({ userToFollowOrUnfollow, className }) => {
 };
 
 export const EditPostBtn = ({ postId }) => {
-	const { postEditingStatus } = useSelector(
-		(store) => store.singlePostSlice
-	);
+	const { postEditingStatus} = useSelector((store) => store.singlePostSlice);
 	const [clickId, setClickId] = useState();
 
 	const navigate = useNavigate();
@@ -58,7 +56,7 @@ export const EditPostBtn = ({ postId }) => {
 				onClick={handleEditPost}
 				className="border self-center px-1 hover:bg-blue-400 text-center py-[0.1rem] hover:text-white rounded-md transition-all delay-75 border-blue-400 "
 			>
-				{postEditingStatus === "loading" && clickId === postId ? (
+				{postEditingStatus=== "loading" && clickId === postId ? (
 					<Spinner className="h-[1.2rem] w-[1.2rem] text-gray-200 animate-spin dark:text-gray-600 fill-blue-600" />
 				) : (
 					"Edit"

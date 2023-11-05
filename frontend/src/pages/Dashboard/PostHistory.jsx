@@ -2,11 +2,10 @@ import React, { useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useCallback } from "react";
 import {
-	IncreaseHistoryPageNumber,
 	fetchUserPostHistory,
 	setHistoryFirstSearch,
 } from "../../redux/post/morePostSlice";
-import { PostInfo, Spinner } from "../../components";
+import { Spinner } from "../../components";
 
 import { Link } from "react-router-dom";
 
@@ -30,7 +29,7 @@ const PostHistory = () => {
 		},
 		[userPostHistoryStatus, historyHasMore]
 	);
-	console.log(userPostHistory);
+
 	useEffect(() => {
 		setPage(1);
 		dispatch(setHistoryFirstSearch());
@@ -51,12 +50,15 @@ const PostHistory = () => {
 							}
 							className=" mx-auto"
 						>
-							<Link to={`/single-post/${post?._id}`} className=" mx-auto">
+							<Link
+								to={`/single-post/${post?._id}`}
+								className=" flex max-w-[15rem] gap-4 items-center md:items-center"
+							>
 								<div className=" hover:cursor-pointer">
 									<img
 										src={post?.image}
 										alt=""
-										className="rounded-lg w-48 object-cover mb-3 self-center border border-gray-300"
+										className="rounded-lg max-w-[5rem] object-cover mb-3 self-center border border-gray-300"
 									/>
 								</div>
 								<h3 className=" font-medium text-xs w-[9rem]">

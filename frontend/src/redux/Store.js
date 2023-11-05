@@ -5,6 +5,7 @@ import singlePostSlice from "./post/singlePostSlice";
 import morePostSlice from "./post/morePostSlice";
 import generalPostSlice from "./post/generalPostSlice";
 import categorySlice from "./category/categorySlice";
+import messageSlice from "./message/messageSlice";
 
 export const store = configureStore({
 	reducer: {
@@ -14,5 +15,6 @@ export const store = configureStore({
 		morePostSlice,
 		generalPostSlice,
 		categorySlice,
+		messageSlice,
 	},
 });

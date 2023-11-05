@@ -24,6 +24,7 @@ const postsRoutes = express.Router();
 postsRoutes.get("/", fetchPostByCategoryCtrl);
 postsRoutes.get("/user-history", authMiddleWare, fetchUserPostHistoryCtrl);
 postsRoutes.get("/user-savedPost", authMiddleWare, fetchUserSavedPostCtrl);
+postsRoutes.post("/delete", authMiddleWare, deletePostCtrl);
 
 postsRoutes.post(
 	"/",
@@ -47,6 +48,6 @@ postsRoutes.put("/dislike", authMiddleWare, disLikingPostCtrl);
 
 postsRoutes.put("/:id", fetchSinglePostsCtrl);
 
-postsRoutes.delete("/:id", authMiddleWare, deletePostCtrl);
+
 
 module.exports = postsRoutes;

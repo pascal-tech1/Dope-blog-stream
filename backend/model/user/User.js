@@ -69,6 +69,7 @@ const userSchema = new mongoose.Schema(
 			type: String,
 			enum: ["Web Development", "Mobile App", "Education", "Politics"],
 		},
+
 		isFollowing: {
 			type: Boolean,
 			default: false,
@@ -81,15 +82,6 @@ const userSchema = new mongoose.Schema(
 		accountVerificationToken: String,
 		accountVerificationTokenExpires: Date,
 
-		viewedBy: {
-			type: [
-				{
-					type: mongoose.Schema.Types.ObjectId,
-					ref: "User",
-				},
-			],
-		},
-
 		followers: {
 			type: [
 				{
@@ -99,6 +91,14 @@ const userSchema = new mongoose.Schema(
 			],
 		},
 		following: {
+			type: [
+				{
+					type: mongoose.Schema.Types.ObjectId,
+					ref: "User",
+				},
+			],
+		},
+		viewedBy: {
 			type: [
 				{
 					type: mongoose.Schema.Types.ObjectId,
@@ -131,6 +131,7 @@ const userSchema = new mongoose.Schema(
 			default: false,
 		},
 	},
+
 	{
 		toJSON: {
 			virtuals: true,
@@ -146,6 +147,25 @@ const userSchema = new mongoose.Schema(
 userSchema.virtual("Posts", {
 	ref: "Post",
 	foreignField: "user",
+	localField: "_id",
+});
+
+// virtual method on the user object to populate user received messages
+userSchema.virtual("receivedMessages", {
+	ref: "Message",
+	foreignField: "receiver",
+	localField: "_id",
+});
+
+// virtual method on the user object to populate user sentMessages
+userSchema.virtual("sentMessages", {
+	ref: "Message",
+	foreignField: "sender",
+	localField: "_id",
+});
+userSchema.virtual("userWhoViewProfile", {
+	ref: "UserProfileView",
+	foreignField: "viewedUser",
 	localField: "_id",
 });
 

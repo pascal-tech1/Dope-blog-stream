@@ -8,7 +8,9 @@ const jwt = require("jsonwebtoken");
 
 const authMiddleWare = expressAsyncHandler(async (req, res, next) => {
 	// checking if the user entered header for authorization
+	
 	const enteredHeader = req?.headers.authorization;
+
 	if (!enteredHeader)
 		throw new Error("Request unAuthorize Enter a valid Token");
 	if (!enteredHeader?.startsWith("Bearer"))
@@ -24,9 +26,9 @@ const authMiddleWare = expressAsyncHandler(async (req, res, next) => {
 		const foundUser = await User.findById(userId).select("-password");
 
 		req.user = foundUser;
-
 		next();
 	} catch (error) {
+	
 		res.status(500).json({
 			status: "failed",
 			messsage: "invalid token or Expired login Again",

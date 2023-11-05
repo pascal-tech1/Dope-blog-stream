@@ -16,6 +16,8 @@ import Category from "./Category";
 import CustomDropdown from "./Dropdown";
 import PostDashboard from "./PostDashboard";
 import FollowUsersList from "./FollowUsersList";
+import Modal from "./Modal";
+import MessageUser from "./MessageUser";
 
 export {
 	DashboardSideBar,
@@ -37,4 +39,6 @@ export {
 	CustomDropdown,
 	PostDashboard,
 	FollowUsersList,
+	Modal,
+	MessageUser,
 };

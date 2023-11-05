@@ -4,7 +4,7 @@ import { fetchSinglePost } from "../redux/post/singlePostSlice";
 import { useParams } from "react-router-dom";
 import NavBar from "../components/NavBar";
 
-import { LikesSaveViews } from "../components";
+import { LikesSaveViews, MessageUser } from "../components";
 import { AiOutlineMessage } from "react-icons/ai";
 import { useInView } from "react-intersection-observer";
 import { fetchMorePost, fetchUserPost } from "../redux/post/morePostSlice";
@@ -54,9 +54,11 @@ const SinglePost = () => {
 		return (
 			<div className="">
 				<NavBar />
-				<div className=" mt-16 mx-6 font-inter flex flex-col  lg:mx-auto max-w-[50rem] gap-[0.5rem]">
+				<div className=" mt-16 mx-6 font-inter flex flex-col  lg:mx-auto max-w-[50rem] gap-[0.5rem] -z-50">
 					<div>
-						<h1 className=" font-bold text-sm md:text-2xl my-4">{post?.title}</h1>
+						<h1 className=" font-bold text-sm md:text-2xl my-4">
+							{post?.title}
+						</h1>
 					</div>
 					{/* about the user who created the post */}
 					<div className="flex flex-wrap   flex-col">
@@ -95,9 +97,9 @@ const SinglePost = () => {
 										userToFollowOrUnfollow={post?.user}
 										className={` border self-center hover:bg-blue-800 text-center py-[0.4rem] px-4 bg-blue-900 text-white hover:text-white rounded-lg transition-all delay-75`}
 									/>
-									<div className=" bg-gray-500 w-11 h-11 rounded-full flex items-center justify-center text-white ">
-										<AiOutlineMessage className=" text-2xl " />
-									</div>
+
+									{/* message */}
+									<MessageUser receiverId={post?.user?._id} />
 								</div>
 							</div>
 							<div className="flex gap-3">

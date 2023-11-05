@@ -74,7 +74,7 @@ const DashboardSideBar = () => {
 				},
 			],
 		},
-		{ title: "followers", icon: "GiShadowFollower" },
+
 		{
 			title: "messages",
 			icon: "BiMessageDetail",
@@ -90,6 +90,14 @@ const DashboardSideBar = () => {
 			],
 		},
 		{ title: "comments", icon: "AiOutlineComment" },
+		{
+			title: "All Posts",
+			icon: "LuLayoutDashboard",
+		},
+		{
+			title: "All Users",
+			icon: "LuLayoutDashboard",
+		},
 	];
 
 	return (
@@ -104,7 +112,7 @@ const DashboardSideBar = () => {
 
 			{sideBarItems.map((sideBarItem, index) => {
 				let IconComponent;
-
+				console.log(IconComponent);
 				switch (sideBarItem.icon) {
 					case "GiShadowFollower":
 						IconComponent = GiShadowFollower;
@@ -122,6 +130,9 @@ const DashboardSideBar = () => {
 						IconComponent = AiOutlineComment;
 						break;
 					case "LuLayoutDashboard":
+						IconComponent = LuLayoutDashboard;
+						break;
+						case "LuLayoutDashboard":
 						IconComponent = LuLayoutDashboard;
 						break;
 					default:

@@ -7,12 +7,12 @@ import {
 	setFetchFirstCategory,
 } from "../redux/post/allPostSlice";
 
-const Category = ({ allCategory }) => {
+const Category = ({ allCategory, className }) => {
 	const { activeCategory } = useSelector((store) => store.allPostSlice);
 	const dispatch = useDispatch();
-
+	className = className || " flex justify-between gap-2 flex-wrap ";
 	return (
-		<div className=" flex justify-between gap-1 flex-wrap">
+		<div className={className}>
 			{allCategory?.map((category, index) => {
 				return (
 					<button

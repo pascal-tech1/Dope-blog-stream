@@ -7,7 +7,7 @@ import {
 	UserToFollow,
 } from "../components";
 import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import {
 	clearCreatorAllPost,
 	fetchCreatorPosts,
@@ -23,12 +23,15 @@ const UserPage = () => {
 		creatorAllPostTotalPages,
 		hasMore,
 	} = useSelector((store) => store.generalPostSlice);
+	const loginUserId = useSelector((store) => store.userSlice?.user?._id);
 	const dispatch = useDispatch();
 	const { userId } = useParams();
 	const [page, setPage] = useState(1);
 	const [viewAll, setViewAll] = useState(1);
+	const navigate = useNavigate();
 
 	useEffect(() => {
+		!loginUserId && navigate('/login')
 		dispatch(clearCreatorAllPost());
 		dispatch(fetchPostCreatorProfile(userId));
 		setPage(1);
@@ -49,16 +52,26 @@ const UserPage = () => {
 			</div>
 		);
 	}
+	console.log(postCreatorProfileStatus);
 	if (postCreatorProfileStatus === "failed") {
 		return (
 			<div className=" grid place-content-center">
 				<h1 className=" text-red-500">
 					Fetching User Profile Failed try again
 				</h1>
+				<button
+					className=" bg-blue-400 rounded-lg px-1 py-1 hover:bg-blue-200 transition-all delay-75 place-self-center "
+					onClick={(e) => {
+						e.preventDefault();
+						dispatch(fetchPostCreatorProfile(userId));
+					}}
+				>
+					Retry
+				</button>
 			</div>
 		);
 	}
-	console.log(hasMore, page, creatorAllPost);
+
 	if (postCreatorProfileStatus === "success") {
 		return (
 			<>
@@ -88,10 +101,10 @@ const UserPage = () => {
 						</div>
 						<div className=" hidden md:flex flex-col col-start-1 col-span-2  bg-white border-t ">
 							<h1 className="font-semibold  max-w-max py-4 ">
-								{`Posts By ${postCreatorProfile?.firstName} ${postCreatorProfile.lastName}`}
+								{`Posts By ${postCreatorProfile?.firstName} ${postCreatorProfile?.lastName}`}
 							</h1>
 							<MorePost post={creatorAllPost} status={creatorPostStatus} />
-							{creatorAllPost.length === 0 ? (
+							{creatorAllPost?.length === 0 ? (
 								<h1 className=" text-yellow-600 my-4">
 									This user have no Post
 								</h1>
@@ -117,7 +130,7 @@ const UserPage = () => {
 						<div className=" text-gray-400 flex gap-3 flex-col md:pl-4">
 							<div className="flex gap-4 items-center md:pt-4 justify-center">
 								<h1 className="font-semibold   text-black ">
-									{`${postCreatorProfile?.firstName} ${postCreatorProfile.lastName} Profile`}
+									{`${postCreatorProfile?.firstName} ${postCreatorProfile?.lastName} Profile`}
 								</h1>
 								<FollowingBtn
 									className=" border self-center hover:bg-blue-800 text-center  px-2 bg-blue-900 text-white hover:text-white rounded-lg transition-all delay-75"
@@ -139,30 +152,30 @@ const UserPage = () => {
 									.map((user, index) => {
 										return <UserToFollow user={user} index={index} />;
 									})}
-								{postCreatorProfile.following.length > viewAll && (
+								{postCreatorProfile?.following?.length > viewAll && (
 									<button
 										onClick={(e) => {
 											e.preventDefault();
-											setViewAll(postCreatorProfile.length);
+											setViewAll(postCreatorProfile?.length);
 										}}
 										className="text-sm b rounded-lg px-2 text-black border border-gray-300 hover:bg-gray-300 transition-all delay-75"
 									>
-										{`see all${postCreatorProfile.following.length}`}
+										{`see all${postCreatorProfile?.following?.length}`}
 									</button>
 								)}
-								{postCreatorProfile.following.length === 0 && (
-									<h1>{`${postCreatorProfile.lastName} following list is empty`}</h1>
+								{postCreatorProfile?.following?.length === 0 && (
+									<h1>{`${postCreatorProfile?.lastName} following list is empty`}</h1>
 								)}
 							</div>
 						</div>
 					</div>
 					<div className=" md:hidden flex flex-col col-start-1 col-span-2  bg-white border-t ">
 						<h1 className="max-w-max font-semibold py-4 ">
-							{`Posts By ${postCreatorProfile?.firstName} ${postCreatorProfile.lastName}`}
+							{`Posts By ${postCreatorProfile?.firstName} ${postCreatorProfile?.lastName}`}
 						</h1>
 						<MorePost post={creatorAllPost} status={creatorPostStatus} />
 
-						{creatorAllPost.length === 0 ? (
+						{creatorAllPost?.length === 0 ? (
 							<h1 className=" text-yellow-600 my-4">
 								This user have no Post
 							</h1>

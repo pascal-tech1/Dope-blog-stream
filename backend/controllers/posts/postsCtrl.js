@@ -7,6 +7,8 @@ const handleCloudinaryUpload = require("../../config/cloundinary/cloudinaryUploa
 const User = require("../../model/user/User");
 const checkProfanity = require("../../utils/profanWords");
 const decodeToken = require("../../utils/DecodeLoginUser");
+const mongoose = require("mongoose");
+const path = require("path");
 
 // '''''''''''''''''''''''''''''''''''''''''
 //   Create Post conttoller
@@ -61,34 +63,57 @@ const createPostCtrl = expressAsyncHandler(async (req, res) => {
 //   fetch All the  user post controller
 // '''''''''''''''''''''''''''''''''''''''''''''
 const fetchUserPostCtrl = expressAsyncHandler(async (req, res) => {
-	const { userId, postId } = req.body;
-
+	const { userId } = req.body;
+	const { filter } = req.query;
 	const page = parseInt(req.query.page) || 1; // Current page number, default to 1
 	const postNumberPerPage = parseInt(req.query.postNumberPerPage) || 10; // Number of items per page
 
+	const filterCriteria = (filter) => {
+		if (filter === "Highest likes") return { likes: -1 };
+		if (filter === "Lowest likes") return { likes: 1 };
+		if (filter === "Latest") return { updatedAt: 1 };
+		if (filter === "Oldest") return { updatedAt: -1 };
+		if (filter === "A-Z") return { title: 1 };
+		if (filter === "Z-A") return { title: -1 };
+		if (filter === "Lowest view") return { numViews: 1 };
+		if (filter === "Highest view") return { numViews: -1 };
+		if (filter === "Highest dislikes") return { disLikes: -1 };
+		if (filter === "Lowest dislikes") return { disLikes: 1 };
+		if (filter === "Category") return { category: 1 };
+
+		return {}; // Default case: no sorting
+	};
+	const sortingObject = filterCriteria(filter);
+
 	try {
-		const user = await User.findById(userId).populate({
-			path: "Posts",
-			select: "-content",
-		});
+		const { Posts } = await User.findById(userId)
+			.populate({
+				path: "Posts",
+				select: "_id",
+			})
+			.select("Posts");
 
-		const posts = user.Posts.filter((post) => post._id !== postId);
-		const totalPosts = posts.length;
+		const user = await User.findById(userId)
+			.populate({
+				path: "Posts",
+				select: "-content",
+				options: { sort: sortingObject },
+				skip: (page - 1) * postNumberPerPage,
+				limit: postNumberPerPage,
+			})
+			.select("Posts");
+		const userPosts = user.Posts;
 
+		const totalPosts = Posts.length;
 		const totalPages = Math.ceil(totalPosts / postNumberPerPage);
-		const startIndex = (page - 1) * postNumberPerPage;
-		const endIndex = page * postNumberPerPage;
-		console.log(page, startIndex, endIndex);
-		const paginatedPosts = posts.slice(startIndex, endIndex);
-
 		res.json({
 			currentPage: page,
 			totalPages: totalPages,
-			posts: paginatedPosts,
+			posts: userPosts,
 			totalNumber: totalPosts,
 		});
 	} catch (error) {
-		res.status(500).json({ message: "Internal Server Error" });
+		res.status(500).json({ message: error.message });
 	}
 });
 
@@ -189,12 +214,19 @@ const updatePostCtrl = expressAsyncHandler(async (req, res) => {
 // ''''''''''''''''''''''''''''''''''''''''''''
 
 const deletePostCtrl = expressAsyncHandler(async (req, res) => {
-	const { id } = req?.params;
+	const { postIds } = req.body;
+
 	try {
-		const post = await Post.findByIdAndDelete(id);
-		res.json(post);
+		const deletedPosts = await Post.deleteMany({
+			_id: { $in: postIds },
+		});
+
+		res.status(200).json({
+			message: `successfully deleted ${deletedPosts.deletedCount} posts`,
+			postIds,
+		});
 	} catch (error) {
-		res.json(error);
+		res.status(400).json({ message: "failed to delete post" });
 	}
 });
 // '''''''''''''''''''''''''''''''''''''''''
@@ -320,33 +352,34 @@ const fetchPostByCategoryCtrl = expressAsyncHandler(async (req, res) => {
 	let page = parseInt(req?.query?.page) || 1; // Current page,ipco
 	const postNumberPerPage = parseInt(req?.query?.postNumberPerPage) || 10; // Number of items per page
 	const category = req.query?.category;
-
+	const searchQuery = req.query?.searchQuery;
 	// Calculate the skip value to skip items on previous pages
 	let skip = (page - 1) * postNumberPerPage;
+	let filter;
+	if (category === "all" && searchQuery.length === 0) filter = {};
+	if (category === "all" && searchQuery.length !== 0)
+		filter = {
+			$and: [{ $text: { $search: searchQuery } }],
+		};
+	if (category !== "all" && searchQuery.length === 0)
+		filter = { category: category };
+	if (category !== "all" && searchQuery.length !== 0)
+		filter = {
+			category: category,
+			$and: [{ $text: { $search: searchQuery } }],
+		};
+		console.log(filter, searchQuery)
 	try {
-		if (category === "all") {
-			const posts = await Post.find({})
-				.skip(skip)
-				.limit(postNumberPerPage)
-				.populate({
-					path: "user",
-					select: ["_id", "firstName", "lastName", "profilePhoto"],
-				})
-				.select("-content");
-			res.status(200).json(posts);
-			return;
-		} else {
-			const posts = await Post.find({ category: category })
-				.skip(skip)
-				.limit(postNumberPerPage)
-				.populate({
-					path: "user",
-					select: ["_id", "firstName", "lastName", "profilePhoto"],
-				})
-				.select("-content");
-			res.status(200).json(posts);
-			return;
-		}
+		const posts = await Post.find(filter)
+			.skip(skip)
+			.limit(postNumberPerPage)
+			.populate({
+				path: "user",
+				select: ["_id", "firstName", "lastName", "profilePhoto"],
+			})
+			.select("-content");
+		res.status(200).json(posts);
+		return;
 	} catch (error) {
 		res.status(500).json({ error: "Internal Server Error" });
 	}

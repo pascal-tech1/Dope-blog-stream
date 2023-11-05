@@ -161,7 +161,6 @@ export const fetchUserFollowingList = createAsyncThunk(
 
 			return resp.data;
 		} catch (error) {
-			console.log(error);
 			if (!error.response) {
 				throw new Error();
 			}
@@ -184,6 +183,46 @@ export const fetchUserFollowersList = createAsyncThunk(
 		}
 	}
 );
+
+export const fetchUserDetailsCounts = createAsyncThunk(
+	"fetchUser/DetailsCounts",
+	async (_, { getState, rejectWithValue }) => {
+		try {
+			const resp = await customFetch("/users/user-details-Count", {
+				headers: {
+					authorization: `Bearer ${getState().userSlice?.token}`,
+				},
+			});
+
+			return resp.data;
+		} catch (error) {
+			if (!error.response) {
+				throw new Error(error);
+			}
+			return rejectWithValue(error?.response?.data);
+		}
+	}
+);
+export const fetchWhoViewedUserProfile = createAsyncThunk(
+	"fetchWho/ViewedUserProfile",
+	async (_, { getState, rejectWithValue }) => {
+		try {
+			const resp = await customFetch("/users/viewedBy", {
+				headers: {
+					authorization: `Bearer ${getState().userSlice?.token}`,
+				},
+			});
+			console.log("im here fetchwho");
+			return resp.data;
+		} catch (error) {
+			if (!error.response) {
+				throw new Error(error);
+			}
+			return rejectWithValue(error?.response?.data);
+		}
+	}
+);
+
 const initialState = {
 	user: null,
 	token: getUserFromLocalStorage(),
@@ -194,6 +233,9 @@ const initialState = {
 	followerslistTotalNumber: 0,
 	fetchingFollowersListStatus: "idle",
 	fetchingFollowingListStatus: "idle",
+	userDetailsCount: {},
+	whoViewUserProfile: [],
+	whoViewUserProfileStatus: "idle",
 };
 const userSlice = createSlice({
 	name: "userSlice",
@@ -356,7 +398,7 @@ const userSlice = createSlice({
 		},
 		[fetchUserFollowersList.fulfilled]: (state, { payload }) => {
 			state.fetchingFollowersListStatus = "success";
-			console.log(payload.userfollowerlist);
+
 			state.userFollowerslist = payload.userfollowerlist;
 			state.followerslistTotalNumber = payload.followerslistTotalNumber;
 		},
@@ -364,6 +406,28 @@ const userSlice = createSlice({
 			state.fetchingFollowersListStatus = "failed";
 			state.appErr = action?.payload?.message;
 			state.serverErr = action?.error?.message;
+			toast.error(action?.payload?.message);
+		},
+		[fetchUserDetailsCounts.pending]: (state) => {
+			state.userDetailsCountStatus = "loading";
+		},
+		[fetchUserDetailsCounts.fulfilled]: (state, { payload }) => {
+			state.userDetailsCountStatus = "success";
+			state.userDetailsCount = payload;
+		},
+		[fetchUserDetailsCounts.rejected]: (state, action) => {
+			state.userDetailsCountStatus = "failed";
+			toast.error(action?.payload?.message);
+		},
+		[fetchWhoViewedUserProfile.pending]: (state) => {
+			state.whoViewUserProfileStatus = "loading";
+		},
+		[fetchWhoViewedUserProfile.fulfilled]: (state, { payload }) => {
+			state.whoViewUserProfileStatus = "success";
+			state.whoViewUserProfile = payload.userWhoViewProfile;
+		},
+		[fetchWhoViewedUserProfile.rejected]: (state, action) => {
+			state.whoViewUserProfileStatus = "failed";
 			toast.error(action?.payload?.message);
 		},
 	},
