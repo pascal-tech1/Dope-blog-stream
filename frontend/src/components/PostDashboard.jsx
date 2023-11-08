@@ -6,7 +6,7 @@ const PostDashboard = ({ posts, status, title, page }) => {
 	return (
 		<div>
 			<div className="flex justify-between">
-				<h3 className=" font-bold text-gray-800 mb-3  ">{title}</h3>
+				<h3 className=" font-bold text-gray-800 mb-3 text-xs ">{title}</h3>
 				<Link
 					to={`${page}`}
 					className="text-xs font-medium text-blue-500 hover:text-blue-900 transition-all duration-75"

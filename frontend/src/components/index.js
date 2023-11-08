@@ -18,6 +18,7 @@ import PostDashboard from "./PostDashboard";
 import FollowUsersList from "./FollowUsersList";
 import Modal from "./Modal";
 import MessageUser from "./MessageUser";
+import { BarChart } from "./BarChart";
 
 export {
 	DashboardSideBar,
@@ -41,4 +42,5 @@ export {
 	FollowUsersList,
 	Modal,
 	MessageUser,
+	BarChart,
 };

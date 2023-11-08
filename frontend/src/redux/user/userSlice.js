@@ -155,10 +155,14 @@ export const fetchRandomUser = createAsyncThunk(
 
 export const fetchUserFollowingList = createAsyncThunk(
 	"user/followingList",
-	async (user, { getState, rejectWithValue }) => {
-		try {
-			const resp = await customFetch.post("/users/following", user);
+	async (_, { getState, rejectWithValue }) => {
+		const { followingListPageNumber, followsNumberPerPage, user } =
+			getState().userSlice;
 
+		try {
+			const resp = await customFetch(
+				`/users/following?userId=${user._id}&pageNumber=${followingListPageNumber}&numberPerPage=${followsNumberPerPage}`
+			);
 			return resp.data;
 		} catch (error) {
 			if (!error.response) {
@@ -170,9 +174,14 @@ export const fetchUserFollowingList = createAsyncThunk(
 );
 export const fetchUserFollowersList = createAsyncThunk(
 	"user/followersList",
-	async (user, { getState, rejectWithValue }) => {
+	async (_, { getState, rejectWithValue }) => {
+		const { followersListPageNumber, followsNumberPerPage, user } =
+			getState().userSlice;
+
 		try {
-			const resp = await customFetch.post("/users/followers", user);
+			const resp = await customFetch(
+				`/users/followers?userId=${user._id}&pageNumber=${followersListPageNumber}&numberPerPage=${followsNumberPerPage}`
+			);
 
 			return resp.data;
 		} catch (error) {
@@ -187,13 +196,14 @@ export const fetchUserFollowersList = createAsyncThunk(
 export const fetchUserDetailsCounts = createAsyncThunk(
 	"fetchUser/DetailsCounts",
 	async (_, { getState, rejectWithValue }) => {
+		console.log(getState().userSlice?.token);
 		try {
 			const resp = await customFetch("/users/user-details-Count", {
 				headers: {
 					authorization: `Bearer ${getState().userSlice?.token}`,
 				},
 			});
-
+			console.log(resp.data);
 			return resp.data;
 		} catch (error) {
 			if (!error.response) {
@@ -212,7 +222,7 @@ export const fetchWhoViewedUserProfile = createAsyncThunk(
 					authorization: `Bearer ${getState().userSlice?.token}`,
 				},
 			});
-			console.log("im here fetchwho");
+
 			return resp.data;
 		} catch (error) {
 			if (!error.response) {
@@ -223,6 +233,30 @@ export const fetchWhoViewedUserProfile = createAsyncThunk(
 	}
 );
 
+export const fetchPostImpressionsCount = createAsyncThunk(
+	"post/impressionCount",
+	async (params, { getState, rejectWithValue }) => {
+		const { chartSelectedFilter } = getState().userSlice;
+
+		try {
+			const resp = await customFetch(
+				`/users/impression-Counts?page=${params.page}&numberPerPage=${params.numberPerPage}&filter=${chartSelectedFilter}`,
+				{
+					headers: {
+						authorization: `Bearer ${getState().userSlice?.token}`,
+					},
+				}
+			);
+
+			return resp.data;
+		} catch (error) {
+			if (!error?.response) {
+				throw new Error(error);
+			}
+			return rejectWithValue(error?.response?.data);
+		}
+	}
+);
 const initialState = {
 	user: null,
 	token: getUserFromLocalStorage(),
@@ -236,25 +270,54 @@ const initialState = {
 	userDetailsCount: {},
 	whoViewUserProfile: [],
 	whoViewUserProfileStatus: "idle",
+	chartSelectedFilter: "likes and dislikes",
+	userPostImpression: null,
+	followingListPageNumber: 1,
+	followsNumberPerPage: 2,
+	followersListPageNumber: 1,
 };
 const userSlice = createSlice({
 	name: "userSlice",
 	initialState,
 	reducers: {
 		logOutUser: (state, action) => {
+			removeUserFromLocalStorage();
 			state.user = null;
-			state.token = getUserFromLocalStorage();
+			state.token = null;
 			state.randomUsers = [];
 			state.userfollowinglist = [];
 			state.followinglistTotalNumber = 0;
 			state.userFollowerslist = [];
 			state.followerslistTotalNumber = 0;
 			state.fetchingFollowersListStatus = "idle";
-			(state.fetchingFollowingListStatus = "idle"),
-				removeUserFromLocalStorage(action.payload);
+			state.fetchingFollowingListStatus = "idle";
+			state.userDetailsCount = {};
+			state.whoViewUserProfile = [];
+			state.whoViewUserProfileStatus = "idle";
+			state.chartSelectedFilter = "likes and dislikes";
+			state.userPostImpression = null;
 		},
 		setUserState: (state, action) => {
 			state.user = action.payload;
+		},
+		updateFollowingListPageNumber: (state, action) => {
+			state.followingListPageNumber += 1;
+		},
+		updateFollowersListPageNumber: (state, action) => {
+			state.followersListPageNumber += 1;
+		},
+		setFirstFetchFollowingUser: (state, action) => {
+			state.followinglistTotalNumber = 0;
+			state.followingListPageNumber = 1;
+			state.userfollowinglist = [];
+		},
+		setFirstFetchFollowersUser: (state, action) => {
+			state.followerslistTotalNumber = 0;
+			state.followersListPageNumber = 1;
+			state.userFollowerslist = [];
+		},
+		setChartSelectedFilter: (state, { payload }) => {
+			state.chartSelectedFilter = payload;
 		},
 	},
 	extraReducers: {
@@ -266,11 +329,13 @@ const userSlice = createSlice({
 			state.user = payload.user;
 			state.status = payload.status;
 			addUserToLocalStorage(payload.token);
+			state.token = payload.token;
 			toast.success(payload.message);
 		},
-		[loginUser.rejected]: (state, { payload }) => {
+		[loginUser.rejected]: (state, { action }) => {
 			state.isLoading = false;
-			toast.error(payload.message);
+			const error = action?.payload?.message || action?.error?.message;
+			toast.error(error);
 		},
 		[loginUserWithToken.pending]: (state) => {
 			state.isLoading = true;
@@ -278,40 +343,32 @@ const userSlice = createSlice({
 		[loginUserWithToken.fulfilled]: (state, { payload }) => {
 			state.isLoading = false;
 			state.user = payload.user;
-			state.appErr = undefined;
-			state.serverErr = undefined;
-			toast.success("login successfull");
 		},
 		[loginUserWithToken.rejected]: (state, action) => {
 			state.isLoading = false;
-			state.appErr = action?.payload?.error;
-			state.serverErr = action?.error?.message;
-			toast.error(state.appErr);
+			const error = action?.payload?.error || action?.error?.message;
+			toast.error(error);
 		},
 		[RegisterUser.pending]: (state) => {
 			state.isLoading = true;
 		},
 		[RegisterUser.fulfilled]: (state, { payload }) => {
 			state.isLoading = false;
-
+			state.token = payload;
 			addUserToLocalStorage(payload);
-			state.appErr = undefined;
-			state.serverErr = undefined;
-			toast("registered successfully");
+			toast.success(payload?.message);
 		},
 		[RegisterUser.rejected]: (state, action) => {
 			state.isLoading = false;
-			state.appErr = action?.payload?.message;
-			state.serverErr = action?.error?.message;
-			state?.appErr ? toast(state?.appErr) : toast(state?.serverErr);
+			const error = action?.payload?.message || action?.error?.message;
+			toast.error(error);
 		},
 		[updateUser.pending]: (state) => {
 			state.isLoading = true;
 		},
 		[updateUser.fulfilled]: (state, { payload }) => {
 			state.isLoading = false;
-			state.appErr = undefined;
-			state.serverErr = undefined;
+
 			state.user = payload.user;
 			toast.success(payload.message);
 		},
@@ -333,6 +390,7 @@ const userSlice = createSlice({
 					(user) => user._id !== payload.data.userToUnFollowId
 				);
 				state.followinglistTotalNumber -= 1;
+				state.numberOfUnFollowUser += 1;
 			}
 			if (payload.action === "follow") {
 				state.userfollowinglist = [
@@ -340,6 +398,7 @@ const userSlice = createSlice({
 					...state.userfollowinglist,
 				];
 				state.followinglistTotalNumber += 1;
+				state.numberOfFollowUser += 1;
 			}
 		},
 		[followOrUnfollowUser.rejected]: (state, action) => {
@@ -384,38 +443,45 @@ const userSlice = createSlice({
 		},
 		[fetchUserFollowingList.fulfilled]: (state, { payload }) => {
 			state.fetchingFollowingListStatus = "success";
-			state.userfollowinglist = payload.userfollowinglist;
+
+			state.userfollowinglist = [
+				...state.userfollowinglist,
+				...payload.userfollowinglist.following,
+			];
 			state.followinglistTotalNumber = payload.followinglistTotalNumber;
 		},
 		[fetchUserFollowingList.rejected]: (state, action) => {
 			state.fetchingFollowingListStatus = "failed";
-			state.appErr = action?.payload?.message;
-			state.serverErr = action?.error?.message;
-			toast.error(action?.payload?.message);
+			const error = action?.payload?.message || action?.error?.message;
+			toast.error(error);
 		},
 		[fetchUserFollowersList.pending]: (state) => {
 			state.fetchingFollowersListStatus = "loading";
 		},
 		[fetchUserFollowersList.fulfilled]: (state, { payload }) => {
 			state.fetchingFollowersListStatus = "success";
-
-			state.userFollowerslist = payload.userfollowerlist;
+			state.userFollowerslist = [
+				...state.userFollowerslist,
+				...payload.userfollowerlist.followers,
+			];
 			state.followerslistTotalNumber = payload.followerslistTotalNumber;
+			console.log(state.userFollowerslist);
 		},
 		[fetchUserFollowersList.rejected]: (state, action) => {
 			state.fetchingFollowersListStatus = "failed";
-			state.appErr = action?.payload?.message;
-			state.serverErr = action?.error?.message;
-			toast.error(action?.payload?.message);
+			const error = action?.payload?.message || action?.error?.message;
+			toast.error(error);
 		},
 		[fetchUserDetailsCounts.pending]: (state) => {
 			state.userDetailsCountStatus = "loading";
 		},
 		[fetchUserDetailsCounts.fulfilled]: (state, { payload }) => {
+			console.log(payload);
 			state.userDetailsCountStatus = "success";
 			state.userDetailsCount = payload;
 		},
 		[fetchUserDetailsCounts.rejected]: (state, action) => {
+			console.log(action.payload);
 			state.userDetailsCountStatus = "failed";
 			toast.error(action?.payload?.message);
 		},
@@ -430,8 +496,27 @@ const userSlice = createSlice({
 			state.whoViewUserProfileStatus = "failed";
 			toast.error(action?.payload?.message);
 		},
+		[fetchPostImpressionsCount.pending]: (state) => {
+			state.userPostImpressionStatus = "loading";
+		},
+		[fetchPostImpressionsCount.fulfilled]: (state, { payload }) => {
+			state.userPostImpressionStatus = "success";
+			state.userPostImpression = payload;
+		},
+		[fetchPostImpressionsCount.rejected]: (state, action) => {
+			state.userPostImpressionStatus = "failed";
+			toast.error(action?.payload?.message);
+		},
 	},
 });
 
 export default userSlice.reducer;
-export const { logOutUser, setUserState } = userSlice.actions;
+export const {
+	logOutUser,
+	setUserState,
+	setChartSelectedFilter,
+	updateFollowingListPageNumber,
+	updateFollowersListPageNumber,
+	setFirstFetchFollowingUser,
+	setFirstFetchFollowersUser,
+} = userSlice.actions;

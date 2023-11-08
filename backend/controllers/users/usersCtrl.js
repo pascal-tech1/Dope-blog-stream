@@ -30,9 +30,14 @@ const userRegisterCtrl = expressAsyncHandler(async (req, res) => {
 			email: email,
 			password: password,
 		});
-		res.json(user);
+		ress.status(201).json({
+			status: "success",
+			message: "account created successfully",
+		});
 	} catch (error) {
-		res.json(error);
+		res
+			.status(500)
+			.json({ status: "failed", message: "account creation failed" });
 	}
 });
 
@@ -54,11 +59,9 @@ const userLoginCtrl = expressAsyncHandler(async (req, res) => {
 		"profession",
 		"location",
 		"language",
-		"nickName",
 		"education",
 		"isBlocked",
 		"isAdmin",
-		"category",
 		"password",
 		"bio",
 		"following",
@@ -73,6 +76,7 @@ const userLoginCtrl = expressAsyncHandler(async (req, res) => {
 			user: userFound,
 			// generate a token that will be used to retain the login of the user
 			token: generateJwtToken(userFound?._id),
+			message: "login successfully",
 		});
 	} else {
 		res.status(500).json({
@@ -96,11 +100,9 @@ const userLoginWithTokenCtrl = expressAsyncHandler(async (req, res) => {
 		"profession",
 		"location",
 		"language",
-		"nickName",
 		"education",
 		"isBlocked",
 		"isAdmin",
-		"category",
 		"bio",
 		"following",
 	]);
@@ -159,17 +161,15 @@ const fetchUserDetailsCtrl = expressAsyncHandler(async (req, res) => {
 				"profession",
 				"location",
 				"language",
-				"nickName",
 				"education",
 				"isBlocked",
 				"isAdmin",
-				"category",
 				"bio",
 				"following",
 			])
 			.populate({
 				path: "following",
-				select: ["_id", "firstName", "lastName", "profilePhoto"], // Exclude the "password" field
+				select: ["_id", "firstName", "lastName", "profilePhoto"],
 			});
 
 		if (loginUserId.toString() !== userId.toString()) {
@@ -184,7 +184,6 @@ const fetchUserDetailsCtrl = expressAsyncHandler(async (req, res) => {
 				await UserProfileView.create({
 					viewedUser: userId,
 					viewedBy: loginUserId,
-				
 				});
 			} else {
 				await UserProfileView.findByIdAndUpdate(
@@ -230,15 +229,10 @@ const updateUserDetailsCtrl = expressAsyncHandler(async (req, res) => {
 			"profession",
 			"location",
 			"language",
-			"nickName",
 			"education",
 			"isBlocked",
 			"isAdmin",
-			"category",
-			"updatedAt",
-			"createdAt",
 			"bio",
-			"following",
 		]);
 
 		res.status(201).json({
@@ -281,6 +275,7 @@ const followingUserCtrl = expressAsyncHandler(async (req, res) => {
 	if (userToFollowId === loginUserId)
 		throw new Error("sorry you can't follow yourself");
 	validateMongoDbUserId(userToFollowId);
+
 	let userToFollow = await User.findById(userToFollowId);
 
 	const allreadyFollowing = await userToFollow?.followers?.find(
@@ -324,7 +319,6 @@ const unFollowingUserCtrl = expressAsyncHandler(async (req, res) => {
 	const loginUserId = req?.user.id;
 	const userToUnFollowId = req?.body?.userToFollowOrUnfollowId;
 	validateMongoDbUserId(userToUnFollowId);
-
 	const userToUnFollow = await User.findByIdAndUpdate(
 		userToUnFollowId,
 		{
@@ -614,12 +608,20 @@ const fetchRandomUserCtrl = expressAsyncHandler(async (req, res) => {
 
 const fetchUserFollowingListCtrl = expressAsyncHandler(
 	async (req, res) => {
-		const { userId, startIndex, endIndex } = req.body;
+		const pageNumber = parseInt(req.query.pageNumber) || 1; // Current page number, default to 1
+		const numberPerPage = parseInt(req.query.numberPerPage) || 10; // Number of items per page
+
+		const userId = req.query.userId;
+		const skip = (pageNumber - 1) * numberPerPage;
 
 		try {
+			const { following } = await User.findById(userId).select(
+				"following"
+			);
 			const userfollowinglist = await User.findById(userId)
 				.populate({
 					path: "following",
+					options: { sort: { _id: 1 } },
 					select: [
 						"_id",
 						"firstName",
@@ -627,18 +629,15 @@ const fetchUserFollowingListCtrl = expressAsyncHandler(
 						"profilePhoto",
 						"profession",
 					],
+					limit: numberPerPage,
+					skip: skip,
 				})
 				.select("following");
-
-			const followinglistTotalNumber = userfollowinglist.following.length;
-
-			const paginatedFollowingList = userfollowinglist.following
-				.slice(startIndex, endIndex)
-				.reverse();
-
+			console.log(userfollowinglist);
+			const followinglistTotalNumber = following.length;
 			res.status(200).json({
 				followinglistTotalNumber,
-				userfollowinglist: paginatedFollowingList,
+				userfollowinglist: userfollowinglist,
 			});
 		} catch (error) {
 			res.status(500).json({ message: "Internal Server Error" });
@@ -647,13 +646,20 @@ const fetchUserFollowingListCtrl = expressAsyncHandler(
 );
 const fetchUserFollowersListCtrl = expressAsyncHandler(
 	async (req, res) => {
-		const { userId, startIndex, endIndex } = req.body;
+		const pageNumber = parseInt(req.query.pageNumber) || 1; // Current page number, default to 1
+		const numberPerPage = parseInt(req.query.numberPerPage) || 10; // Number of items per page
+		console.log("im hereeee dcdtl");
+		const userId = req.query.userId;
+		const skip = (pageNumber - 1) * numberPerPage;
 
 		try {
-			const userFollowerList = await User.findById(userId)
-				.select("followers")
+			const { followers } = await User.findById(userId).select(
+				"followers"
+			);
+			const userfollowerslist = await User.findById(userId)
 				.populate({
 					path: "followers",
+					options: { sort: { _id: 1 } },
 					select: [
 						"_id",
 						"firstName",
@@ -661,27 +667,26 @@ const fetchUserFollowersListCtrl = expressAsyncHandler(
 						"profilePhoto",
 						"profession",
 					],
-				});
+					limit: numberPerPage,
+					skip: skip,
+				})
+				.select("followers");
 
-			const followerslistTotalNumber = userFollowerList.followers.length;
-
-			const paginatedFollowerList = userFollowerList.followers
-
-				.slice(startIndex, endIndex)
-				.reverse();
-
+			const followerslistTotalNumber = followers.length;
 			res.status(200).json({
 				followerslistTotalNumber,
-				userfollowerlist: paginatedFollowerList,
+				userfollowerlist: userfollowerslist,
 			});
 		} catch (error) {
 			res.status(500).json({ message: "Internal Server Error" });
 		}
 	}
 );
+
 const fetchUserCountsCtrl = expressAsyncHandler(async (req, res) => {
 	try {
 		const userFound = await User.findById(req.user._id).populate("Posts");
+		console.log(req.user._id);
 
 		const followersCount = userFound?.followers?.length;
 		const followingCount = userFound.following.length;
@@ -736,7 +741,7 @@ const fetchWhoViewedUserProfileCtrl = expressAsyncHandler(
 					],
 				},
 			});
-			console.log(userWhoViewProfile);
+
 			res.status(200).json({ status: "success", userWhoViewProfile });
 		} catch (error) {
 			console.log(error);
@@ -749,6 +754,47 @@ const fetchWhoViewedUserProfileCtrl = expressAsyncHandler(
 		// });
 	}
 );
+
+const fetchPostImpressionsCount = expressAsyncHandler(async (req, res) => {
+	const userId = req.user._id;
+
+	const { filter } = req.query;
+	const page = parseInt(req.query.page) || 1; // Current page number, default to 1
+	const numberPerPage = parseInt(req.query.numberPerPage) || 10; // Number of items per page
+	// "likes and dislikes", "number of views";
+	// console.log(filter);
+	try {
+		const { Posts } = await User.findById(userId).populate({
+			path: "Posts",
+			select: ["likes", "disLikes", "numViews", "title"],
+		});
+		const postsTitle = Posts.map((post) => post.title);
+
+		if (filter === "likes and dislikes") {
+			const likesDataset = Posts.map((post) => post.likes.length);
+			const disLikesDataset = Posts.map((post) => post.disLikes.length);
+
+			res.status(200).json({
+				likesDataset,
+				disLikesDataset,
+				postsTitle,
+			});
+			return;
+		}
+
+		if (filter === "number of views") {
+			const numViewDataset = Posts.map((post) => post.numViews);
+
+			res.status(200).json({
+				numViewDataset,
+				postsTitle,
+			});
+			return;
+		}
+	} catch (error) {
+		res.status(500).json({ message: error.message });
+	}
+});
 
 module.exports = {
 	userRegisterCtrl,
@@ -772,4 +818,5 @@ module.exports = {
 	fetchUserFollowersListCtrl,
 	fetchUserCountsCtrl,
 	fetchWhoViewedUserProfileCtrl,
+	fetchPostImpressionsCount,
 };

@@ -52,7 +52,7 @@ const AdditionalUserProfile = () => {
 	return (
 		<form
 			onSubmit={formik.handleSubmit}
-			className=" col-start-5 col-span-2 px-4 bg-white py-4 row-start-1 lg:shadow-sm lg:rounded-md"
+			className=" col-start-5 col-span-2 px-4 bg-white row-start-1 lg:shadow-sm lg:rounded-md"
 		>
 			<div className=" flex justify-between mr-4 ">
 				<h1 className=" font-bold text-gray-900 ">Additional Details</h1>
@@ -64,22 +64,8 @@ const AdditionalUserProfile = () => {
 				</button>
 			</div>
 			{isUserProfileClicked ? (
-				<div className="flex gap-4 flex-col mt-5">
-					<div className="flex gap-2  flex-col ">
-						<label htmlFor="email">Email</label>
-						<input
-							value={formik.values.email}
-							onChange={formik.handleChange("email")}
-							onBlur={formik.handleBlur("email")}
-							type="email"
-							name="email"
-							id="email"
-							className=" max-w-md border border-blue-400 px-1 py-1 rounded-md outline-none focus:border-b-blue-800 "
-						/>
-						<div className=" text-red-500">
-							{formik.touched.email && formik.errors.email}
-						</div>
-					</div>
+				// Additional user details form input
+				<div className="flex flex-col mt-2">
 					<div className="flex gap-2 flex-col ">
 						<label htmlFor="language">Languages</label>
 						<input
@@ -127,7 +113,8 @@ const AdditionalUserProfile = () => {
 					</div>
 				</div>
 			) : (
-				<div className="flex flex-col gap-4 mt-5">
+				// display
+				<div className="flex flex-col gap-4 mt-2">
 					<div className=" flex gap-3 items-center">
 						<MdOutlineLanguage className=" text-gray-400 font-medium text-lg" />
 						<div>

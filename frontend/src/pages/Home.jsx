@@ -1,4 +1,4 @@
-import React, {  useEffect} from "react";
+import React, { useEffect } from "react";
 import {
 	Category,
 	CustomDropdown,
@@ -16,7 +16,7 @@ const Home = () => {
 	const dispatch = useDispatch();
 
 	const { allCategory } = useSelector((store) => store.categorySlice);
-	const { randomUsers } = useSelector((store) => store.userSlice);
+	const { randomUsers, user } = useSelector((store) => store.userSlice);
 	const { displayedCategory, activeCategory } = useSelector(
 		(store) => store.allPostSlice
 	);
@@ -27,7 +27,7 @@ const Home = () => {
 	allCategoryLeft = allCategoryLeft.map((category) => category.title);
 
 	useEffect(() => {
-		dispatch(fetchRandomUser(3));
+		dispatch(fetchRandomUser(4));
 		dispatch(fetchAllCategorys());
 	}, []);
 
@@ -64,8 +64,8 @@ const Home = () => {
 					</div>
 				</main>
 				{/* left section */}
-				<main className=" grid-cols-2 col-span-1 hidden md:grid h-max ">
-					<div className=" fixed">
+				<main className=" grid-cols-2 col-span-1 hidden md:grid ">
+					<div className=" fixed h-[85vh] overflow-y-scroll mb-11">
 						<div className=" m-4 mr-14 px-2 h-screen border-l">
 							<div className="flex gap-2  bg-gray-100 p-4 h-max place-self-center">
 								<div>

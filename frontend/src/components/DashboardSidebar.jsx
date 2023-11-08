@@ -4,7 +4,11 @@ import { LuLayoutDashboard } from "react-icons/lu";
 import { AiOutlineComment } from "react-icons/ai";
 import { BiMessageDetail } from "react-icons/bi";
 import { CiUser } from "react-icons/ci";
-import { MdOutlineSignpost } from "react-icons/md";
+import {
+	MdAdminPanelSettings,
+	MdOutlineAdminPanelSettings,
+	MdOutlineSignpost,
+} from "react-icons/md";
 import { GiShadowFollower } from "react-icons/gi";
 import { IoMdArrowDropdown } from "react-icons/io";
 
@@ -13,6 +17,7 @@ const DashboardSideBar = () => {
 		profile: false,
 		messages: false,
 		post: false,
+		follows: false,
 	});
 
 	const toggleMenuOption = (title) => {
@@ -21,14 +26,7 @@ const DashboardSideBar = () => {
 			[title]: !prev[title],
 		}));
 	};
-	const closeMenuOption = () => {
-		setIsMenuOpen((prev) => ({
-			...prev,
-			messages: false,
-			post: false,
-			profile: false,
-		}));
-	};
+
 	const closeMenu = (title) => {
 		setIsMenuOpen((prev) => ({
 			...prev,
@@ -36,7 +34,7 @@ const DashboardSideBar = () => {
 	};
 	const sideBarItems = [
 		{
-			title: "dashboard",
+			title: "stats",
 			icon: "LuLayoutDashboard",
 		},
 		{
@@ -53,7 +51,6 @@ const DashboardSideBar = () => {
 				},
 			],
 		},
-
 		{
 			title: "post",
 			icon: "MdOutlineSignpost",
@@ -74,35 +71,57 @@ const DashboardSideBar = () => {
 				},
 			],
 		},
-
 		{
-			title: "messages",
+			title: "follows",
 			icon: "BiMessageDetail",
-			menuOpen: isMenuOpen.messages,
+			menuOpen: isMenuOpen.follows,
 			hasSubMenu: true,
 			submenu: [
 				{
-					title: "view",
+					title: "followers",
 				},
 				{
-					title: "Send",
+					title: "following",
 				},
 			],
 		},
-		{ title: "comments", icon: "AiOutlineComment" },
 		{
-			title: "All Posts",
-			icon: "LuLayoutDashboard",
+			title: "Admin",
+			icon: "MdOutlineAdminPanelSettings",
+			menuOpen: isMenuOpen.Admin,
+			hasSubMenu: true,
+			submenu: [
+				{
+					title: "All Users",
+				},
+				{
+					title: "All Posts",
+				},
+				{
+					title: "Category",
+				},
+			],
 		},
-		{
-			title: "All Users",
-			icon: "LuLayoutDashboard",
-		},
+
+		// {
+		// 	title: "messages",
+		// 	icon: "BiMessageDetail",
+		// 	menuOpen: isMenuOpen.messages,
+		// 	hasSubMenu: true,
+		// 	submenu: [
+		// 		{
+		// 			title: "view",
+		// 		},
+		// 		{
+		// 			title: "Send",
+		// 		},
+		// 	],
+		// },
 	];
 
 	return (
-		<aside className=" flex flex-col  font-medium fixed bg-white">
-			<Link to="/" className="mt-10 mb-6 ml-10 hidden md:flex">
+		<aside className=" flex flex-col  font-medium fixed bg-white h-96  md:h-screen  overflow-y-scroll shadow-md rounded-lg px-4">
+			<Link to="/" className="mt-4 ml-10 md:flex">
 				<img
 					src="../../public/blogvana.png"
 					alt=""
@@ -110,83 +129,85 @@ const DashboardSideBar = () => {
 				/>
 			</Link>
 
-			{sideBarItems.map((sideBarItem, index) => {
-				let IconComponent;
-				console.log(IconComponent);
-				switch (sideBarItem.icon) {
-					case "GiShadowFollower":
-						IconComponent = GiShadowFollower;
-						break;
-					case "MdOutlineSignpost":
-						IconComponent = MdOutlineSignpost;
-						break;
-					case "CiUser":
-						IconComponent = CiUser;
-						break;
-					case "BiMessageDetail":
-						IconComponent = BiMessageDetail;
-						break;
-					case "AiOutlineComment":
-						IconComponent = AiOutlineComment;
-						break;
-					case "LuLayoutDashboard":
-						IconComponent = LuLayoutDashboard;
-						break;
-						case "LuLayoutDashboard":
-						IconComponent = LuLayoutDashboard;
-						break;
-					default:
-						IconComponent = AiOutlineComment; // Default icon
-				}
-				return (
-					<div key={index} className=" flex gap-3 ml-5 pr-2 mt-3">
-						{sideBarItem.hasSubMenu ? (
-							<div className="flex flex-col">
-								<div
-									onClick={() => {
-										toggleMenuOption(sideBarItem.title);
-									}}
-									className=" hover:bg-blue-400 hover:text-white flex gap-2 items-center pl-[0.35rem] cursor-pointer py-2 w-full rounded-lg"
-								>
-									<IconComponent className=" text-lg" />
-									<span className=" ">{sideBarItem.title}</span>
-									<IoMdArrowDropdown />
-								</div>
+			<div className="pb-6">
+				{sideBarItems.map((sideBarItem, index) => {
+					let IconComponent;
 
-								<div className=" flex flex-col items-center justify-start border-l ">
-									{sideBarItem.submenu?.map((submenuItem, index) => {
-										return (
-											<NavLink
-												key={index}
-												onClick={() => {
-													closeMenu(sideBarItem.title);
-												}}
-												to={`${sideBarItem.title}-${submenuItem?.title}`}
-												className={`${
-													sideBarItem.menuOpen ? "" : "hidden"
-												}  flex mt-1   py-1 px-2 hover:text-white hover:bg-blue-400   w-max aria-[current=page]:text-white rounded-lg aria-[current=page]:bg-blue-400`}
-											>
-												<h3 className="">{submenuItem.title}</h3>
-											</NavLink>
-										);
-									})}
+					switch (sideBarItem.icon) {
+						case "GiShadowFollower":
+							IconComponent = GiShadowFollower;
+							break;
+						case "MdOutlineSignpost":
+							IconComponent = MdOutlineSignpost;
+							break;
+						case "CiUser":
+							IconComponent = CiUser;
+							break;
+						case "BiMessageDetail":
+							IconComponent = BiMessageDetail;
+							break;
+						case "AiOutlineComment":
+							IconComponent = AiOutlineComment;
+							break;
+						case "LuLayoutDashboard":
+							IconComponent = LuLayoutDashboard;
+							break;
+						case "LuLayoutDashboard":
+							IconComponent = LuLayoutDashboard;
+							break;
+						case "MdOutlineAdminPanelSettings":
+							IconComponent = MdOutlineAdminPanelSettings;
+							break;
+						default:
+							IconComponent = AiOutlineComment; // Default icon
+					}
+					return (
+						<div key={index} className=" flex ml-5 pr-2 mt-3">
+							{sideBarItem.hasSubMenu ? (
+								<div className="flex flex-col">
+									<div
+										onClick={() => {
+											toggleMenuOption(sideBarItem.title);
+										}}
+										className=" hover:bg-blue-400 hover:text-white flex gap-2 items-center pl-[0.35rem] cursor-pointer py-2 w-full rounded-lg"
+									>
+										<IconComponent className=" text-lg" />
+										<span className=" ">{sideBarItem.title}</span>
+										<IoMdArrowDropdown />
+									</div>
+
+									<div className=" flex flex-col items-center justify-start border-l ">
+										{sideBarItem.submenu?.map((submenuItem, index) => {
+											return (
+												<NavLink
+													key={index}
+													onClick={() => {
+														closeMenu(sideBarItem.title);
+													}}
+													to={`${sideBarItem.title}-${submenuItem?.title}`}
+													className={`${
+														sideBarItem.menuOpen ? "" : "hidden"
+													}  flex mt-1   py-1 px-2 hover:text-white hover:bg-blue-400   w-max aria-[current=page]:text-white rounded-lg aria-[current=page]:bg-blue-400`}
+												>
+													<h3 className="">{submenuItem.title}</h3>
+												</NavLink>
+											);
+										})}
+									</div>
 								</div>
-							</div>
-						) : (
-							<NavLink
-								onClick={() => {
-									closeMenuOption();
-								}}
-								to={sideBarItem.title}
-								className="flex gap-2 items-center  pl-[0.35rem] hover:text-white hover:bg-blue-400 py-2 w-full rounded-lg aria-[current=page]:text-white aria-[current=page]:bg-blue-400"
-							>
-								<IconComponent className="  text-lg "></IconComponent>
-								<span className=" font-inter">{sideBarItem.title}</span>
-							</NavLink>
-						)}
-					</div>
-				);
-			})}
+							) : (
+								<NavLink
+									to={sideBarItem.title}
+									className="flex gap-2 items-center px-2  pl-[0.35rem] hover:text-white hover:bg-blue-400 py-2 w-full rounded-lg aria-[current=page]:text-white aria-[current=page]:bg-blue-400"
+								>
+									<IconComponent className="  text-lg "></IconComponent>
+									<span className=" font-inter">{sideBarItem.title}</span>
+								</NavLink>
+							)}
+						</div>
+					);
+				})}
+			</div>
 		</aside>
 	);
 };

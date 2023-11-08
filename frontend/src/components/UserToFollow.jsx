@@ -6,7 +6,6 @@ import { formatDate } from "../utils/dataFormatter";
 import { BsEye } from "react-icons/bs";
 
 const UserToFollow = ({ user, index, date, numberOfView }) => {
-
 	const loginUser = useSelector((store) => store.userSlice?.user);
 	return (
 		<div
@@ -34,7 +33,7 @@ const UserToFollow = ({ user, index, date, numberOfView }) => {
 							</div>
 						)}
 					</div>
-					{date && <h3>{user?.profession}</h3>}
+					{date && <h3 className="text-xs">{user?.profession}</h3>}
 
 					{date && (
 						<div>
@@ -45,12 +44,14 @@ const UserToFollow = ({ user, index, date, numberOfView }) => {
 					)}
 				</div>
 			</Link>
-			<div>
-				<FollowingBtn
-					userToFollowOrUnfollow={user}
-					className=" border  px-2 my-[0.2rem] rounded-lg hover:bg-gray-200 transition-all delay-75  text-sm "
-				/>
-			</div>
+			{!date && (
+				<div>
+					<FollowingBtn
+						userToFollowOrUnfollow={user}
+						className="border border-blue-200  px-2 my-[0.2rem] rounded-lg hover:bg-blue-200 transition-all delay-75  text-sm "
+					/>
+				</div>
+			)}
 		</div>
 	);
 };

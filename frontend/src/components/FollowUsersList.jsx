@@ -1,46 +1,38 @@
 import React from "react";
 import Spinner from "./spinner";
-import { useDispatch } from "react-redux";
+
 import UserToFollow from "./UserToFollow";
 
 const FollowUsersList = ({
 	list,
 	listTotalNumber,
 	fetchingListStatus,
+	isProfileView,
 	fetchAction,
-	_id,
+	title,
 }) => {
-	const dispatch = useDispatch();
 	return (
 		<div className=" my-4">
 			{list?.map((user, index) => {
 				return <UserToFollow user={user} index={index} />;
 			})}
 
+			{fetchingListStatus === "loading" && <Spinner />}
 			{listTotalNumber !== list?.length &&
-				(fetchingListStatus === "loading" ? (
-					<Spinner />
-				) : (
+				fetchingListStatus !== "loading" && (
 					<button
 						onClick={(e) => {
-							e.preventDefault();
-
-							dispatch(
-								fetchAction({
-									startIndex: 0,
-									endIndex: listTotalNumber,
-									userId: _id,
-								})
-							);
+							fetchAction(e);
 						}}
-						className="text-sm b rounded-lg px-2 text-black border border-gray-300 hover:bg-gray-300 transition-all delay-75"
+						className="text-sm b rounded-lg px-2  border bg-blue-300 drop-shadow-md text-white border-gray-300 hover:bg-gray-300 transition-all delay-75"
 					>
-						{`see all${listTotalNumber}`}
+						{isProfileView ? `see all${listTotalNumber}` : "load more"}
 					</button>
-				))}
-			{listTotalNumber === 0 && (
+				)}
+
+			{listTotalNumber === 0 && fetchingListStatus !== "loading" && (
 				<div>
-					<h1 className="mt-6"> followers list is empty</h1>
+					<h1 className="mt-6">{`${title} list is empty`}</h1>
 				</div>
 			)}
 		</div>

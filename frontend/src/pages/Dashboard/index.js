@@ -13,12 +13,14 @@ import SavedPost from "./SavedPost";
 import PostHistory from "./PostHistory";
 import MyPosts from "./MyPosts";
 import DashboardCustomDropdown from "../../components/DashboardCustomDropdown";
+import Following from "./Following";
 
 export {
 	Layout,
 	Dashboard,
 	Profile,
 	Followers,
+	Following,
 	Messages,
 	CreatePost,
 	Comments,
@@ -29,5 +31,5 @@ export {
 	SavedPost,
 	PostHistory,
 	MyPosts,
-	DashboardCustomDropdown
+	DashboardCustomDropdown,
 };

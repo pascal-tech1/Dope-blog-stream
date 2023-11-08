@@ -10,7 +10,11 @@ import {
 import {
 	fetchUserFollowingList,
 	fetchUserFollowersList,
+	updateFollowingListPageNumber,
+	setFirstFetchFollowersUser,
+	setFirstFetchFollowingUser,
 } from "../../redux/user/userSlice";
+import { useNavigate } from "react-router-dom";
 
 const ProfileView = () => {
 	const {
@@ -22,29 +26,27 @@ const ProfileView = () => {
 		followerslistTotalNumber,
 		fetchingFollowersListStatus,
 	} = useSelector((store) => store?.userSlice);
-	const initialFollowingListNumber = 1;
-	const dispatch = useDispatch();
 
+	const dispatch = useDispatch();
+	const navigate = useNavigate();
 	const _id = user?.id;
+
 	useEffect(() => {
 		if (!_id) return;
-		if (userFollowerslist?.length > 0) return;
-		dispatch(
-			fetchUserFollowingList({
-				startIndex: 0,
-				endIndex: initialFollowingListNumber,
-				userId: _id,
-			})
-		);
-		dispatch(
-			fetchUserFollowersList({
-				startIndex: 0,
-				endIndex: initialFollowingListNumber,
-				userId: _id,
-			})
-		);
+		dispatch(setFirstFetchFollowingUser());
+		dispatch(fetchUserFollowingList());
+		dispatch(updateFollowingListPageNumber());
+		dispatch(setFirstFetchFollowersUser());
+		dispatch(fetchUserFollowersList());
 	}, [_id]);
-
+	const handleNavigateToFollowing = (e) => {
+		e.preventDefault();
+		navigate("/dashboard/follows-following");
+	};
+	const handleNavigateToFollower = (e) => {
+		e.preventDefault();
+		navigate("/dashboard/follows-followers");
+	};
 	if (!user) {
 		return <h3 className=" text-black text-3xl">Loading ....</h3>;
 	}
@@ -74,27 +76,31 @@ const ProfileView = () => {
 			<AdditionalUserProfile />
 
 			{/* following  */}
-			<div className=" lg:col-start-1 col-span-3">
+			<div className=" md:col-start-1 col-span-3  ">
 				<h1 className="font-semibold  max-w-max pt-3 pb-1 ">following</h1>
 
 				<FollowUsersList
 					list={userfollowinglist}
 					listTotalNumber={followinglistTotalNumber}
 					fetchingListStatus={fetchingFollowingListStatus}
-					fetchAction={fetchUserFollowingList}
 					_id={_id}
+					isProfileView={true}
+					fetchAction={handleNavigateToFollowing}
+					title={"following"}
 				/>
 			</div>
 			{/* followers  */}
-			<div className=" lg:col-start-4 col-span-full">
+			<div className=" md:col-start-4 col-span-full">
 				<h1 className="font-semibold  max-w-max pt-3 pb-1 ">followers</h1>
 
 				<FollowUsersList
 					list={userFollowerslist}
 					listTotalNumber={followerslistTotalNumber}
 					fetchingListStatus={fetchingFollowersListStatus}
-					fetchAction={fetchUserFollowersList}
 					_id={_id}
+					isProfileView={true}
+					fetchAction={handleNavigateToFollower}
+					title={"followers"}
 				/>
 			</div>
 		</div>

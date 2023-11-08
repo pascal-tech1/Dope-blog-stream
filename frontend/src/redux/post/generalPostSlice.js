@@ -46,7 +46,7 @@ export const likeOrDislikePost = createAsyncThunk(
 export const fetchPostCreatorProfile = createAsyncThunk(
 	"fetch/postcreatorProfile",
 	async (userId, { rejectWithValue, getState, dispatch }) => {
-		console.log('imn hhhh')
+		console.log("imn hhhh");
 		try {
 			const resp = await customFetch(`/users/profile/${userId}`, {
 				headers: {
@@ -157,7 +157,7 @@ const generalPostSlice = createSlice({
 			state.postCreatorProfileStatus = "loading";
 		},
 		[fetchPostCreatorProfile.fulfilled]: (state, { payload }) => {
-			console.log(payload)
+			console.log(payload);
 			state.postCreatorProfileStatus = "success";
 			state.postCreatorProfile = payload.foundUser;
 		},

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { Link, useNavigate } from "react-router-dom";
@@ -20,6 +20,12 @@ const Login = () => {
 			.min(8, "Password is too short - should be 8 chars minimum."),
 	});
 
+	useEffect(() => {
+		if (user) {
+			navigate("/");
+		}
+	}, [user]);
+
 	const formik = useFormik({
 		initialValues: {
 			email: "",
@@ -32,9 +38,6 @@ const Login = () => {
 				password: values.password,
 			};
 			dispatch(loginUser(user));
-			if (user) {
-				navigate("/");
-			}
 		},
 		validationSchema: formSchema,
 	});

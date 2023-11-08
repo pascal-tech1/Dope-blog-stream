@@ -31,7 +31,7 @@ const UserPage = () => {
 	const navigate = useNavigate();
 
 	useEffect(() => {
-		!loginUserId && navigate('/login')
+		!loginUserId && navigate("/login");
 		dispatch(clearCreatorAllPost());
 		dispatch(fetchPostCreatorProfile(userId));
 		setPage(1);
@@ -52,7 +52,7 @@ const UserPage = () => {
 			</div>
 		);
 	}
-	console.log(postCreatorProfileStatus);
+
 	if (postCreatorProfileStatus === "failed") {
 		return (
 			<div className=" grid place-content-center">
