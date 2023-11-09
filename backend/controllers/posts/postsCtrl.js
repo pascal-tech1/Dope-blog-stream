@@ -9,6 +9,7 @@ const checkProfanity = require("../../utils/profanWords");
 const decodeToken = require("../../utils/DecodeLoginUser");
 const mongoose = require("mongoose");
 const path = require("path");
+const filterCriteria = require("../../utils/filterSortCriteria");
 
 // '''''''''''''''''''''''''''''''''''''''''
 //   Create Post conttoller
@@ -58,7 +59,37 @@ const createPostCtrl = expressAsyncHandler(async (req, res) => {
 		res.status(500).json({ message: error.message });
 	}
 });
+const fetchAllUserPostCtrl = expressAsyncHandler(async (req, res) => {
+	console.log("im here all usersss");
 
+	const { filter } = req.query;
+	const page = parseInt(req.query.page) || 1; // Current page number, default to 1
+	const postNumberPerPage = parseInt(req.query.postNumberPerPage) || 10; // Number of items per page
+	console.log(filter, page, postNumberPerPage);
+	const sortingObject = filterCriteria(filter);
+
+	try {
+		const Posts = await Post.find({});
+		const posts = await Post.find({})
+			.populate({ path: "user", select: ["firstName", "lastName"] })
+			.sort(sortingObject)
+			.skip((page - 1) * postNumberPerPage)
+			.limit(postNumberPerPage)
+			.select(["-content", "-description", "-title", "-image"]);
+
+		const totalPosts = Posts.length;
+		const totalPages = Math.ceil(totalPosts / postNumberPerPage);
+
+		res.json({
+			currentPage: page,
+			totalPages: totalPages,
+			posts: posts,
+			totalNumber: totalPosts,
+		});
+	} catch (error) {
+		res.status(500).json({ message: error.message });
+	}
+});
 // '''''''''''''''''''''''''''''''''''''''''
 //   fetch All the  user post controller
 // '''''''''''''''''''''''''''''''''''''''''''''
@@ -68,21 +99,6 @@ const fetchUserPostCtrl = expressAsyncHandler(async (req, res) => {
 	const page = parseInt(req.query.page) || 1; // Current page number, default to 1
 	const postNumberPerPage = parseInt(req.query.postNumberPerPage) || 10; // Number of items per page
 
-	const filterCriteria = (filter) => {
-		if (filter === "Highest likes") return { likes: -1 };
-		if (filter === "Lowest likes") return { likes: 1 };
-		if (filter === "Latest") return { updatedAt: 1 };
-		if (filter === "Oldest") return { updatedAt: -1 };
-		if (filter === "A-Z") return { title: 1 };
-		if (filter === "Z-A") return { title: -1 };
-		if (filter === "Lowest view") return { numViews: 1 };
-		if (filter === "Highest view") return { numViews: -1 };
-		if (filter === "Highest dislikes") return { disLikes: -1 };
-		if (filter === "Lowest dislikes") return { disLikes: 1 };
-		if (filter === "Category") return { category: 1 };
-
-		return {}; // Default case: no sorting
-	};
 	const sortingObject = filterCriteria(filter);
 
 	try {
@@ -368,7 +384,7 @@ const fetchPostByCategoryCtrl = expressAsyncHandler(async (req, res) => {
 			category: category,
 			$and: [{ $text: { $search: searchQuery } }],
 		};
-		console.log(filter, searchQuery)
+	console.log(filter, searchQuery);
 	try {
 		const posts = await Post.find(filter)
 			.skip(skip)
@@ -461,4 +477,5 @@ module.exports = {
 	fetchPostByCategoryCtrl,
 	fetchUserPostHistoryCtrl,
 	fetchUserSavedPostCtrl,
+	fetchAllUserPostCtrl,
 };

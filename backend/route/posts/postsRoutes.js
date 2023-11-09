@@ -13,15 +13,23 @@ const {
 	fetchPostByCategoryCtrl,
 	fetchUserPostHistoryCtrl,
 	fetchUserSavedPostCtrl,
+	fetchAllUserPostCtrl,
 } = require("../../controllers/posts/postsCtrl");
 const authMiddleWare = require("../../middlewares/authentication/authMiddleWare");
 const {
 	postImageResize,
 	postImageUpload,
 } = require("../../middlewares/uploads/PhotoUpload");
+const adminMiddleWare = require("../../middlewares/authentication/authAdminCheck");
 
 const postsRoutes = express.Router();
 postsRoutes.get("/", fetchPostByCategoryCtrl);
+postsRoutes.get(
+	"/admin-all-post",
+	authMiddleWare,
+	// adminMiddleWare,
+	fetchAllUserPostCtrl
+);
 postsRoutes.get("/user-history", authMiddleWare, fetchUserPostHistoryCtrl);
 postsRoutes.get("/user-savedPost", authMiddleWare, fetchUserSavedPostCtrl);
 postsRoutes.post("/delete", authMiddleWare, deletePostCtrl);
@@ -47,7 +55,5 @@ postsRoutes.put("/like", authMiddleWare, likePostCtrl);
 postsRoutes.put("/dislike", authMiddleWare, disLikingPostCtrl);
 
 postsRoutes.put("/:id", fetchSinglePostsCtrl);
-
-
 
 module.exports = postsRoutes;

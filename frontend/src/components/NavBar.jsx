@@ -86,7 +86,7 @@ const NavBar = () => {
 							} flex flex-col gap-3 absolute top-14 z-50 right-11 md:right-20 border bg-slate-50 rounded-md px-6 py-6  transition-all`}
 						>
 							<Link
-								to="/dashboard/stats"
+								to="/stats"
 								className="bg-blue-400 px-2 rounded-md text-white hover:shadow-md transition-all hover:bg-blue-300"
 							>
 								User Profile

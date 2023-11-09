@@ -50,7 +50,7 @@ export const EditPostBtn = ({ postId }) => {
 		setClickId(postId);
 		const isPostFetch = await dispatch(fetchPostToBeEdited(postId));
 		if (isPostFetch) {
-			navigate("/dashboard/post-Create");
+			navigate("/post-Create");
 		}
 	};
 	return (

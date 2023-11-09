@@ -41,11 +41,11 @@ const ProfileView = () => {
 	}, [_id]);
 	const handleNavigateToFollowing = (e) => {
 		e.preventDefault();
-		navigate("/dashboard/follows-following");
+		navigate("/follows-following");
 	};
 	const handleNavigateToFollower = (e) => {
 		e.preventDefault();
-		navigate("/dashboard/follows-followers");
+		navigate("/follows-followers");
 	};
 	if (!user) {
 		return <h3 className=" text-black text-3xl">Loading ....</h3>;

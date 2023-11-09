@@ -33,7 +33,6 @@ const MyPosts = () => {
 			if (observer.current) observer.current.disconnect();
 			observer.current = new IntersectionObserver((entries) => {
 				if (entries[0].isIntersecting && hasMore) {
-					
 					if (!id) return;
 					page += 1;
 					dispatch(
@@ -165,7 +164,11 @@ const MyPosts = () => {
 			{posts.map((post, index) => {
 				return (
 					<div
-						ref={posts.length === index + 1 ? lastPostRef : null}
+						ref={
+							posts.length === index + 1 && posts.length > 1
+								? lastPostRef
+								: null
+						}
 						className={`${
 							post.action === "action" ? " bg-gray-500  text-white" : ""
 						}  grid grid-cols-7 md:grid-cols-11 text-left border-b py-4 md:px-2 `}

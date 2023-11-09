@@ -7,7 +7,6 @@ export const fetchPostByCategory = createAsyncThunk(
 	async (_, { getState, rejectWithValue, dispatch }) => {
 		const { page, postNumberPerPage, activeCategory, searchQuery } =
 			getState().allPostSlice;
-		console.log(searchQuery);
 		try {
 			const resp = await customFetch(
 				`/posts/?page=${page}&postNumberPerPage=${postNumberPerPage}&category=${activeCategory}&searchQuery=${searchQuery}`
@@ -32,6 +31,7 @@ const initialState = {
 	activeCategory: "all",
 	displayedCategory: ["all", "react", "javascript"],
 	undisplayedCategory: [],
+	
 };
 
 const allPostSlice = createSlice({
@@ -94,6 +94,7 @@ const allPostSlice = createSlice({
 				}
 			});
 		},
+		
 	},
 
 	extraReducers: {

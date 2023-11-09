@@ -32,7 +32,6 @@ const Following = () => {
 	return (
 		<div className=" grid max-w-md w-full px-6 mt-16">
 			<h1 className="font-semibold place-self-center text-blue-400  max-w-max pt-3 pb-1 ">
-				{" "}
 				Users you are following
 			</h1>
 			<h3 className=" font-medium text-gray-900 drop-shadow-md">
@@ -45,6 +44,7 @@ const Following = () => {
 				fetchingListStatus={fetchingFollowingListStatus}
 				fetchAction={handleFetchMoreButtonClicked}
 				_id={_id}
+				title={"following"}
 			/>
 		</div>
 	);

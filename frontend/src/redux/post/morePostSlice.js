@@ -170,6 +170,7 @@ const morePostSlice = createSlice({
 			state.morePostStatus = "success";
 		},
 		[fetchMorePost.rejected]: (state, action) => {
+			console.log(action.payload);
 			state.morePostStatus = "failed";
 		},
 		[fetchUserPostHistory.pending]: (state, action) => {

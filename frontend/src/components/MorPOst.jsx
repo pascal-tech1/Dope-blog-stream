@@ -1,10 +1,12 @@
 import React from "react";
-import Spinner from "./spinner";
+
 import { Link } from "react-router-dom";
 import LikesSaveViews from "./LikesSaveViews";
 import PostUserInfo from "./PostUserInfo";
+import Spinner from "./Spinner";
 
 export const MorePost = ({ post, status }) => {
+
 	return (
 		<>
 			<div className="  grid grid-cols-1 place-content-center min-[600px]:grid-cols-2 gap-8 w-[100%]">
