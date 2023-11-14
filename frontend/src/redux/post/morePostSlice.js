@@ -25,7 +25,7 @@ export const fetchMorePost = createAsyncThunk(
 
 		try {
 			const resp = await customFetch(
-				`/posts/?page=${page}&postNumberPerPage=${postNumberPerPage}&category=${activeCategory}`
+				`/posts/randomPost?page=${page}&postNumberPerPage=${postNumberPerPage}&category=${activeCategory}`
 			);
 			return resp.data;
 		} catch (error) {

@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { formatDate } from "../utils/dataFormatter";
 import { BsEye } from "react-icons/bs";
+import MessageUser from "./MessageUser";
 
 const UserToFollow = ({ user, index, date, numberOfView }) => {
 	const loginUser = useSelector((store) => store.userSlice?.user);
@@ -44,7 +45,11 @@ const UserToFollow = ({ user, index, date, numberOfView }) => {
 					)}
 				</div>
 			</Link>
-			{!date && (
+			{date ? (
+				<div>
+					<MessageUser receiverId={user?._id} />
+				</div>
+			) : (
 				<div>
 					<FollowingBtn
 						userToFollowOrUnfollow={user}

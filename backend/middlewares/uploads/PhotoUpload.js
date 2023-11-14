@@ -7,9 +7,12 @@ const multerStorage = multer.memoryStorage();
 
 // file checking
 const multerFliter = (req, file, cb) => {
+
 	if (file.mimetype.startsWith("image")) {
+		
 		cb(null, true);
 	} else {
+		console.log('im here file upload',file)
 		cb({ message: "unsupported file format" }, false);
 	}
 };

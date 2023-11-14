@@ -18,8 +18,16 @@ import {
 
 const CreatePost = () => {
 	const dispatch = useDispatch();
-	const { status, isEditing, postEditingStatus, postToBeEdited } =
-		useSelector((store) => store.singlePostSlice);
+	const {
+		status,
+		isEditing,
+		postEditingStatus,
+		postToBeEdited,
+		title,
+		description,
+		content,
+		category,
+	} = useSelector((store) => store.singlePostSlice);
 
 	const [postImage, setPostImage] = useState(null);
 
@@ -28,31 +36,29 @@ const CreatePost = () => {
 		: isEditing && postToBeEdited?.image;
 
 	useEffect(() => {
-		if (postEditingStatus === "failed") {
+		if (postEditingStatus === "success") {
 			setPostImage(null);
 			formik.resetForm({
 				values: {
-					title: "",
-					description: "",
-					category: "",
+					title,
+					description,
+					category,
 					image: null,
-					content: "",
+					content,
 				},
 			});
 			dispatch(clearSinglesliceState());
 		}
 	}, [postEditingStatus]);
-	console.log(postImage);
+
 	const formik = useFormik({
-		enableReinitialize: false,
 		initialValues: {
-			title: (isEditing && postToBeEdited?.title) || "",
-			description: (isEditing && postToBeEdited?.description) || "",
-			category: (isEditing && postToBeEdited?.category) || "",
+			title: (isEditing && postToBeEdited?.title) || title,
+			description:
+				(isEditing && postToBeEdited?.description) || description,
+			category: (isEditing && postToBeEdited?.category) || category,
 			image: null,
-			content:
-				(isEditing && postToBeEdited?.content) ||
-				"Enter your post content here, Creativity is your limit",
+			content: (isEditing && postToBeEdited?.content) || content,
 		},
 
 		onSubmit: (values) => {
@@ -70,7 +76,7 @@ const CreatePost = () => {
 			</div>
 		);
 	}
-
+formik.handleChangez
 	return (
 		<div className=" font-inter font-medium mt-16  gap-7 px-10 relative ">
 			<form onSubmit={formik.handleSubmit} className=" ">
@@ -165,16 +171,15 @@ const CreatePost = () => {
 				</div>
 
 				<div className=" mt-3">
-				<div>
-				<ReactQuill
-						theme="snow"
-						modules={modules}
-						value={formik.values.content}
-						onChange={formik.handleChange("content")}
-						className=" h-screen top-0 "
-					
-					/>
-				</div>
+					<div>
+						<ReactQuill
+							theme="snow"
+							modules={modules}
+							value={formik.values.content}
+							onChange={formik.handleChange("content")}
+							className=" h-screen top-0 "
+						/>
+					</div>
 
 					<div className=" flex gap-2  mt-[9rem] md:mt-[6rem] items-center justify-center ">
 						<button

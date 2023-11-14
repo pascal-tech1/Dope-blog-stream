@@ -9,12 +9,13 @@ const checkProfanity = require("../../utils/profanWords");
 const decodeToken = require("../../utils/DecodeLoginUser");
 const mongoose = require("mongoose");
 const path = require("path");
-const filterCriteria = require("../../utils/filterSortCriteria");
+const { filterCriteria } = require("../../utils/filterSortCriteria");
 
 // '''''''''''''''''''''''''''''''''''''''''
 //   Create Post conttoller
 // '''''''''''''''''''''''''''''''''''''''''''''
 const createPostCtrl = expressAsyncHandler(async (req, res) => {
+	console.log("im ctrl ");
 	const { id } = req.user;
 	validateMongoDbUserId(id);
 
@@ -40,13 +41,15 @@ const createPostCtrl = expressAsyncHandler(async (req, res) => {
 			imageLocalPath,
 			`mern-blog-app/${user?.email}/postImage`
 		);
-
 		// remove the file
-		if (fs.existsSync(imageLocalPath)) {
-			fs.unlink(imageLocalPath);
-		} else {
-			throw new Error("No valid file path found for deletions");
-		}
+		fs.unlink(imageLocalPath, (err) => {
+			if (err) {
+				res.status(500).json({ message: "failed to edit post" });
+				return;
+			} else {
+				console.log("File deleted successfully");
+			}
+		});
 
 		const post = await Post.create({
 			...req.body,
@@ -60,12 +63,10 @@ const createPostCtrl = expressAsyncHandler(async (req, res) => {
 	}
 });
 const fetchAllUserPostCtrl = expressAsyncHandler(async (req, res) => {
-	console.log("im here all usersss");
-
 	const { filter } = req.query;
 	const page = parseInt(req.query.page) || 1; // Current page number, default to 1
 	const postNumberPerPage = parseInt(req.query.postNumberPerPage) || 10; // Number of items per page
-	console.log(filter, page, postNumberPerPage);
+
 	const sortingObject = filterCriteria(filter);
 
 	try {
@@ -75,10 +76,17 @@ const fetchAllUserPostCtrl = expressAsyncHandler(async (req, res) => {
 			.sort(sortingObject)
 			.skip((page - 1) * postNumberPerPage)
 			.limit(postNumberPerPage)
-			.select(["-content", "-description", "-title", "-image"]);
+			.select([
+				"-content",
+				"-description",
+				"-title",
+				"-image",
+				"-password",
+			]);
 
 		const totalPosts = Posts.length;
 		const totalPages = Math.ceil(totalPosts / postNumberPerPage);
+		console.log(posts);
 
 		res.json({
 			currentPage: page,
@@ -203,11 +211,15 @@ const updatePostCtrl = expressAsyncHandler(async (req, res) => {
 		let imageUrl;
 		req?.file ? (imageUrl = uploadedImage?.url) : (imageUrl = post.image);
 		// remove the file
-		if (fs.existsSync(imageLocalPath)) {
-			fs.unlink(imageLocalPath);
-		} else {
-			throw new Error("No valid file path found for deletions");
-		}
+		req?.file &&
+			fs.unlink(imageLocalPath, (err) => {
+				if (err) {
+					res.status(500).json({ message: "failed to edit post" });
+					return;
+				} else {
+					console.log("File deleted successfully");
+				}
+			});
 
 		post = await Post.findByIdAndUpdate(
 			postId,
@@ -221,7 +233,8 @@ const updatePostCtrl = expressAsyncHandler(async (req, res) => {
 		).populate("user");
 		res.json(post);
 	} catch (error) {
-		res.status(500).json({ message: error.message });
+		console.log(error);
+		res.status(500).json({ messsage: error.message });
 	}
 });
 

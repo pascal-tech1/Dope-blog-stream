@@ -31,7 +31,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { getUserFromLocalStorage } from "./utils/localStorage";
 import { useDispatch } from "react-redux";
 import { loginUserWithToken } from "./redux/user/userSlice";
-import { AllUsers, AllUsersPost, Category } from "./AdminPages";
+import { AllUsers, AllUsersPost, AdminAllCategory} from "./AdminPages";
 
 const App = () => {
 	const dispatch = useDispatch();
@@ -62,7 +62,7 @@ const App = () => {
 					<Route path="comments" element={<Comments />} />
 					<Route path="Admin-All Users" element={<AllUsers />} />
 					<Route path="Admin-All Posts" element={<AllUsersPost />} />
-					<Route path="Admin-Category" element={<Category />} />
+					<Route path="Admin-Category" element={<AdminAllCategory />} />
 				</Route>
 
 				<Route path="login" element={<Login />} />

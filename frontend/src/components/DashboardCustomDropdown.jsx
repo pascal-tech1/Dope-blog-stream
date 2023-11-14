@@ -25,7 +25,7 @@ const DashboardCustomDropdown = ({
 	};
 
 	return (
-		<div onClick={(e) => handleDropDownClose(e)} className="relative">
+		<div onClick={(e) => handleDropDownClose(e)} className="relative z-40">
 			<button
 				onClick={toggleDropdown}
 				className="bg-white border justify-center px-2 flex gap-1 items-center  rounded  py-1 text-gray-700 focus:outline-none focus:border-gray-500"

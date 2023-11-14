@@ -11,6 +11,7 @@ const email = require("../../config/email");
 const handleCloudinaryUpload = require("../../config/cloundinary/cloudinaryUploadConfig");
 const UserProfileView = require("../../model/userProfileView/userProfileView");
 const { default: mongoose } = require("mongoose");
+const { filterUserCriteria } = require("../../utils/filterSortCriteria");
 
 // '''''''''''''''''''''''''''''''''''''''''
 //         Register user
@@ -115,15 +116,6 @@ const userLoginWithTokenCtrl = expressAsyncHandler(async (req, res) => {
 // '''''''''''''''''''''''''''''''''''''''''
 //         fetch All user
 // '''''''''''''''''''''''''''''''''''''''''''''
-
-const fetchAllUserCtrl = expressAsyncHandler(async (req, res) => {
-	try {
-		const allUser = await User.find({});
-		res.json(allUser);
-	} catch (error) {
-		res.json(error);
-	}
-});
 
 // '''''''''''''''''''''''''''''''''''''''''
 //         delete single user with id
@@ -791,6 +783,69 @@ const fetchPostImpressionsCount = expressAsyncHandler(async (req, res) => {
 			});
 			return;
 		}
+	} catch (error) {
+		res.status(500).json({ message: error.message });
+	}
+});
+
+const fetchAllUserCtrl = expressAsyncHandler(async (req, res) => {
+	const { filter } = req.query;
+	const page = parseInt(req.query.page) || 1;
+	const numberPerPage = parseInt(req.query.numberPerPage) || 10;
+
+	const sortingObject = filterUserCriteria(filter);
+	console.log(page);
+	console.log(numberPerPage);
+
+	try {
+		const users = await User.aggregate([
+			{
+				$lookup: {
+					from: "posts", // Change this to the actual name of your Posts collection
+					localField: "_id",
+					foreignField: "user", // Assuming there's a field in Posts that references the User
+					as: "Posts",
+				},
+			},
+			{
+				$addFields: {
+					followersCount: { $size: "$followers" },
+					followingCount: { $size: "$following" },
+					postsCount: { $size: "$Posts" },
+				},
+			},
+
+			{
+				$sort: sortingObject,
+			},
+			{
+				$skip: (page - 1) * numberPerPage,
+			},
+			{
+				$limit: numberPerPage,
+			},
+			{
+				$project: {
+					firstName: 1,
+					lastName: 1,
+					email: 1,
+					createdAt: 1,
+					followersCount: "$followersCount",
+					followingCount: "$followingCount",
+					postsCount: "$postsCount",
+				},
+			},
+		]);
+
+		const totalUsers = await User.countDocuments({});
+		const totalPages = Math.ceil(totalUsers / numberPerPage);
+
+		res.json({
+			currentPage: page,
+			totalPages: totalPages,
+			users: users,
+			totalNumber: totalUsers,
+		});
 	} catch (error) {
 		res.status(500).json({ message: error.message });
 	}

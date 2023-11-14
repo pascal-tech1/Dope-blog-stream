@@ -27,6 +27,31 @@ export const fetchAllUsersPost = createAsyncThunk(
 		}
 	}
 );
+
+export const fetchAllUsers = createAsyncThunk(
+	"fetch/AllUsers",
+	async (params, { getState, rejectWithValue }) => {
+		const numberPerPage = 2;
+		const { adminAllUsersPageNumber } = getState().adminSlice;
+
+		try {
+			const resp = await customFetch(
+				`/users/admin-all-users?page=${adminAllUsersPageNumber}&numberPerPage=${numberPerPage}&filter=${params.filter}`,
+				{
+					headers: {
+						authorization: `Bearer ${getState().userSlice?.token}`,
+					},
+				}
+			);
+			return resp.data;
+		} catch (error) {
+			if (!error.response) {
+				throw new Error();
+			}
+			return rejectWithValue(error?.response?.data);
+		}
+	}
+);
 export const deletePostAdmin = createAsyncThunk(
 	"delete/PostAdmin",
 	async (postIds, { getState, rejectWithValue, dispatch }) => {
@@ -51,6 +76,8 @@ export const deletePostAdmin = createAsyncThunk(
 	}
 );
 
+
+
 const initialState = {
 	hasMore: true,
 	allPost: [],
@@ -60,6 +87,14 @@ const initialState = {
 	adminAllPostTotalPages: null,
 	deletingPostStatus: "idle",
 	adminAllPostPageNumber: 1,
+	// allusers
+	adminAllUsersPageNumber: 1,
+	adminFetchUsersHasMore: true,
+	allUsers: [],
+	AdminAllUserSelectedFilter: "Newest User",
+	adminAllUsersStatus: "idle",
+	adminAllUsersTotalNumber: null,
+	adminAllUsersTotalPages: null,
 };
 
 const adminSlice = createSlice({
@@ -76,6 +111,17 @@ const adminSlice = createSlice({
 		},
 		increaseAdminAllPostPageNumber: (state) => {
 			state.adminAllPostPageNumber += 1;
+		},
+		clearAdminAllUser: (state) => {
+			state.adminAllUsersPageNumber = 1;
+			state.AdminFetchUsersHasMore = true;
+			state.allUsers = [];
+		},
+		setAllUsersSelectedFilter: (state, { payload }) => {
+			state.AdminAllUserSelectedFilter = payload;
+		},
+		increaseAdminAllUsersPageNumber: (state) => {
+			state.adminAllUsersPageNumber += 1;
 		},
 	},
 	extraReducers: {
@@ -98,7 +144,27 @@ const adminSlice = createSlice({
 			state.serverErr = action?.error?.message;
 			toast.error(action?.payload?.message);
 		},
-		// user delete posts
+		[fetchAllUsers.pending]: (state) => {
+			state.adminAllUsersStatus = "loading";
+		},
+		[fetchAllUsers.fulfilled]: (state, { payload }) => {
+			state.adminAllUsersStatus = "success";
+
+			state.adminAllUsersTotalNumber = payload.totalNumber;
+			state.allUsers = [...state.allUsers, ...payload.users];
+			state.adminAllUsersTotalPages = payload.totalPages;
+			console.log(payload.totalPages, payload.currentPage);
+			if (payload.totalPages === payload.currentPage)
+				state.adminFetchUsersHasMore = false;
+			else state.adminFetchUsersHasMore = true;
+		},
+		[fetchAllUsers.rejected]: (state, action) => {
+			state.adminAllUsersStatus = "failed";
+			state.appErr = action?.payload?.message;
+			state.serverErr = action?.error?.message;
+			toast.error(action?.payload?.message);
+		},
+
 		[deletePostAdmin.pending]: (state) => {
 			state.deletingPostStatus = "loading";
 		},
@@ -123,5 +189,8 @@ export const {
 	clearAdminAllPost,
 	setMyPostSelectedFilter,
 	increaseAdminAllPostPageNumber,
+	increaseAdminAllUsersPageNumber,
+	setAllUsersSelectedFilter,
+	clearAdminAllUser,
 } = adminSlice.actions;
 export default adminSlice.reducer;

@@ -23,7 +23,6 @@ export const fetchSinglePost = createAsyncThunk(
 
 			return resp.data;
 		} catch (error) {
-			console.log(error);
 			if (!error?.response) {
 				throw new Error();
 			}
@@ -101,6 +100,11 @@ const initialState = {
 	editingPost: null,
 	postToBeEdited: [],
 	postEditingStatus: "idle",
+	postEditingFetchingStatus: "idle",
+	title: "",
+	category: "",
+	description: "",
+	content: "",
 };
 const singlePostSlice = createSlice({
 	name: "singlePostSlice",
@@ -146,14 +150,14 @@ const singlePostSlice = createSlice({
 			state.appErr = action?.payload?.message;
 		},
 		[fetchPostToBeEdited.pending]: (state, action) => {
-			state.postEditingStatus = "loading";
+			state.postEditingFetchingStatus = "loading";
 		},
 		[fetchPostToBeEdited.fulfilled]: (state, action) => {
-			state.postEditingStatus = "success";
+			state.postEditingFetchingStatus = "success";
 			state.postToBeEdited = action.payload;
 		},
 		[fetchPostToBeEdited.rejected]: (state, action) => {
-			state.postEditingStatus = "success";
+			state.postEditingFetchingStatus = "success";
 			toast.error("failed to fetch Post");
 		},
 		// create post
@@ -175,7 +179,6 @@ const singlePostSlice = createSlice({
 			state.isLoading = true;
 		},
 		[updatePost.fulfilled]: (state, action) => {
-			console.log("updating success");
 			state.postEditingStatus = "success";
 			state.post = action.payload;
 			state.isLoading = false;
@@ -184,6 +187,7 @@ const singlePostSlice = createSlice({
 		[updatePost.rejected]: (state, action) => {
 			console.log("updating failed");
 			state.postEditingStatus = "failed";
+			console.log(action.payload);
 			toast.error(action.payload.message);
 		},
 	},

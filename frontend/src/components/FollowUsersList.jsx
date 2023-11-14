@@ -1,7 +1,8 @@
 import React from "react";
-import Spinner from "./spinner";
+
 
 import UserToFollow from "./UserToFollow";
+import Spinner from "./Spinner";
 
 const FollowUsersList = ({
 	list,
@@ -12,19 +13,24 @@ const FollowUsersList = ({
 	title,
 }) => {
 	return (
-		<div className=" my-4">
+		<div className=" my-4 flex flex-col">
 			{list?.map((user, index) => {
 				return <UserToFollow user={user} index={index} />;
 			})}
 
-			{fetchingListStatus === "loading" && <Spinner />}
+			{fetchingListStatus === "loading" && (
+				<div className=" self-center">
+				
+					<Spinner />
+				</div>
+			)}
 			{listTotalNumber !== list?.length &&
 				fetchingListStatus !== "loading" && (
 					<button
 						onClick={(e) => {
 							fetchAction(e);
 						}}
-						className="text-sm b rounded-lg px-2  border bg-blue-300 drop-shadow-md text-white border-gray-300 hover:bg-gray-300 transition-all delay-75"
+						className="text-sm self-center rounded-lg px-2  border bg-blue-300 drop-shadow-md text-white border-gray-300 hover:bg-gray-300 transition-all delay-75"
 					>
 						{isProfileView ? `see all${listTotalNumber}` : "load more"}
 					</button>

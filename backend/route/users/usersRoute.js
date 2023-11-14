@@ -33,6 +33,7 @@ const {
 const userRoutes = express.Router();
 
 userRoutes.get("/user-details-Count", authMiddleWare, fetchUserCountsCtrl);
+userRoutes.get("/admin-all-users", authMiddleWare, fetchAllUserCtrl);
 userRoutes.get("/viewedBy", authMiddleWare, fetchWhoViewedUserProfileCtrl);
 userRoutes.get("/following", fetchUserFollowingListCtrl);
 userRoutes.get("/followers", fetchUserFollowersListCtrl);
@@ -45,7 +46,7 @@ userRoutes.post("/register", userRegisterCtrl);
 userRoutes.post("/random-users", fetchRandomUserCtrl);
 userRoutes.get("/loginWithToken", authMiddleWare, userLoginWithTokenCtrl);
 userRoutes.post("/login", userLoginCtrl);
-userRoutes.get("/", authMiddleWare, fetchAllUserCtrl);
+
 userRoutes.delete("/delete/:USERID", deleteUserCtrl);
 // userRoutes.get("/:USERID", authMiddleWare, fetchUserDetailsCtrl);
 userRoutes.get("/profile/:userId", authMiddleWare, fetchUserDetailsCtrl);

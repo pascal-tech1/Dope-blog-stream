@@ -12,7 +12,6 @@ const MessageUser = ({ receiverId }) => {
 		setIsModalOpen(true);
 	};
 	const closeModal = () => {
-		console.log("im her closeModal message");
 		setIsModalOpen(false);
 	};
 	const continueAction = () => {
@@ -36,13 +35,13 @@ const MessageUser = ({ receiverId }) => {
 						name="message"
 						id="message"
 						placeholder="Enter your message"
-						className=" bg-gray-100 py-4 px-6  border rounded-md outline-none focus:border-gray-400"
+						className=" bg-gray-100 py-2 px-2  border rounded-md outline-none focus:border-gray-400"
 					/>
 				</div>
 			</Modal>
 			<div
 				onClick={openModal}
-				className=" bg-gray-500 w-11 h-11 rounded-full flex items-center justify-center text-white "
+				className=" bg-gray-500 w-6 h-6 rounded-full flex items-center justify-center text-white "
 			>
 				<AiOutlineMessage className=" text-2xl " />
 			</div>

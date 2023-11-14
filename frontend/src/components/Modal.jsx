@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 
 function Modal({ isOpen, onClose, onContinue, children }) {
-	console.log(isOpen);
 	useEffect(() => {
 		const handleKeyPress = (e) => {
 			if (isOpen && e.key === "Escape") {
@@ -20,7 +19,6 @@ function Modal({ isOpen, onClose, onContinue, children }) {
 		};
 	}, [isOpen, onClose, onContinue]);
 
-	
 	const closeModal = () => {
 		onClose();
 	};
@@ -36,15 +34,13 @@ function Modal({ isOpen, onClose, onContinue, children }) {
 
 	return (
 		<div
-			className={`fixed top-0 left-0 w-full h-full flex justify-center items-center bg-black bg-opacity-40 z-50  ${
+			className={` z-50 fixed top-0 left-0 w-full h-full flex justify-center items-center bg-black bg-opacity-40  ${
 				isOpen ? "" : "hidden"
 			}`}
-			onClick={(e) => handleBackdropClick(e)}
-		>
+			onClick={(e) => handleBackdropClick(e)}	>
 			<div
-				className=" bg-white  text-black p-4 w-[90%] rounded-lg md:w-1/2 flex flex-col items-center gap-6"
-				onClick={(e) => e.stopPropagation()}
-			>
+				className=" z-50 bg-white  text-black p-4 w-[90%] rounded-lg md:w-1/2 flex flex-col items-center gap-6"
+				onClick={(e) => e.stopPropagation()}>
 				<div className="p-4">{children}</div>
 				<div className=" flex flex-col items-center gap-2">
 					<div className="flex gap-4 items-center">

@@ -63,15 +63,14 @@ const Dashboard = () => {
 	useEffect(() => {
 		console.log(fetchMessageStatus);
 		if (fetchMessageStatus === "success") {
-			console.log("im herre 3");
 			userPostHistory.length === 0 && dispatch(fetchUserPostHistory());
 			userSavedPost.length === 0 && dispatch(fetchUserSavedPost());
 		}
 	}, [fetchMessageStatus]);
 
 	return (
-		<div className=" flex flex-col  lg:grid grid-cols-12 lg:gap-8 mt-16 mx-6 lg:mx-0 font-inter antialiased">
-			<div className="col-start-1 row-start-1 col-span-10 ">
+		<div className=" flex flex-col  lg:grid grid-cols-12 lg:gap-8 mt-16 px-6 lg:mx-0 font-inter antialiased">
+			<div className="col-start-1 row-start-1 col-span-9 ">
 				<div className=" flex flex-wrap justify-between md:grid grid-cols-3 gap-2">
 					<div className="  col-start-1 ">
 						<UserDetailsCount
@@ -126,21 +125,21 @@ const Dashboard = () => {
 					</div>
 				</div>
 				{/* chart  */}
-				<div className="col-start-1 col-span-10 lg:grid grid-cols-12 gap-4 flex flex-col">
-					<div className=" col-start-1 col-span-8">
+				<div className=" pt-4  flex flex-col lg:flex-row justify-between">
+					<div className="lg:w-[60%]  ">
 						<h1 className=" font-bold text-xs text-gray-800 mb-3">
 							post Charts
 						</h1>
 						<BarChart />
 					</div>
 					{/* viewedBy */}
-					<div className=" col-start-9 col-span-3">
+					<div className=" col-start-8 col-span-4 px-1 w-[37%] ">
 						<h1 className=" font-bold text-xs text-gray-800 mb-3">
 							Who's Viewed your profile
 						</h1>
 						{whoViewUserProfile?.map((users, index) =>
 							users?.viewedBy?.map((viewedBy, index) => (
-								<div>
+								<div key={index}>
 									<UserToFollow
 										user={viewedBy}
 										index={index}

@@ -6,22 +6,27 @@ const validateMongoDbUserId = require("../../utils/validateMongoDbUserId");
 // '''''''''''''''''''''''''''''''''''''''''''
 
 const createCategoryCtrl = expressAsyncHandler(async (req, res) => {
-	const { title } = req?.body;
-	const categoryAlreadyExist = await Category.findOne({ title });
+	let category = req?.body.activeEditingCategory;
 
-	if (categoryAlreadyExist) {
-		throw new Error("Category Already exist");
-	}
+	const categoryAlreadyExist = await Category.findOne({
+		title: category.toLocaleLowerCase(),
+	});
+
+	if (categoryAlreadyExist) throw new Error("Category Already exist");
+
 	const loginAdmin = req?.user;
 
 	try {
-		const category = await Category.create({
+		const createdCategory = await Category.create({
 			user: loginAdmin?._id,
-			title,
+			title: category.toLocaleLowerCase(),
 		});
 
-		res.status(201).json(category);
+		res
+			.status(201)
+			.json({ message: `category ${category} `, createdCategory });
 	} catch (error) {
+		console.log(error);
 		res.json({ message: "faliled to create Category" });
 	}
 });
@@ -57,28 +62,42 @@ const fetchSingleCategorysCtrl = expressAsyncHandler(async (req, res) => {
 //   update category cocntroller
 // ''''''''''''''''''''''''''''''''''''''''''''
 const updateCategoryCtrl = expressAsyncHandler(async (req, res) => {
-	const { categoryId } = req?.params;
-	const { title } = req?.body;
+	const { categoryId } = req.params;
+	const { title } = req.body;
 
 	// // check if title exist
-	const categoryAlreadyExist = await Category.findOne({ title });
-	if (categoryAlreadyExist) {
-		throw new Error("category already exist");
+
+	const titleExist = await Category.findOne({ title });
+	if (titleExist) {
+		throw new Error("Category with this title exist try a different one");
+	}
+
+	const categoryAlreadyExist = await Category.findOne({ _id: categoryId });
+
+	if (!categoryAlreadyExist) {
+		throw new Error("No category found try again");
+	}
+	if (categoryAlreadyExist.title === title) {
+		throw new Error("category is the same make changes");
 	}
 	validateMongoDbUserId(categoryId);
-
 	try {
 		const category = await Category.findByIdAndUpdate(
 			categoryId,
 			{
-				title,
+				title:
+					title.charAt(0).toUpperCase() + title.slice(1).toLowerCase(),
 			},
 			{ new: true, runValidators: true }
 		);
 
-		res.json(category);
+		res.status(200).json({
+			message: `Category ${categoryAlreadyExist.title} is successfully modified to ${title}`,
+			category,
+		});
 	} catch (error) {
-		res.json(error);
+		console.log(error);
+		res.status(500).json({ status: "failed", message: error.messasge });
 	}
 });
 
@@ -86,16 +105,19 @@ const updateCategoryCtrl = expressAsyncHandler(async (req, res) => {
 //   delete category controller
 // ''''''''''''''''''''''''''''''''''''''''''''
 const deleteCategoryCtrl = expressAsyncHandler(async (req, res) => {
-	const { categoryId } = req?.params;
-	validateMongoDbUserId(categoryId);
+	const { categoryIds } = req.body;
 
 	try {
-		const category = await Category.findByIdAndDelete(categoryId, {
-			new: true,
+		const deletedCategory = await Category.deleteMany({
+			_id: { $in: categoryIds },
 		});
-		res.json(category);
+
+		res.status(200).json({
+			message: `successfully deleted ${deletedCategory.deletedCount} posts`,
+			categoryIds,
+		});
 	} catch (error) {
-		res.json(error);
+		res.status(400).json({ message: "failed to delete post" });
 	}
 });
 

@@ -1,5 +1,5 @@
 import AllUsersPost from "./AllUsersPosts";
 import AllUsers from "./AllUsers";
-import Category from "./Category";
+import AdminAllCategory from "./Category";
 
-export { AllUsersPost, AllUsers, Category };
+export { AllUsersPost, AllUsers, AdminAllCategory };

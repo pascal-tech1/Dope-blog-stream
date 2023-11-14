@@ -5,7 +5,6 @@ import UserDetailsCount from "./UserDetailsCount";
 import UserProfile from "./UserProfile";
 import AdditionalUserProfile from "./AdditionalUserProfile";
 import UserBio from "./UserBio";
-import Spinner from "./spinner";
 import { FollowingBtn, EditPostBtn } from "./FollowingBtn";
 import PostInfo from "./PostInfo";
 import LikesSaveViews from "./LikesSaveViews";
@@ -19,6 +18,9 @@ import FollowUsersList from "./FollowUsersList";
 import Modal from "./Modal";
 import MessageUser from "./MessageUser";
 import { BarChart } from "./BarChart";
+import Tooltip from "./Tooltip";
+import Spinner from "./Spinner";
+import AdminCategory from "./AdminCategory";
 
 export {
 	DashboardSideBar,
@@ -43,4 +45,6 @@ export {
 	Modal,
 	MessageUser,
 	BarChart,
+	Tooltip,
+	AdminCategory
 };
