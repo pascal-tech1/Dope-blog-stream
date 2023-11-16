@@ -31,7 +31,7 @@ const ProfileView = () => {
 	const navigate = useNavigate();
 	const _id = user?.id;
 
-	useEffect(() => {
+	useEffect( () => {
 		if (!_id) return;
 		dispatch(setFirstFetchFollowingUser());
 		dispatch(fetchUserFollowingList());
@@ -51,7 +51,7 @@ const ProfileView = () => {
 		return <h3 className=" text-black text-3xl">Loading ....</h3>;
 	}
 	return (
-		<div className=" flex flex-col md:ml-14 row-span-2 lg:grid grid-cols-6 pcol-start-1 col-span-4 rounded-xl mx-4 lg:mb-6 pt-4 lg:shadow-sm lg:rounded-md lg:ml-0  font-inter mt-10 gap-5 bg-white lg:bg-transparent">
+		<div className=" flex flex-col row-span-2 md:grid grid-cols-6 col-start-1 col-span-4 rounded-xl mx-4 lg:mb-6 pt-4 lg:shadow-sm lg:rounded-md lg:ml-0  font-inter gap-5 bg-white lg:bg-transparent">
 			<div className=" col-start-1 col-span-4  bg-white lg:shadow-sm lg:rounded-md">
 				<div className="w-full relative ">
 					<div className=" w-full ">

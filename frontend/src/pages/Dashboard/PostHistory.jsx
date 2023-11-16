@@ -40,7 +40,7 @@ const PostHistory = () => {
 	}, [page]);
 	return (
 		<div className="mx-4">
-			<div className="mt-16 flex max-w-full justify-between flex-wrap gap-6 ">
+			<div className="flex max-w-full justify-between flex-wrap gap-6 ">
 				{userPostHistory.map((post, index) => {
 					return (
 						<div

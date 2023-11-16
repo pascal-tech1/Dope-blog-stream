@@ -128,7 +128,7 @@ const AllUsersPosts = () => {
 	};
 
 	return (
-		<div className="mt-16 shadow-md rounded-lg  font-medium  mx-2  md:mx-6 grid overflow-x-scroll min-w-[1000px]  ">
+		<div className=" shadow-md rounded-lg  font-medium  mx-2  md:mx-6 grid overflow-x-scroll min-w-[1000px]  ">
 			<Modal
 				isOpen={isModalOpen}
 				onClose={closeModal}

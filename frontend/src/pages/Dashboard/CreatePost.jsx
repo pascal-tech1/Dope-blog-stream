@@ -15,6 +15,9 @@ import {
 	formSchema,
 	isEditingFormSchema,
 } from "../../utils/createPostYup";
+import DashboardCustomDropdown from "../../components/DashboardCustomDropdown";
+import { fetchAllCategorys } from "../../redux/category/categorySlice";
+import { toast } from "react-toastify";
 
 const CreatePost = () => {
 	const dispatch = useDispatch();
@@ -28,8 +31,10 @@ const CreatePost = () => {
 		content,
 		category,
 	} = useSelector((store) => store.singlePostSlice);
-
+	const { allCategory } = useSelector((store) => store.categorySlice);
+	const [quillIsFocus, setQuillIsFocus] = useState(false);
 	const [postImage, setPostImage] = useState(null);
+	const [selectedFilter, setSelectedFilter] = useState("name");
 
 	const url = postImage
 		? URL.createObjectURL(postImage)
@@ -42,7 +47,6 @@ const CreatePost = () => {
 				values: {
 					title,
 					description,
-					category,
 					image: null,
 					content,
 				},
@@ -50,6 +54,11 @@ const CreatePost = () => {
 			dispatch(clearSinglesliceState());
 		}
 	}, [postEditingStatus]);
+	useEffect(() => {
+		dispatch(fetchAllCategorys());
+	}, []);
+
+	const allCategorytitle = allCategory.map((category) => category.title);
 
 	const formik = useFormik({
 		initialValues: {
@@ -62,25 +71,48 @@ const CreatePost = () => {
 		},
 
 		onSubmit: (values) => {
+			if (values.content.length <= 100) {
+				toast.error(
+					"content is required and cannot be less than 100 characters"
+				);
+				return;
+			}
+			values.category = selectedFilter;
+
 			isEditing
 				? dispatch(updatePost(values))
 				: dispatch(createPost(values));
 		},
+
 		validationSchema: isEditing ? isEditingFormSchema : formSchema,
 	});
 
 	if (status === "loading") {
 		return (
-			<div className="flex justify-center items-center mt-8">
+			<div className="flex justify-center items-center">
 				<Spinner />
 			</div>
 		);
 	}
-formik.handleChangez
+	const handleFocus = (e) => {
+		setQuillIsFocus(true);
+	};
+	const handleBlur = (e) => {
+		setQuillIsFocus(false);
+	};
+
 	return (
-		<div className=" font-inter font-medium mt-16  gap-7 px-10 relative ">
+		<div
+			className={`${
+				quillIsFocus && ""
+			}font-inter font-medium  gap-7 pb-6  relative  `}
+		>
 			<form onSubmit={formik.handleSubmit} className=" ">
-				<div className="flex flex-col gap-4">
+				<div
+					className={`flex flex-col gap-4 ${
+						quillIsFocus && " absolute -top-[15rem]"
+					}`}
+				>
 					<div className="grid grid-cols-3 items-center w-11/12 lg:w-3/6 relative ">
 						<label className=" col-start-1 col-span-1" htmlFor="title">
 							Title
@@ -104,15 +136,14 @@ formik.handleChangez
 						<label className=" col-start-1 col-span-1" htmlFor="category">
 							Category
 						</label>
-						<input
-							value={formik.values.category}
-							onChange={formik.handleChange("category")}
-							onBlur={formik.handleBlur("category")}
-							type="text"
-							name="category"
-							id="category"
-							className=" col-start-2 col-span-full w-full rounded-lg px-2 py-2 outline-none border border-blue-300 focus:border-blue-800"
-						/>
+
+						<div className=" ">
+							<DashboardCustomDropdown
+								allFilters={allCategorytitle}
+								setSelectedFilter={setSelectedFilter}
+								selectedFilter={selectedFilter}
+							/>
+						</div>
 					</div>
 					<div className="grid grid-cols-3 items-center  w-11/12 lg:w-3/6 ">
 						<label
@@ -170,18 +201,8 @@ formik.handleChangez
 					</div>
 				</div>
 
-				<div className=" mt-3">
-					<div>
-						<ReactQuill
-							theme="snow"
-							modules={modules}
-							value={formik.values.content}
-							onChange={formik.handleChange("content")}
-							className=" h-screen top-0 "
-						/>
-					</div>
-
-					<div className=" flex gap-2  mt-[9rem] md:mt-[6rem] items-center justify-center ">
+				<div className=" mb-6 relative">
+					<div className=" flex gap-2 items-center justify-center absolute -top-4 right-0 ">
 						<button
 							type="submit"
 							className={`self-start border border-blue-400  py-1 px-2 hover:bg-blue-400 transition-all hover:text-white ${
@@ -194,6 +215,23 @@ formik.handleChangez
 								<h3>{isEditing ? "Update Post" : "Create Post"}</h3>
 							)}
 						</button>
+					</div>
+					<div
+						onBlur={handleBlur}
+						onFocus={handleFocus}
+						className={`my-6 ${
+							quillIsFocus
+								? "  h-[80vh]  relative top-0  z-50"
+								: "h-[40vh]"
+						}`}
+					>
+						<ReactQuill
+							theme="snow"
+							modules={modules}
+							value={formik.values.content}
+							onChange={formik.handleChange("content")}
+							className="h-full py-6"
+						/>
 					</div>
 				</div>
 			</form>

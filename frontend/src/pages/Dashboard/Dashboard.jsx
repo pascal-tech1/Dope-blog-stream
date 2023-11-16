@@ -69,7 +69,7 @@ const Dashboard = () => {
 	}, [fetchMessageStatus]);
 
 	return (
-		<div className=" flex flex-col  lg:grid grid-cols-12 lg:gap-8 mt-16 px-6 lg:mx-0 font-inter antialiased">
+		<div className=" flex flex-col  lg:grid grid-cols-12 lg:gap-8  px-6 lg:mx-0 font-inter antialiased">
 			<div className="col-start-1 row-start-1 col-span-9 ">
 				<div className=" flex flex-wrap justify-between md:grid grid-cols-3 gap-2">
 					<div className="  col-start-1 ">

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useState } from "react";
 import { Outlet } from "react-router-dom";
 
@@ -10,22 +10,52 @@ const Layout = () => {
 	const handleToggleSideBarMenu = (data) => {
 		setIsDropDownOpen(data);
 	};
+	useEffect(() => {
+		const handleKeyPress = (e) => {
+			console.log("i");
+			if (e.key === "B") {
+				console.log("im here now");
+				setIsDropDownOpen(!isDrpDownOpen);
+			}
+		};
+
+		document.addEventListener("keydown", handleKeyPress);
+
+		return () => {
+			document.removeEventListener("keydown", handleKeyPress);
+		};
+	}, [isDrpDownOpen]);
 	return (
-		<div className="grid grid-cols-12 font-inter font-extralight  text-sm  relative  ">
-			<div className=" md:col-start-3 col-span-full row-start-1 md:relative">
+		<section className="dashboardLayout grid-cols-12    ">
+			<div
+				className={`${
+					isDrpDownOpen
+						? "md:col-start-3  col-start-1"
+						: " col-start-1 md:col-start-1"
+				}  col-span-full row-start-1 row-span-1`}
+			>
 				<DashboardNavBAr toggleSideMenu={handleToggleSideBarMenu} />
+			</div>
+
+			<div
+				className={` ${
+					isDrpDownOpen
+						? "md:col-start-3 col-start-1"
+						: " col-start-1 md:col-start-1 "
+				}  col-span-full row-start-2 overflow-y-auto px-4 md:px-6 scroll-m-0 scroll-smooth  custom-scrollbar  `}
+			>
 				<Outlet />
 			</div>
-			<section
-			
+			<div
 				className={`${
-					isDrpDownOpen ? "" : "hidden md:flex"
-				}   absolute bg-[#ffff]  w-max h-max top-8 md:top-0 md:ml-0 md:mt-0 col-start-1 col-span-2 md:h-screen min-w-full shadow-sm row-start-1`}
+					isDrpDownOpen
+						? "absolute top-7 md:top-0  md:relative overflow-y-auto"
+						: "hidden"
+				}    md:col-start-1 col-span-2 row-start-1 row-span-2 h-screen z-50 custom-scrollbar overflow-x-hidden bg-white   `}
 			>
-				
 				<DashboardSideBar />
-			</section>
-		</div>
+			</div>
+		</section>
 	);
 };
 

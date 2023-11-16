@@ -20,10 +20,10 @@ const DashboardNavBAr = ({ toggleSideMenu }) => {
 	};
 
 	return (
-		<div className=" flex justify-between my-1 w-full md:w-10/12 fixed bg-opacity-0 backdrop-blur top-0 right-0 z-50 ">
+		<div className=" flex justify-between my-1 w-full bg-opacity-0 backdrop-blur top-0 right-0 z-50 ">
 			<FiMenu
 				onClick={handleOnclick}
-				className=" md:hidden text-xl ml-6  text-gray-900"
+				className=" text-xl ml-6  text-gray-900"
 			/>
 			<input
 				type="search"

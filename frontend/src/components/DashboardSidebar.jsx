@@ -120,8 +120,8 @@ const DashboardSideBar = () => {
 	];
 
 	return (
-		<aside className=" flex flex-col  font-medium fixed bg-white h-96  md:h-screen  overflow-y-scroll shadow-md rounded-lg px-4">
-			<Link to="/" className="mt-4 ml-10 md:flex">
+		<aside className=" flex flex-col  font-medium  h-96  ">
+			<Link to="/" className="mt-4 self-center md:flex">
 				<img
 					src="../../public/blogvana.png"
 					alt=""
@@ -129,7 +129,7 @@ const DashboardSideBar = () => {
 				/>
 			</Link>
 
-			<div className="pb-6">
+			<div className="pb-6 self-center max-w-fit   ">
 				{sideBarItems.map((sideBarItem, index) => {
 					let IconComponent;
 
@@ -162,7 +162,7 @@ const DashboardSideBar = () => {
 							IconComponent = AiOutlineComment; // Default icon
 					}
 					return (
-						<div key={index} className=" flex ml-5 pr-2 mt-3">
+						<div key={index} className=" flex justify-center items-center pr-2 mt-3">
 							{sideBarItem.hasSubMenu ? (
 								<div className="flex flex-col">
 									<div

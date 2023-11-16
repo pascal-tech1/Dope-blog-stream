@@ -116,7 +116,7 @@ const AdminAllCategory = () => {
 	};
 
 	return (
-		<section className="flex mt-16 flex-col py-3  items-center h-screen">
+		<section className="flex  flex-col py-3  items-center h-screen">
 			<Modal
 				isOpen={isModalOpen}
 				onClose={closeModal}

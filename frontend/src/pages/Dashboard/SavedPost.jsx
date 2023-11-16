@@ -41,7 +41,7 @@ const Saved = () => {
 
 	return (
 		<div className="mx-4">
-			<div className="mt-16 flex max-w-full justify-between flex-wrap gap-6 ">
+			<div className=" flex max-w-full justify-between flex-wrap gap-6 ">
 				{userSavedPost.map((post, index) => {
 					return (
 						<div

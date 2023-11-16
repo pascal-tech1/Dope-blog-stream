@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import Spinner from "./spinner";
+import Spinner from "./Spinner";
+
 
 const PostDashboard = ({ posts, status, title, page }) => {
 	return (
@@ -14,17 +15,17 @@ const PostDashboard = ({ posts, status, title, page }) => {
 					View All
 				</Link>
 			</div>
-			<div className=" flex gap-4 overflow-x-scroll ">
+			<div className=" flex gap-4 overflow-x-scroll custom-scrollbar">
 				{posts?.map((post) => (
 					<Link to={`/single-post/${post?._id}`} className="">
 						<div className=" hover:cursor-pointer">
 							<img
 								src={post?.image}
 								alt=""
-								className="rounded-lg w-28 object-cover mb-3 self-center border border-gray-300"
+								className="rounded-lg w-20 object-cover mb-3 self-center border border-gray-300"
 							/>
 						</div>
-						<h3 className=" font-medium text-xs w-[9rem]">
+						<h3 className=" font-medium text-xs w-[9rem] mb-2">
 							{post?.title}
 						</h3>
 					</Link>

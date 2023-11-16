@@ -46,7 +46,7 @@ const Home = () => {
 		<div className={`bg-${theme}-background font-inter font-lights `}>
 			<NavBar />
 
-			<div className=" md:grid grid-cols-3 mt-7 md:mt-16 text-sm   ">
+			<div className=" md:grid grid-cols-3 mt-7 md:mt-16   ">
 				{/* right section */}
 				<main className=" col-span-2  px-6 py-6  lg:px-20  ">
 					<div className="">
@@ -83,7 +83,7 @@ const Home = () => {
 							</div>
 							{/* followers section */}
 							<section className="">
-								<h2 className=" whitespace-nowrap text-center text-sm font-medium my-4 place-self-center">
+								<h2 className=" whitespace-nowrap text-center font-medium my-4 place-self-center">
 									People you might be interested in
 								</h2>
 

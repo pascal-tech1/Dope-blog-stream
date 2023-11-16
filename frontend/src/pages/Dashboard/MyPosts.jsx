@@ -130,7 +130,7 @@ const MyPosts = () => {
 	};
 
 	return (
-		<div className="mt-16 shadow-md rounded-lg  font-medium min-w-[300px] mx-2  md:mx-6 grid relative  ">
+		<div className="shadow-md rounded-lg  font-medium min-w-[300px] mx-2  md:mx-6 grid relative  ">
 			<Modal
 				isOpen={isModalOpen}
 				onClose={closeModal}

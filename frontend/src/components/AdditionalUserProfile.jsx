@@ -14,6 +14,7 @@ import {
 	MdOutlineDateRange,
 	MdOutlineSchool,
 } from "react-icons/md";
+import { formatDate } from "../utils/dataFormatter";
 
 const AdditionalUserProfile = () => {
 	const user = useSelector((store) => store?.userSlice?.user);
@@ -133,7 +134,9 @@ const AdditionalUserProfile = () => {
 						<MdOutlineDateRange className=" text-gray-400 font-medium text-lg" />
 						<div>
 							<h2 className=" text-gray-400">Join Date</h2>
-							<h3 className=" text-blue-400 text-xs">{user?.createdAt}</h3>
+							<h3 className=" text-blue-400 text-xs">
+								{formatDate(user?.createdAt)}
+							</h3>
 						</div>
 					</div>
 					<div className=" flex gap-3 items-center">

@@ -31,8 +31,8 @@ const Following = () => {
 	}, [_id]);
 
 	return (
-		<div className=" grid max-w-md w-full px-6 mt-16">
-			<h1 className="font-semibold place-self-center text-blue-400  max-w-max pt-3 pb-1 ">
+		<div className=" grid max-w-md w-full px-6 ">
+			<h1 className="font-semibold place-self-center text-blue-400   max-w-max pt-3 pb-1 ">
 				{" "}
 				Your followers
 			</h1>

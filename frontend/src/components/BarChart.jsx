@@ -128,7 +128,7 @@ export function BarChart() {
 
 	return (
 		<div className="w-full h-[300px] border-x border-t  py-2 rounded-lg">
-			<div>
+			<div className=" px-2">
 				<DashboardCustomDropdown
 					allFilters={allFilter}
 					setSelectedFilter={setChartSelectedFilter}

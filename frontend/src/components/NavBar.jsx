@@ -99,7 +99,7 @@ const NavBar = () => {
 							</button>
 						</div>
 						<Link
-							to="/dashboard/post-Create"
+							to="/post-Create"
 							className=" mr-4 text-xs md:text-sm flex hover:border-gray-300 place-items-center gap-[0.3rem] border border-blue-200 px-1 py-1 md:px-2 rounded-md hover:bg-gray-100 transition-all"
 						>
 							<BsPencilSquare />

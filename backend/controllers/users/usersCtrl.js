@@ -66,6 +66,8 @@ const userLoginCtrl = expressAsyncHandler(async (req, res) => {
 		"password",
 		"bio",
 		"following",
+		"createdAt",
+		"nickName",
 	]);
 
 	if (
@@ -106,6 +108,8 @@ const userLoginWithTokenCtrl = expressAsyncHandler(async (req, res) => {
 		"isAdmin",
 		"bio",
 		"following",
+		"createdAt",
+		"nickName",
 	]);
 	res.status(200).json({
 		status: "success",
@@ -158,6 +162,8 @@ const fetchUserDetailsCtrl = expressAsyncHandler(async (req, res) => {
 				"isAdmin",
 				"bio",
 				"following",
+				"createdAt",
+				"nickName",
 			])
 			.populate({
 				path: "following",
