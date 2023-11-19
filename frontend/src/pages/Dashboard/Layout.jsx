@@ -26,13 +26,13 @@ const Layout = () => {
 		};
 	}, [isDrpDownOpen]);
 	return (
-		<section className="dashboardLayout grid-cols-12    ">
+		<section className="dashboardLayout grid-cols-12 lg:bg-gray-50   ">
 			<div
 				className={`${
 					isDrpDownOpen
 						? "md:col-start-3  col-start-1"
 						: " col-start-1 md:col-start-1"
-				}  col-span-full row-start-1 row-span-1`}
+				}  col-span-full row-start-1 row-span-1 md:px-2`}
 			>
 				<DashboardNavBAr toggleSideMenu={handleToggleSideBarMenu} />
 			</div>
@@ -42,7 +42,7 @@ const Layout = () => {
 					isDrpDownOpen
 						? "md:col-start-3 col-start-1"
 						: " col-start-1 md:col-start-1 "
-				}  col-span-full row-start-2 overflow-y-auto px-4 md:px-6 scroll-m-0 scroll-smooth  custom-scrollbar  `}
+				}  col-span-full row-start-2 overflow-y-auto px-4 md:px-8 scroll-m-0 scroll-smooth  custom-scrollbar  `}
 			>
 				<Outlet />
 			</div>
@@ -51,7 +51,7 @@ const Layout = () => {
 					isDrpDownOpen
 						? "absolute top-7 md:top-0  md:relative overflow-y-auto"
 						: "hidden"
-				}    md:col-start-1 col-span-2 row-start-1 row-span-2 h-screen z-50 custom-scrollbar overflow-x-hidden bg-white   `}
+				}    md:col-start-1 col-span-2 row-start-1 row-span-2 h-screen z-[50] custom-scrollbar bg-white drop-shadow-sm rounded-md   `}
 			>
 				<DashboardSideBar />
 			</div>

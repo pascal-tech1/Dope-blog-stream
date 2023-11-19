@@ -21,6 +21,7 @@ import { BarChart } from "./BarChart";
 import Tooltip from "./Tooltip";
 import Spinner from "./Spinner";
 import AdminCategory from "./AdminCategory";
+import BlockOrUnblockUser from "./BlockOrUnblockUser";
 
 export {
 	DashboardSideBar,
@@ -46,5 +47,6 @@ export {
 	MessageUser,
 	BarChart,
 	Tooltip,
-	AdminCategory
+	AdminCategory,
+	BlockOrUnblockUser,
 };

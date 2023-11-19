@@ -6,6 +6,7 @@ import { toast } from "react-toastify";
 import {
 	clearAdminAllUser,
 	deletePostAdmin,
+	deleteUserAdmin,
 	fetchAllUsers,
 	increaseAdminAllUsersPageNumber,
 	setAllUsersSelectedFilter,
@@ -14,7 +15,7 @@ import Modal from "../components/Modal";
 import DashboardCustomDropdown from "../components/DashboardCustomDropdown";
 import { formatDate } from "../utils/dataFormatter";
 import Spinner from "../components/Spinner";
-import { MessageUser, Tooltip } from "../components";
+import { BlockOrUnblockUser, MessageUser, Tooltip } from "../components";
 
 const AllUsers = () => {
 	const {
@@ -119,7 +120,7 @@ const AllUsers = () => {
 
 		checkedItems.length > 0
 			? setIsModalOpen(true)
-			: toast.error("select post to delete");
+			: toast.error("please select users to delete");
 	};
 	const closeModal = () => {
 		setIsModalOpen(false);
@@ -128,15 +129,16 @@ const AllUsers = () => {
 		setCheckedItemId((prev) => prev.filter((item) => item !== "User Id"));
 		closeModal();
 		if (checkedItems.length === 0) {
-			toast.warning("Please Select Post To delete");
+			toast.warning("Please Select Users To delete");
 			return;
 		}
 
-		dispatch(deletePostAdmin(checkedItems));
+		dispatch(deleteUserAdmin(checkedItems));
 	};
 
 	return (
-		<div className=" shadow-md rounded-lg  font-medium  mx-2  md:mx-6 grid overflow-x-scroll min-w-[900px]  ">
+		<div className=" tableContainer min-w-[900px]  ">
+			{/* modal */}
 			<Modal
 				isOpen={isModalOpen}
 				onClose={closeModal}
@@ -144,12 +146,13 @@ const AllUsers = () => {
 			>
 				<div>
 					<h1>
-						Do you want to continue to delete {checkedItems.length} post
+						Do you want to continue to delete {checkedItems.length} user
 					</h1>
 					<h3>Remember this Action cannot be undone</h3>
 				</div>
 			</Modal>
-			<div className="flex justify-between  mx-6 gap-4 mb-4 ">
+			{/* table actions buttons */}
+			<div className="tableActionStyle ">
 				<button
 					onClick={openModal}
 					className="  py-[0.15] rounded-lg hover:text-red-700 text-red-400 outline-none"
@@ -164,12 +167,12 @@ const AllUsers = () => {
 					/>
 				</div>
 				<h3 className="flex gap-2 items-center ">
-					Total Post :<span>{adminAllUsersTotalNumber}</span>
+					Total Users :<span>{adminAllUsersTotalNumber}</span>
 				</h3>
 			</div>
-			<div className=" ">
+			{/* table */}
+			<div className="tableBaginsStyle ">
 				{tableItems.map((user, index) => {
-					console.log(tableItems.length);
 					return (
 						<div
 							ref={
@@ -178,17 +181,17 @@ const AllUsers = () => {
 									: null
 							}
 							className={`${
-								user.action === "action" ? " bg-gray-500  text-white" : ""
-							}  grid grid-cols-11  text-center border-b py-4 px-2`}
+								user.action === "action" ? " bg-gray-500  text-white " : ""
+							} grid grid-cols-11 gap-2  text-start border-b py-3 items-center px-2  `}
 						>
-							<div className="col-start-1 col-span-2 px-2 flex gap-2">
+							<div className="col-start-1 col-span-2 px-2 flex gap-2 ">
 								<input
 									type="checkbox"
 									name="check"
 									id={user._id}
 									checked={checkedItems.includes(user._id)}
 									onChange={() => handleCheckedItemcsChange(user._id)}
-									className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+									className="checkboxStyle"
 								/>
 
 								<Link to={`/profile/${user._id}`}>
@@ -198,7 +201,7 @@ const AllUsers = () => {
 								</Link>
 							</div>
 							{user.firstName.length > 12 ? (
-								<Tooltip info={`${user.firstName.slice(0, 23)}...`}>
+								<Tooltip info={`${user.firstName.slice(0, 10)}...`}>
 									<h3>{user.firstName}</h3>
 								</Tooltip>
 							) : (
@@ -206,7 +209,7 @@ const AllUsers = () => {
 							)}
 
 							{user.lastName.length > 12 ? (
-								<Tooltip info={`${user.lastName.slice(0, 23)}...`}>
+								<Tooltip info={`${user.lastName.slice(0, 10)}...`}>
 									<h3>{user.lastName}</h3>
 								</Tooltip>
 							) : (
@@ -234,24 +237,30 @@ const AllUsers = () => {
 							<h3 className="col-start-10 col-span-1">
 								{user.followingCount}
 							</h3>
-							<div className="col-span-1 col-start-11 place-self-center">
+							<div className="col-span-1 col-start-11 place-self-center mr-4">
 								{user.action === "action" ? (
 									"Action"
 								) : (
-									<MessageUser receiverId={user?._id} />
+									<div className="flex gap-1 items-center">
+										<MessageUser receiverId={user?._id} />
+										<BlockOrUnblockUser user={user} />
+									</div>
 								)}
 							</div>
 						</div>
 					);
 				})}
-			</div>
-			<div className="my-2 place-self-center">
-				{adminAllUsersStatus === "loading" && <Spinner />}
-			</div>
-			<div className=" place-self-center">
-				{!adminFetchUsersHasMore && adminAllUsersStatus === "success" && (
-					<div className=" text-yellow-600 my-4">No more Post Buddy</div>
-				)}
+				<div className="my-2 place-self-center">
+					{adminAllUsersStatus === "loading" && <Spinner />}
+				</div>
+				<div className=" place-self-center">
+					{!adminFetchUsersHasMore &&
+						adminAllUsersStatus === "success" && (
+							<div className=" text-yellow-600 my-4">
+								No more Post Buddy
+							</div>
+						)}
+				</div>
 			</div>
 		</div>
 	);

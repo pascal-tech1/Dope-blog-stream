@@ -95,7 +95,7 @@ const SinglePost = () => {
 								<div className="flex items-center gap-2">
 									<FollowingBtn
 										userToFollowOrUnfollow={post?.user}
-										className={` border self-center hover:bg-blue-800 text-center py-[0.4rem] px-4 bg-blue-900 text-white hover:text-white rounded-lg transition-all delay-75`}
+										className={` border self-center hover:bg-blue-800 text-center py-1 px-2 bg-blue-900 text-white hover:text-white rounded-lg transition-all delay-75`}
 									/>
 
 									{/* message */}

@@ -39,7 +39,7 @@ const PostHistory = () => {
 		dispatch(fetchUserPostHistory(page));
 	}, [page]);
 	return (
-		<div className="mx-4">
+		<div className="">
 			<div className="flex max-w-full justify-between flex-wrap gap-6 ">
 				{userPostHistory.map((post, index) => {
 					return (

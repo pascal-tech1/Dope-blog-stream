@@ -29,9 +29,6 @@ const initialState = {
 	searchQuery: "",
 	hasMore: true,
 	activeCategory: "all",
-	displayedCategory: ["all", "react", "javascript"],
-	undisplayedCategory: [],
-	
 };
 
 const allPostSlice = createSlice({
@@ -64,11 +61,6 @@ const allPostSlice = createSlice({
 		setActiveCategory: (state, { payload }) => {
 			state.activeCategory = payload;
 		},
-		toggleDisplayedCategory: (state, { payload }) => {
-			console.log("im here");
-			state.displayedCategory.pop();
-			state.displayedCategory.push(payload);
-		},
 
 		updateNumbPostViewInAllPostSlice: (state, { payload }) => {
 			state.allPost.map((post) => {
@@ -94,7 +86,6 @@ const allPostSlice = createSlice({
 				}
 			});
 		},
-		
 	},
 
 	extraReducers: {
@@ -131,7 +122,6 @@ export const {
 	updateSinglePost,
 	setFetchFirstCategory,
 	setActiveCategory,
-	toggleDisplayedCategory,
 	setEmptySearch,
 } = allPostSlice.actions;
 export default allPostSlice.reducer;

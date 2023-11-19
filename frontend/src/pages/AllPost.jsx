@@ -10,9 +10,8 @@ import {
 
 const AllPost = () => {
 	const dispatch = useDispatch();
-	const { allPost, isLoading, searchQuery, hasMore } = useSelector(
-		(store) => store.allPostSlice
-	);
+	const { allPost, isLoading, searchQuery, hasMore, activeCategory } =
+		useSelector((store) => store.allPostSlice);
 
 	useEffect(() => {
 		allPost.length === 0 &&
@@ -42,7 +41,10 @@ const AllPost = () => {
 				<div className="flex gap-2 my-2">
 					<h3>
 						All Post found for
-						<span className=" ml-1 text-blue-400">{searchQuery}</span>
+						<span className=" ml-1 text-blue-400">{searchQuery} in </span>
+						<span className=" ml-1 text-blue-400">
+							{activeCategory.toUpperCase()} category
+						</span>
 					</h3>
 					<button
 						onClick={(e) => {

@@ -12,6 +12,7 @@ const handleCloudinaryUpload = require("../../config/cloundinary/cloudinaryUploa
 const UserProfileView = require("../../model/userProfileView/userProfileView");
 const { default: mongoose } = require("mongoose");
 const { filterUserCriteria } = require("../../utils/filterSortCriteria");
+const Post = require("../../model/post/Post");
 
 // '''''''''''''''''''''''''''''''''''''''''
 //         Register user
@@ -22,7 +23,8 @@ const userRegisterCtrl = expressAsyncHandler(async (req, res) => {
 
 	// finding if user exist in mongoDb database using the mongodb findOne method
 	const userExist = await User.findOne({ email });
-	if (userExist) throw new Error("User already Exist");
+	if (userExist)
+		throw new Error("User already Exist, try different email");
 
 	try {
 		const user = await User.create({
@@ -31,7 +33,7 @@ const userRegisterCtrl = expressAsyncHandler(async (req, res) => {
 			email: email,
 			password: password,
 		});
-		ress.status(201).json({
+		res.status(201).json({
 			status: "success",
 			message: "account created successfully",
 		});
@@ -124,18 +126,6 @@ const userLoginWithTokenCtrl = expressAsyncHandler(async (req, res) => {
 // '''''''''''''''''''''''''''''''''''''''''
 //         delete single user with id
 // '''''''''''''''''''''''''''''''''''''''''''''
-
-const deleteUserCtrl = expressAsyncHandler(async (req, res) => {
-	const { USERID } = req.params;
-	validateMongoDbUserId(USERID);
-
-	try {
-		const deletedUser = await User.findByIdAndRemove(USERID);
-		res.json(deletedUser);
-	} catch (error) {
-		res.json(error);
-	}
-});
 
 // '''''''''''''''''''''''''''''''''''''''''
 //        fetch single user details
@@ -231,6 +221,7 @@ const updateUserDetailsCtrl = expressAsyncHandler(async (req, res) => {
 			"isBlocked",
 			"isAdmin",
 			"bio",
+			"coverPhoto",
 		]);
 
 		res.status(201).json({
@@ -502,13 +493,19 @@ const profilePhotoUploadCtrl = expressAsyncHandler(async (req, res) => {
 
 		await user.save();
 		// remove the file
-		// if (fs.existsSync(imageLocalPath)) {
-		// 	fs.unlink(imageLocalPath);
-		// } else {
-		// 	throw new Error("No valid file path found for deletions");
-		// }
+		fs.unlink(imageLocalPath, (err) => {
+			if (err) {
+				res.status(500).json({ message: "failed to  upload image" });
+				return;
+			} else {
+				console.log("File deleted successfully");
+			}
+		});
 
-		res.send({ message: "image uploaoded successfully" });
+		res.send({
+			message: "image uploaoded successfully",
+			userImage: user.profilePhoto,
+		});
 	} catch (error) {
 		res.json(error);
 	}
@@ -523,7 +520,12 @@ const savePostCtrl = expressAsyncHandler(async (req, res) => {
 	const { postId } = req?.body;
 
 	try {
-		validateMongoDbUserId(postId);
+		const postToBeSaved = await Post.findById(postId).select([
+			"_id",
+			"image",
+			"title",
+		]);
+
 		const { savedPost } = await User.findById(loginUserId).select(
 			"savedPost"
 		);
@@ -549,7 +551,7 @@ const savePostCtrl = expressAsyncHandler(async (req, res) => {
 				});
 			res.status(200).json({
 				message: "post is already in your saved post",
-				savedPost,
+				postToBeSaved,
 			});
 
 			return;
@@ -571,11 +573,12 @@ const savePostCtrl = expressAsyncHandler(async (req, res) => {
 				});
 			res.status(200).json({
 				message: "post saved Successfully",
-				savedPost,
+				postToBeSaved,
 			});
 			return;
 		}
 	} catch (error) {
+		console.log(error);
 		res
 			.status(500)
 			.json({ status: "faild", message: "saving post failed try again" });
@@ -836,6 +839,7 @@ const fetchAllUserCtrl = expressAsyncHandler(async (req, res) => {
 					lastName: 1,
 					email: 1,
 					createdAt: 1,
+					isBlocked: 1,
 					followersCount: "$followersCount",
 					followingCount: "$followingCount",
 					postsCount: "$postsCount",
@@ -854,6 +858,66 @@ const fetchAllUserCtrl = expressAsyncHandler(async (req, res) => {
 		});
 	} catch (error) {
 		res.status(500).json({ message: error.message });
+	}
+});
+
+const blockOrUnblockUserCtrl = expressAsyncHandler(async (req, res) => {
+	const { action, userId } = req.body;
+	const foundUser = await User.findById(userId);
+
+	try {
+		if (action === "block") {
+			const blockUser = await User.findByIdAndUpdate(
+				userId,
+				{
+					isBlocked: true,
+				},
+				{ new: true }
+			).select(["_id", "firstName", "lastName", "isBlocked"]);
+
+			res.status(200).json({
+				message: `${blockUser.firstName} ${blockUser.lastName} has been successfully block`,
+				user: blockUser,
+			});
+			return;
+		}
+		if (action === "unblock") {
+			const unblockUser = await User.findByIdAndUpdate(
+				userId,
+				{
+					isBlocked: false,
+				},
+				{
+					new: true,
+				}
+			).select(["_id", "firstName", "lastName", "isBlocked"]);
+			console.log(unblockUser);
+			res.status(200).json({
+				message: `${unblockUser.firstName} ${unblockUser.lastName} has been successfully unblock`,
+				user: unblockUser,
+			});
+			return;
+		}
+	} catch (error) {
+		console.log(error);
+	}
+});
+
+const deleteUserCtrl = expressAsyncHandler(async (req, res) => {
+	const { userIds } = req.body;
+
+	try {
+		const deletedUsers = await User.deleteMany({
+			_id: { $in: userIds },
+		});
+
+		res.status(200).json({
+			message: `successfully deleted ${deletedUsers.deletedCount} users`,
+			userIds,
+		});
+	} catch (error) {
+		console.log(error);
+		res.status(400).json({ message: "failed to delete post" });
 	}
 });
 
@@ -880,4 +944,5 @@ module.exports = {
 	fetchUserCountsCtrl,
 	fetchWhoViewedUserProfileCtrl,
 	fetchPostImpressionsCount,
+	blockOrUnblockUserCtrl,
 };

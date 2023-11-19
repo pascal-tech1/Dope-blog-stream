@@ -7,6 +7,7 @@ import {
 	getUserFromLocalStorage,
 	removeUserFromLocalStorage,
 } from "../../utils/localStorage";
+import { updateUserSavedPost } from "../post/morePostSlice";
 
 export const loginUser = createAsyncThunk(
 	"user/loginUser",
@@ -125,7 +126,8 @@ export const savePost = createAsyncThunk(
 					},
 				}
 			);
-
+			console.log(resp.data.postToBeSaved);
+			dispatch(updateUserSavedPost(resp.data.postToBeSaved));
 			return resp.data;
 		} catch (error) {
 			if (!error.response) {
@@ -247,6 +249,32 @@ export const fetchPostImpressionsCount = createAsyncThunk(
 					},
 				}
 			);
+
+			return resp.data;
+		} catch (error) {
+			if (!error?.response) {
+				throw new Error(error);
+			}
+			return rejectWithValue(error?.response?.data);
+		}
+	}
+);
+export const uploadProfilePhoto = createAsyncThunk(
+	"uploadProfile/Photo",
+	async (userImage, { getState, rejectWithValue }) => {
+		console.log(userImage);
+		try {
+			const resp = await customFetch.post(
+				`/users/profile-picture-upload`,
+				{ image: userImage },
+				{
+					headers: {
+						"Content-Type": "multipart/form-data",
+						authorization: `Bearer ${getState().userSlice?.token}`,
+					},
+				}
+			);
+			console.log(resp.data);
 
 			return resp.data;
 		} catch (error) {

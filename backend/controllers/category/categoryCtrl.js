@@ -113,11 +113,11 @@ const deleteCategoryCtrl = expressAsyncHandler(async (req, res) => {
 		});
 
 		res.status(200).json({
-			message: `successfully deleted ${deletedCategory.deletedCount} posts`,
+			message: `successfully deleted ${deletedCategory.deletedCount} category`,
 			categoryIds,
 		});
 	} catch (error) {
-		res.status(400).json({ message: "failed to delete post" });
+		res.status(400).json({ message: "failed to delete category" });
 	}
 });
 

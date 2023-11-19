@@ -139,10 +139,9 @@ const categorySlice = createSlice({
 			state.categorystatus = "success";
 			state.allCategory = state.allCategory.map((oldCategory) => {
 				if (oldCategory._id === payload.category._id) {
-					console.log(payload.category.title, oldCategory.title);
 					oldCategory.title = payload.category.title;
 				}
-				console.log(oldCategory);
+
 				return oldCategory;
 			});
 
@@ -152,7 +151,6 @@ const categorySlice = createSlice({
 		[editCategory.rejected]: (state, { payload }) => {
 			state.categorystatus = "failed";
 			toast.error(payload?.message);
-			
 		},
 		[deleteCategory.pending]: (state, { payload }) => {
 			state.deleteCategoryStatus = "loading";

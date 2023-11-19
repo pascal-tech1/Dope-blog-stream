@@ -15,7 +15,7 @@ const PostDashboard = ({ posts, status, title, page }) => {
 					View All
 				</Link>
 			</div>
-			<div className=" flex gap-4 overflow-x-scroll custom-scrollbar">
+			<div className=" flex  overflow-x-scroll custom-scrollbar">
 				{posts?.map((post) => (
 					<Link to={`/single-post/${post?._id}`} className="">
 						<div className=" hover:cursor-pointer">

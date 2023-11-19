@@ -34,7 +34,7 @@ function Modal({ isOpen, onClose, onContinue, children }) {
 
 	return (
 		<div
-			className={` z-50 fixed top-0 left-0 w-full h-full flex justify-center items-center bg-black bg-opacity-40  ${
+			className={` z-[1000] fixed top-0 left-0 w-full h-full flex justify-center items-center bg-black bg-opacity-40  ${
 				isOpen ? "" : "hidden"
 			}`}
 			onClick={(e) => handleBackdropClick(e)}	>

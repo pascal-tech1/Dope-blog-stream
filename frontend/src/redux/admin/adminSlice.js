@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import customFetch from "../../utils/axios";
 import { toast } from "react-toastify";
+import { setUserState, updateUser } from "../user/userSlice";
 
 export const fetchAllUsersPost = createAsyncThunk(
 	"fetch/AllUsersPost",
@@ -76,7 +77,53 @@ export const deletePostAdmin = createAsyncThunk(
 	}
 );
 
+export const deleteUserAdmin = createAsyncThunk(
+	"delete/UserAdmin",
+	async (userIds, { getState, rejectWithValue }) => {
+		try {
+			const resp = await customFetch.post(
+				`/users/delete`,
+				{ userIds },
+				{
+					headers: {
+						authorization: `Bearer ${getState().userSlice?.token}`,
+					},
+				}
+			);
+			console.log(resp.data);
+			return resp.data;
+		} catch (error) {
+			if (!error?.response) {
+				throw new Error(error);
+			}
+			return rejectWithValue(error?.response?.data);
+		}
+	}
+);
 
+export const blockOrUnblockUser = createAsyncThunk(
+	"block/unblockUser",
+	async (userId, { getState, rejectWithValue }) => {
+		try {
+			const resp = await customFetch.post(
+				`/users/blockOrUnblock-user`,
+				userId,
+				{
+					headers: {
+						authorization: `Bearer ${getState().userSlice?.token}`,
+					},
+				}
+			);
+
+			return resp.data;
+		} catch (error) {
+			if (!error?.response) {
+				throw new Error(error);
+			}
+			return rejectWithValue(error?.response?.data);
+		}
+	}
+);
 
 const initialState = {
 	hasMore: true,
@@ -95,6 +142,7 @@ const initialState = {
 	adminAllUsersStatus: "idle",
 	adminAllUsersTotalNumber: null,
 	adminAllUsersTotalPages: null,
+	deleteUsersStatus: "idle",
 };
 
 const adminSlice = createSlice({
@@ -180,6 +228,43 @@ const adminSlice = createSlice({
 		},
 		[deletePostAdmin.rejected]: (state, action) => {
 			state.deletingPostStatus = "falied";
+			toast.error(payload.message);
+		},
+		[deleteUserAdmin.pending]: (state) => {
+			state.deleteUsersStatus = "loading";
+		},
+		[deleteUserAdmin.fulfilled]: (state, { payload }) => {
+			state.deleteUsersStatus = "success";
+			const { userIds } = payload;
+
+			state.adminAllUsersTotalNumber -= 1;
+			state.allUsers = state.allUsers.filter(
+				(user) => !userIds.includes(user._id)
+			);
+			toast.success(payload.message);
+		},
+		[deleteUserAdmin.rejected]: (state, { payload }) => {
+			state.deleteUsersStatus = "falied";
+			toast.error(payload.message);
+		},
+		[blockOrUnblockUser.pending]: (state) => {
+			state.blockOrUnblockUserStatus = "loading";
+		},
+		[blockOrUnblockUser.fulfilled]: (state, { payload }) => {
+			state.blockOrUnblockUserStatus = "success";
+			console.log(payload);
+			state.allUsers = state.allUsers.map((post) => {
+				if (post._id === payload.user._id) {
+					console.log("im here update user");
+					post.isBlocked = payload.user.isBlocked;
+				}
+				console.log(post);
+				return post;
+			});
+			toast.success(payload.message);
+		},
+		[blockOrUnblockUser.rejected]: (state, action) => {
+			state.blockOrUnblockUserStatus = "falied";
 			toast.error(payload.message);
 		},
 	},

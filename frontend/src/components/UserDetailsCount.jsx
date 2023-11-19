@@ -2,7 +2,7 @@ import React from "react";
 
 const UserDetailsCount = ({ count, text, children }) => {
 	return (
-		<div className=" bg-gray-50 shadow-sm self-center justify-center flex py-2 space-x-4  px-2 items-center rounded-md ">
+		<div className=" bg-white drop-shadow-sm self-center justify-center flex py-2 space-x-4  px-2 items-center rounded-md ">
 			{children}
 			<div>
 				<h1 className=" font-bold">{count}</h1>

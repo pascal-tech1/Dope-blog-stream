@@ -9,6 +9,8 @@ import {
 } from "../../components";
 import { useDispatch, useSelector } from "react-redux";
 import {
+	IncreaseHistoryPageNumber,
+	IncreaseSavedPostPageNumber,
 	fetchUserPostHistory,
 	fetchUserSavedPost,
 } from "../../redux/post/morePostSlice";
@@ -39,37 +41,34 @@ const Dashboard = () => {
 		userPostHistoryStatus,
 		userSavedPost,
 		userSavedPostStatus,
+		savedPostPageNumber,
+		historyPageNumber,
 	} = useSelector((store) => store?.morePostSlice);
 	const { msg, fetchMessageStatus } = useSelector(
 		(store) => store?.messageSlice
 	);
 
 	const _id = user?._id;
-	console.log(_id);
+
 	useEffect(() => {
 		if (!_id) return;
-		console.log("im herre 1");
 		dispatch(fetchUserDetailsCounts());
 		dispatch(fetchMsg({ page: 1, limit: 4 }));
 		dispatch(fetchWhoViewedUserProfile());
+
+		historyPageNumber === 1 && dispatch(fetchUserPostHistory(1));
+		savedPostPageNumber === 1 && dispatch(fetchUserSavedPost(1));
+		dispatch(IncreaseHistoryPageNumber());
+		dispatch(IncreaseSavedPostPageNumber());
 	}, [_id]);
 
 	useEffect(() => {
 		if (!_id) return;
-		console.log("im herre 2");
 		dispatch(fetchPostImpressionsCount({ page: 1, numberPerPage: 10 }));
 	}, [chartSelectedFilter, _id]);
 
-	useEffect(() => {
-		console.log(fetchMessageStatus);
-		if (fetchMessageStatus === "success") {
-			userPostHistory.length === 0 && dispatch(fetchUserPostHistory());
-			userSavedPost.length === 0 && dispatch(fetchUserSavedPost());
-		}
-	}, [fetchMessageStatus]);
-
 	return (
-		<div className=" flex flex-col  lg:grid grid-cols-12 lg:gap-8  px-6 lg:mx-0 font-inter antialiased">
+		<div className=" flex flex-col gap-4  lg:grid grid-cols-12 lg:gap-8  lg:mx-0 font-inter antialiased">
 			<div className="col-start-1 row-start-1 col-span-9 ">
 				<div className=" flex flex-wrap justify-between md:grid grid-cols-3 gap-2">
 					<div className="  col-start-1 ">
@@ -125,16 +124,16 @@ const Dashboard = () => {
 					</div>
 				</div>
 				{/* chart  */}
-				<div className=" pt-4  flex flex-col lg:flex-row justify-between">
-					<div className="lg:w-[60%]  ">
+				<div className=" pt-4  flex flex-col gap-4 lg:flex-row justify-between">
+					<div className="lg:w-[60%] bg-white pt-2 pb-8 rounded-md drop-shadow-sm px-2 ">
 						<h1 className=" font-bold text-xs text-gray-800 mb-3">
 							post Charts
 						</h1>
 						<BarChart />
 					</div>
 					{/* viewedBy */}
-					<div className=" col-start-8 col-span-4 px-1 w-[37%] ">
-						<h1 className=" font-bold text-xs text-gray-800 mb-3">
+					<div className=" col-start-8 col-span-4  lg:w-[37%] md:w-[50%] bg-white py-2  rounded-md shadow-sm px-4 ">
+						<h1 className=" font-bold text-xs text-gray-800 mb-3 mt-10 lg:mt-0">
 							Who's Viewed your profile
 						</h1>
 						{whoViewUserProfile?.map((users, index) =>
@@ -154,7 +153,7 @@ const Dashboard = () => {
 			</div>
 
 			{/* messages */}
-			<div className=" lg:col-start-10 lg:col-span-full row-start-1 rounded-lg bg-white px-3  ">
+			<div className=" lg:col-start-10 lg:col-span-full row-start-1  bg-white py-2 rounded-md drop-shadow-sm px-2 ">
 				<h1 className=" font-bold text-gray-800 mb-3 text-xs">
 					Recent Mesaages
 				</h1>
@@ -182,20 +181,20 @@ const Dashboard = () => {
 				</div>
 			</div>
 			{/* post history */}
-			<div className=" col-start-1 col-span-full  border-t py-4 flex gap-8 flex-col ">
+			<div className=" col-start-1 col-span-full  flex gap-8 flex-col bg-white py-2  rounded-md drop-shadow-sm px-4 ">
 				<PostDashboard
-					posts={userPostHistory}
+					posts={userPostHistory.slice(0, 10)}
 					status={userPostHistoryStatus}
 					title={"Post View History"}
-					page={"/dashboard/post-History"}
+					page={"/post-History"}
 				/>
 			</div>
-			<div className=" col-start-1 col-span-full mb-6 border-y py-4 flex gap-8 flex-col ">
+			<div className=" col-start-1 col-span-full mb-6 flex gap-8 flex-col  bg-white py-2  rounded-md drop-shadow-sm px-4 ">
 				<PostDashboard
-					posts={userSavedPost}
+					posts={userSavedPost.slice(0, 10)}
 					status={userSavedPostStatus}
 					title={"Saved Post"}
-					page={"/dashboard/post-Saved"}
+					page={"/post-Saved"}
 				/>
 			</div>
 		</div>

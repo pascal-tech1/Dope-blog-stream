@@ -7,13 +7,18 @@ const multerStorage = multer.memoryStorage();
 
 // file checking
 const multerFliter = (req, file, cb) => {
+	console.log(file, "im her filee")
 
-	if (file.mimetype.startsWith("image")) {
+	try {
+		if (file.mimetype.startsWith("image")) {
 		
-		cb(null, true);
-	} else {
-		console.log('im here file upload',file)
-		cb({ message: "unsupported file format" }, false);
+			cb(null, true);
+		} else {
+			console.log('im here file upload',file)
+			cb({ message: "unsupported file format" }, false);
+		}
+	} catch (error) {
+		console.log(error)
 	}
 };
 
@@ -33,6 +38,7 @@ const postImageUpload = multer({
 
 // image resizing MiddleWare
 const ProfilePhotResize = async (req, res, next) => {
+	console.log(req.file, "photo resize")
 	try {
 		if (!req.file) throw new Error("no file to resize");
 

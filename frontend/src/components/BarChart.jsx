@@ -127,15 +127,16 @@ export function BarChart() {
 	const allFilter = ["likes and dislikes", "number of views"];
 
 	return (
-		<div className="w-full h-[300px] border-x border-t  py-2 rounded-lg">
-			<div className=" px-2">
+		<div className="w-full h-[300px]  flex flex-col  py-2 rounded-lg">
+			<div className=" px-2 self-start ">
 				<DashboardCustomDropdown
 					allFilters={allFilter}
 					setSelectedFilter={setChartSelectedFilter}
 					selectedFilter={chartSelectedFilter}
+					dropdownWidth={"yes"}
 				/>
 			</div>
-			{userPostImpression && <Bar options={options} data={data} />};
+			{userPostImpression && <Bar options={options} data={data} />}
 		</div>
 	);
 }

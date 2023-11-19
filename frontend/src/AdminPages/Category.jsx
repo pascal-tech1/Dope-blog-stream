@@ -176,7 +176,7 @@ const AdminAllCategory = () => {
 				</button>
 			</div>
 			<div className=" h-full flex flex-col gap-6 px-6  ">
-				<div className="border rounded-lg px-2 py-2 mx-3 drop-shadow-md  h-[50%] overflow-y-scroll">
+				<div className="border rounded-lg px-2 py-2 mx-3 drop-shadow-md  h-[50%] overflow-y-auto custom-scrollbar">
 					<AdminCategory
 						checkedItems={checkedItems}
 						handleCheckedItemcsChange={handleCheckedItemcsChange}

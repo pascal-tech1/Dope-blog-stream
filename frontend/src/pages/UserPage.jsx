@@ -125,9 +125,9 @@ const UserPage = () => {
 							)}
 						</div>
 					</div>
-
-					<div className=" flex flex-col gap-3 place-items-center md:border-l relative ">
-						<div className=" text-gray-400 flex gap-3 flex-col md:pl-4">
+					{/* left */}
+					<div className=" flex flex-col gap-3 place-items-center md:border-l relative  ">
+						<div className=" text-gray-400 flex gap-3 flex-col md:ml-8 md:mr-4 md:fixed md:h-screen md:w-fit ">
 							<div className="flex gap-4 items-center md:pt-4 justify-center">
 								<h1 className="font-semibold   text-black ">
 									{`${postCreatorProfile?.firstName} ${postCreatorProfile?.lastName} Profile`}

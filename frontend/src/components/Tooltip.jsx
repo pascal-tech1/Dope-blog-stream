@@ -1,10 +1,10 @@
 import React from "react";
 
-const Tooltip = ({  info, children }) => {
+const Tooltip = ({ info, children }) => {
 	return (
-		<div className="group relative w-max z-10">
-			{info}
-			<div className=" group-hover:bg-black group-hover:opacity-75 pointer-events-none absolute -top-7 left-0 w-max opacity-0 transition-opacity text-white px-1 py-1">
+		<div className="group relative w-max ">
+			<h3 className=" ">{info}</h3>
+			<div className=" rounded-lg z-50 group-hover:bg-black group-hover:opacity-75 pointer-events-none  -top-7 left-0 opacity-0 transition-opacity text-white px-1 absolute py-1">
 				{children}
 			</div>
 		</div>

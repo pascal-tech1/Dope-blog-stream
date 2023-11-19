@@ -18,6 +18,11 @@ const userSchema = new mongoose.Schema(
 			default:
 				"https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png",
 		},
+		coverPhoto: {
+			type: String,
+			default:
+				"https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png",
+		},
 		email: {
 			type: String,
 			required: [true, "Email is required"],
@@ -64,10 +69,6 @@ const userSchema = new mongoose.Schema(
 		role: {
 			type: String,
 			enum: ["Admin", "Guest", "Blogger"],
-		},
-		category: {
-			type: String,
-			enum: ["Web Development", "Mobile App", "Education", "Politics"],
 		},
 
 		isFollowing: {

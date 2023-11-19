@@ -73,7 +73,7 @@ export const fetchUserSavedPost = createAsyncThunk(
 					},
 				}
 			);
-			console.log(resp.data);
+
 			return resp.data;
 		} catch (error) {
 			if (!error?.response) {
@@ -148,6 +148,12 @@ const morePostSlice = createSlice({
 			state.savedPostPageNumber = 1;
 			state.savedPostHasMore = true;
 		},
+		updateUserViewHistory: (state, { payload }) => {
+			state.userPostHistory = [payload, ...state.userPostHistory];
+		},
+		updateUserSavedPost: (state, { payload }) => {
+			state.userSavedPost = [payload, ...state.userSavedPost];
+		},
 	},
 	extraReducers: {
 		// fetch  user creator Post
@@ -215,4 +221,6 @@ export const {
 	IncreaseSavedPostPageNumber,
 	setHistoryFirstSearch,
 	setSavedPostFirstSearch,
+	updateUserViewHistory,
+	updateUserSavedPost,
 } = morePostSlice.actions;

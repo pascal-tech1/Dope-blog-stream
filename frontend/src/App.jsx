@@ -31,7 +31,8 @@ import "react-toastify/dist/ReactToastify.css";
 import { getUserFromLocalStorage } from "./utils/localStorage";
 import { useDispatch } from "react-redux";
 import { loginUserWithToken } from "./redux/user/userSlice";
-import { AllUsers, AllUsersPost, AdminAllCategory} from "./AdminPages";
+import { AllUsers, AllUsersPost, AdminAllCategory } from "./AdminPages";
+
 
 const App = () => {
 	const dispatch = useDispatch();
@@ -67,6 +68,7 @@ const App = () => {
 
 				<Route path="login" element={<Login />} />
 				<Route path="register" element={<Register />} />
+			
 				<Route path="/profile/:userId" element={<UserPage />} />
 				<Route path="*" element={<Error />} />
 			</Routes>

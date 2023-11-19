@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import FilerobotImageEditor from "filerobot-image-editor";
 import {
 	AdditionalUserProfile,
 	FollowUsersList,
@@ -13,8 +14,11 @@ import {
 	updateFollowingListPageNumber,
 	setFirstFetchFollowersUser,
 	setFirstFetchFollowingUser,
+	updateUser,
+	uploadProfilePhoto,
 } from "../../redux/user/userSlice";
 import { useNavigate } from "react-router-dom";
+import { BiCamera } from "react-icons/bi";
 
 const ProfileView = () => {
 	const {
@@ -26,12 +30,28 @@ const ProfileView = () => {
 		followerslistTotalNumber,
 		fetchingFollowersListStatus,
 	} = useSelector((store) => store?.userSlice);
+	// Custom toolbar component with an upload button
+	const customToolbar = [
+		{
+			name: "upload",
+			icon: "upload", // You can use an icon library or provide a custom icon
+			title: "Upload",
+			onClick: () => {
+				// Trigger the upload when the button is clicked
+				handleUpload(/* Pass the edited image here */);
+				// Optionally, you can close the editor here
+				setShow(false);
+			},
+		},
+		// Add more buttons if needed
+	];
 
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 	const _id = user?.id;
-
-	useEffect( () => {
+	const [show, toggle] = useState(false);
+	const [src, setSrc] = useState(null);
+	useEffect(() => {
 		if (!_id) return;
 		dispatch(setFirstFetchFollowingUser());
 		dispatch(fetchUserFollowingList());
@@ -51,15 +71,37 @@ const ProfileView = () => {
 		return <h3 className=" text-black text-3xl">Loading ....</h3>;
 	}
 	return (
-		<div className=" flex flex-col row-span-2 md:grid grid-cols-6 col-start-1 col-span-4 rounded-xl mx-4 lg:mb-6 pt-4 lg:shadow-sm lg:rounded-md lg:ml-0  font-inter gap-5 bg-white lg:bg-transparent">
+		<div className=" flex flex-col row-span-2 md:grid grid-cols-6 col-start-1 col-span-4 rounded-xl  lg:mb-6 pt-4 lg:shadow-sm lg:rounded-md lg:ml-0  font-inter gap-5 bg-white lg:bg-transparent">
+			<FilerobotImageEditor
+				show={show}
+				src={src}
+				customToolbar={customToolbar}
+				onClose={() => {
+					toggle(false);
+				}}
+			/>
 			<div className=" col-start-1 col-span-4  bg-white lg:shadow-sm lg:rounded-md">
 				<div className="w-full relative ">
-					<div className=" w-full ">
+					<div className=" w-full relative ">
 						<img
 							src={user?.profilePhoto}
 							alt=""
 							className=" h-28  w-full"
 						/>
+						<label className=" absolute bottom-0 right-0  text-center px-1 flex items-center justify-center bg-blue-200 drop-shadow-md hover:drop-shadow-sm hover:bg-blue-300 transition-all delay-75  h-12 w-12 rounded-full ">
+							<input
+								onChange={(e) => {
+									setSrc(URL.createObjectURL(e.currentTarget.files[0]));
+									toggle(true);
+								}}
+								type="file"
+								name="image"
+								id="image"
+								className="hidden z-50"
+							/>
+
+							<BiCamera className=" text-4xl fill-white -rotate-3" />
+						</label>
 					</div>
 					<img
 						src={user?.profilePhoto}

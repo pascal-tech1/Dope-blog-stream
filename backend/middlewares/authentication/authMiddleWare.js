@@ -26,6 +26,7 @@ const authMiddleWare = expressAsyncHandler(async (req, res, next) => {
 		const foundUser = await User.findById(userId).select("-password");
 
 		req.user = foundUser;
+
 		next();
 	} catch (error) {
 		res.status(500).json({

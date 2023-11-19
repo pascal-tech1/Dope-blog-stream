@@ -14,13 +14,13 @@ const PostInfo = ({ post }) => {
 			<div className="flex  flex-row justify-between gap-4 mt-3">
 				<div className=" self-start">
 					<Link to={`/single-post/${post?._id}`}>
-						<h3 className=" font-semibold  lg:text-lg mb-2 ">{post?.title}</h3>
+						<h3 className=" font-semibold text-sm  lg:text-lg mb-2 ">{post?.title}</h3>
 					</Link>
 					<div className=" text-xs hidden md:flex ">
-						<p>
+						<p className=" ">
 							{post?.description}
 
-							<Link
+							 <Link
 								to={`/single-post/${post?._id}`}
 								className="ml-1 text-blue-300 hover:text-blue-400 transition-all cursor-pointer"
 							>
@@ -34,10 +34,10 @@ const PostInfo = ({ post }) => {
 				</div>
 				<Link
 					to={`/single-post/${post?._id}`}
-					className=" self-center md:self-start "
+					className=" self-start  "
 				>
 					<img
-						className=" max-w-xs w-[7rem] md:w-[8rem]  rounded-md"
+						className=" max-w-xs w-[5rem] md:w-[8rem]  rounded-md"
 						src={post?.image}
 						alt=""
 					/>

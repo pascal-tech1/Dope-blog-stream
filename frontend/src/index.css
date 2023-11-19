@@ -32,19 +32,29 @@
 /* Custom Scrollbar Styling */
 .custom-scrollbar::-webkit-scrollbar {
 	width: 10px;
-  height: 10px;
- 
+	height: 10px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
 	background-color: #bcd2e8;
 	border-radius: 6px;
-  height: 1rem;
+	height: 1rem;
 }
 
 .custom-scrollbar::-webkit-scrollbar-track {
 	background-color: transparent;
 	border-radius: 6px;
+}
+.tableLayout {
+	display: grid;
+	grid-template-rows: 2rem 1fr;
+	height: 90vh;
+	overflow-y: auto;
+}
+.dashboardLayout {
+	display: grid;
+	grid-template-rows: 3rem 1fr;
+	height: 100vh;
 }
 
 .form-label {
@@ -66,8 +76,19 @@
 	@apply absolute top-[-0.6rem] left-0 text-white bg-red-400 text-center rounded-md  mt-1  text-xs min-w-max py-[0.15rem];
 }
 
-.dashboardLayout {
-	display: grid;
-	grid-template-rows: 3rem 1fr;
-	height: 100vh;
+
+
+.tableContainer {
+	@apply shadow-md rounded-lg  font-medium tableLayout gap-4  -mx-2 ;
 }
+.checkboxStyle {
+	@apply w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600;
+}
+
+.tableActionStyle {
+	@apply flex justify-between items-start fixed z-50  mx-6 gap-4 row-start-1 row-span-1 ;
+}
+.tableBaginsStyle {
+	@apply overflow-x-auto overflow-y-auto row-start-2 flex flex-col custom-scrollbar;
+}
+

@@ -33,8 +33,6 @@ const DashboardNavBAr = ({ toggleSideMenu }) => {
 				className=" w-1/2 outline-none mx-6 text-center border border-gray-200  transition-all rounded-lg focus:border-b-blue-400 placeholder:text-gray-400"
 			/>
 			<div className="flex space-x-3 mr-2 items-center ">
-				<IoMdNotificationsOutline className="text-2xl font-bold  text-blue-400" />
-				<BiMessageRoundedDots className="text-2xl  font-bold  text-blue-400" />
 				<h3 className=" hidden md:flex text-xs border-l pl-4  pr-1">
 					Hello, Onyeka
 				</h3>
@@ -51,11 +49,11 @@ const DashboardNavBAr = ({ toggleSideMenu }) => {
 					<BsPencilSquare className=" text-inherit" />
 					<h3 className="hidden md:flex text-xs">new</h3>
 				</Link>
-				<img
+				{/* <img
 					src="../../public/person.png"
 					alt=""
 					className=" w-8 h-8  rounded-full mr-4"
-				/>
+				/> */}
 			</div>
 			{/* <h3 className=" border-l pl-4  pr-1 md:hidden">Hello, Onyeka</h3>
 				<img

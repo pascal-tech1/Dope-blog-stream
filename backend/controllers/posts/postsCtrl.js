@@ -15,7 +15,6 @@ const { filterCriteria } = require("../../utils/filterSortCriteria");
 //   Create Post conttoller
 // '''''''''''''''''''''''''''''''''''''''''''''
 const createPostCtrl = expressAsyncHandler(async (req, res) => {
-	console.log("im ctrl ");
 	const { id } = req.user;
 	validateMongoDbUserId(id);
 

@@ -24,6 +24,7 @@ const {
 	fetchUserCountsCtrl,
 	fetchWhoViewedUserProfileCtrl,
 	fetchPostImpressionsCount,
+	blockOrUnblockUserCtrl,
 } = require("../../controllers/users/usersCtrl");
 const {
 	profilePhotoUpload,
@@ -37,6 +38,11 @@ userRoutes.get("/admin-all-users", authMiddleWare, fetchAllUserCtrl);
 userRoutes.get("/viewedBy", authMiddleWare, fetchWhoViewedUserProfileCtrl);
 userRoutes.get("/following", fetchUserFollowingListCtrl);
 userRoutes.get("/followers", fetchUserFollowersListCtrl);
+userRoutes.post(
+	"/blockOrUnblock-user",
+	authMiddleWare,
+	blockOrUnblockUserCtrl
+);
 userRoutes.get(
 	"/impression-Counts",
 	authMiddleWare,
@@ -47,7 +53,7 @@ userRoutes.post("/random-users", fetchRandomUserCtrl);
 userRoutes.get("/loginWithToken", authMiddleWare, userLoginWithTokenCtrl);
 userRoutes.post("/login", userLoginCtrl);
 
-userRoutes.delete("/delete/:USERID", deleteUserCtrl);
+userRoutes.post("/delete", authMiddleWare, deleteUserCtrl);
 // userRoutes.get("/:USERID", authMiddleWare, fetchUserDetailsCtrl);
 userRoutes.get("/profile/:userId", authMiddleWare, fetchUserDetailsCtrl);
 userRoutes.post("/save-post", authMiddleWare, savePostCtrl);

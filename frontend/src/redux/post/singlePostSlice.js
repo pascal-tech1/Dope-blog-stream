@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import customFetch from "../../utils/axios";
 import { toast } from "react-toastify";
 import { updateSinglePost } from "./allPostSlice";
-import { updateNumbPostViewInMorePostSlice } from "./morePostSlice";
+import { updateNumbPostViewInMorePostSlice, updateUserViewHistory } from "./morePostSlice";
 
 export const fetchSinglePost = createAsyncThunk(
 	"fetchSingle/Post",
@@ -20,7 +20,8 @@ export const fetchSinglePost = createAsyncThunk(
 					numViews: resp.data.numViews,
 				})
 			);
-
+			console.log(resp.data)
+			dispatch(updateUserViewHistory(resp.data));
 			return resp.data;
 		} catch (error) {
 			if (!error?.response) {

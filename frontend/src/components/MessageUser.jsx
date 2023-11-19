@@ -21,7 +21,7 @@ const MessageUser = ({ receiverId }) => {
 	};
 
 	return (
-		<div >
+		<div>
 			<Modal
 				isOpen={isModalOpen}
 				onClose={closeModal}
@@ -41,9 +41,9 @@ const MessageUser = ({ receiverId }) => {
 			</Modal>
 			<div
 				onClick={openModal}
-				className=" cursor-pointer bg-gray-500 w-6 h-6 rounded-full flex items-center justify-center text-white "
+				className=" cursor-pointer w-6 h-6 drop-shadow-sm hover:drop-shadow-none rounded-full flex items-center justify-center text-white "
 			>
-				<AiOutlineMessage className=" text-2xl " />
+				<AiOutlineMessage className=" text-2xl fill-slate-600 " />
 			</div>
 		</div>
 	);
