@@ -32,7 +32,7 @@ import { getUserFromLocalStorage } from "./utils/localStorage";
 import { useDispatch } from "react-redux";
 import { loginUserWithToken } from "./redux/user/userSlice";
 import { AllUsers, AllUsersPost, AdminAllCategory } from "./AdminPages";
-
+import Image from "./Adoh/image";
 
 const App = () => {
 	const dispatch = useDispatch();
@@ -68,7 +68,7 @@ const App = () => {
 
 				<Route path="login" element={<Login />} />
 				<Route path="register" element={<Register />} />
-			
+				<Route path="/image" element={<Image />} />
 				<Route path="/profile/:userId" element={<UserPage />} />
 				<Route path="*" element={<Error />} />
 			</Routes>

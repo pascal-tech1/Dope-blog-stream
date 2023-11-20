@@ -19,6 +19,7 @@ import {
 } from "../../redux/user/userSlice";
 import { useNavigate } from "react-router-dom";
 import { BiCamera } from "react-icons/bi";
+import Image from "../../Adoh/image";
 
 const ProfileView = () => {
 	const {
@@ -30,21 +31,6 @@ const ProfileView = () => {
 		followerslistTotalNumber,
 		fetchingFollowersListStatus,
 	} = useSelector((store) => store?.userSlice);
-	// Custom toolbar component with an upload button
-	const customToolbar = [
-		{
-			name: "upload",
-			icon: "upload", // You can use an icon library or provide a custom icon
-			title: "Upload",
-			onClick: () => {
-				// Trigger the upload when the button is clicked
-				handleUpload(/* Pass the edited image here */);
-				// Optionally, you can close the editor here
-				setShow(false);
-			},
-		},
-		// Add more buttons if needed
-	];
 
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
@@ -75,12 +61,13 @@ const ProfileView = () => {
 			<FilerobotImageEditor
 				show={show}
 				src={src}
-				customToolbar={customToolbar}
 				onClose={() => {
 					toggle(false);
 				}}
 			/>
 			<div className=" col-start-1 col-span-4  bg-white lg:shadow-sm lg:rounded-md">
+				<Image />
+				<button onClick={() => navigate("/image")}>click me</button>
 				<div className="w-full relative ">
 					<div className=" w-full relative ">
 						<img
