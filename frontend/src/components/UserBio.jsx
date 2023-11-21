@@ -36,14 +36,14 @@ const UserBio = () => {
 	return (
 		<form
 			onSubmit={formik.handleSubmit}
-			className="  rounded-xl flex flex-col px-4  mt-8 mb-4"
+			className="  rounded-xl flex flex-col px-4 mt-4 mb-4"
 		>
 			<div className=" flex justify-between mr-4 mt-4">
 				<h1 className=" font-bold text-gray-900 ">Summary</h1>
 				<button type="submit" className="flex gap-1">
 					<MdEdit className=" text-blue-500" />
 					<h3 className="font-bold text-gray-600 hover:text-gray-900 text-xs">
-						Edits
+						{isUserProfileClicked ? "save" : "Edit"}
 					</h3>
 				</button>
 			</div>
@@ -56,10 +56,10 @@ const UserBio = () => {
 					id="summary"
 					cols="30"
 					rows="5"
-					className=" border border-blue-400 outline-none focus:border-blue-800 px-2 py-2 mt-2"
+					className=" border rounded-lg border-blue-400 outline-none focus:border-blue-800 px-2 py-2 mt-2"
 				></textarea>
 			) : (
-				<p>{user?.bio}</p>
+				<p className=" text-sm">{user?.bio}</p>
 			)}
 			<div className=" text-red-500">
 				{formik.touched.bio && formik.errors.bio}

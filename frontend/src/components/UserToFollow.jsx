@@ -26,7 +26,7 @@ const UserToFollow = ({ user, index, date, numberOfView }) => {
 				</div>
 
 				<div>
-					<div className=" flex items-center gap-2 font-light text-xs text-gray-900">
+					<div className=" flex items-center gap-2 font-light text-sm text-gray-900">
 						{`${user?.firstName} ${user?.lastName}`}
 						{date && (
 							<div className="flex items-center gap-1 text-sm ">

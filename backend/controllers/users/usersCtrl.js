@@ -70,6 +70,7 @@ const userLoginCtrl = expressAsyncHandler(async (req, res) => {
 		"following",
 		"createdAt",
 		"nickName",
+		"coverPhoto",
 	]);
 
 	if (
@@ -112,6 +113,7 @@ const userLoginWithTokenCtrl = expressAsyncHandler(async (req, res) => {
 		"following",
 		"createdAt",
 		"nickName",
+		"coverPhoto",
 	]);
 	res.status(200).json({
 		status: "success",
@@ -154,6 +156,7 @@ const fetchUserDetailsCtrl = expressAsyncHandler(async (req, res) => {
 				"following",
 				"createdAt",
 				"nickName",
+				"coverPhoto",
 			])
 			.populate({
 				path: "following",
@@ -481,6 +484,7 @@ const profilePhotoUploadCtrl = expressAsyncHandler(async (req, res) => {
 	try {
 		const { id } = req.user;
 		const user = await User.findById(id);
+		const data = req.body;
 
 		const imageLocalPath = `public/images/profile/${req?.file?.fileName}`;
 
@@ -489,9 +493,6 @@ const profilePhotoUploadCtrl = expressAsyncHandler(async (req, res) => {
 			`mern-blog-app/${user.email}/profilePhoto`
 		);
 
-		user.profilePhoto = uploadedImage.url;
-
-		await user.save();
 		// remove the file
 		fs.unlink(imageLocalPath, (err) => {
 			if (err) {
@@ -502,12 +503,33 @@ const profilePhotoUploadCtrl = expressAsyncHandler(async (req, res) => {
 			}
 		});
 
-		res.send({
-			message: "image uploaoded successfully",
-			userImage: user.profilePhoto,
-		});
+		if (data.whatUploading === "profilePhoto") {
+			user.profilePhoto = uploadedImage.url;
+			await user.save();
+
+			res.send({
+				message: "profile photo uploaoded successfully",
+				userImage: user.profilePhoto,
+				whatUploading: data.whatUploading,
+			});
+			return;
+		}
+		if (data.whatUploading === "coverPhoto") {
+			user.coverPhoto = uploadedImage.url;
+			await user.save();
+
+			res.send({
+				message: "cover image uploaoded successfully",
+				userImage: user.coverPhoto,
+				whatUploading: data.whatUploading,
+			});
+			return;
+		}
 	} catch (error) {
-		res.json(error);
+		res.status(500).json({
+			status: "failed",
+			message: "failed to upload file try again",
+		});
 	}
 });
 

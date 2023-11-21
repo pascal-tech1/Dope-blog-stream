@@ -1,5 +1,11 @@
 import React, { useState, useCallback, useRef, useEffect } from "react";
-import { BiDownload, BiReset, BiZoomIn, BiZoomOut } from "react-icons/bi";
+import {
+	BiCrop,
+	BiDownload,
+	BiReset,
+	BiZoomIn,
+	BiZoomOut,
+} from "react-icons/bi";
 import { FiUploadCloud } from "react-icons/fi";
 import { LuImagePlus } from "react-icons/lu";
 import {
@@ -10,140 +16,154 @@ import {
 	MdRotateLeft,
 	MdRotateRight,
 } from "react-icons/md";
-import ReactCrop from "react-image-crop";
-import "react-image-crop/dist/ReactCrop.css";
+import Cropper from "react-cropper";
+import "cropperjs/dist/cropper.css";
+import { useDispatch } from "react-redux";
+import { BsCrop } from "react-icons/bs";
 
-function generateDownload(canvas, crop) {
-	if (!crop || !canvas) {
-		return;
-	}
+const defaultSrc =
+	"https://raw.githubusercontent.com/roadmanfong/react-cropper/master/example/img/child.jpg";
 
-	canvas.toBlob(
-		(blob) => {
-			const previewUrl = window.URL.createObjectURL(blob);
-
-			const anchor = document.createElement("a");
-			anchor.download = "cropPreview.png";
-			anchor.href = URL.createObjectURL(blob);
-			anchor.click();
-
-			window.URL.revokeObjectURL(previewUrl);
-		},
-		"image/png",
-		1
-	);
-}
-
-function setCanvasImage(image, canvas, crop, scale, rotation) {
-	if (!crop || !canvas || !image) {
-		return;
-	}
-
-	const scaleX = image.naturalWidth / image.width;
-	const scaleY = image.naturalHeight / image.height;
-	const ctx = canvas.getContext("2d");
-	const pixelRatio = window.devicePixelRatio;
-
-	const canvasWidth = canvas.width / pixelRatio;
-	const canvasHeight = canvas.height / pixelRatio;
-
-	const { x, y, width, height } = crop;
-
-	const rotatedWidth = width * Math.abs(Math.cos((rotation * Math.PI) / 180)) + height * Math.abs(Math.sin((rotation * Math.PI) / 180));
-	const rotatedHeight = height * Math.abs(Math.cos((rotation * Math.PI) / 180)) + width * Math.abs(Math.sin((rotation * Math.PI) / 180));
-
-	canvas.width = rotatedWidth * scale * pixelRatio * scaleX;
-	canvas.height = rotatedHeight * scale * pixelRatio * scaleY;
-
-	ctx.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
-	ctx.imageSmoothingQuality = "high";
-
-	// Translate to the center of the canvas, apply rotation, and then translate back
-	ctx.translate(canvas.width / 2, canvas.height / 2);
-	ctx.rotate((rotation * Math.PI) / 180);
-	ctx.translate(-canvas.width / 2, -canvas.height / 2);
-
-	ctx.drawImage(
-		image,
-		x * scaleX,
-		y * scaleY,
-		width * scaleX,
-		height * scaleY,
-		0,
-		0,
-		rotatedWidth * scale * scaleX,
-		rotatedHeight * scale * scaleY
-	);
-}
-
-export default function Image() {
-	const [upImg, setUpImg] = useState();
-	const [hasAspectRatio, togleHasAspectRatio] = useState(true);
-	const imgRef = useRef(null);
-	const previewCanvasRef = useRef(null);
-
-	const [crop, setCrop] = useState({ unit: "px", width: 30, aspect: 1 });
-	const [scaleNumber, setScaleNumber] = useState(1);
-	const [angle, setAngle] = useState(0);
+export const Image = ({
+	handleFileChange,
+	image,
+	setImage,
+	fileName,
+	uploadAction,
+	whatUploading,
+}) => {
+	const [cropData, setCropData] = useState("#");
 	const [isPreview, setIsPreview] = useState(false);
+	const cropperRef = useRef(null);
+	const dispatch = useDispatch();
 
-	useEffect(() => {
-		console.log(hasAspectRatio);
+	const handleCropEnd = () => {
+		if (typeof cropperRef.current?.cropper !== "undefined") {
+			// Get the cropped canvas with transparent fill
+			const croppedCanvas = cropperRef.current?.cropper.getCroppedCanvas({
+				fillColor: "transparent",
+			});
 
-		if (hasAspectRatio) {
-			setCrop({ unit: "px", width: 30, aspect: 1 });
-		} else {
-			setCrop({});
-		}
-	}, [hasAspectRatio]);
+			// Convert the canvas to a data URL
 
-	const [completedCrop, setCompletedCrop] = useState(null);
-
-	// on selecting file we set load the image on to cropper
-	const onSelectFile = (e) => {
-		if (e.target.files && e.target.files.length > 0) {
-			const reader = new FileReader();
-			reader.addEventListener("load", () => setUpImg(reader.result));
-			reader.readAsDataURL(e.target.files[0]);
+			setCropData(croppedCanvas.toDataURL("image/jpeg"));
 		}
 	};
+	const handleImageUpload = async () => {
+		if (typeof cropperRef.current?.cropper !== "undefined") {
+			// Get the cropped canvas with transparent fill
+			const croppedCanvas = cropperRef.current?.cropper.getCroppedCanvas({
+				fillColor: "transparent",
+			});
 
-	const onLoad = useCallback((img) => {
-		imgRef.current = img;
-	}, []);
-	const onCropChange = (crop) => {
-		if (isPreview) {
-			setCanvasImage(
-				imgRef.current,
-				previewCanvasRef.current,
-				crop,
-				scaleNumber
-			);
+			const blobPromise = new Promise((resolve) => {
+				croppedCanvas.toBlob(
+					(blob) => {
+						resolve(blob);
+					},
+					"image/png",
+					1
+				);
+			});
+
+			const blob = await blobPromise;
+
+			const file = new File([blob], fileName, {
+				type: "image/png",
+			});
+
+			dispatch(uploadAction({ file, whatUploading }));
+			setImage(null);
 		}
 	};
-	useEffect(() => {
-		setCanvasImage(imgRef.current, previewCanvasRef.current, completedCrop, scaleNumber, angle);
-	}, [completedCrop, scaleNumber, angle]);
-	
-	console.log(crop);
+	const handleDownload = () => {
+		const croppedCanvas = cropperRef.current?.cropper.getCroppedCanvas({
+			fillColor: "transparent",
+		});
 
+		// Create a download link
+		const downloadLink = document.createElement("a");
+		downloadLink.href = croppedCanvas.toDataURL("image/jpeg");
+		downloadLink.download = fileName || "cropped_image.jpeg";
+
+		// Trigger a click event on the download link
+		document.body.appendChild(downloadLink);
+		downloadLink.click();
+
+		// Clean up and remove the download link
+		document.body.removeChild(downloadLink);
+	};
+
+	const handleZoomIn = () => {
+		if (typeof cropperRef.current?.cropper !== "undefined") {
+			// Get the cropped canvas with transparent fill
+			cropperRef.current?.cropper.zoom(0.1);
+		}
+	};
+	const handleZoomOut = () => {
+		if (typeof cropperRef.current?.cropper !== "undefined") {
+			// Get the cropped canvas with transparent fill
+			cropperRef.current?.cropper.zoom(-0.1);
+		}
+	};
+	const handleRotateLeft = () => {
+		if (typeof cropperRef.current?.cropper !== "undefined") {
+			// Get the cropped canvas with transparent fill
+			cropperRef.current?.cropper.rotate(-10);
+		}
+	};
+	const handleRotateRight = () => {
+		if (typeof cropperRef.current?.cropper !== "undefined") {
+			// Get the cropped canvas with transparent fill
+			cropperRef.current?.cropper.rotate(10);
+		}
+	};
+	const handleReset = () => {
+		if (typeof cropperRef.current?.cropper !== "undefined") {
+			// Get the cropped canvas with transparent fill
+			cropperRef.current?.cropper.reset();
+			handleSetCustomCropping();
+		}
+	};
+	const handleSetCoverCropping = () => {
+		if (typeof cropperRef.current?.cropper !== "undefined") {
+			cropperRef.current?.cropper.setAspectRatio(6);
+		}
+	};
+	const handleSetProfileCropping = () => {
+		if (typeof cropperRef.current?.cropper !== "undefined") {
+			cropperRef.current?.cropper.setAspectRatio(1);
+			cropperRef.current?.cropper.rounded(true);
+		}
+	};
+	const handleSetCustomCropping = () => {
+		if (typeof cropperRef.current?.cropper !== "undefined") {
+			cropperRef.current?.cropper.setAspectRatio(NaN);
+		}
+	};
 	return (
-		<div className=" z-[1000] fixed top-0 left-0 w-full h-full flex justify-center bg-black bg-opacity-40   ">
+		<div className=" z-[1000] fixed top-0 left-0 w-full h-full flex justify-center bg-black bg-opacity-80 backdrop-blur-sm overflow-auto   ">
 			<div
 				className={` ${
 					!isPreview && "justify-between"
-				} flex items-center flex-col  bg-white h-[90vh] w-[90vw] lg:w-[60vw] shadow-lg rounded-lg mx-6 mt-6 relative`}
+				}  flex items-center flex-col bg-white h-[100vh] w-[100vw] lg:w-[80vw] shadow-lg rounded-lg mx-2  relative px-4 `}
 			>
-				<button className="right-3 absolute top-2 drop-shadow-lg ">
+				<button
+					onClick={(e) => {
+						e.preventDefault();
+						setImage(null);
+					}}
+					className="right-3 absolute top-2 drop-shadow-lg "
+				>
 					<MdCancel className=" fill-red-400 shadow-md hover:shadow-none text-xl " />
 				</button>
-
-				<div className="flex justify-between items-center  gap-4 pt-4 pb-3  px-4  flex-wrap">
+				{/* cropper action button */}
+				<div className="flex justify-center items-center  gap-8 pt-10 pb-3  px-4  flex-wrap self-stretch">
 					<label className="  cursor-pointer ">
 						<input
 							type="file"
 							accept="image/*"
-							onChange={onSelectFile}
+							onChange={(e) => handleFileChange(e)}
 							className=" hidden z-50"
 						/>
 						<h1 className=" border shadow-md hover:shadow-sm py-1 rounded-md px-3">
@@ -156,109 +176,107 @@ export default function Image() {
 					>
 						<MdPreview />
 					</button>
-					<button className=" border shadow-md hover:shadow-sm py-1 rounded-md px-3">
+					<button
+						onClick={handleDownload}
+						className=" border shadow-md hover:shadow-sm py-1 rounded-md px-3"
+					>
 						<BiDownload />
 					</button>
-					<button className=" border shadow-md hover:shadow-sm py-1 rounded-md px-3">
+					<button
+						// onClick={() => uploadCroppedImage()}
+						onClick={handleImageUpload}
+						className=" border shadow-md hover:shadow-sm py-1 rounded-md px-3"
+					>
 						<FiUploadCloud />
 					</button>
 				</div>
-
-				<div
-					className={`${
-						isPreview ? "hidden" : ""
-					}  px-4 flex flex-col items-center `}
-				>
-					<div className=" ">
-						<div className=" z-[10000000000000]">
-							<ReactCrop
-								src={upImg}
-								onImageLoaded={onLoad}
-								crop={crop}
-								onChange={(c) => setCrop(c)}
-								onComplete={(c) => setCompletedCrop(c)}
-								// onChange={onCropChange}
-								scale={scaleNumber}
-								style={{ maxHeight: "90vh", maxWidth: "90vh" }}
-								className={`${
-									scaleNumber > 0 && ""
-								}  custom-scrollbar cursor-grab `}
-								// keepSelection={!isPreview}
-								rotate={angle}
-							/>
-						</div>
+				{/* cropper image */}
+				<div className={`${isPreview && "hidden"}`}>
+					<div className="flex gap-4 text-sm py-4">
+						<button
+							onClick={handleSetCoverCropping}
+							className=" shadow-sm  rounded-md hover:shadow-none flex items-center justify-center flex-col"
+						>
+							cover
+						</button>
+						<button
+							onClick={handleSetProfileCropping}
+							className=" shadow-sm  rounded-md hover:shadow-none flex flex-col"
+						>
+							profile
+						</button>
+						<button
+							onClick={handleSetCustomCropping}
+							className=" shadow-sm  rounded-md hover:shadow-none flex flex-col"
+						>
+							custom
+						</button>
 					</div>
+
+					<Cropper
+						initialAspectRatio={1}
+						src={image}
+						ref={cropperRef}
+						viewMode={1}
+						guides={true}
+						minCropBoxHeight={10}
+						minCropBoxWidth={10}
+						background={false}
+						responsive={true}
+						checkOrientation={false}
+						className=" max-h-[100%] max-w-[80vw] lg:max-w-[60vw]"
+						cropend={handleCropEnd}
+						restore={true}
+						style={{ borderRadius: "50%" }}
+					/>
 				</div>
+
+				{/* cropper tool bar */}
 				<div
 					className={`${
 						isPreview ? "hidden" : ""
-					}  flex gap-4 flex-wrap  bg-slate-200 px-8 py-2 mb-4 rounded-md items-center mt-4  `}
+					}  flex gap-4 flex-wrap  bg-slate-200 px-8 py-2 mb-4 rounded-md items-center mt-4  text-lg `}
 				>
 					<button
-						className=" shadow-sm hover:shadow-none"
-						onClick={() => togleHasAspectRatio(!hasAspectRatio)}
-					>
-						<MdImageAspectRatio />
-					</button>
-					<button
-						className=" shadow-sm hover:shadow-none"
-						onClick={() => setScaleNumber(scaleNumber + 0.1)}
+						className=" shadow-md hover:shadow-none rounded-md px-1"
+						onClick={handleZoomIn}
 					>
 						<BiZoomIn />
 					</button>
 					<button
-						className=" shadow-sm hover:shadow-none"
-						onClick={() =>
-							scaleNumber > 0.2 && setScaleNumber(scaleNumber - 0.1)
-						}
+						className=" shadow-md hover:shadow-none rounded-md px-1"
+						onClick={handleZoomOut}
 					>
 						<BiZoomOut />
 					</button>
 					<button
-						className=" shadow-sm hover:shadow-none"
-						onClick={() => setAngle(angle + 10)}
+						className=" shadow-md hover:shadow-none rounded-md px-1"
+						onClick={handleRotateLeft}
 					>
 						<MdRotateLeft />
 					</button>
 					<button
-						className=" shadow-sm hover:shadow-none"
-						onClick={() => setAngle(angle - 10)}
+						className=" shadow-md hover:shadow-none rounded-md px-1"
+						onClick={handleRotateRight}
 					>
 						<MdRotateRight />
 					</button>
 					<button
-						className=" shadow-sm hover:shadow-none"
-						onClick={() => setAngle(0)}
+						onClick={handleReset}
+						className=" shadow-md hover:shadow-none rounded-md px-1"
 					>
 						<BiReset />
 					</button>
 				</div>
-				<div
-					className={`${
-						isPreview ? "" : "hidden"
-					}   px-4  self-center my-auto  `}
-				>
-					{/* Canvas to display cropped image */}
-					<canvas
-						ref={previewCanvasRef}
-						// Rounding is important so the canvas width and height matches/is a multiple for sharpness.
-						style={{
-							width: Math.round(completedCrop?.width ?? 0),
-							height: Math.round(completedCrop?.height ?? 0),
-						}}
-					/>
-				</div>
+				{/* cropped image preview */}
 
-				{/* <button
-					type="button"
-					disabled={!completedCrop?.width || !completedCrop?.height}
-					onClick={() =>
-						generateDownload(previewCanvasRef.current, completedCrop)
-					}
-				>
-					Download cropped image
-				</button> */}
+				{/* Canvas to display cropped image */}
+				<div className={` ${!isPreview && "hidden "}  my-auto `}>
+					<img src={cropData} alt="cropped" className="  max-h-[50vh]" />
+				</div>
 			</div>
 		</div>
 	);
-}
+};
+
+export default Image;

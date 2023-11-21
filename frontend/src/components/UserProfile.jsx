@@ -45,10 +45,10 @@ const UserProfile = () => {
 	return (
 		<form
 			onSubmit={formik.handleSubmit}
-			className=" relative flex flex-col gap-2 items-center mt-4 transition-all "
+			className=" relative flex flex-col gap-2 items-center transition-all px-4 "
 		>
 			{isUserProfileClicked ? (
-				<div className="flex gap-2 flex-col transition-all">
+				<div className="flex gap-2 flex-col transition-all self-start">
 					<div className=" relative">
 						<input
 							className=" text-center px-1 py-1 outline-none focus:border-b-blue-800 border border-blue-400 rounded-md"
@@ -103,10 +103,10 @@ const UserProfile = () => {
 					</div>
 				</div>
 			) : (
-				<div className="transition-all">
-					<h1 className=" font-bold text-xs md:text-lg">{`${user?.firstName} ${user?.lastName}`}</h1>
-					<h3 className=" font-bold text-gray-500 text-xs">{`Profession : ${user?.profession}`}</h3>
-					<h3 className="font-bold text-gray-500 text-xs">{`Location : ${user?.location}`}</h3>
+				<div className="transition-all self-start ">
+					<h1 className=" font-bold  md:text-lg">{`${user?.firstName} ${user?.lastName}`}</h1>
+					<h3 className=" font-bold text-gray-500 text-sm">{`Profession : ${user?.profession}`}</h3>
+					<h3 className="font-bold text-gray-500 text-sm">{`Location : ${user?.location}`}</h3>
 				</div>
 			)}
 

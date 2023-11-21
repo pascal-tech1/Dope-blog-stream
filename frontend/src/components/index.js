@@ -22,6 +22,8 @@ import Tooltip from "./Tooltip";
 import Spinner from "./Spinner";
 import AdminCategory from "./AdminCategory";
 import BlockOrUnblockUser from "./BlockOrUnblockUser";
+import CoverPhoto from "./CoverPhot";
+import ProfilePhoto from "./ProfilePhoto";
 
 export {
 	DashboardSideBar,
@@ -49,4 +51,6 @@ export {
 	Tooltip,
 	AdminCategory,
 	BlockOrUnblockUser,
+	CoverPhoto,
+	ProfilePhoto
 };

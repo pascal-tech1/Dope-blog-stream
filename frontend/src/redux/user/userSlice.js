@@ -262,11 +262,11 @@ export const fetchPostImpressionsCount = createAsyncThunk(
 export const uploadProfilePhoto = createAsyncThunk(
 	"uploadProfile/Photo",
 	async (userImage, { getState, rejectWithValue }) => {
-		console.log(userImage);
+		console.log(userImage.file);
 		try {
 			const resp = await customFetch.post(
 				`/users/profile-picture-upload`,
-				{ image: userImage },
+				{ image: userImage.file, whatUploading: userImage.whatUploading },
 				{
 					headers: {
 						"Content-Type": "multipart/form-data",
@@ -533,6 +533,25 @@ const userSlice = createSlice({
 		},
 		[fetchPostImpressionsCount.rejected]: (state, action) => {
 			state.userPostImpressionStatus = "failed";
+			toast.error(action?.payload?.message);
+		},
+		[uploadProfilePhoto.pending]: (state) => {
+			state.profilePictureUploadStatus = "loading";
+		},
+		[uploadProfilePhoto.fulfilled]: (state, { payload }) => {
+			if (payload.whatUploading === "profilePhoto") {
+				state.user.profilePhoto = payload.userImage;
+			}
+			if (payload.whatUploading === "coverPhoto") {
+				state.user.coverPhoto = payload.userImage;
+			}
+
+			toast.success(payload?.message);
+			console.log(payload);
+			state.profilePictureUploadStatus = "success";
+		},
+		[uploadProfilePhoto.rejected]: (state, action) => {
+			state.profilePictureUploadStatus = "failed";
 			toast.error(action?.payload?.message);
 		},
 	},
