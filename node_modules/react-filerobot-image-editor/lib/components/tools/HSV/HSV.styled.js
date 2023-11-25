@@ -1,0 +1,1 @@
+import styled from"styled-components";var StyledSliderContainer=styled.div.withConfig({componentId:"sc-tm5uj2-0"})(["margin:6px;"]);export{StyledSliderContainer};

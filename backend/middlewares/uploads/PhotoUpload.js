@@ -35,12 +35,21 @@ const ProfilePhotResize = async (req, res, next) => {
 	try {
 		if (!req.file) throw new Error("no file to resize");
 
+		if (req.file) {
+			const outputBuffer = await sharp(req.file.buffer)
+				.resize(20, 20)
+				.toFormat("jpeg", { quality: 20 })
+				.toBuffer();
+
+			// Convert the buffer to a base64-encoded string
+			const base64String = outputBuffer.toString("base64");
+			req.blurProfilePhoto = base64String;
+		}
+
 		req.file.fileName = `user-${Date.now()} - ${req.file.originalname}`;
 		await sharp(req.file.buffer)
-			.toFormat("jpeg")
 			.jpeg({ quality: 90 })
 			.toFile(path.join(`public/images/profile/${req.file.fileName}`));
-
 		next();
 	} catch (error) {
 		console.log("erro", error);
@@ -50,13 +59,21 @@ const ProfilePhotResize = async (req, res, next) => {
 const postImageResize = async (req, res, next) => {
 	try {
 		const { file, url } = req;
+		if (file) {
+			const outputBuffer = await sharp(file.buffer)
+				.resize(40, 40)
+				.toFormat("jpeg", { quality: 50 })
+				.toBuffer();
+
+			// Convert the buffer to a base64-encoded string
+			const base64String = outputBuffer.toString("base64");
+			req.blurImageUrl = base64String;
+		}
 
 		if (file) {
 			const fileName = `user-${Date.now()} - ${file.originalname}`;
 			await sharp(file.buffer)
-				.resize(500, 500)
 				.toFormat("jpeg")
-				.jpeg({ quality: 90 })
 				.toFile(path.join(`public/images/posts/${fileName}`));
 
 			req.file.fileName = fileName;

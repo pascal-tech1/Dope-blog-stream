@@ -13,6 +13,9 @@ const userSchema = new mongoose.Schema(
 			required: [true, "Last name is required"],
 			type: String,
 		},
+		blurProfilePhoto: {
+			type: String,
+		},
 		profilePhoto: {
 			type: String,
 			default:

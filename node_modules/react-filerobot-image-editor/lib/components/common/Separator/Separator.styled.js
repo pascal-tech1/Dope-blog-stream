@@ -1,0 +1,1 @@
+import styled from"styled-components";var StyledSeparator=styled.div.withConfig({componentId:"sc-etsyb6-0"})(["display:inline-block;height:",";width:",";border-radius:1px;background:#dfe7ed;"],function(a){return a.height},function(a){return a.width});export{StyledSeparator};

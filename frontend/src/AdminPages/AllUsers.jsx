@@ -217,7 +217,7 @@ const AllUsers = () => {
 							)}
 							<div className="">
 								{user.email.length > 20 ? (
-									<Tooltip info={`${user.email.slice(0, 20)}...`}>
+									<Tooltip info={`${user.email.slice(0, 14)}...`}>
 										<h3>{user.email}</h3>
 									</Tooltip>
 								) : (

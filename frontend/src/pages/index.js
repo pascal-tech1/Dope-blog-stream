@@ -5,8 +5,10 @@ import Home from "./Home";
 import SinglePost from "./SinglePost";
 import AllPost from "./AllPost";
 import UserPage from "./userPage";
-
+import VerifyEmail from "../components/VerifyEmail";
+import ConfirmEmailPage from "./ComfirmEmailPage";
 import Error from "./Error";
+import PasswordReset from "./PasswordReset";
 
 export {
 	Home,
@@ -17,4 +19,7 @@ export {
 	AllPost,
 	UserPage,
 	Error,
+	VerifyEmail,
+	ConfirmEmailPage,
+	PasswordReset,
 };

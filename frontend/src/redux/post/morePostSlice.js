@@ -132,6 +132,10 @@ const morePostSlice = createSlice({
 				}
 			});
 		},
+
+		clearUserPost: (state, { payload }) => {
+			state.userPost = [];
+		},
 		IncreaseHistoryPageNumber: (state) => {
 			state.historyPageNumber = state.historyPageNumber + 1;
 		},
@@ -223,4 +227,5 @@ export const {
 	setSavedPostFirstSearch,
 	updateUserViewHistory,
 	updateUserSavedPost,
+	clearUserPost
 } = morePostSlice.actions;

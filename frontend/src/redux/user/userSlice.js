@@ -16,6 +16,7 @@ export const loginUser = createAsyncThunk(
 			const resp = await customFetch.post("/users/login", user);
 			return resp.data;
 		} catch (error) {
+			console.log(error)
 			if (!error.response) {
 				throw new Error();
 			}
@@ -285,6 +286,78 @@ export const uploadProfilePhoto = createAsyncThunk(
 		}
 	}
 );
+export const verifyEmail = createAsyncThunk(
+	"verify/Email",
+	async (emailParam, { getState, rejectWithValue }) => {
+		const email = emailParam || getState().userSlice.userEmail;
+		try {
+			const resp = await customFetch.post(`/users/send-email`, {
+				email,
+			});
+			console.log(resp.data);
+			return resp.data;
+		} catch (error) {
+			console.log(error);
+			if (!error?.response) {
+				throw new Error(error);
+			}
+			return rejectWithValue(error?.response?.data);
+		}
+	}
+);
+
+export const confirmSentEmail = createAsyncThunk(
+	"confirm/sentEmail",
+	async (token, { getState, rejectWithValue }) => {
+		try {
+			const resp = await customFetch.post(`/users/confirm-sent-email`, {
+				token,
+			});
+			console.log(resp.data);
+			return resp.data;
+		} catch (error) {
+			console.log(error);
+			if (!error?.response) {
+				throw new Error(error);
+			}
+			return rejectWithValue(error?.response?.data);
+		}
+	}
+);
+export const sendForgotPasswordEmail = createAsyncThunk(
+	"send/forgotPasswordEmail",
+	async (email, { getState, rejectWithValue }) => {
+		try {
+			const resp = await customFetch.post(`/users/forget-password`, email);
+			console.log(resp.data);
+			return resp.data;
+		} catch (error) {
+			console.log(error);
+			if (!error?.response) {
+				throw new Error(error);
+			}
+			return rejectWithValue(error?.response?.data);
+		}
+	}
+);
+
+export const resetPassword = createAsyncThunk(
+	"reset/Password",
+	async (user, { getState, rejectWithValue }) => {
+		try {
+			const resp = await customFetch.post(`/users/reset-password`, user);
+			console.log(resp.data);
+			return resp.data;
+		} catch (error) {
+			console.log(error);
+			if (!error?.response) {
+				throw new Error(error);
+			}
+			return rejectWithValue(error?.response?.data);
+		}
+	}
+);
+
 const initialState = {
 	user: null,
 	token: getUserFromLocalStorage(),
@@ -303,6 +376,8 @@ const initialState = {
 	followingListPageNumber: 1,
 	followsNumberPerPage: 2,
 	followersListPageNumber: 1,
+	confirmSentEmailStatus: "idle",
+	resetPasswordStatus: "idle",
 };
 const userSlice = createSlice({
 	name: "userSlice",
@@ -360,9 +435,9 @@ const userSlice = createSlice({
 			state.token = payload.token;
 			toast.success(payload.message);
 		},
-		[loginUser.rejected]: (state, { action }) => {
+		[loginUser.rejected]: (state, { payload }) => {
 			state.isLoading = false;
-			const error = action?.payload?.message || action?.error?.message;
+			const error = payload?.message || error?.message;
 			toast.error(error);
 		},
 		[loginUserWithToken.pending]: (state) => {
@@ -374,20 +449,18 @@ const userSlice = createSlice({
 		},
 		[loginUserWithToken.rejected]: (state, action) => {
 			state.isLoading = false;
-			const error = action?.payload?.error || action?.error?.message;
-			toast.error(error);
+			toast.error("login failed");
 		},
 		[RegisterUser.pending]: (state) => {
-			state.isLoading = true;
+			state.registerUserStatus = "loading";
 		},
 		[RegisterUser.fulfilled]: (state, { payload }) => {
-			state.isLoading = false;
-			state.token = payload;
-			addUserToLocalStorage(payload);
+			state.registerUserStatus = "success";
+			state.userEmail = payload.userEmail;
 			toast.success(payload?.message);
 		},
 		[RegisterUser.rejected]: (state, action) => {
-			state.isLoading = false;
+			state.registerUserStatus = "failed";
 			const error = action?.payload?.message || action?.error?.message;
 			toast.error(error);
 		},
@@ -553,6 +626,50 @@ const userSlice = createSlice({
 		[uploadProfilePhoto.rejected]: (state, action) => {
 			state.profilePictureUploadStatus = "failed";
 			toast.error(action?.payload?.message);
+		},
+		[verifyEmail.pending]: (state) => {
+			state.verifyEmailStatus = "loading";
+		},
+		[verifyEmail.fulfilled]: (state, { payload }) => {
+			toast.success(payload?.message);
+			state.verifyEmailStatus = "success";
+		},
+		[verifyEmail.rejected]: (state, { payload }) => {
+			state.verifyEmailStatus = "failed";
+			toast.error(payload?.message);
+		},
+		[confirmSentEmail.pending]: (state) => {
+			state.confirmSentEmailStatus = "loading";
+		},
+		[confirmSentEmail.fulfilled]: (state, { payload }) => {
+			toast.success(payload?.message);
+			state.confirmSentEmailStatus = "success";
+		},
+		[confirmSentEmail.rejected]: (state, { payload }) => {
+			state.confirmSentEmailStatus = "failed";
+			toast.error(payload?.message);
+		},
+		[sendForgotPasswordEmail.pending]: (state) => {
+			state.sendForgotPasswordEmailStatus = "loading";
+		},
+		[sendForgotPasswordEmail.fulfilled]: (state, { payload }) => {
+			toast.success(payload?.message);
+			state.sendForgotPasswordEmailStatus = "success";
+		},
+		[sendForgotPasswordEmail.rejected]: (state, { payload }) => {
+			state.sendForgotPasswordEmailStatus = "failed";
+			toast.error(payload?.message);
+		},
+		[resetPassword.pending]: (state) => {
+			state.resetPasswordStatus = "loading";
+		},
+		[resetPassword.fulfilled]: (state, { payload }) => {
+			toast.success(payload?.message);
+			state.resetPasswordStatus = "success";
+		},
+		[resetPassword.rejected]: (state, { payload }) => {
+			state.resetPasswordStatus = "failed";
+			toast.error(payload?.message);
 		},
 	},
 });

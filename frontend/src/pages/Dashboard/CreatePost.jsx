@@ -31,6 +31,8 @@ const CreatePost = () => {
 		content,
 		category,
 	} = useSelector((store) => store.singlePostSlice);
+
+	console.log(postToBeEdited);
 	const { allCategory } = useSelector((store) => store.categorySlice);
 	const [quillIsFocus, setQuillIsFocus] = useState(false);
 	const [postImage, setPostImage] = useState(null);

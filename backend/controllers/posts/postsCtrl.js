@@ -49,13 +49,15 @@ const createPostCtrl = expressAsyncHandler(async (req, res) => {
 				console.log("File deleted successfully");
 			}
 		});
+		
 
 		const post = await Post.create({
 			...req.body,
 			user: id,
 			image: uploadedImage?.url,
+			blurImageUrl: req.blurImageUrl,
 		});
-
+	
 		res.json(post);
 	} catch (error) {
 		res.status(500).json({ message: error.message });
@@ -80,12 +82,12 @@ const fetchAllUserPostCtrl = expressAsyncHandler(async (req, res) => {
 				"-description",
 				"-title",
 				"-image",
+				"-blurImageUrl",
 				"-password",
 			]);
 
 		const totalPosts = Posts.length;
 		const totalPages = Math.ceil(totalPosts / postNumberPerPage);
-		console.log(posts);
 
 		res.json({
 			currentPage: page,
@@ -225,12 +227,14 @@ const updatePostCtrl = expressAsyncHandler(async (req, res) => {
 			{
 				...req.body,
 				image: imageUrl,
+				blurImageUrl: req.blurImageUrl,
 			},
 			{
 				new: true,
 			}
 		).populate("user");
 		res.json(post);
+	
 	} catch (error) {
 		console.log(error);
 		res.status(500).json({ messsage: error.message });
@@ -377,10 +381,15 @@ const searchPostCtrl = expressAsyncHandler(async (req, res) => {
 });
 
 const fetchPostByCategoryCtrl = expressAsyncHandler(async (req, res) => {
+	
 	let page = parseInt(req?.query?.page) || 1; // Current page,ipco
 	const postNumberPerPage = parseInt(req?.query?.postNumberPerPage) || 10; // Number of items per page
 	const category = req.query?.category;
 	const searchQuery = req.query?.searchQuery;
+	const where = req.query?.where;
+
+	const sort = where === "morePost" && { category: -1 };
+
 	// Calculate the skip value to skip items on previous pages
 	let skip = (page - 1) * postNumberPerPage;
 	let filter;
@@ -396,19 +405,52 @@ const fetchPostByCategoryCtrl = expressAsyncHandler(async (req, res) => {
 			category: category,
 			$and: [{ $text: { $search: searchQuery } }],
 		};
-	console.log(filter, searchQuery);
+
 	try {
 		const posts = await Post.find(filter)
 			.skip(skip)
 			.limit(postNumberPerPage)
+			.sort(sort)
 			.populate({
 				path: "user",
-				select: ["_id", "firstName", "lastName", "profilePhoto"],
+				select: [
+					"_id",
+					"firstName",
+					"lastName",
+					"profilePhoto",
+					"blurProfilePhoto",
+				],
 			})
 			.select("-content");
+		
+
+		// const newPostPromises = posts.map(async (post) => {
+		// 	const imageUrl = post.image;
+		// 	const imageUrlBlur = await uptimizeCloudinaryImage(imageUrl, 200);
+		// 	const userProfilePhotoWithBlur = await uptimizeCloudinaryImage(
+		// 		imageUrl,
+		// 		50
+		// 	);
+
+		// 	// Update the image property correctly
+
+		// 	return {
+		// 		...post._doc,
+
+		// 		image: imageUrlBlur,
+		// 		user: {
+		// 			...post._doc.user._doc,
+		// 			profilePhoto: userProfilePhotoWithBlur,
+		// 		},
+		// 	};
+		// });
+		// Wait for all promises to be resolved
+		// const newPost = await Promise.all(newPostPromises);
+
 		res.status(200).json(posts);
 		return;
 	} catch (error) {
+		console.log(error);
 		res.status(500).json({ error: "Internal Server Error" });
 	}
 });

@@ -120,7 +120,7 @@ const DashboardSideBar = () => {
 	];
 
 	return (
-		<aside className=" flex flex-col  font-medium  h-96  ">
+		<aside className=" flex flex-col  font-medium  h-screen  ">
 			<Link to="/" className="mt-4 self-center md:flex">
 				<img
 					src="../../public/blogvana.png"
@@ -149,9 +149,7 @@ const DashboardSideBar = () => {
 						case "AiOutlineComment":
 							IconComponent = AiOutlineComment;
 							break;
-						case "LuLayoutDashboard":
-							IconComponent = LuLayoutDashboard;
-							break;
+						
 						case "LuLayoutDashboard":
 							IconComponent = LuLayoutDashboard;
 							break;
@@ -162,7 +160,7 @@ const DashboardSideBar = () => {
 							IconComponent = AiOutlineComment; // Default icon
 					}
 					return (
-						<div key={index} className=" flex justify-center items-center pr-2 mt-3">
+						<div key={index} className=" flex justify-start items-center px-4 mt-3 ">
 							{sideBarItem.hasSubMenu ? (
 								<div className="flex flex-col">
 									<div
@@ -173,7 +171,7 @@ const DashboardSideBar = () => {
 									>
 										<IconComponent className=" text-lg" />
 										<span className=" ">{sideBarItem.title}</span>
-										<IoMdArrowDropdown />
+										<IoMdArrowDropdown className=" self-end" />
 									</div>
 
 									<div className=" flex flex-col items-center justify-start border-l ">
@@ -200,7 +198,8 @@ const DashboardSideBar = () => {
 									to={sideBarItem.title}
 									className="flex gap-2 items-center px-2  pl-[0.35rem] hover:text-white hover:bg-blue-400 py-2 w-full rounded-lg aria-[current=page]:text-white aria-[current=page]:bg-blue-400"
 								>
-									<IconComponent className="  text-lg "></IconComponent>
+									<IconComponent className=" text-lg " />
+									{/* <IconComponent className="  text-lg "></IconComponent> */}
 									<span className=" font-inter">{sideBarItem.title}</span>
 								</NavLink>
 							)}

@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import { formatDate } from "../utils/dataFormatter";
 import { BsEye } from "react-icons/bs";
 import MessageUser from "./MessageUser";
+import LazyLoadImg from "./LazyLoadImg";
 
 const UserToFollow = ({ user, index, date, numberOfView }) => {
 	const loginUser = useSelector((store) => store.userSlice?.user);
@@ -17,11 +18,24 @@ const UserToFollow = ({ user, index, date, numberOfView }) => {
 				to={loginUser?._id ? `/profile/${user._id}` : `/login`}
 				className="flex gap-4 items-center "
 			>
-				<div>
+				{/* <div>
 					<img
 						className=" w-8 h-8 rounded-full"
 						src={user?.profilePhoto}
 						alt=""
+					/>
+				</div> */}
+				{/* lazyloading */}
+
+				<div>
+					<LazyLoadImg
+						backgroundClassName={" rounded-full  w-10 h-10  relative"}
+						imgClassName={
+							"absolute inset-0 w-full h-full  object-cover rounded-full "
+						}
+						originalImgUrl={user?.profilePhoto}
+						blurImageStr={user?.blurProfilePhoto}
+						optimizationStr={"q_auto,f_auto,w_100"}
 					/>
 				</div>
 

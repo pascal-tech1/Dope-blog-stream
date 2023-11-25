@@ -25,6 +25,9 @@ import BlockOrUnblockUser from "./BlockOrUnblockUser";
 import CoverPhoto from "./CoverPhot";
 import ProfilePhoto from "./ProfilePhoto";
 
+import LazyLoadImg from "./LazyLoadImg";
+import ForgotPassword from "./ForgotPassword";
+
 export {
 	DashboardSideBar,
 	NavBar,
@@ -52,5 +55,7 @@ export {
 	AdminCategory,
 	BlockOrUnblockUser,
 	CoverPhoto,
-	ProfilePhoto
+	ProfilePhoto,
+	LazyLoadImg,
+	ForgotPassword,
 };

@@ -191,7 +191,7 @@ export const Image = ({
 					</button>
 				</div>
 				{/* cropper image */}
-				<div className={`${isPreview && "hidden"}`}>
+				<div className={`${isPreview && "hidden"}  `}>
 					<div className="flex gap-4 text-sm py-4">
 						<button
 							onClick={handleSetCoverCropping}
@@ -224,10 +224,10 @@ export const Image = ({
 						background={false}
 						responsive={true}
 						checkOrientation={false}
-						className=" max-h-[100%] max-w-[80vw] lg:max-w-[60vw]"
+						className=" max-h-[70vh] max-w-[80vw] lg:max-w-[60vw] "
 						cropend={handleCropEnd}
 						restore={true}
-						style={{ borderRadius: "50%" }}
+						
 					/>
 				</div>
 

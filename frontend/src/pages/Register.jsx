@@ -1,14 +1,32 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { NavBar } from "../components";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Carousel from "../utils/carousel";
-import { RegisterUser } from "../redux/user/userSlice";
+import { RegisterUser, verifyEmail } from "../redux/user/userSlice";
 import { useSelector, useDispatch } from "react-redux";
 import { LoadingSpinner } from "../utils/Spinner";
+import VerifyEmail from "../components/VerifyEmail";
 
 const Register = () => {
+	const registerUserStatus = useSelector(
+		(store) => store.userSlice.registerUserStatus
+	);
+	const dispatch = useDispatch();
+	const navigate = useNavigate();
+	const [isRegistered, setIsRegistered] = useState(false);
+	const [isRegistering, setIsRegistering] = useState(false);
+	useEffect(() => {
+		setIsRegistered(false);
+		if (registerUserStatus === "success" && isRegistering) {
+			console.log("im here")
+			dispatch(verifyEmail());
+			setIsRegistered(true);
+		}
+	}, [registerUserStatus]);
+	console.log(isRegistered)
+
 	const formSchema = Yup.object().shape({
 		firstName: Yup.string()
 			.required("First Name is Required.")
@@ -36,12 +54,17 @@ const Register = () => {
 		},
 		validationSchema: formSchema,
 	});
-	const isLoading = useSelector((store) => store.userSlice.isLoading);
-	const dispatch = useDispatch();
 
 	return (
 		<div className="h-screen flex justify-center md:grid place-items-center place-content-center px-3 grid-cols-2 md:p-8  font-helvetica font-light">
-			<NavBar/>
+			<NavBar />
+			<div
+				className={` z-[1000] fixed top-0 left-0 w-full h-full flex justify-center items-center bg-black bg-opacity-40  ${
+					isRegistered ? "" : "hidden"
+				}`}
+			>
+				<VerifyEmail setIsRegistered={setIsRegistered} />
+			</div>
 			<div className=" hidden md:flex flex-col p-9 bg-gray-100 mr-6 shadow-sm justify-center items-center">
 				<h1 className=" font-medium">
 					Join Our Community and Start Sharing Your Story!
@@ -129,8 +152,16 @@ const Register = () => {
 						{formik.touched.password && formik.errors.password}
 					</h1>
 				</div>
-				<button type="submit" className="form-btn mt-4">
-					{isLoading ? <LoadingSpinner /> : "Register"}
+				<button
+					onClick={() => setIsRegistering(true)}
+					type="submit"
+					className="form-btn mt-4"
+				>
+					{registerUserStatus === "loading" ? (
+						<LoadingSpinner />
+					) : (
+						"Register"
+					)}
 				</button>
 
 				<div className=" mt-8">

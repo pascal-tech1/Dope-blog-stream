@@ -12,7 +12,7 @@ const {
 	followingUserCtrl,
 	unFollowingUserCtrl,
 	sendAcctVerificationEmailCtrl,
-	AcctVerificationCtrl,
+	confirmSentEmailCtrl,
 	sendPasswordResetEmailCtrl,
 	resetPasswordCtrl,
 	profilePhotoUploadCtrl,
@@ -64,14 +64,10 @@ userRoutes.post(
 	ProfilePhotResize,
 	profilePhotoUploadCtrl
 );
-userRoutes.post(
-	"/send-email",
-	authMiddleWare,
-	sendAcctVerificationEmailCtrl
-);
-userRoutes.post("/verify-Account", authMiddleWare, AcctVerificationCtrl);
+userRoutes.post("/send-email", sendAcctVerificationEmailCtrl);
+userRoutes.post("/confirm-sent-email", confirmSentEmailCtrl);
 userRoutes.post("/forget-password", sendPasswordResetEmailCtrl);
-userRoutes.put("/reset-password", resetPasswordCtrl);
+userRoutes.updatePasswordCtrl("/reset-password", resetPasswordCtrl);
 userRoutes.post("/follow", authMiddleWare, followingUserCtrl);
 userRoutes.post("/unfollow", authMiddleWare, unFollowingUserCtrl);
 userRoutes.put("/updatePassword", authMiddleWare, updatePasswordCtrl);

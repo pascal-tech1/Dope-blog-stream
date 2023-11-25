@@ -1,15 +1,16 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { loginUser } from "../redux/user/userSlice";
 import { LoadingSpinner } from "../utils/Spinner";
-import { NavBar } from "../components";
+import { ForgotPassword, NavBar } from "../components";
 
 const Login = () => {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
+	const [isOpen, setIsOpen] = useState(false);
 
 	const { user, isLoading } = useSelector((store) => store.userSlice);
 
@@ -44,6 +45,13 @@ const Login = () => {
 
 	return (
 		<div className="h-screen flex justify-center md:grid place-items-center place-content-center px-3 grid-cols-2 md:p-8  font-helvetica font-light">
+			<div
+				className={` z-[1000] fixed top-0 left-0 w-full h-full flex justify-center items-center bg-black bg-opacity-40  ${
+					isOpen ? "" : "hidden"
+				}`}
+			>
+				<ForgotPassword setIsOpen={setIsOpen} />
+			</div>
 			<NavBar />
 			<div className=" hidden md:flex flex-col p-9 bg-gray-100 mr-6 shadow-sm justify-center items-center">
 				<h1 className=" font-medium">Get Ready to Be Inspired</h1>
@@ -104,6 +112,13 @@ const Login = () => {
 				<button type="submit" className="form-btn mt-4">
 					{isLoading ? <LoadingSpinner /> : "login"}
 				</button>
+
+				<h3
+					onClick={() => setIsOpen(true)}
+					className=" cursor-pointer self-end text-blue-600 hover:text-blue-800 transition-all delay-75"
+				>
+					forget password
+				</h3>
 
 				<div className=" mt-8">
 					<h3 className=" font-light font-helvetica text-gray-500">

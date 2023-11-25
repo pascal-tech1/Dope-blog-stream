@@ -1,13 +1,17 @@
-import React, { useEffect } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchSinglePost } from "../redux/post/singlePostSlice";
+import { fetchSinglePost, setStatus } from "../redux/post/singlePostSlice";
 import { useParams } from "react-router-dom";
 import NavBar from "../components/NavBar";
 
-import { LikesSaveViews, MessageUser } from "../components";
+import { LazyLoadImg, LikesSaveViews, MessageUser } from "../components";
 import { AiOutlineMessage } from "react-icons/ai";
 import { useInView } from "react-intersection-observer";
-import { fetchMorePost, fetchUserPost } from "../redux/post/morePostSlice";
+import {
+	clearUserPost,
+	fetchMorePost,
+	fetchUserPost,
+} from "../redux/post/morePostSlice";
 
 import {
 	FollowingBtn,
@@ -15,30 +19,72 @@ import {
 	MorePost,
 	PostUserInfo,
 } from "../components";
-import { fetchPostByCategory } from "../redux/post/allPostSlice";
+import {
+	clearMorePost,
+	fetchPostByCategory,
+} from "../redux/post/allPostSlice";
 
 const SinglePost = () => {
 	const { id } = useParams();
-	const { post, status } = useSelector((store) => store.singlePostSlice);
+	const [pageNumber, setPageNumber] = useState(1);
 	const dispatch = useDispatch();
 
-	const { userPost, userPostStatus, morePost, morePostStatus } =
-		useSelector((store) => store.morePostSlice);
+	// state imports
+	const { post, status } = useSelector((store) => store.singlePostSlice);
+	const { morePost, morePostStatus, morePostHasMore, isLoading } =
+		useSelector((store) => store.allPostSlice);
+	const { userPost, userPostStatus } = useSelector(
+		(store) => store.morePostSlice
+	);
+	//
+	console.log(pageNumber);
+	const observer = useRef();
+	const lastPostRef = useCallback(
+		(node) => {
+			if (status !== "success") return;
+			if (morePostStatus === "loading") return;
+			if (userPostStatus === "loading") return;
+			if (observer.current) observer.current.disconnect();
+			observer.current = new IntersectionObserver((entries) => {
+				if (entries[0].isIntersecting) {
+					dispatch(clearUserPost());
+					dispatch(clearMorePost());
+					setPageNumber(1);
 
-	const { ref, inView } = useInView();
+					dispatch(
+						fetchUserPost({ postId: post?._id, userId: post?.user?._id })
+					);
+
+					dispatch(
+						fetchPostByCategory({
+							page: 1,
+							postNumberPerPage: 10,
+							where: "morePost",
+						})
+					);
+					dispatch(setStatus("idle"));
+				}
+			});
+			if (node) observer.current.observe(node);
+		},
+		[status, morePostStatus, userPostStatus, morePostHasMore]
+	);
 
 	useEffect(() => {
 		if (post?._id !== id) dispatch(fetchSinglePost(id));
 	}, [id]);
 
 	useEffect(() => {
-		if (inView && userPostStatus !== "success") {
+		pageNumber > 1 &&
 			dispatch(
-				fetchUserPost({ postId: post?._id, userId: post?.user?._id })
+				fetchPostByCategory({
+					page: pageNumber,
+					postNumberPerPage: 10,
+					where: "morePost",
+				})
 			);
-			dispatch(fetchMorePost(10));
-		}
-	}, [inView]);
+	}, [pageNumber]);
+
 	if (status === "loading")
 		return (
 			<div className=" grid place-content-center mt-8">
@@ -50,11 +96,12 @@ const SinglePost = () => {
 			<div className=" text-red-600">failed to fetch Post try again</div>
 		);
 	}
-	if (status === "success")
+
+	if (post)
 		return (
 			<div className="">
 				<NavBar />
-				<div className=" mt-16 mx-6 font-inter flex flex-col  lg:mx-auto max-w-[50rem] gap-[0.5rem] -z-50">
+				<div className=" mt-16 mx-6 font-inter flex flex-col   lg:mx-auto max-w-[50rem] gap-[0.5rem] -z-50">
 					<div>
 						<h1 className=" font-bold text-sm md:text-2xl my-4">
 							{post?.title}
@@ -65,19 +112,26 @@ const SinglePost = () => {
 						<PostUserInfo post={post} />
 						<LikesSaveViews post={post} />
 					</div>
-					<div className=" rounded-md flex items-center justify-center">
-						<img
-							src={post?.image}
-							alt=""
-							className="rounded-lg w-full object-cover h-[400px]"
-						/>
+
+					<div className="">
+						{/* <LazyLoadImg
+							backgroundClassName={" rounded-md h-full w-full relative  "}
+							imgClassName={
+								" inset-0 w-full h-full object-cover rounded-md "
+							}
+							originalImgUrl={post?.image}
+							// blurImageStr={post?.blurImageUrl}
+							optimizationStr={"q_auto,f_auto"}
+						/> */}
+						<img className="" src={post?.image} alt="" />
 					</div>
+
 					<div
 						className=" "
 						dangerouslySetInnerHTML={{ __html: post?.content }}
 					></div>
 
-					<div ref={ref} className=" border-y py-4 my-4 ">
+					<div ref={lastPostRef} className=" border-y py-4 my-4 ">
 						<div className="flex justify-between flex-col my-4">
 							<img
 								src={post?.user?.profilePhoto}
@@ -124,7 +178,7 @@ const SinglePost = () => {
 					)}
 
 					{/* more post from blogvana */}
-					<div className=" my-6">
+					<div className=" my-6 flex flex-col">
 						<h1 className=" flex items-center gap-3  justify-center font-bold text-xl mb-4">
 							More Posts from Blogvana{" "}
 							<span>
@@ -136,8 +190,23 @@ const SinglePost = () => {
 							</span>
 						</h1>
 						{morePost && (
-							<MorePost post={morePost} status={morePostStatus} />
+							<MorePost post={morePost} status={isLoading} />
 						)}
+						{console.log(isLoading)}
+						<div className=" self-center">
+							{morePostHasMore ? (
+								<button
+									onClick={() => {
+										setPageNumber((prev) => prev + 1);
+									}}
+									className=" bg-blue-400  text-white px-2 my-4  rounded-md hover:bg-blue-600 transition-all delay-75"
+								>
+									{isLoading ? <Spinner /> : "load more"}
+								</button>
+							) : (
+								<h1 className=" text-yellow-400">NO more Post</h1>
+							)}
+						</div>
 					</div>
 				</div>
 			</div>

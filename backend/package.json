@@ -9,6 +9,7 @@
   "author": "Pascal",
   "license": "ISC",
   "dependencies": {
+    "axios": "^1.6.2",
     "bad-words": "^3.0.4",
     "bcryptjs": "^2.4.3",
     "cloudinary": "^1.40.0",

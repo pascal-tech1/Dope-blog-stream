@@ -2,7 +2,10 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import customFetch from "../../utils/axios";
 import { toast } from "react-toastify";
 import { updateSinglePost } from "./allPostSlice";
-import { updateNumbPostViewInMorePostSlice, updateUserViewHistory } from "./morePostSlice";
+import {
+	updateNumbPostViewInMorePostSlice,
+	updateUserViewHistory,
+} from "./morePostSlice";
 
 export const fetchSinglePost = createAsyncThunk(
 	"fetchSingle/Post",
@@ -20,7 +23,7 @@ export const fetchSinglePost = createAsyncThunk(
 					numViews: resp.data.numViews,
 				})
 			);
-			console.log(resp.data)
+			console.log(resp.data);
 			dispatch(updateUserViewHistory(resp.data));
 			return resp.data;
 		} catch (error) {
@@ -132,6 +135,11 @@ const singlePostSlice = createSlice({
 			state.isEditing = false;
 			state.postEditingStatus = "idle";
 		},
+		setStatus: (state, { payload }) => {
+			console.log('im here')
+			console.log(payload)
+			state.status = payload;
+		},
 	},
 
 	extraReducers: {
@@ -199,5 +207,6 @@ export const {
 	setSinglePostStatus,
 	clearSinglesliceState,
 	setPostToBeEdited,
+	setStatus
 } = singlePostSlice.actions;
 export default singlePostSlice.reducer;

@@ -76,7 +76,7 @@ const Home = () => {
 					</div>
 				</main>
 				{/* left section */}
-				<main className=" grid-cols-3 col-span-2 hidden md:grid md:mx-6 ">
+				<main className=" grid-cols-3 col-span-2 hidden md:grid px-3 ">
 					<div className=" fixed h-[85vh] overflow-y-auto custom-scrollbar mb-11">
 						<div className=" m-4 mr-14 px-2 h-screen border-l">
 							<div className="flex gap-2  bg-gray-100 p-4 h-max place-self-center">

@@ -4,15 +4,21 @@ import customFetch from "../../utils/axios";
 
 export const fetchPostByCategory = createAsyncThunk(
 	"fetch/PostByCategory",
-	async (_, { getState, rejectWithValue, dispatch }) => {
+	async (params, { getState, rejectWithValue, dispatch }) => {
 		const { page, postNumberPerPage, activeCategory, searchQuery } =
 			getState().allPostSlice;
+		const newPage = params?.page || page;
+		const newPostNumberPerPaage =
+			params?.postNumberPerPage || postNumberPerPage;
+
 		try {
 			const resp = await customFetch(
-				`/posts/?page=${page}&postNumberPerPage=${postNumberPerPage}&category=${activeCategory}&searchQuery=${searchQuery}`
+				`/posts/?page=${newPage}&postNumberPerPage=${newPostNumberPerPaage}&category=${activeCategory}&searchQuery=${searchQuery}&where=${params?.where}`
 			);
-			return resp.data;
+
+			return { data: resp.data, fromWhere: params?.where };
 		} catch (error) {
+			console.log(error);
 			if (!error?.response) {
 				throw new Error(error);
 			}
@@ -29,6 +35,9 @@ const initialState = {
 	searchQuery: "",
 	hasMore: true,
 	activeCategory: "all",
+	morePost: [],
+	morePostStatus: "idle",
+	morePostHasMore: true,
 };
 
 const allPostSlice = createSlice({
@@ -86,31 +95,42 @@ const allPostSlice = createSlice({
 				}
 			});
 		},
+		clearMorePost: (state) => {
+			state.morePost = [];
+			state.morePostHasMore = true;
+		},
 	},
 
 	extraReducers: {
 		[fetchPostByCategory.pending]: (state, action) => {
 			state.isLoading = true;
 		},
-		[fetchPostByCategory.fulfilled]: (state, action) => {
-			if (action.payload.length < 10) {
-				state.hasMore = false;
-				state.allPost = [...state.allPost, ...action.payload];
+		[fetchPostByCategory.fulfilled]: (state, { payload }) => {
+			if (payload?.fromWhere === "morePost") {
+				if (payload.data.length < 10) {
+					state.morePostHasMore = false;
+					state.morePost = [...state.morePost, ...payload.data];
+				} else {
+					state.morePost = [...state.morePost, ...payload.data];
+				}
+				state.morePostStatus = false;
 			} else {
-				state.allPost = [...state.allPost, ...action.payload];
+				if (payload.data.length < 10) {
+					state.hasMore = false;
+					state.allPost = [...state.allPost, ...payload.data];
+				} else {
+					state.allPost = [...state.allPost, ...payload.data];
+				}
 			}
 			state.isLoading = false;
-
-			state.serverErr = undefined;
-			state.appErr = undefined;
 		},
-		[fetchPostByCategory.rejected]: (state, action) => {
-			(state.isLoading = false),
-				(state.serverErr = action?.error?.message);
-			state.appErr = action?.payload?.message;
-			state.appErr
-				? toast.error(state.appErr)
-				: toast.error(state.serverErr);
+		[fetchPostByCategory.rejected]: (state, { payload }) => {
+			state.isLoading = false;
+			if (payload?.fromWhere === "morePost") {
+				toast.error("fetching more Post faild try again later");
+			} else {
+				toast.error("fetching post failed try again later");
+			}
 		},
 	},
 });
@@ -123,5 +143,6 @@ export const {
 	setFetchFirstCategory,
 	setActiveCategory,
 	setEmptySearch,
+	clearMorePost,
 } = allPostSlice.actions;
 export default allPostSlice.reducer;

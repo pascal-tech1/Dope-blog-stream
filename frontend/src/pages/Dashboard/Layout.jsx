@@ -5,7 +5,7 @@ import { Outlet } from "react-router-dom";
 import { DashboardSideBar, DashboardNavBAr } from "../../components";
 
 const Layout = () => {
-	const [isDrpDownOpen, setIsDropDownOpen] = useState(false);
+	const [isDrpDownOpen, setIsDropDownOpen] = useState(true);
 
 	const handleToggleSideBarMenu = (data) => {
 		setIsDropDownOpen(data);
@@ -49,9 +49,9 @@ const Layout = () => {
 			<div
 				className={`${
 					isDrpDownOpen
-						? "absolute top-7 md:top-0  md:relative overflow-y-auto"
-						: "hidden"
-				}    md:col-start-1 col-span-2 row-start-1 row-span-2 h-screen z-[50] custom-scrollbar bg-white drop-shadow-sm rounded-md   `}
+						? "absolute top-7 md:top-0  md:relative "
+						: "hidden "
+				}    md:col-start-1 col-span-2 row-start-1 row-span-2 h-screen z-[50] overflow-y-auto custom-scrollbar bg-white drop-shadow-sm rounded-md px-2   `}
 			>
 				<DashboardSideBar />
 			</div>

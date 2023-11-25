@@ -11,6 +11,7 @@ import {
 	fetchPostByCategory,
 	setFirstSearch,
 } from "../redux/post/allPostSlice.js";
+import LazyLoadImg from "./LazyLoadImg.jsx";
 
 const NavBar = () => {
 	const user = useSelector((store) => store?.userSlice.user);
@@ -40,7 +41,7 @@ const NavBar = () => {
 	});
 	return (
 		<div className="fixed top-0 w-full border-b bg-white bg-opacity-20 backdrop-blur z-50">
-			<div className=" flex justify-between my-2 mx-4 md:mx-10 items-center lg:ml-20">
+			<div className=" flex justify-between my-2 mx-2 md:mx-10 items-center lg:ml-20 flex-wrap">
 				<Link to="/" className=" border">
 					<img
 						src="../../public/blogvana.png"
@@ -53,7 +54,7 @@ const NavBar = () => {
 					className="relative w-1/3 justify-center  items-center"
 				>
 					<input
-						className=" px-1 font-sm py-1  border rounded-lg border-blue-200 text-center focus:outline-none focus:border-blue-400  w-full bg-transparent "
+						className=" text-xs md:text-base px-1 font-sm py-1  border rounded-lg border-blue-200 text-center focus:outline-none focus:border-blue-400  w-full bg-transparent "
 						type="search"
 						name="search"
 						id="seearch"
@@ -64,17 +65,23 @@ const NavBar = () => {
 				</form>
 				{user ? (
 					<div className=" flex place-content-between gap-1 md:gap-4 place-items-center">
-						<IoMdNotificationsOutline className="text-2xl md:text-3xl antialiased text-blue-400" />
 						<button
 							onClick={() => setShowLogOut(!showLogOut)}
 							className="flex items-center"
 						>
 							<div className=" flex items-center">
-								<div className="border border-blue-400 rounded-full py-1 px-1 ">
-									<img
-										className=" w-6 h-6 md:w-8 md:h-8 rounded-full"
-										src={user?.profilePhoto}
-										alt=""
+								{/* lazyloading */}
+								<div>
+									<LazyLoadImg
+										backgroundClassName={
+											" rounded-full w-10 h-10 md:w-12 md:h-12  relative border border-blue-400  "
+										}
+										imgClassName={
+											"absolute inset-0 w-full h-full  object-cover rounded-full "
+										}
+										originalImgUrl={user?.profilePhoto}
+										blurImageStr={user?.blurProfilePhoto}
+										optimizationStr={"q_auto,f_auto,w_100"}
 									/>
 								</div>
 								<MdOutlineArrowDropDown className="text-blue-400 transition-alls" />
@@ -100,7 +107,7 @@ const NavBar = () => {
 						</div>
 						<Link
 							to="/post-Create"
-							className=" mr-4 text-xs md:text-sm flex hover:border-gray-300 place-items-center gap-[0.3rem] border border-blue-200 px-1 py-1 md:px-2 rounded-md hover:bg-gray-100 transition-all"
+							className="  text-xs md:text-sm flex hover:border-gray-300 place-items-center gap-[0.3rem] border border-blue-200 px-1 py-1 md:px-2 rounded-md hover:bg-gray-100 transition-all"
 						>
 							<BsPencilSquare />
 							<h3 className=" hidden md:flex">write</h3>
