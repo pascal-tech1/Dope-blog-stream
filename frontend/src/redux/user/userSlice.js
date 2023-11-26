@@ -16,7 +16,7 @@ export const loginUser = createAsyncThunk(
 			const resp = await customFetch.post("/users/login", user);
 			return resp.data;
 		} catch (error) {
-			console.log(error)
+			console.log(error);
 			if (!error.response) {
 				throw new Error();
 			}
@@ -329,10 +329,9 @@ export const sendForgotPasswordEmail = createAsyncThunk(
 	async (email, { getState, rejectWithValue }) => {
 		try {
 			const resp = await customFetch.post(`/users/forget-password`, email);
-			console.log(resp.data);
+
 			return resp.data;
 		} catch (error) {
-			console.log(error);
 			if (!error?.response) {
 				throw new Error(error);
 			}
@@ -346,6 +345,27 @@ export const resetPassword = createAsyncThunk(
 	async (user, { getState, rejectWithValue }) => {
 		try {
 			const resp = await customFetch.post(`/users/reset-password`, user);
+			console.log(resp.data);
+			return resp.data;
+		} catch (error) {
+			console.log(error);
+			if (!error?.response) {
+				throw new Error(error);
+			}
+			return rejectWithValue(error?.response?.data);
+		}
+	}
+);
+
+export const updatePassword = createAsyncThunk(
+	"update/Password",
+	async (user, { getState, rejectWithValue }) => {
+		try {
+			const resp = await customFetch.post(`/users/update-password`, user, {
+				headers: {
+					Authorization: `Bearer ${getState().userSlice.token} `,
+				},
+			});
 			console.log(resp.data);
 			return resp.data;
 		} catch (error) {
@@ -669,6 +689,17 @@ const userSlice = createSlice({
 		},
 		[resetPassword.rejected]: (state, { payload }) => {
 			state.resetPasswordStatus = "failed";
+			toast.error(payload?.message);
+		},
+		[updatePassword.pending]: (state) => {
+			state.updatePasswordStatus = "loading";
+		},
+		[updatePassword.fulfilled]: (state, { payload }) => {
+			toast.success(payload?.message);
+			state.updatePasswordStatus = "success";
+		},
+		[updatePassword.rejected]: (state, { payload }) => {
+			state.updatePasswordStatus = "failed";
 			toast.error(payload?.message);
 		},
 	},

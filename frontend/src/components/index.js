@@ -27,6 +27,7 @@ import ProfilePhoto from "./ProfilePhoto";
 
 import LazyLoadImg from "./LazyLoadImg";
 import ForgotPassword from "./ForgotPassword";
+import UserDashboardMenu from "./UserDashboardMenu";
 
 export {
 	DashboardSideBar,
@@ -58,4 +59,5 @@ export {
 	ProfilePhoto,
 	LazyLoadImg,
 	ForgotPassword,
+	UserDashboardMenu,
 };

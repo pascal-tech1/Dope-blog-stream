@@ -32,11 +32,10 @@ const CreatePost = () => {
 		category,
 	} = useSelector((store) => store.singlePostSlice);
 
-	console.log(postToBeEdited);
 	const { allCategory } = useSelector((store) => store.categorySlice);
 	const [quillIsFocus, setQuillIsFocus] = useState(false);
 	const [postImage, setPostImage] = useState(null);
-	const [selectedFilter, setSelectedFilter] = useState("name");
+	const [selectedFilter, setSelectedFilter] = useState("general");
 
 	const url = postImage
 		? URL.createObjectURL(postImage)
@@ -54,10 +53,12 @@ const CreatePost = () => {
 				},
 			});
 			dispatch(clearSinglesliceState());
+			setSelectedFilter("General");
 		}
 	}, [postEditingStatus]);
 	useEffect(() => {
 		dispatch(fetchAllCategorys());
+		isEditing && setSelectedFilter(postToBeEdited?.category);
 	}, []);
 
 	const allCategorytitle = allCategory.map((category) => category.title);

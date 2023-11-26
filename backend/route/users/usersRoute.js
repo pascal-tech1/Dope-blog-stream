@@ -67,10 +67,10 @@ userRoutes.post(
 userRoutes.post("/send-email", sendAcctVerificationEmailCtrl);
 userRoutes.post("/confirm-sent-email", confirmSentEmailCtrl);
 userRoutes.post("/forget-password", sendPasswordResetEmailCtrl);
-userRoutes.updatePasswordCtrl("/reset-password", resetPasswordCtrl);
+userRoutes.post("/reset-password", resetPasswordCtrl);
 userRoutes.post("/follow", authMiddleWare, followingUserCtrl);
 userRoutes.post("/unfollow", authMiddleWare, unFollowingUserCtrl);
-userRoutes.put("/updatePassword", authMiddleWare, updatePasswordCtrl);
+userRoutes.post("/update-password", authMiddleWare, updatePasswordCtrl);
 userRoutes.put("/:USERID", authMiddleWare, updateUserDetailsCtrl);
 
 module.exports = userRoutes;

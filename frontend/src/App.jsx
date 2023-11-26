@@ -11,6 +11,7 @@ import {
 	Error,
 	VerifyEmail,
 	PasswordReset,
+	UpdatePassword,
 } from "./pages";
 import {
 	Comments,
@@ -74,6 +75,7 @@ const App = () => {
 				<Route path="/image" element={<Image />} />
 				<Route path="/reset-password/:token" element={<PasswordReset />} />
 				<Route path="/profile/:userId" element={<UserPage />} />
+				<Route path="/update-password" element={<UpdatePassword/>} />
 				<Route
 					path="/confirm-sent-email/:token"
 					element={<ComfirmEmailPage />}

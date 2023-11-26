@@ -9,6 +9,7 @@ import VerifyEmail from "../components/VerifyEmail";
 import ConfirmEmailPage from "./ComfirmEmailPage";
 import Error from "./Error";
 import PasswordReset from "./PasswordReset";
+import UpdatePassword from "./UpdatePassword";
 
 export {
 	Home,
@@ -22,4 +23,5 @@ export {
 	VerifyEmail,
 	ConfirmEmailPage,
 	PasswordReset,
+	UpdatePassword
 };

@@ -1,17 +1,21 @@
 import React, { useState } from "react";
 import { FiMenu } from "react-icons/fi";
-import { IoMdNotificationsOutline } from "react-icons/io";
+import { IoIosMenu } from "react-icons/io";
 import { BsPencilSquare } from "react-icons/bs";
-import { BiMessageRoundedDots } from "react-icons/bi";
+import { CiMenuKebab } from "react-icons/ci";
+
 import { Link } from "react-router-dom";
 import {
 	setIsEditingPost,
 	setPostToBeEdited,
 } from "../redux/post/singlePostSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import UserDashboardMenu from "./UserDashboardMenu";
 
 const DashboardNavBAr = ({ toggleSideMenu }) => {
 	const [isSideBarMenuopen, setIsSideBarmenuOpen] = useState(true);
+	const [isMenuOpen, setIsMenuOpen] = useState(true);
+	const { user } = useSelector((store) => store.userSlice);
 	const dispatch = useDispatch();
 	const handleOnclick = (e) => {
 		e.preventDefault();
@@ -20,7 +24,15 @@ const DashboardNavBAr = ({ toggleSideMenu }) => {
 	};
 
 	return (
-		<div className=" flex justify-between my-1 w-full bg-opacity-0 backdrop-blur top-0 right-0 z-50 ">
+		<div className=" flex my-1 w-full bg-opacity-0 backdrop-blur top-0 right-0 justify-around  z-50 items-center relative">
+			{isMenuOpen && (
+				<div className=" ">
+					<UserDashboardMenu
+						isMenuOpen={isMenuOpen}
+						setIsMenuOpen={setIsMenuOpen}
+					/>
+				</div>
+			)}
 			<FiMenu
 				onClick={handleOnclick}
 				className=" text-xl ml-6  text-gray-900"
@@ -34,7 +46,7 @@ const DashboardNavBAr = ({ toggleSideMenu }) => {
 			/>
 			<div className="flex space-x-3 mr-2 items-center ">
 				<h3 className=" hidden md:flex text-xs border-l pl-4  pr-1">
-					Hello, Onyeka
+					Hello, {user?.lastName}
 				</h3>
 				<Link
 					onClick={(e) => {
@@ -49,18 +61,23 @@ const DashboardNavBAr = ({ toggleSideMenu }) => {
 					<BsPencilSquare className=" text-inherit" />
 					<h3 className="hidden md:flex text-xs">new</h3>
 				</Link>
-				{/* <img
-					src="../../public/person.png"
-					alt=""
-					className=" w-8 h-8  rounded-full mr-4"
-				/> */}
+				<div
+					onClick={() => setIsDropdownOpen(true)}
+					className=" rounded-full w-6 h-6 text-blue-400 "
+				>
+					<img
+						src={user?.profilePhoto}
+						alt=""
+						className=" rounded-full h-full w-full "
+					/>
+				</div>
+				<div
+					onClick={() => setIsMenuOpen(!isMenuOpen)}
+					className=" p-1 rounded-full hover:cursor-pointer hover:bg-gray-400  transition-all delay-75 hover:text-white"
+				>
+					<CiMenuKebab />
+				</div>
 			</div>
-			{/* <h3 className=" border-l pl-4  pr-1 md:hidden">Hello, Onyeka</h3>
-				<img
-					src="../../public/person.png"
-					alt=""
-					className=" w-8 h-8  rounded-full mr-4"
-				/> */}
 		</div>
 	);
 };
