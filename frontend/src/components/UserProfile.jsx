@@ -5,7 +5,8 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { updateUser } from "../redux/user/userSlice";
 
-import { MdEdit } from "react-icons/md";
+import { MdApps, MdEdit, MdWork } from "react-icons/md";
+import { BiMap } from "react-icons/bi";
 
 const UserProfile = () => {
 	const [isUserProfileClicked, setIsUserProfileClicked] = useState(false);
@@ -105,8 +106,14 @@ const UserProfile = () => {
 			) : (
 				<div className="transition-all self-start ">
 					<h1 className=" font-bold  md:text-lg">{`${user?.firstName} ${user?.lastName}`}</h1>
-					<h3 className=" font-bold text-gray-500 text-sm">{`Profession : ${user?.profession}`}</h3>
-					<h3 className="font-bold text-gray-500 text-sm">{`Location : ${user?.location}`}</h3>
+					<div className=" font-bold text-gray-500 text-sm flex gap-2 items-center">
+						{" "}
+						<MdWork className=" text-blue-400" /> {user?.profession}
+					</div>
+					<div className="font-bold text-gray-500 text-sm flex gap-2 items-center">
+						{" "}
+						<BiMap className=" text-blue-400" /> {user?.location}
+					</div>
 				</div>
 			)}
 

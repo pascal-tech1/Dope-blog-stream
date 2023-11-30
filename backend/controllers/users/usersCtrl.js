@@ -10,10 +10,12 @@ const crypto = require("crypto");
 const email = require("../../config/email");
 const handleCloudinaryUpload = require("../../config/cloundinary/cloudinaryUploadConfig");
 const UserProfileView = require("../../model/userProfileView/userProfileView");
-const { default: mongoose } = require("mongoose");
+const { default: mongoose, isValidObjectId } = require("mongoose");
 const { filterUserCriteria } = require("../../utils/filterSortCriteria");
 const Post = require("../../model/post/Post");
 const emailVerificationHtml = require("./sendEmailVerificationLink");
+const emailChangeVerificationHtml = require("./sendChangeEmailLink");
+const SavedPosts = require("../../model/savedPosts/savedPosts");
 
 // '''''''''''''''''''''''''''''''''''''''''
 //         Register user
@@ -80,7 +82,6 @@ const userLoginCtrl = expressAsyncHandler(async (req, res) => {
 			userFound &&
 			(await userFound.isPasswordCorrect(req?.body?.password))
 		) {
-			console.log(userFound);
 			res.status(200).json({
 				status: "success",
 				user: userFound,
@@ -139,36 +140,38 @@ const fetchUserDetailsCtrl = expressAsyncHandler(async (req, res) => {
 	validateMongoDbUserId(userId);
 
 	try {
-		const foundUser = await User.findById(userId)
-			.select([
-				"_id",
-				"firstName",
-				"lastName",
-				"profilePhoto",
-				"blurProfilePhoto",
-				"email",
-				"profession",
-				"location",
-				"language",
-				"education",
-				"isBlocked",
-				"isAdmin",
-				"bio",
-				"following",
-				"createdAt",
-				"nickName",
-				"coverPhoto",
-			])
-			.populate({
-				path: "following",
-				select: [
-					"_id",
-					"firstName",
-					"lastName",
-					"profilePhoto",
-					"blurProfilePhoto",
-				],
-			});
+		const foundUser = await User.aggregate([
+			{ $match: { _id: new mongoose.Types.ObjectId(userId) } },
+			{
+				$addFields: {
+					followersCount: { $size: "$followers" },
+					followingCount: { $size: "$following" },
+				},
+			},
+
+			{
+				$project: {
+					_id: 1,
+					firstName: 1,
+					lastName: 1,
+					profilePhoto: 1,
+					blurProfilePhoto: 1,
+					email: 1,
+					profession: 1,
+					location: 1,
+					language: 1,
+					education: 1,
+					blurCoverPhoto: 1,
+					bio: 1,
+					createdAt: 1,
+					nickName: 1,
+					coverPhoto: 1,
+					followersCount: "$followersCount",
+					followingCount: "$followingCount",
+					postsCount: "$postsCount",
+				},
+			},
+		]);
 
 		if (loginUserId.toString() !== userId.toString()) {
 			let allreadyViewed = await UserProfileView.findOne({
@@ -194,7 +197,7 @@ const fetchUserDetailsCtrl = expressAsyncHandler(async (req, res) => {
 			}
 		}
 
-		res.status(200).json({ foundUser });
+		res.status(200).json({ foundUser: foundUser[0] });
 	} catch (error) {
 		console.log(error);
 		res.status(500).json(error);
@@ -426,8 +429,7 @@ const confirmSentEmailCtrl = expressAsyncHandler(async (req, res) => {
 				return;
 			} else {
 				res.json({
-					message:
-						"your email address has been successfully verified. Welcome to BlogVana, where innovation meets excellence! ",
+					message: "your email address has been successfully verified. ",
 				});
 				return;
 			}
@@ -444,7 +446,6 @@ const confirmSentEmailCtrl = expressAsyncHandler(async (req, res) => {
 
 const sendPasswordResetEmailCtrl = expressAsyncHandler(
 	async (req, res) => {
-		console.log(req.body);
 		const { email } = req?.body;
 
 		const foundUser = await User.findOne({ email: email });
@@ -558,6 +559,68 @@ const updatePasswordCtrl = expressAsyncHandler(async (req, res) => {
 		res.status(400).json({ message: error.message });
 	}
 });
+const ChangeEmailCtrl = expressAsyncHandler(async (req, res) => {
+	try {
+		const { email } = req?.body;
+		const { password } = req?.body;
+		const { newEmail } = req?.body;
+		const loginUser = req.user;
+		if (email === newEmail)
+			throw new Error("old and new Email can't be the same");
+		if (email !== loginUser.email) throw new Error("invalid credentials");
+
+		// console.log(loginUser)
+		const foundUser = await User.findOne({ email: email });
+		const isPasswordMatch = await foundUser.isPasswordCorrect(password);
+		if (!isPasswordMatch) throw new Error("invalid credentials");
+
+		const verificationToken = await foundUser.accountVerificationHandler();
+		await foundUser.save();
+
+		const emailToSend = emailChangeVerificationHtml(
+			foundUser.firstName,
+			verificationToken,
+			newEmail
+		);
+		let mailDetails = {
+			from: "pascalazubike003@gmail.com",
+			to: `${newEmail}`,
+			subject: "Account Email Change activation token",
+			html: emailToSend,
+		};
+
+		mailTransporter.sendMail(mailDetails, function (err, data) {
+			if (err) {
+				// "throw new Error("failed to send message");"
+				res.status(500).json({ message: "failed to send message" });
+			} else {
+			}
+		});
+		updateduser = await User.findByIdAndUpdate(
+			foundUser._id,
+			{
+				email: newEmail,
+				isAccountVerified: false,
+			},
+			{
+				new: true,
+				runValidators: true,
+			}
+		);
+
+		res.json({
+			message:
+				"email change successfully, check your email to verify your new email",
+			mailDetails,
+		});
+		return;
+	} catch (error) {
+		res.status(500).json({
+			status: "failed",
+			message: error.message,
+		});
+	}
+});
 
 // '''''''''''''''''''''''''''''''''''''''''
 //       profile photo upload
@@ -601,11 +664,13 @@ const profilePhotoUploadCtrl = expressAsyncHandler(async (req, res) => {
 		}
 		if (data.whatUploading === "coverPhoto") {
 			user.coverPhoto = uploadedImage.url;
+			user.blurCoverPhoto = req.blurProfilePhoto;
 			await user.save();
 
 			res.send({
 				message: "cover image uploaoded successfully",
 				userImage: user.coverPhoto,
+				blurCoverPhoto: user.blurCoverPhoto,
 				whatUploading: data.whatUploading,
 			});
 			return;
@@ -627,63 +692,17 @@ const savePostCtrl = expressAsyncHandler(async (req, res) => {
 	const { postId } = req?.body;
 
 	try {
-		const postToBeSaved = await Post.findById(postId).select([
-			"_id",
-			"image",
-			"title",
-		]);
-
-		const { savedPost } = await User.findById(loginUserId).select(
-			"savedPost"
-		);
-
-		if (savedPost.includes(postId)) {
-			await User.findByIdAndUpdate(loginUserId, {
-				$pull: { savedPost: postId },
-			});
-			const { savedPost } = await User.findByIdAndUpdate(
-				loginUserId,
-				{
-					$push: { savedPost: postId },
-				},
-				{
-					new: true,
-				}
-			)
-
-				.populate("savedPost")
-				.select("savedPost")
-				.sort({
-					createdAt: -1,
-				});
-			res.status(200).json({
-				message: "post is already in your saved post",
-				postToBeSaved,
-			});
-
-			return;
-		} else {
-			const { savedPost } = await User.findByIdAndUpdate(
-				loginUserId,
-				{
-					$push: { savedPost: postId },
-				},
-				{
-					new: true,
-				}
-			)
-
-				.populate("savedPost")
-				.select("savedPost")
-				.sort({
-					createdAt: -1,
-				});
-			res.status(200).json({
-				message: "post saved Successfully",
-				postToBeSaved,
-			});
-			return;
-		}
+		let savedPost = await SavedPosts.findOneAndUpdate(
+			{ post: postId, user: loginUserId },
+			{ $set: { updatedAt: new Date() } },
+			{ upsert: true, new: true }
+		).populate({
+			path: "post",
+			select: ["image", "title", "createdAt", "blurImageUrl"],
+		});
+		res
+			.status(200)
+			.json({ message: "Post saved successfully", savedPost });
 	} catch (error) {
 		console.log(error);
 		res
@@ -724,9 +743,11 @@ const fetchUserFollowingListCtrl = expressAsyncHandler(
 		const skip = (pageNumber - 1) * numberPerPage;
 
 		try {
-			const { following } = await User.findById(userId).select(
-				"following"
-			);
+			const { following } = await User.findById(userId)
+				.populate({
+					path: "following",
+				})
+				.select("following");
 			const userfollowinglist = await User.findById(userId)
 				.populate({
 					path: "following",
@@ -750,6 +771,7 @@ const fetchUserFollowingListCtrl = expressAsyncHandler(
 				userfollowinglist: userfollowinglist,
 			});
 		} catch (error) {
+			console.log(error);
 			res.status(500).json({ message: "Internal Server Error" });
 		}
 	}
@@ -763,9 +785,11 @@ const fetchUserFollowersListCtrl = expressAsyncHandler(
 		const skip = (pageNumber - 1) * numberPerPage;
 
 		try {
-			const { followers } = await User.findById(userId).select(
-				"followers"
-			);
+			const { followers } = await User.findById(userId)
+				.populate({
+					path: "followers",
+				})
+				.select("followers");
 			const userfollowerslist = await User.findById(userId)
 				.populate({
 					path: "followers",
@@ -833,13 +857,26 @@ const fetchUserCountsCtrl = expressAsyncHandler(async (req, res) => {
 
 const fetchWhoViewedUserProfileCtrl = expressAsyncHandler(
 	async (req, res) => {
+		const page = req.query.page;
+		const numberPerPage = req.query.numberPerPage;
 		const { _id } = req.user;
 		if (!_id) throw new Error("User Id is Required");
 
 		try {
+			const usersViewedJustForLength = await User.findById(_id).populate({
+				path: "userWhoViewProfile",
+				populate: {
+					path: "viewedBy",
+				},
+			});
+
+			const whoViewUserProfileCount =
+				usersViewedJustForLength.userWhoViewProfile.length;
 			const { userWhoViewProfile } = await User.findById(_id).populate({
 				path: "userWhoViewProfile",
-
+				options: { sort: { updatedAt: -1 } },
+				skip: (page - 1) * numberPerPage,
+				limit: numberPerPage,
 				populate: {
 					path: "viewedBy",
 					select: [
@@ -853,7 +890,11 @@ const fetchWhoViewedUserProfileCtrl = expressAsyncHandler(
 				},
 			});
 
-			res.status(200).json({ status: "success", userWhoViewProfile });
+			res.status(200).json({
+				status: "success",
+				userWhoViewProfile,
+				whoViewUserProfileCount,
+			});
 		} catch (error) {
 			console.log(error);
 			res.status(500).json({ status: "failed", message: error.message });
@@ -908,19 +949,41 @@ const fetchPostImpressionsCount = expressAsyncHandler(async (req, res) => {
 });
 
 const fetchAllUserCtrl = expressAsyncHandler(async (req, res) => {
-	const { filter } = req.query;
+	const { filter, searchTerm } = req.query;
+
 	const page = parseInt(req.query.page) || 1;
 	const numberPerPage = parseInt(req.query.numberPerPage) || 10;
+	const regexPattern = new RegExp(`.*${searchTerm}.*`, "i");
 
 	const sortingObject = filterUserCriteria(filter);
+	let searchQuery;
+
+	if (searchTerm) {
+		if (isValidObjectId(searchTerm)) {
+			searchQuery = { _id: new mongoose.Types.ObjectId(searchTerm) };
+		} else {
+			searchQuery = {
+				$or: [
+					{ firstName: { $regex: regexPattern } },
+					{ lastName: { $regex: regexPattern } },
+					{ email: { $regex: regexPattern } },
+				],
+			};
+		}
+	} else {
+		searchQuery = {};
+	}
 
 	try {
 		const users = await User.aggregate([
 			{
+				$match: searchQuery,
+			},
+			{
 				$lookup: {
-					from: "posts", // Change this to the actual name of your Posts collection
+					from: "posts",
 					localField: "_id",
-					foreignField: "user", // Assuming there's a field in Posts that references the User
+					foreignField: "user",
 					as: "Posts",
 				},
 			},
@@ -1053,4 +1116,5 @@ module.exports = {
 	fetchWhoViewedUserProfileCtrl,
 	fetchPostImpressionsCount,
 	blockOrUnblockUserCtrl,
+	ChangeEmailCtrl,
 };

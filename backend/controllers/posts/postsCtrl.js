@@ -10,6 +10,8 @@ const decodeToken = require("../../utils/DecodeLoginUser");
 const mongoose = require("mongoose");
 const path = require("path");
 const { filterCriteria } = require("../../utils/filterSortCriteria");
+const PostViewedHistory = require("../../model/postHistory/PostViewedHistory");
+const { isValidObjectId } = require("mongoose");
 
 // '''''''''''''''''''''''''''''''''''''''''
 //   Create Post conttoller
@@ -49,7 +51,6 @@ const createPostCtrl = expressAsyncHandler(async (req, res) => {
 				console.log("File deleted successfully");
 			}
 		});
-		
 
 		const post = await Post.create({
 			...req.body,
@@ -57,22 +58,34 @@ const createPostCtrl = expressAsyncHandler(async (req, res) => {
 			image: uploadedImage?.url,
 			blurImageUrl: req.blurImageUrl,
 		});
-	
+
 		res.json(post);
 	} catch (error) {
 		res.status(500).json({ message: error.message });
 	}
 });
 const fetchAllUserPostCtrl = expressAsyncHandler(async (req, res) => {
-	const { filter } = req.query;
+	const { filter, searchTerm } = req.query;
+
 	const page = parseInt(req.query.page) || 1; // Current page number, default to 1
 	const postNumberPerPage = parseInt(req.query.postNumberPerPage) || 10; // Number of items per page
-
+	const regexPattern = new RegExp(`.*${searchTerm}.*`, "i");
 	const sortingObject = filterCriteria(filter);
+	let searchQuery;
+
+	if (searchTerm) {
+		if (isValidObjectId(searchTerm)) {
+			searchQuery = { _id: new mongoose.Types.ObjectId(searchTerm) };
+		} else {
+			searchQuery = { category: { $regex: regexPattern } };
+		}
+	} else {
+		searchQuery = {};
+	}
 
 	try {
-		const Posts = await Post.find({});
-		const posts = await Post.find({})
+		const Posts = await Post.find(searchQuery);
+		const posts = await Post.find(searchQuery)
 			.populate({ path: "user", select: ["firstName", "lastName"] })
 			.sort(sortingObject)
 			.skip((page - 1) * postNumberPerPage)
@@ -104,11 +117,24 @@ const fetchAllUserPostCtrl = expressAsyncHandler(async (req, res) => {
 // '''''''''''''''''''''''''''''''''''''''''''''
 const fetchUserPostCtrl = expressAsyncHandler(async (req, res) => {
 	const { userId } = req.body;
-	const { filter } = req.query;
+	const { filter, searchTerm } = req.query;
+
 	const page = parseInt(req.query.page) || 1; // Current page number, default to 1
 	const postNumberPerPage = parseInt(req.query.postNumberPerPage) || 10; // Number of items per page
-
+	const regexPattern = new RegExp(`.*${searchTerm}.*`, "i");
 	const sortingObject = filterCriteria(filter);
+	let searchQuery;
+
+	if (searchTerm) {
+		searchQuery = {
+			$or: [
+				{ title: { $regex: regexPattern } },
+				{ category: { $regex: regexPattern } },
+			],
+		};
+	} else {
+		searchQuery = {};
+	}
 
 	try {
 		const { Posts } = await User.findById(userId)
@@ -122,6 +148,7 @@ const fetchUserPostCtrl = expressAsyncHandler(async (req, res) => {
 			.populate({
 				path: "Posts",
 				select: "-content",
+				match: searchQuery,
 				options: { sort: sortingObject },
 				skip: (page - 1) * postNumberPerPage,
 				limit: postNumberPerPage,
@@ -157,18 +184,29 @@ const fetchSinglePostsCtrl = expressAsyncHandler(async (req, res) => {
 		await post.save();
 
 		if (userToken) {
-			const loginUser = await decodeToken(userToken);
-			await User.findByIdAndUpdate(
-				loginUser._id,
+			const loginUserId = await decodeToken(userToken);
+			const thresholdTime = new Date();
+			thresholdTime.setHours(thresholdTime.getHours() - 24);
+
+			// Check if userViewedPost exists and updatedAt is within the last 24 hours
+
+			userViewedPost = await PostViewedHistory.findOneAndUpdate(
 				{
-					$push: { postViewHistory: post._id },
+					post: post._id,
+					user: loginUserId,
+					updatedAt: { $gte: thresholdTime },
 				},
-				{ new: true }
-			);
+				{ $set: { updatedAt: new Date() } },
+				{ upsert: true, new: true }
+			).populate({
+				path: "post",
+				select: ["image", "title", "createdAt", "blurImageUrl"],
+			});
 		}
-		res.json(post);
+		res.json({ post, userViewedPost });
 	} catch (error) {
-		res.json(error);
+		console.log(error);
+		res.json({ message: "fetching post failed try again" });
 	}
 });
 
@@ -234,7 +272,6 @@ const updatePostCtrl = expressAsyncHandler(async (req, res) => {
 			}
 		).populate("user");
 		res.json(post);
-	
 	} catch (error) {
 		console.log(error);
 		res.status(500).json({ messsage: error.message });
@@ -381,7 +418,6 @@ const searchPostCtrl = expressAsyncHandler(async (req, res) => {
 });
 
 const fetchPostByCategoryCtrl = expressAsyncHandler(async (req, res) => {
-	
 	let page = parseInt(req?.query?.page) || 1; // Current page,ipco
 	const postNumberPerPage = parseInt(req?.query?.postNumberPerPage) || 10; // Number of items per page
 	const category = req.query?.category;
@@ -390,7 +426,6 @@ const fetchPostByCategoryCtrl = expressAsyncHandler(async (req, res) => {
 
 	const sort = where === "morePost" && { category: -1 };
 
-	// Calculate the skip value to skip items on previous pages
 	let skip = (page - 1) * postNumberPerPage;
 	let filter;
 	if (category === "all" && searchQuery.length === 0) filter = {};
@@ -422,7 +457,6 @@ const fetchPostByCategoryCtrl = expressAsyncHandler(async (req, res) => {
 				],
 			})
 			.select("-content");
-		
 
 		// const newPostPromises = posts.map(async (post) => {
 		// 	const imageUrl = post.image;
@@ -459,33 +493,34 @@ const fetchUserPostHistoryCtrl = expressAsyncHandler(async (req, res) => {
 	const { _id } = req.user;
 
 	const page = parseInt(req.query.page) || 1; // Current page number, default to 1
-	const postNumberPerPage = parseInt(req.query.postNumberPerPage) || 10; // Number of items per page
+	const numberPerPage = parseInt(req.query.postNumberPerPage) || 10; // Number of items per page
 
 	try {
-		const { postViewHistory } = await User.findById(_id)
-			.populate({
-				path: "postViewHistory",
-				select: ["image", "title", "createdAt"],
-			})
-			.select("postViewHistory");
+		const postHistoryForLength = await User.findById(_id).populate({
+			path: "postViewHistory",
+		});
 
-		const totalPages = Math.ceil(
-			postViewHistory.length / postNumberPerPage
-		);
-		const startIndex = (page - 1) * postNumberPerPage;
-		const endIndex = page * postNumberPerPage;
+		const postHistoryTotalCount =
+			postHistoryForLength.postViewHistory.length;
 
-		const paginatedPosts = postViewHistory
-			.reverse()
-			.slice(startIndex, endIndex);
+		const { postViewHistory } = await User.findById(_id).populate({
+			path: "postViewHistory",
+			options: { sort: { updatedAt: -1 } },
+			skip: (page - 1) * numberPerPage,
+			limit: numberPerPage,
+			populate: {
+				path: "post",
+				select: ["image", "title", "createdAt", "blurImageUrl"],
+			},
+		});
 
 		res.json({
-			currentPage: page,
-			totalPages: totalPages,
-			posts: paginatedPosts,
+			totalPostHistory: postHistoryTotalCount,
+			posts: postViewHistory,
 		});
 	} catch (error) {
-		res.status(500).json({ message: "failed to fetch post history" });
+		console.log(error);
+		res.status(500).json({ message: error.message });
 	}
 });
 
@@ -493,29 +528,33 @@ const fetchUserSavedPostCtrl = expressAsyncHandler(async (req, res) => {
 	const { _id } = req.user;
 
 	const page = parseInt(req.query.page) || 1; // Current page number, default to 1
-	const postNumberPerPage = parseInt(req.query.postNumberPerPage) || 10; // Number of items per page
+	const numberPerPage = parseInt(req.query.postNumberPerPage) || 10; // Number of items per page
 
 	try {
-		const { savedPost } = await User.findById(_id)
-			.populate({
-				path: "savedPost",
-				select: ["image", "title", "createdAt"],
-			})
-			.sort({ _id: -1 })
-			.select("savedPost");
+		const savedPostForLength = await User.findById(_id).populate({
+			path: "savedPost",
+		});
 
-		const totalPages = Math.ceil(savedPost.length / postNumberPerPage);
-		const startIndex = (page - 1) * postNumberPerPage;
-		const endIndex = page * postNumberPerPage;
+		const savedPosTotalCount = savedPostForLength.savedPost.length;
 
-		const paginatedPosts = savedPost.reverse().slice(startIndex, endIndex);
+		const { savedPost } = await User.findById(_id).populate({
+			path: "savedPost",
+			options: { sort: { updatedAt: -1 } },
+			skip: (page - 1) * numberPerPage,
+			limit: numberPerPage,
+			populate: {
+				path: "post",
+				select: ["image", "title", "createdAt", "blurImageUrl"],
+			},
+		});
+
 		res.json({
-			currentPage: page,
-			totalPages: totalPages,
-			posts: paginatedPosts,
+			totalSavedPosts: savedPosTotalCount,
+			posts: savedPost,
 		});
 	} catch (error) {
-		res.status(500).json({ message: "failed to fetch post history" });
+		console.log(error);
+		res.status(500).json({ message: error.message });
 	}
 });
 

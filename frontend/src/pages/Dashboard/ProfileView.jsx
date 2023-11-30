@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import FilerobotImageEditor from "filerobot-image-editor";
+
 import {
 	AdditionalUserProfile,
 	CoverPhoto,
@@ -42,7 +42,7 @@ const ProfileView = () => {
 	useEffect(() => {
 		if (!_id) return;
 		dispatch(setFirstFetchFollowingUser());
-		dispatch(fetchUserFollowingList());
+		dispatch(fetchUserFollowingList(_id));
 		dispatch(updateFollowingListPageNumber());
 		dispatch(setFirstFetchFollowersUser());
 		dispatch(fetchUserFollowersList());
@@ -58,29 +58,7 @@ const ProfileView = () => {
 	if (!user) {
 		return <h3 className=" text-black text-3xl">Loading ....</h3>;
 	}
-
-	const config = {
-		tools: [
-			"adjust",
-			"effects",
-			"filters",
-			"rotate",
-			"crop",
-			"resize",
-			"watermark",
-			"shapes",
-			"image",
-			"text",
-			"upload",
-		],
-		translations: {
-			en: {
-				"toolbar.save": "Save",
-				"toolbar.apply": "Apply",
-				"toolbar.Download": "upload",
-			},
-		},
-	};
+	console.log(userfollowinglist);
 
 	return (
 		<>

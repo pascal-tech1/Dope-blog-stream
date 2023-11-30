@@ -16,7 +16,7 @@ const createMsgCtrl = expressAsyncHandler(async (req, res) => {
 			"message not sent, because it contains profane wordss"
 		);
 	}
-	
+
 	const senderId = req.user._id;
 
 	const receiverInfo = await User.findById(receiverId).select("email");
@@ -25,7 +25,7 @@ const createMsgCtrl = expressAsyncHandler(async (req, res) => {
 		"lastName",
 	]);
 	const subject = `Message from BlogVana user  ${senderInfo?.firstName} ${senderInfo?.lastName}`;
-	
+
 	let mailDetails = {
 		from: "pascalazubike003@gmail.com",
 		to: "pascalazubike003@gmail.com",
@@ -57,11 +57,19 @@ const createMsgCtrl = expressAsyncHandler(async (req, res) => {
 });
 
 const fetchMsgCtrl = expressAsyncHandler(async (req, res) => {
-	
-	const page = req.params.page;
-	const numberPerPage = req.params.numberPerPage;
+	const page = req.query.page;
+	const numberPerPage = req.query.numberPerPage;
+
 	try {
 		const userId = req.user._id;
+		const messages = await User.findById(userId)
+			.populate({
+				path: "receivedMessages",
+			})
+			.select("receivedMessages");
+
+		const receivedMessageCount = messages.receivedMessages.length;
+
 		const { receivedMessages } = await User.findById(userId)
 			.populate({
 				path: "receivedMessages",
@@ -75,9 +83,12 @@ const fetchMsgCtrl = expressAsyncHandler(async (req, res) => {
 				},
 			})
 			.select("receivedMessages");
-		
-		res.status(200).json({ status: "success", receivedMessages });
+
+		res
+			.status(200)
+			.json({ status: "success", receivedMessages, receivedMessageCount });
 	} catch (error) {
+		console.log(error);
 		res.status(500).json({
 			status: "failed",
 			messages: "fetching messages failed try again",

@@ -27,6 +27,8 @@ const AllUsers = () => {
 		adminFetchUsersHasMore,
 	} = useSelector((store) => store.adminSlice);
 
+	const { dashboardSearchTerm } = useSelector((store) => store.userSlice);
+
 	const dispatch = useDispatch();
 	const observer = useRef();
 	const [checkedItems, setCheckedItemId] = useState([]);
@@ -52,7 +54,7 @@ const AllUsers = () => {
 		},
 		[adminAllUsersStatus, adminFetchUsersHasMore]
 	);
-	console.log(lastPostRef);
+
 	useEffect(() => {
 		if (adminAllUsersStatus === "loading") return;
 
@@ -62,7 +64,7 @@ const AllUsers = () => {
 				filter: AdminAllUserSelectedFilter,
 			})
 		);
-	}, [AdminAllUserSelectedFilter]);
+	}, [AdminAllUserSelectedFilter, dashboardSearchTerm]);
 
 	const tableItems = [
 		{
@@ -73,8 +75,8 @@ const AllUsers = () => {
 			email: "email",
 			createdAt: "Join Date",
 			postsCount: "Post Count",
-			followersCount: "Followers Count",
-			followingCount: "Following Count",
+			followersCount: "Followers",
+			followingCount: "Following",
 			action: "action",
 		},
 
@@ -137,7 +139,7 @@ const AllUsers = () => {
 	};
 
 	return (
-		<div className=" tableContainer min-w-[900px]  ">
+		<div className=" tableContainer overflow-x-scroll min-w-[1200px] relative ">
 			{/* modal */}
 			<Modal
 				isOpen={isModalOpen}
@@ -171,7 +173,7 @@ const AllUsers = () => {
 				</h3>
 			</div>
 			{/* table */}
-			<div className="tableBaginsStyle ">
+			<div className="tableBaginsStyle relative">
 				{tableItems.map((user, index) => {
 					return (
 						<div
@@ -181,10 +183,12 @@ const AllUsers = () => {
 									: null
 							}
 							className={`${
-								user.action === "action" ? " bg-gray-500  text-white " : ""
-							} grid grid-cols-11 gap-2  text-start border-b py-3 items-center px-2  `}
+								user.action === "action"
+									? "tableHeading  -top-0 items-center z-30  bg-gray-500  text-white "
+									: ""
+							} grid grid-cols-12 gap-2 text-start border py-3 items-cente `}
 						>
-							<div className="col-start-1 col-span-2 px-2 flex gap-2 ">
+							<div className=" px-2 flex gap-2 items-center  ">
 								<input
 									type="checkbox"
 									name="check"
@@ -194,54 +198,43 @@ const AllUsers = () => {
 									className="checkboxStyle"
 								/>
 
-								<Link to={`/profile/${user._id}`}>
-									<Tooltip info={`${user._id.toString().slice(0, 12)}...`}>
+								<Link to={`/profile/${user._id}`} className=" col-span-3">
+									<Tooltip info={user._id}>
 										<h3>{user._id}</h3>
 									</Tooltip>
 								</Link>
 							</div>
-							{user.firstName.length > 12 ? (
-								<Tooltip info={`${user.firstName.slice(0, 10)}...`}>
+
+							<div className=" col-start-4">
+								<Tooltip info={user.firstName}>
 									<h3>{user.firstName}</h3>
 								</Tooltip>
-							) : (
-								<h3>{user.firstName}</h3>
-							)}
-
-							{user.lastName.length > 12 ? (
-								<Tooltip info={`${user.lastName.slice(0, 10)}...`}>
-									<h3>{user.lastName}</h3>
-								</Tooltip>
-							) : (
-								<h3>{user.lastName}</h3>
-							)}
-							<div className="">
-								{user.email.length > 20 ? (
-									<Tooltip info={`${user.email.slice(0, 14)}...`}>
-										<h3>{user.email}</h3>
-									</Tooltip>
-								) : (
-									<h3>{user.email}</h3>
-								)}
 							</div>
-							<h3 className="  col-start-7 col-span-1">
-								{user.createdAt === "Join Date"
-									? "Join Date"
-									: formatDate(user.createdAt)}
-							</h3>
 
-							<h3 className="col-start-8 col-span-1">{user.postsCount}</h3>
-							<h3 className="col-start-9 col-span-1">
-								{user.followersCount}
-							</h3>
-							<h3 className="col-start-10 col-span-1">
-								{user.followingCount}
-							</h3>
-							<div className="col-span-1 col-start-11 place-self-center mr-4">
+							<Tooltip info={user.lastName}>
+								<h3>{user.lastName}</h3>
+							</Tooltip>
+							<div className=" col-start-6 col-span-2 px-4">
+								<Tooltip info={user.email}>
+									<h3>{user.email}</h3>
+								</Tooltip>
+							</div>
+							<Tooltip info={formatDate(user.createdAt)}>
+								<h3>
+									{user.createdAt === "Join Date"
+										? "Join Date"
+										: formatDate(user.createdAt)}
+								</h3>
+							</Tooltip>
+
+							<h3 className="">{user.postsCount}</h3>
+							<h3 className="">{user.followersCount}</h3>
+							<h3 className="">{user.followingCount}</h3>
+							<div className=" relative self-start  ">
 								{user.action === "action" ? (
 									"Action"
 								) : (
-									<div className="flex gap-1 items-center">
+									<div className="flex gap-1 items-center right-4 sticky right-0 ">
 										<MessageUser receiverId={user?._id} />
 										<BlockOrUnblockUser user={user} />
 									</div>
@@ -257,7 +250,15 @@ const AllUsers = () => {
 					{!adminFetchUsersHasMore &&
 						adminAllUsersStatus === "success" && (
 							<div className=" text-yellow-600 my-4">
-								No more Post Buddy
+								No more user
+							</div>
+						)}
+				</div>
+				<div className=" place-self-center">
+					{allUsers.length===0 &&
+						adminAllUsersStatus === "success" && (
+							<div className=" text-yellow-600 my-4">
+								No User found
 							</div>
 						)}
 				</div>

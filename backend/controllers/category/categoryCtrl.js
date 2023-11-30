@@ -35,8 +35,19 @@ const createCategoryCtrl = expressAsyncHandler(async (req, res) => {
 //   fetch all categorys
 // ''''''''''''''''''''''''''''''''''''''''''''
 const fetchAllCategorysCtrl = expressAsyncHandler(async (req, res) => {
+	const { searchTerm } = req.query;
+	console.log("category", searchTerm);
+	const regexPattern = new RegExp(`.*${searchTerm}.*`, "i");
+	let searchQuery;
+
+	if (searchTerm) {
+		searchQuery = { title: { $regex: regexPattern } };
+	} else {
+		searchQuery = {};
+	}
+
 	try {
-		const allCategory = await Category.find({}).select("title");
+		const allCategory = await Category.find(searchQuery).select("title");
 		res.status(200).json({ status: "success", allCategory });
 	} catch (error) {
 		res

@@ -14,11 +14,14 @@ import DashboardCustomDropdown from "./DashboardCustomDropdown";
 
 import { setChartSelectedFilter } from "../redux/user/userSlice";
 import { useSelector } from "react-redux";
+import ChartSkeleton from "./chartSkeleton";
 
 export function BarChart() {
-	const { chartSelectedFilter, userPostImpression } = useSelector(
-		(store) => store.userSlice
-	);
+	const {
+		chartSelectedFilter,
+		userPostImpression,
+		userPostImpressionStatus,
+	} = useSelector((store) => store.userSlice);
 
 	ChartJS.register(
 		CategoryScale,
@@ -136,7 +139,8 @@ export function BarChart() {
 					dropdownWidth={"yes"}
 				/>
 			</div>
-			{userPostImpression && <Bar options={options} data={data} />}
+
+			<Bar options={options} data={data} />
 		</div>
 	);
 }

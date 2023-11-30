@@ -23,5 +23,5 @@ export {
 	VerifyEmail,
 	ConfirmEmailPage,
 	PasswordReset,
-	UpdatePassword
+	UpdatePassword,
 };

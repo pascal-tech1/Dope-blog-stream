@@ -15,10 +15,12 @@ import { BsSaveFill } from "react-icons/bs";
 import { toast } from "react-toastify";
 
 const AdminAllCategory = () => {
+	const { dashboardSearchTerm } = useSelector((store) => store.userSlice);
 	const dispatch = useDispatch();
+
 	useEffect(() => {
 		dispatch(fetchAllCategorys());
-	}, []);
+	}, [dashboardSearchTerm]);
 	const {
 		allCategory,
 		categorystatus,

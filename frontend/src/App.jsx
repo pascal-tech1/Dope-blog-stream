@@ -27,6 +27,8 @@ import {
 	SavedPost,
 	MyPosts,
 	Following,
+	Messages,
+	ProfileViews,
 } from "./pages/Dashboard";
 
 import { ToastContainer } from "react-toastify";
@@ -54,7 +56,8 @@ const App = () => {
 				<Route element={<Layout />}>
 					<Route index path="stats" element={<Dashboard />} />
 					<Route path="profile-view" element={<ProfileView />} />
-					<Route path="profile-edit" element={<ProfileEdit />} />
+					<Route path="profile-Message" element={<Messages />} />
+					<Route path="profile-Profile Views" element={<ProfileViews />} />
 					<Route path="post-My Posts" element={<MyPosts />} />
 					<Route path="post-Create" element={<CreatePost />} />
 					<Route path="post-History" element={<PostHistory />} />
@@ -75,7 +78,7 @@ const App = () => {
 				<Route path="/image" element={<Image />} />
 				<Route path="/reset-password/:token" element={<PasswordReset />} />
 				<Route path="/profile/:userId" element={<UserPage />} />
-				<Route path="/update-password" element={<UpdatePassword/>} />
+				<Route path="/update-password" element={<UpdatePassword />} />
 				<Route
 					path="/confirm-sent-email/:token"
 					element={<ComfirmEmailPage />}

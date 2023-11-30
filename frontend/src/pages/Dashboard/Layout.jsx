@@ -2,7 +2,12 @@ import React, { useEffect } from "react";
 import { useState } from "react";
 import { Outlet } from "react-router-dom";
 
-import { DashboardSideBar, DashboardNavBAr } from "../../components";
+import {
+	DashboardSideBar,
+	DashboardNavBAr,
+	ChangeEmailForm,
+	Modal,
+} from "../../components";
 
 const Layout = () => {
 	const [isDrpDownOpen, setIsDropDownOpen] = useState(true);
@@ -12,9 +17,7 @@ const Layout = () => {
 	};
 	useEffect(() => {
 		const handleKeyPress = (e) => {
-			console.log("i");
 			if (e.key === "B") {
-				console.log("im here now");
 				setIsDropDownOpen(!isDrpDownOpen);
 			}
 		};
@@ -25,8 +28,11 @@ const Layout = () => {
 			document.removeEventListener("keydown", handleKeyPress);
 		};
 	}, [isDrpDownOpen]);
+
 	return (
 		<section className="dashboardLayout grid-cols-12 lg:bg-gray-50   ">
+			<ChangeEmailForm />
+
 			<div
 				className={`${
 					isDrpDownOpen

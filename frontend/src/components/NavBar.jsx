@@ -49,6 +49,7 @@ const NavBar = () => {
 						className="w-8 md:w-14 border border-blue-400"
 					/>
 				</Link>
+
 				<form
 					onSubmit={formik.handleSubmit}
 					className="relative w-1/3 justify-center  items-center"
@@ -74,7 +75,7 @@ const NavBar = () => {
 								<div>
 									<LazyLoadImg
 										backgroundClassName={
-											" rounded-full w-10 h-10 md:w-12 md:h-12  relative border border-blue-400  "
+											" rounded-full w-10 h-10 md:w-8 md:h-8  relative border border-blue-400  "
 										}
 										imgClassName={
 											"absolute inset-0 w-full h-full  object-cover rounded-full "
@@ -82,6 +83,7 @@ const NavBar = () => {
 										originalImgUrl={user?.profilePhoto}
 										blurImageStr={user?.blurProfilePhoto}
 										optimizationStr={"q_auto,f_auto,w_100"}
+										paddingBottom={"100%"}
 									/>
 								</div>
 								<MdOutlineArrowDropDown className="text-blue-400 transition-alls" />

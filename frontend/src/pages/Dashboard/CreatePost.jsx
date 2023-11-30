@@ -52,7 +52,7 @@ const CreatePost = () => {
 					content,
 				},
 			});
-			dispatch(clearSinglesliceState());
+			dispatch(clearSinglesliceState("idle"));
 			setSelectedFilter("General");
 		}
 	}, [postEditingStatus]);

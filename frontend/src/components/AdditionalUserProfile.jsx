@@ -117,33 +117,33 @@ const AdditionalUserProfile = () => {
 				// display
 				<div className="flex flex-col gap-4 mt-2">
 					<div className=" flex gap-3 items-center">
-						<MdOutlineLanguage className=" text-gray-400 font-medium text-lg" />
+						<MdOutlineLanguage className=" text-blue-400 font-medium text-lg" />
 						<div>
-							<h2 className=" text-gray-400">Languages</h2>
-							<h3 className=" text-blue-400 text-xs">{user?.language}</h3>
+							<h2 className=" text-blue-400">Languages</h2>
+							<h3 className=" text-gray-400">{user?.language}</h3>
 						</div>
 					</div>
 					<div className=" flex gap-3 items-center">
-						<MdOutlineVerifiedUser className=" text-gray-400 font-medium text-lg" />
+						<MdOutlineVerifiedUser className=" text-blue-400 font-medium text-lg" />
 						<div>
-							<h2 className=" text-gray-400">Nick name</h2>
-							<h3 className=" text-blue-400 text-xs">{user?.nickName}</h3>
+							<h2 className=" text-blue-400">Nick name</h2>
+							<h3 className=" text-gray-400 text-xs">{user?.nickName}</h3>
 						</div>
 					</div>
 					<div className=" flex gap-3 items-center">
-						<MdOutlineDateRange className=" text-gray-400 font-medium text-lg" />
+						<MdOutlineDateRange className=" text-blue-400 font-medium text-lg" />
 						<div>
-							<h2 className=" text-gray-400">Join Date</h2>
-							<h3 className=" text-blue-400 text-xs">
+							<h2 className=" text-blue-400">Join Date</h2>
+							<h3 className=" text-gray-400 text-xs">
 								{formatDate(user?.createdAt)}
 							</h3>
 						</div>
 					</div>
 					<div className=" flex gap-3 items-center">
-						<MdOutlineSchool className=" text-gray-400 font-medium text-lg" />
+						<MdOutlineSchool className=" text-blue-400 font-medium text-lg" />
 						<div>
-							<h2 className=" text-gray-400">Education</h2>
-							<h3 className=" text-blue-400 text-xs">{user?.education}</h3>
+							<h2 className=" text-blue-400">Education</h2>
+							<h3 className=" text-gray-400 text-xs">{user?.education}</h3>
 						</div>
 					</div>
 				</div>

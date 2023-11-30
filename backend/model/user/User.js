@@ -26,6 +26,9 @@ const userSchema = new mongoose.Schema(
 			default:
 				"https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png",
 		},
+		blurCoverPhoto: {
+			type: String,
+		},
 		email: {
 			type: String,
 			required: [true, "Email is required"],
@@ -110,22 +113,22 @@ const userSchema = new mongoose.Schema(
 				},
 			],
 		},
-		postViewHistory: {
-			type: [
-				{
-					type: mongoose.Schema.Types.ObjectId,
-					ref: "Post",
-				},
-			],
-		},
-		savedPost: {
-			type: [
-				{
-					type: mongoose.Schema.Types.ObjectId,
-					ref: "Post",
-				},
-			],
-		},
+		// postViewHistory: {
+		// 	type: [
+		// 		{
+		// 			type: mongoose.Schema.Types.ObjectId,
+		// 			ref: "Post",
+		// 		},
+		// 	],
+		// },
+		// savedPost: {
+		// 	type: [
+		// 		{
+		// 			type: mongoose.Schema.Types.ObjectId,
+		// 			ref: "Post",
+		// 		},
+		// 	],
+		// },
 		passwordChangeAt: Date,
 		passwordRessetToken: String,
 		passwordResetExpires: Date,
@@ -173,6 +176,17 @@ userSchema.virtual("userWhoViewProfile", {
 	localField: "_id",
 });
 
+userSchema.virtual("savedPost", {
+	ref: "SavedPosts",
+	foreignField: "user",
+	localField: "_id",
+});
+
+userSchema.virtual("postViewHistory", {
+	ref: "PostViewedHistory",
+	foreignField: "user",
+	localField: "_id",
+});
 // creating a mongoose middleware that handles the hashing before storing the data
 userSchema.pre("save", async function (next) {
 	// ensuring the password is hash only one the password field changes

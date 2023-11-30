@@ -42,7 +42,7 @@ const PostInfo = ({ post }) => {
 					{/* lazyloadingImg */}
 					<LazyLoadImg
 						backgroundClassName={
-							"max-w-xs w-[5rem] md:w-[8rem] rounded-md relative"
+							"w-[112px] rounded-md relative"
 						}
 						imgClassName={
 							"absolute inset-0 w-full h-full object-cover rounded-md"
@@ -50,6 +50,7 @@ const PostInfo = ({ post }) => {
 						originalImgUrl={post?.image}
 						blurImageStr={post.blurImageUrl}
 						optimizationStr={"q_auto,f_auto,w_200"}
+						paddingBottom={"100%"}
 					/>
 				</Link>
 			</div>

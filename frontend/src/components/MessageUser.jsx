@@ -1,8 +1,10 @@
 import React, { useState } from "react";
-import { AiOutlineMessage } from "react-icons/ai";
+
 import { useDispatch } from "react-redux";
 import Modal from "./Modal";
 import { sendMsg } from "../redux/message/messageSlice";
+
+import { LuSend } from "react-icons/lu";
 
 const MessageUser = ({ receiverId }) => {
 	const dispatch = useDispatch();
@@ -41,9 +43,9 @@ const MessageUser = ({ receiverId }) => {
 			</Modal>
 			<div
 				onClick={openModal}
-				className=" cursor-pointer w-6 h-6 drop-shadow-sm hover:drop-shadow-none rounded-full flex items-center justify-center text-white "
+				className=" cursor-pointer w-6 h-6 rounded-full hover:bg-gray-300 hover:rounded-full hover:p-1 flex items-center justify-center text-white transition-all delay-75 "
 			>
-				<AiOutlineMessage className=" text-2xl fill-slate-600 " />
+				<LuSend className=" text-2xl fill-slate-600 " />
 			</div>
 		</div>
 	);

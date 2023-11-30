@@ -2,9 +2,11 @@ import React, { useState } from "react";
 import Modal from "./Modal";
 import { blockOrUnblockUser } from "../redux/admin/adminSlice";
 import { useDispatch } from "react-redux";
+import { BiBlock } from "react-icons/bi";
+import { BsUnlock } from "react-icons/bs";
 
 const BlockOrUnblockUser = ({ user }) => {
-    console.log(user.isBlocked)
+	console.log(user.isBlocked);
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const dispatch = useDispatch();
 
@@ -41,9 +43,9 @@ const BlockOrUnblockUser = ({ user }) => {
 			</Modal>
 			<button
 				onClick={() => openModal()}
-				className="bg-red-400 px-2 py-1 text-sm  drop-shadow-sm rounded-xl text-white hover:drop-shadow-none hover:bg-red-300 transition-all delay-75"
+				className=" px-2 py-1 text-sm  drop-shadow-sm rounded-xl text-red-400 hover:drop-shadow-none hover:bg-red-300 transition-all delay-75"
 			>
-				{user.isBlocked ? "unblock " : "block"}
+				{user.isBlocked ? <BiBlock /> : <BsUnlock />}
 			</button>
 		</div>
 	);

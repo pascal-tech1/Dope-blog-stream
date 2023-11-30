@@ -24,8 +24,8 @@ export const fetchSinglePost = createAsyncThunk(
 				})
 			);
 			console.log(resp.data);
-			dispatch(updateUserViewHistory(resp.data));
-			return resp.data;
+			dispatch(updateUserViewHistory(resp.data.userViewedPost));
+			return resp.data.post;
 		} catch (error) {
 			if (!error?.response) {
 				throw new Error();
@@ -129,15 +129,15 @@ const singlePostSlice = createSlice({
 			state.status = payload;
 		},
 		setPostToBeEdited: (state, { payload }) => {
-			state.postToBeEdited = payload;
+			state.postToBeEdited = payload.post;
 		},
 		clearSinglesliceState: (state, { payload }) => {
 			state.isEditing = false;
-			state.postEditingStatus = "idle";
+			state.postEditingStatus = payload;
 		},
 		setStatus: (state, { payload }) => {
-			console.log('im here')
-			console.log(payload)
+			console.log("im here");
+			console.log(payload);
 			state.status = payload;
 		},
 	},
@@ -163,7 +163,7 @@ const singlePostSlice = createSlice({
 		},
 		[fetchPostToBeEdited.fulfilled]: (state, action) => {
 			state.postEditingFetchingStatus = "success";
-			state.postToBeEdited = action.payload;
+			state.postToBeEdited = action.payload.post;
 		},
 		[fetchPostToBeEdited.rejected]: (state, action) => {
 			state.postEditingFetchingStatus = "success";
@@ -207,6 +207,6 @@ export const {
 	setSinglePostStatus,
 	clearSinglesliceState,
 	setPostToBeEdited,
-	setStatus
+	setStatus,
 } = singlePostSlice.actions;
 export default singlePostSlice.reducer;

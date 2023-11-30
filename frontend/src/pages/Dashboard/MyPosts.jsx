@@ -21,8 +21,11 @@ const MyPosts = () => {
 		hasMore,
 		MyPostSelectedFilter,
 	} = useSelector((store) => store.generalPostSlice);
-	const id = useSelector((store) => store.userSlice?.user?._id);
 
+	const { user, dashboardSearchTerm } = useSelector(
+		(store) => store.userSlice
+	);
+	const id = user?._id;
 	const dispatch = useDispatch();
 	const observer = useRef();
 	const [checkedPostId, setCheckedPostid] = useState([]);
@@ -61,7 +64,7 @@ const MyPosts = () => {
 				})
 			);
 		} else return;
-	}, [MyPostSelectedFilter, id]);
+	}, [MyPostSelectedFilter, id, dashboardSearchTerm]);
 
 	const posts = [
 		{

@@ -52,9 +52,9 @@ const AllPost = () => {
 							dispatch(setEmptySearch());
 							dispatch(fetchPostByCategory());
 						}}
-						className=" bg-red-400 px-1 text-white rounded-lg hover:bg-red-300 transition-all delay-75"
+						className=" bg-red-400 text-xs px-1 text-white rounded-lg hover:bg-red-300 transition-all delay-75"
 					>
-						clear search
+						clear
 					</button>
 				</div>
 			)}
@@ -65,11 +65,14 @@ const AllPost = () => {
 						ref={allPost.length === index + 1 ? lastPostRef : null}
 						className=" border-t pt-2 mt-4 mb-6 "
 					>
+						{/* The post info's including the user info */}
 						<PostInfo post={post} />
 					</div>
 				);
 				//
 			})}
+
+			{/* loading Spinner */}
 			<div className=" grid place-content-center">
 				{isLoading && <Spinner />}
 			</div>

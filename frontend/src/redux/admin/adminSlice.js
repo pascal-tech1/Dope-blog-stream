@@ -8,10 +8,11 @@ export const fetchAllUsersPost = createAsyncThunk(
 	async (params, { getState, rejectWithValue }) => {
 		const postNumberPerPage = 12;
 		const { adminAllPostPageNumber } = getState().adminSlice;
-		console.log(adminAllPostPageNumber);
+		const { dashboardSearchTerm } = getState().userSlice;
+		
 		try {
 			const resp = await customFetch(
-				`/posts/admin-all-post?page=${adminAllPostPageNumber}&postNumberPerPage=${postNumberPerPage}&filter=${params.filter}`,
+				`/posts/admin-all-post?page=${adminAllPostPageNumber}&postNumberPerPage=${postNumberPerPage}&filter=${params.filter}&searchTerm=${dashboardSearchTerm}`,
 				{
 					headers: {
 						authorization: `Bearer ${getState().userSlice?.token}`,
@@ -32,12 +33,13 @@ export const fetchAllUsersPost = createAsyncThunk(
 export const fetchAllUsers = createAsyncThunk(
 	"fetch/AllUsers",
 	async (params, { getState, rejectWithValue }) => {
-		const numberPerPage = 2;
+		const numberPerPage = 10;
 		const { adminAllUsersPageNumber } = getState().adminSlice;
+		const { dashboardSearchTerm } = getState().userSlice;
 
 		try {
 			const resp = await customFetch(
-				`/users/admin-all-users?page=${adminAllUsersPageNumber}&numberPerPage=${numberPerPage}&filter=${params.filter}`,
+				`/users/admin-all-users?page=${adminAllUsersPageNumber}&numberPerPage=${numberPerPage}&filter=${params.filter}&searchTerm=${dashboardSearchTerm}`,
 				{
 					headers: {
 						authorization: `Bearer ${getState().userSlice?.token}`,

@@ -7,7 +7,6 @@ import LazyLoadImg from "./LazyLoadImg";
 
 const PostUserInfo = ({ post }) => {
 	const loginUser = useSelector((store) => store.userSlice.user);
-
 	const user = post?.user;
 
 	return (
@@ -18,21 +17,17 @@ const PostUserInfo = ({ post }) => {
 						to={loginUser?._id ? `/profile/${user._id}` : `/login`}
 						className="flex gap-2 self-center"
 					>
-						{/* <img
-							src={post?.user?.profilePhoto}
-							alt=""
-							className="w-8 h-8 rounded-full "
-						/> */}
-						{/* lazyloadingImg */}
+						{/* lazyloading image */}
 						<div>
 							<LazyLoadImg
-								backgroundClassName={" rounded-full  w-10 h-10  relative"}
+								backgroundClassName={" rounded-full  w-8 h-8  relative"}
 								imgClassName={
 									"absolute inset-0 w-full h-full  object-cover rounded-full "
 								}
 								originalImgUrl={post?.user?.profilePhoto}
 								blurImageStr={post?.user?.blurProfilePhoto}
 								optimizationStr={"q_auto,f_auto,w_100"}
+								paddingBottom={"100%"}
 							/>
 						</div>
 
@@ -41,7 +36,7 @@ const PostUserInfo = ({ post }) => {
 							<h3 className=" text-xs">{` ${post?.user?.firstName} ${post?.user?.lastName}  `}</h3>
 						</div>
 					</Link>
-					{/* if its not the user that created the post render the follow button else render theedit button */}
+					{/* if its not the user that created the post render the follow button else render the edit button */}
 					{loginUser?._id !== post?.user?._id ? (
 						<FollowingBtn
 							userToFollowOrUnfollow={post?.user}

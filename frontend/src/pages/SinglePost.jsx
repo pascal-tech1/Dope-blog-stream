@@ -5,8 +5,8 @@ import { useParams } from "react-router-dom";
 import NavBar from "../components/NavBar";
 
 import { LazyLoadImg, LikesSaveViews, MessageUser } from "../components";
-import { AiOutlineMessage } from "react-icons/ai";
-import { useInView } from "react-intersection-observer";
+
+
 import {
 	clearUserPost,
 	fetchMorePost,
@@ -36,9 +36,30 @@ const SinglePost = () => {
 	const { userPost, userPostStatus } = useSelector(
 		(store) => store.morePostSlice
 	);
-	//
-	console.log(pageNumber);
+
 	const observer = useRef();
+	const [screenWidth, setScreenWidth] = useState(window.innerWidth);
+
+	useEffect(() => {
+		// Function to update screen width
+
+		const updateScreenWidth = () => {
+			const newScreenWidth = window.innerWidth;
+			const updatedWith = newScreenWidth > 800 ? 850 : newScreenWidth;
+			if (newScreenWidth > screenWidth) {
+				setScreenWidth(updatedWith);
+			}
+		};
+
+		// Attach event listener to update width on window resize
+		window.addEventListener("resize", updateScreenWidth);
+
+		// Cleanup: remove event listener on component unmount
+		return () => {
+			window.removeEventListener("resize", updateScreenWidth);
+		};
+	}, [screenWidth]); // Empty dependency array ensures the effect runs only once on mount
+
 	const lastPostRef = useCallback(
 		(node) => {
 			if (status !== "success") return;
@@ -50,7 +71,6 @@ const SinglePost = () => {
 					dispatch(clearUserPost());
 					dispatch(clearMorePost());
 					setPageNumber(1);
-
 					dispatch(
 						fetchUserPost({ postId: post?._id, userId: post?.user?._id })
 					);
@@ -101,36 +121,41 @@ const SinglePost = () => {
 		return (
 			<div className="">
 				<NavBar />
-				<div className=" mt-16 mx-6 font-inter flex flex-col   lg:mx-auto max-w-[50rem] gap-[0.5rem] -z-50">
-					<div>
-						<h1 className=" font-bold text-sm md:text-2xl my-4">
-							{post?.title}
-						</h1>
-					</div>
-					{/* about the user who created the post */}
-					<div className="flex flex-wrap   flex-col">
-						<PostUserInfo post={post} />
-						<LikesSaveViews post={post} />
-					</div>
+				<div className=" mt-16 px-8 font-inter   md:mx-auto max-w-[50rem] gap-[0.5rem] -z-50 ">
+					<div className=" flex flex-col gap-2">
+						<div>
+							<h1 className=" font-bold text-sm md:text-2xl my-2 md:my-4">
+								{post?.title}
+							</h1>
+						</div>
+						{/* about the user who created the post and post likes and views */}
+						<div className="flex flex-wrap flex-col">
+							<PostUserInfo post={post} />
+							<LikesSaveViews post={post} />
+						</div>
 
-					<div className="">
-						{/* <LazyLoadImg
-							backgroundClassName={" rounded-md h-full w-full relative  "}
-							imgClassName={
-								" inset-0 w-full h-full object-cover rounded-md "
-							}
-							originalImgUrl={post?.image}
-							// blurImageStr={post?.blurImageUrl}
-							optimizationStr={"q_auto,f_auto"}
-						/> */}
-						<img className="" src={post?.image} alt="" />
+						<div className=" flex items-center ">
+							{/* <img className="" src={post?.image} alt="" /> */}
+							<LazyLoadImg
+								backgroundClassName={
+									" w-full h-auto rounded-md relative overflow-hidden"
+								}
+								imgClassName={
+									"absolute inset-0 w-full h-auto object-cover rounded-md"
+								}
+								originalImgUrl={post?.image}
+								blurImageStr={post.blurImageUrl}
+								optimizationStr={`q_auto,f_auto,w_800`}
+							/>
+						</div>
 					</div>
-
+					{/* insert the post content in the dom */}
 					<div
-						className=" "
+						className=" mt-4 "
 						dangerouslySetInnerHTML={{ __html: post?.content }}
 					></div>
-
+					{/* when the user scroll to this div with lasPostRef a fetch request for 
+					userPost and morePost is trigered in the useCallBackHook */}
 					<div ref={lastPostRef} className=" border-y py-4 my-4 ">
 						<div className="flex justify-between flex-col my-4">
 							<img
@@ -147,12 +172,13 @@ const SinglePost = () => {
 									</span>
 								</h3>
 								<div className="flex items-center gap-2">
+									{/* followingBtn component */}
 									<FollowingBtn
 										userToFollowOrUnfollow={post?.user}
 										className={` border self-center hover:bg-blue-800 text-center py-1 px-2 bg-blue-900 text-white hover:text-white rounded-lg transition-all delay-75`}
 									/>
 
-									{/* message */}
+									{/* message component */}
 									<MessageUser receiverId={post?.user?._id} />
 								</div>
 							</div>
@@ -174,7 +200,11 @@ const SinglePost = () => {
 						</h1>
 					</div>
 					{userPost && (
-						<MorePost post={userPost} status={userPostStatus} />
+						<MorePost
+							post={userPost}
+							status={userPostStatus}
+							titleLength={43}
+						/>
 					)}
 
 					{/* more post from blogvana */}
@@ -190,9 +220,13 @@ const SinglePost = () => {
 							</span>
 						</h1>
 						{morePost && (
-							<MorePost post={morePost} status={isLoading} />
+							<MorePost
+								post={morePost}
+								status={isLoading}
+								titleLength={43}
+							/>
 						)}
-						{console.log(isLoading)}
+
 						<div className=" self-center">
 							{morePostHasMore ? (
 								<button

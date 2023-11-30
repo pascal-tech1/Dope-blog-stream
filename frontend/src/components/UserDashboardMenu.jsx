@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import { logOutUser } from "../redux/user/userSlice";
+import { logOutUser, setChangeEmail } from "../redux/user/userSlice";
 import { useNavigate } from "react-router-dom";
 
 const UserDashboardMenu = ({ isMenuOpen, setIsMenuOpen }) => {
@@ -15,7 +15,9 @@ const UserDashboardMenu = ({ isMenuOpen, setIsMenuOpen }) => {
 		navigate("/update-password");
 	};
 
-	const handleChangeEmail = () => {};
+	const handleChangeEmail = () => {
+		dispatch(setChangeEmail());
+	};
 
 	const handleFaqClick = () => {};
 
@@ -29,21 +31,22 @@ const UserDashboardMenu = ({ isMenuOpen, setIsMenuOpen }) => {
 		{ title: "update password", action: handleUupdatePassword },
 		{ title: "change email", action: handleChangeEmail },
 		{ title: "FAQ", action: handleFaqClick },
-
 		{ title: "log Out", action: handleLogOut },
 	];
 
 	return (
 		<>
-			<div className="absolute top-2 right-0 drop-shadow-lg h-[50vh] rounded-lg  bg-white">
-				<div className=" flex flex-col px-8 justify-start whitespace-nowrap  items-start font-inter gap-3 py-3 text-sm  ">
+			<div className="absolute top-8 right-4 drop-shadow-lg h-[50vh] rounded-lg z-[500]   bg-white">
+				<div className=" flex flex-col px-4 justify-start whitespace-nowrap  items-start font-inter gap-3 py-3 text-sm  ">
 					{menuItem.map((item) => (
 						<button
 							onClick={() => {
 								item.action();
 								setIsMenuOpen(!isMenuOpen);
 							}}
-							className=" hover:bg-blue-100  py-1 px-2 rounded-lg transition-all delay-75"
+							className={`${
+								item.title === "log Out" && " text-red-400"
+							} hover:bg-blue-100  py-1 px-2 rounded-lg transition-all delay-75`}
 						>
 							{item.title}
 						</button>

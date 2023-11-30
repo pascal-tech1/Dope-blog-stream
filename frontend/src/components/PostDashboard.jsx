@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import Spinner from "./Spinner";
-
+import { LazyLoadImg, Tooltip } from "../components";
 
 const PostDashboard = ({ posts, status, title, page }) => {
 	return (
@@ -15,19 +15,33 @@ const PostDashboard = ({ posts, status, title, page }) => {
 					View All
 				</Link>
 			</div>
-			<div className=" flex  overflow-x-scroll custom-scrollbar">
-				{posts?.map((post) => (
-					<Link to={`/single-post/${post?._id}`} className="">
-						<div className=" hover:cursor-pointer">
-							<img
-								src={post?.image}
-								alt=""
-								className="rounded-lg w-20 object-cover mb-3 self-center border border-gray-300"
+			<div className="  overflow-x-scroll custom-scrollbar flex gap-4 ">
+				{posts?.map((item) => (
+					<Link to={`/single-post/${item?.post?._id}`} className=" ">
+						<div className=" hover:cursor-pointer w-30 h-30 flex gap-1 flex-col overflow-hidden items-center py-1 ">
+							{/* <img
+							src={post?.image}
+							alt=""
+							className=" w-full h-20 object-cover  border border-gray-300"
+						/> */}
+
+							<LazyLoadImg
+								backgroundClassName={"   w-full h-20  relative"}
+								imgClassName={
+									"absolute inset-0 w-full h-full  object-cover "
+								}
+								originalImgUrl={item?.post?.image}
+								blurImageStr={item?.post?.blurImageUrl}
+								optimizationStr={"q_auto,f_auto,w_200"}
+								paddingBottom={"80%"}
 							/>
+
+							<h3 className=" font-medium text-xs w-[9rem] mb-2 px-1">
+								<Tooltip info={`${item?.post?.title?.slice(0, 20)}...`}>
+									<h1>{item?.post?.title}</h1>
+								</Tooltip>
+							</h3>
 						</div>
-						<h3 className=" font-medium text-xs w-[9rem] mb-2">
-							{post?.title}
-						</h3>
 					</Link>
 				))}
 				<div className=" grid place-content-center">

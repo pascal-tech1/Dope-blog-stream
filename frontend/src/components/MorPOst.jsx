@@ -3,26 +3,39 @@ import React from "react";
 import { Link } from "react-router-dom";
 import LikesSaveViews from "./LikesSaveViews";
 import PostUserInfo from "./PostUserInfo";
-import Spinner from "./Spinner";
-import LazyLoadImg from "./LazyLoadImg";
 
-export const MorePost = ({ post, status }) => {
+import LazyLoadImg from "./LazyLoadImg";
+import { Spinner, Tooltip } from "../components";
+
+export const MorePost = ({ post, status, titleLength }) => {
 	return (
 		<>
-			<div className="  grid grid-cols-1 place-content-center min-[600px]:grid-cols-2 gap-8 w-[100%]">
+			<div className="  grid grid-cols-1 text-sm   gap-12 min-[600px]:grid-cols-2  w-[100%]">
 				{post?.map((post) => (
-					<div className=" max-w-[384px] col-span-1">
+					<div className=" max-w-[384px] col-span-1 flex gap-3 flex-col
+					">
 						<Link
 							to={`/single-post/${post?._id}`}
 							className=" hover:cursor-pointer"
 						>
-							<img
-								src={post?.image}
-								alt=""
-								className="rounded-lg w-full h-[163px] object-cover mb-3 "
+							<LazyLoadImg
+								backgroundClassName={
+									" w-[80vw]  min-[600px]:w-full  rounded-md relative "
+								}
+								imgClassName={
+									"absolute inset-0 w-full h-full object-cover rounded-md"
+								}
+								originalImgUrl={post?.image}
+								blurImageStr={post.blurImageUrl}
+								optimizationStr={`q_auto,f_auto,w_384`}
+								paddingBottom={"50%"}
 							/>
 						</Link>
-						<h3 className=" text font-bold ">{post?.title}</h3>
+
+						<Tooltip info={post.title}>
+							<h3>{post.title}</h3>
+						</Tooltip>
+
 						<PostUserInfo post={post} />
 						<LikesSaveViews post={post} />
 					</div>
@@ -34,3 +47,14 @@ export const MorePost = ({ post, status }) => {
 		</>
 	);
 };
+
+{
+	/* <LazyLoadImg
+	backgroundClassName={" w-full rounded-md relative "}
+	imgClassName={"absolute inset-0 w-full h-full object-cover rounded-md"}
+	originalImgUrl={post?.image}
+	blurImageStr={post.blurImageUrl}
+	optimizationStr={`q_auto,f_auto,w_384`}
+	// paddingBottom={true}
+/>; */
+}

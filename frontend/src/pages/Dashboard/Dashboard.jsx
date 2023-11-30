@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 
 import {
 	BarChart,
+	MessageSkeleton,
 	PostDashboard,
 	Spinner,
 	UserDetailsCount,
@@ -12,11 +13,14 @@ import {
 	IncreaseHistoryPageNumber,
 	IncreaseSavedPostPageNumber,
 	fetchUserPostHistory,
-	fetchUserSavedPost,
+	fetchSavedPosts,
+	setSavedPostFirstSearch,
+	setHistoryFirstSearch,
 } from "../../redux/post/morePostSlice";
 import { Link } from "react-router-dom";
-import { fetchMsg } from "../../redux/message/messageSlice";
+import { clearMsg, fetchMsg } from "../../redux/message/messageSlice";
 import {
+	clearWhoViewedUserProfile,
 	fetchPostImpressionsCount,
 	fetchUserDetailsCounts,
 	fetchWhoViewedUserProfile,
@@ -34,6 +38,8 @@ const Dashboard = () => {
 		whoViewUserProfile,
 		chartSelectedFilter,
 		userPostImpression,
+		whoViewUserProfileStatus,
+		userDetailsCountStatus,
 	} = useSelector((store) => store?.userSlice);
 
 	const {
@@ -41,8 +47,8 @@ const Dashboard = () => {
 		userPostHistoryStatus,
 		userSavedPost,
 		userSavedPostStatus,
-		savedPostPageNumber,
-		historyPageNumber,
+		savedPostHasMore,
+		historyHasMore,
 	} = useSelector((store) => store?.morePostSlice);
 	const { msg, fetchMessageStatus } = useSelector(
 		(store) => store?.messageSlice
@@ -53,13 +59,19 @@ const Dashboard = () => {
 	useEffect(() => {
 		if (!_id) return;
 		dispatch(fetchUserDetailsCounts());
-		dispatch(fetchMsg({ page: 1, limit: 4 }));
-		dispatch(fetchWhoViewedUserProfile());
+		dispatch(clearMsg());
+		dispatch(fetchMsg({ page: 1, limit: 5 }));
+		dispatch(clearWhoViewedUserProfile());
+		dispatch(fetchWhoViewedUserProfile({ page: 1, limit: 5 }));
 
-		historyPageNumber === 1 && dispatch(fetchUserPostHistory(1));
-		savedPostPageNumber === 1 && dispatch(fetchUserSavedPost(1));
-		dispatch(IncreaseHistoryPageNumber());
-		dispatch(IncreaseSavedPostPageNumber());
+		if (userSavedPost.length < 10 && savedPostHasMore) {
+			dispatch(setSavedPostFirstSearch());
+			dispatch(fetchSavedPosts(1));
+		}
+		if (userPostHistory.length < 10 && historyHasMore) {
+			dispatch(setHistoryFirstSearch());
+			dispatch(fetchUserPostHistory(1));
+		}
 	}, [_id]);
 
 	useEffect(() => {
@@ -70,8 +82,8 @@ const Dashboard = () => {
 	return (
 		<div className=" flex flex-col gap-4  lg:grid grid-cols-12 lg:gap-8  lg:mx-0 font-inter antialiased">
 			<div className="col-start-1 row-start-1 col-span-9 ">
-				<div className=" flex flex-wrap justify-between md:grid grid-cols-3 gap-2">
-					<div className="  col-start-1 ">
+				<div className=" grid grid-cols-2 min-[400px]:grid-cols-3 gap-2">
+					<div className="  ">
 						<UserDetailsCount
 							text="Post"
 							count={userDetailsCount?.postCount}
@@ -79,7 +91,7 @@ const Dashboard = () => {
 							<BsPostcardFill className="text-purple-600 font-bold text-2xl bg-purple-100 rounded-md py-1 px-1" />
 						</UserDetailsCount>
 					</div>
-					<div className="  col-start-2">
+					<div className="  ">
 						<UserDetailsCount
 							text="Likes"
 							count={userDetailsCount?.likesCount}
@@ -87,7 +99,7 @@ const Dashboard = () => {
 							<AiFillLike className="text-orange-600 font-bold text-2xl bg-orange-100 rounded-md py-1 px-1" />
 						</UserDetailsCount>
 					</div>
-					<div className=" col-start-3">
+					<div className=" ">
 						<UserDetailsCount
 							text="Viewers"
 							count={userDetailsCount?.viewsCount}
@@ -96,7 +108,7 @@ const Dashboard = () => {
 						</UserDetailsCount>
 					</div>
 
-					<div className=" col-start-1 row-start-2">
+					<div className="">
 						<UserDetailsCount
 							text="dislikes"
 							count={userDetailsCount?.disLikesCount}
@@ -104,7 +116,7 @@ const Dashboard = () => {
 							<AiFillDislike className="text-red-600 font-bold text-2xl bg-yellow-100 rounded-md py-1 px-1" />
 						</UserDetailsCount>
 					</div>
-					<div className=" col-start-2 row-start-2 ">
+					<div className="  ">
 						<UserDetailsCount
 							bgColor={"bg-green-100"}
 							textColor={"text-green-600"}
@@ -114,7 +126,7 @@ const Dashboard = () => {
 							<GiShadowFollower className="text-yellow-600 font-bold text-2xl bg-yellow-100 rounded-md py-1 px-1" />
 						</UserDetailsCount>
 					</div>
-					<div className=" col-start-3 row-start-2">
+					<div className=" ">
 						<UserDetailsCount
 							text="Following"
 							count={userDetailsCount?.followingCount}
@@ -123,12 +135,14 @@ const Dashboard = () => {
 						</UserDetailsCount>
 					</div>
 				</div>
+
 				{/* chart  */}
 				<div className=" pt-4  flex flex-col gap-4 lg:flex-row justify-between">
 					<div className="lg:w-[60%] bg-white pt-2 pb-8 rounded-md drop-shadow-sm px-2 ">
 						<h1 className=" font-bold text-xs text-gray-800 mb-3">
 							post Charts
 						</h1>
+
 						<BarChart />
 					</div>
 					{/* viewedBy */}
@@ -136,17 +150,21 @@ const Dashboard = () => {
 						<h1 className=" font-bold text-xs text-gray-800 mb-3 mt-10 lg:mt-0">
 							Who's Viewed your profile
 						</h1>
-						{whoViewUserProfile?.map((users, index) =>
-							users?.viewedBy?.map((viewedBy, index) => (
-								<div key={index}>
-									<UserToFollow
-										user={viewedBy}
-										index={index}
-										date={users.updatedAt}
-										numberOfView={users.numberOfView}
-									/>
-								</div>
-							))
+						{whoViewUserProfileStatus === "loading" ? (
+							<MessageSkeleton />
+						) : (
+							whoViewUserProfile.map((users, index) =>
+								users?.viewedBy?.map((viewedBy, index) => (
+									<div key={index}>
+										<UserToFollow
+											user={viewedBy}
+											index={index}
+											date={users.updatedAt}
+											numberOfView={users.numberOfView}
+										/>
+									</div>
+								))
+							)
 						)}
 					</div>
 				</div>
@@ -157,28 +175,32 @@ const Dashboard = () => {
 				<h1 className=" font-bold text-gray-800 mb-3 text-xs">
 					Recent Mesaages
 				</h1>
-				<div className="flex gap-6 flex-col">
-					{msg.map((message) => {
-						return (
-							<Link
-								to={`/profile/${message?.sender?._id}`}
-								className="flex gap-2"
-							>
-								<img
-									src={message?.sender?.profilePhoto}
-									alt=""
-									className=" self-start border bg-blue-400 w-10 h10 rounded-lg"
-								/>
-								<div className=" text-xs font-medium flex gap-1 flex-col">
-									<h3 className="  text-pink-400">
-										{`${message?.sender?.firstName} ${message?.sender?.lastName}`}
-									</h3>
-									<h3>{`${message?.message.slice(0, 60)}...`}</h3>
-								</div>
-							</Link>
-						);
-					})}
-				</div>
+				{fetchMessageStatus === "loading" ? (
+					<MessageSkeleton />
+				) : (
+					<div className="flex gap-6 flex-col">
+						{msg.map((message) => {
+							return (
+								<Link
+									to={`/profile/${message?.sender?._id}`}
+									className="flex gap-2"
+								>
+									<img
+										src={message?.sender?.profilePhoto}
+										alt=""
+										className=" self-start border bg-blue-400 w-10 h10 rounded-lg"
+									/>
+									<div className=" text-xs font-medium flex gap-1 flex-col">
+										<h3 className="  text-pink-400">
+											{`${message?.sender?.firstName} ${message?.sender?.lastName}`}
+										</h3>
+										<h3>{`${message?.message.slice(0, 60)}...`}</h3>
+									</div>
+								</Link>
+							);
+						})}
+					</div>
+				)}
 			</div>
 			{/* post history */}
 			<div className=" col-start-1 col-span-full  flex gap-8 flex-col bg-white py-2  rounded-md drop-shadow-sm px-4 ">

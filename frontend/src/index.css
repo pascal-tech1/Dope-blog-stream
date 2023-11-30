@@ -30,6 +30,68 @@
 @tailwind utilities;
 
 /* Custom Scrollbar Styling */
+
+.tableHeading {
+	position: sticky;
+	
+	/* background-color: white; Set background color as needed */
+	z-index: 10; /* Ensure it's above other elements */
+}
+
+/* loaidng skeletal */
+.loader {
+	width: 100%;
+	height: 100%;
+	margin: auto;
+	display: block;
+	position: relative;
+	background: #fff;
+	box-sizing: border-box;
+}
+.loader::after {
+	content: "";
+	width: calc(100% - 30px);
+	height: calc(100% - 30px);
+	top: 15px;
+	left: 15px;
+	position: absolute;
+	background-image: linear-gradient(
+			100deg,
+			transparent,
+			rgba(255, 255, 255, 0.5) 50%,
+			transparent 80%
+		),
+		linear-gradient(#ddd 56px, transparent 0),
+		linear-gradient(#ddd 24px, transparent 0),
+		linear-gradient(#ddd 18px, transparent 0),
+		linear-gradient(#ddd 66px, transparent 0);
+	background-repeat: no-repeat;
+	background-size: 75px 130px, 55px 56px, 160px 30px, 260px 20px,
+		290px 56px;
+	background-position: 0% 0, 0 0, 70px 5px, 70px 38px, 0px 66px;
+	box-sizing: border-box;
+	animation: animloader 1s linear infinite;
+}
+
+@keyframes animloader {
+	0% {
+		background-position: 0% 0, 0 0, 70px 5px, 70px 38px, 0px 66px;
+	}
+	100% {
+		background-position: 150% 0, 0 0, 70px 5px, 70px 38px, 0px 66px;
+	}
+}
+
+@keyframes animloader {
+	0% {
+		background-position: 0% 0, 120px 0, 120px 40px, 120px 80px;
+	}
+	100% {
+		background-position: 100% 0, 120px 0, 120px 40px, 120px 80px;
+	}
+}
+/* loading skeletal end */
+
 .custom-scrollbar::-webkit-scrollbar {
 	width: 10px;
 	height: 10px;
@@ -37,7 +99,7 @@
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
-	background-color: #bcd2e8;
+	background-color: #c8c8c8;
 	border-radius: 6px;
 	height: 1rem;
 }
@@ -77,19 +139,16 @@
 	@apply absolute top-[-0.6rem] left-0 text-white bg-red-400 text-center rounded-md  mt-1  text-xs min-w-max py-[0.15rem];
 }
 
-
-
 .tableContainer {
-	@apply shadow-md rounded-lg  font-medium tableLayout gap-4  -mx-2 ;
+	@apply shadow-md rounded-lg  font-medium tableLayout gap-4  -mx-2;
 }
 .checkboxStyle {
 	@apply w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600;
 }
 
 .tableActionStyle {
-	@apply flex justify-between items-start fixed z-50  mx-6 gap-4 row-start-1 row-span-1 ;
+	@apply flex justify-between items-start fixed z-50  mx-6 gap-4 row-start-1 row-span-1;
 }
 .tableBaginsStyle {
 	@apply overflow-x-auto overflow-y-auto row-start-2 flex flex-col custom-scrollbar;
 }
-

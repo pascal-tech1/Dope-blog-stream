@@ -3,7 +3,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useCallback } from "react";
 import {
 	IncreaseSavedPostPageNumber,
-	fetchUserSavedPost,
+	fetchSavedPosts,
+	fetchUserPostHistory,
 	setSavedPostFirstSearch,
 } from "../../redux/post/morePostSlice";
 import { Spinner } from "../../components";
@@ -14,16 +15,12 @@ const Saved = () => {
 	const dispatch = useDispatch();
 	const { userSavedPost, savedPostHasMore, userSavedPostStatus } =
 		useSelector((store) => store.morePostSlice);
-	const [page, setPage] = useState(1);
+	let page = 1;
 
 	useEffect(() => {
-		setPage(1);
-		dispatch(setSavedPostFirstSearch());
+		userSavedPost.length === 0 && dispatch(fetchSavedPosts(page));
 	}, []);
 
-	useEffect(() => {
-		dispatch(fetchUserSavedPost(page));
-	}, [page]);
 	const observer = useRef();
 	const lastPostRef = useCallback(
 		(node) => {
@@ -31,42 +28,93 @@ const Saved = () => {
 			if (observer.current) observer.current.disconnect();
 			observer.current = new IntersectionObserver((entries) => {
 				if (entries[0].isIntersecting && savedPostHasMore) {
-					setPage(page + 1);
+					page += 1;
+					dispatch(fetchSavedPosts(page));
 				}
 			});
 			if (node) observer.current.observe(node);
 		},
-		[userSavedPostStatus, savedPostHasMore]
+		[savedPostHasMore, page]
 	);
+
+	// Function to format the date as "Today", "Yesterday", or "Nov, 2023"
+	const formatDate = (dateString) => {
+		const date = new Date(dateString);
+		const today = new Date();
+		const yesterday = new Date();
+		yesterday.setDate(today.getDate() - 1);
+
+		if (
+			date.getDate() === today.getDate() &&
+			date.getMonth() === today.getMonth() &&
+			date.getFullYear() === today.getFullYear()
+		) {
+			return "Today";
+		} else if (
+			date.getDate() === yesterday.getDate() &&
+			date.getMonth() === yesterday.getMonth() &&
+			date.getFullYear() === yesterday.getFullYear()
+		) {
+			return "Yesterday";
+		} else {
+			return `${date.toLocaleString("default", {
+				month: "short",
+			})}, ${date.getFullYear()}`;
+		}
+	};
+
+	// Organize userSavedPost by date
+	const organizedPosts = userSavedPost.reduce((acc, post) => {
+		const dateKey = formatDate(post.updatedAt);
+		if (!acc[dateKey]) {
+			acc[dateKey] = [];
+		}
+		acc[dateKey].push(post);
+		return acc;
+	}, {});
 
 	return (
 		<div className="">
-			<div className=" flex max-w-full justify-between flex-wrap gap-6 ">
-				{userSavedPost.map((post, index) => {
-					return (
-						<div
-							key={index}
-							ref={userSavedPost.length === index + 1 ? lastPostRef : null}
-							className=" mx-auto"
-						>
-							<Link to={`/single-post/${post?._id}`} className=" flex max-w-[15rem] gap-4 items-center md:items-center">
-								<div className=" hover:cursor-pointer">
-									<img
-										src={post?.image}
-										alt=""
-										className="rounded-lg max-w-[5rem] object-cover mb-3 self-center border border-gray-300"
-									/>
+			{Object.keys(organizedPosts).map((dateKey) => (
+				<div key={dateKey}>
+					<h2>{dateKey}</h2>
+					<div className=" grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 ">
+						{organizedPosts[dateKey].map((item, index) => {
+							const post = item?.post;
+							return (
+								<div
+									key={index}
+									ref={
+										userSavedPost.length === index + 1 &&
+										dateKey ===
+											Object.keys(organizedPosts)[
+												Object.keys(organizedPosts).length - 1
+											]
+											? lastPostRef
+											: null
+									}
+									className=""
+								>
+									<Link
+										to={`/single-post/${post?._id}`}
+										className="flex gap-4 justify-between"
+									>
+										<div className="hover:cursor-pointer flex-1">
+											<img
+												src={post?.image}
+												alt=""
+												className="rounded-lg w-full  h-[100px] object-cover mb-3 border border-gray-300"
+											/>
+										</div>
+										<h3 className="font-medium text-xs flex-1 self-center">{post?.title}</h3>
+									</Link>
 								</div>
-								<h3 className=" font-medium text-xs ">
-									{post?.title}
-								</h3>
-							</Link>
-						</div>
-					);
-					//
-				})}
-			</div>
-			<div className=" grid place-content-center">
+							);
+						})}
+					</div>
+				</div>
+			))}
+			<div className="grid place-content-center">
 				{userSavedPostStatus === "loading" && <Spinner />}
 			</div>
 			<div>{!savedPostHasMore && <h3>No more Post</h3>}</div>

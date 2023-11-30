@@ -25,6 +25,7 @@ const {
 	fetchWhoViewedUserProfileCtrl,
 	fetchPostImpressionsCount,
 	blockOrUnblockUserCtrl,
+	ChangeEmailCtrl,
 } = require("../../controllers/users/usersCtrl");
 const {
 	profilePhotoUpload,
@@ -66,6 +67,7 @@ userRoutes.post(
 );
 userRoutes.post("/send-email", sendAcctVerificationEmailCtrl);
 userRoutes.post("/confirm-sent-email", confirmSentEmailCtrl);
+userRoutes.post("/change-email", authMiddleWare, ChangeEmailCtrl);
 userRoutes.post("/forget-password", sendPasswordResetEmailCtrl);
 userRoutes.post("/reset-password", resetPasswordCtrl);
 userRoutes.post("/follow", authMiddleWare, followingUserCtrl);

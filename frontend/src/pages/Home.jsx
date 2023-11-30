@@ -18,7 +18,7 @@ const Home = () => {
 	const navigate = useNavigate();
 
 	const { allCategory } = useSelector((store) => store.categorySlice);
-	const { randomUsers, user } = useSelector((store) => store.userSlice);
+	const { randomUsers } = useSelector((store) => store.userSlice);
 	const { activeCategory } = useSelector((store) => store.allPostSlice);
 
 	let allCategoryArray = allCategory.map((category) => category.title);
@@ -98,13 +98,12 @@ const Home = () => {
 								<h2 className=" whitespace-nowrap text-center font-medium my-4 place-self-center">
 									People you might be interested in
 								</h2>
-
+								{/* renders random users */}
 								{randomUsers?.map((user, index) => {
 									return (
 										<UserToFollow key={index} user={user} index={index} />
 									);
 								})}
-
 								{/* more interesting topic */}
 							</section>
 							<section className="flex justify-center flex-col py-3">

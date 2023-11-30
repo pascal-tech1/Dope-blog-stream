@@ -15,6 +15,7 @@ const FollowUsersList = ({
 	return (
 		<div className=" my-4 flex flex-col ">
 			{list?.map((user, index) => {
+				console.log(title,user)
 				return <UserToFollow user={user} index={index} />;
 			})}
 

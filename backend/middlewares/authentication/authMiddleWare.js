@@ -8,7 +8,7 @@ const jwt = require("jsonwebtoken");
 
 const authMiddleWare = expressAsyncHandler(async (req, res, next) => {
 	// checking if the user entered header for authorization
-	console.log(req.url);
+	
 	const enteredHeader = req.headers.authorization;
 
 	if (!enteredHeader)

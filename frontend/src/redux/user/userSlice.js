@@ -127,8 +127,9 @@ export const savePost = createAsyncThunk(
 					},
 				}
 			);
-			console.log(resp.data.postToBeSaved);
-			dispatch(updateUserSavedPost(resp.data.postToBeSaved));
+
+			dispatch(updateUserSavedPost(resp.data.savedPost));
+
 			return resp.data;
 		} catch (error) {
 			if (!error.response) {
@@ -157,17 +158,18 @@ export const fetchRandomUser = createAsyncThunk(
 );
 
 export const fetchUserFollowingList = createAsyncThunk(
-	"user/followingList",
-	async (_, { getState, rejectWithValue }) => {
-		const { followingListPageNumber, followsNumberPerPage, user } =
+	"fetchUser/followingList",
+	async (_id, { getState, rejectWithValue }) => {
+		const { followingListPageNumber, followsNumberPerPage } =
 			getState().userSlice;
 
 		try {
 			const resp = await customFetch(
-				`/users/following?userId=${user._id}&pageNumber=${followingListPageNumber}&numberPerPage=${followsNumberPerPage}`
+				`/users/following?userId=${_id}&pageNumber=${followingListPageNumber}&numberPerPage=${followsNumberPerPage}`
 			);
-			return resp.data;
+			return { data: resp.data, followingUserId: _id };
 		} catch (error) {
+			console.log(error);
 			if (!error.response) {
 				throw new Error();
 			}
@@ -199,7 +201,6 @@ export const fetchUserFollowersList = createAsyncThunk(
 export const fetchUserDetailsCounts = createAsyncThunk(
 	"fetchUser/DetailsCounts",
 	async (_, { getState, rejectWithValue }) => {
-		console.log(getState().userSlice?.token);
 		try {
 			const resp = await customFetch("/users/user-details-Count", {
 				headers: {
@@ -218,13 +219,16 @@ export const fetchUserDetailsCounts = createAsyncThunk(
 );
 export const fetchWhoViewedUserProfile = createAsyncThunk(
 	"fetchWho/ViewedUserProfile",
-	async (_, { getState, rejectWithValue }) => {
+	async (data, { getState, rejectWithValue }) => {
 		try {
-			const resp = await customFetch("/users/viewedBy", {
-				headers: {
-					authorization: `Bearer ${getState().userSlice?.token}`,
-				},
-			});
+			const resp = await customFetch(
+				`/users/viewedBy?page=${data.page}&numberPerPage=${data.limit}`,
+				{
+					headers: {
+						authorization: `Bearer ${getState().userSlice?.token}`,
+					},
+				}
+			);
 
 			return resp.data;
 		} catch (error) {
@@ -378,6 +382,27 @@ export const updatePassword = createAsyncThunk(
 	}
 );
 
+export const changeEmail = createAsyncThunk(
+	"change/email",
+	async (user, { getState, rejectWithValue }) => {
+		try {
+			const resp = await customFetch.post(`/users/change-email`, user, {
+				headers: {
+					Authorization: `Bearer ${getState().userSlice.token} `,
+				},
+			});
+			console.log(resp.data);
+			return resp.data;
+		} catch (error) {
+			console.log(error);
+			if (!error?.response) {
+				throw new Error(error);
+			}
+			return rejectWithValue(error?.response?.data);
+		}
+	}
+);
+
 const initialState = {
 	user: null,
 	token: getUserFromLocalStorage(),
@@ -391,6 +416,7 @@ const initialState = {
 	userDetailsCount: {},
 	whoViewUserProfile: [],
 	whoViewUserProfileStatus: "idle",
+	whoViewUserProfileCount: 0,
 	chartSelectedFilter: "likes and dislikes",
 	userPostImpression: null,
 	followingListPageNumber: 1,
@@ -398,6 +424,10 @@ const initialState = {
 	followersListPageNumber: 1,
 	confirmSentEmailStatus: "idle",
 	resetPasswordStatus: "idle",
+	changeEmailStatus: false,
+	followingUserListForNonLoginUser: [],
+	followingUserListForNonLoginUserTotalNumber: 0,
+	dashboardSearchTerm: "",
 };
 const userSlice = createSlice({
 	name: "userSlice",
@@ -419,6 +449,15 @@ const userSlice = createSlice({
 			state.whoViewUserProfileStatus = "idle";
 			state.chartSelectedFilter = "likes and dislikes";
 			state.userPostImpression = null;
+			state.followingListPageNumber = 1;
+			state.followsNumberPerPage = 2;
+			state.followersListPageNumber = 1;
+			state.confirmSentEmailStatus = "idle";
+			state.resetPasswordStatus = "idle";
+			state.changeEmailStatus = false;
+		},
+		setChangeEmail: (state) => {
+			state.changeEmailStatus = !state.changeEmailStatus;
 		},
 		setUserState: (state, action) => {
 			state.user = action.payload;
@@ -433,6 +472,9 @@ const userSlice = createSlice({
 			state.followinglistTotalNumber = 0;
 			state.followingListPageNumber = 1;
 			state.userfollowinglist = [];
+			state.followingUserListForNonLoginUserTotalNumber = 0;
+
+			state.followingUserListForNonLoginUser = [];
 		},
 		setFirstFetchFollowersUser: (state, action) => {
 			state.followerslistTotalNumber = 0;
@@ -441,6 +483,12 @@ const userSlice = createSlice({
 		},
 		setChartSelectedFilter: (state, { payload }) => {
 			state.chartSelectedFilter = payload;
+		},
+		clearWhoViewedUserProfile: (state) => {
+			state.whoViewUserProfile = [];
+		},
+		setSearchTermInStore: (state, { payload }) => {
+			state.dashboardSearchTerm = payload;
 		},
 	},
 	extraReducers: {
@@ -535,7 +583,6 @@ const userSlice = createSlice({
 		},
 		[savePost.fulfilled]: (state, { payload }) => {
 			state.isLoading = false;
-			state.user.savedPost = payload.savedPost;
 			toast.success(payload?.message);
 		},
 		[savePost.rejected]: (state, action) => {
@@ -564,12 +611,23 @@ const userSlice = createSlice({
 		},
 		[fetchUserFollowingList.fulfilled]: (state, { payload }) => {
 			state.fetchingFollowingListStatus = "success";
-
-			state.userfollowinglist = [
-				...state.userfollowinglist,
-				...payload.userfollowinglist.following,
-			];
-			state.followinglistTotalNumber = payload.followinglistTotalNumber;
+			console.log(payload);
+			if (payload.followingUserId !== state.user._id) {
+				console.log("im her noon login");
+				state.followingUserListForNonLoginUser = [
+					...state.followingUserListForNonLoginUser,
+					...payload.data.userfollowinglist.following,
+				];
+				state.followingUserListForNonLoginUserTotalNumber =
+					payload.data.followinglistTotalNumber;
+			} else {
+				state.userfollowinglist = [
+					...state.userfollowinglist,
+					...payload.data.userfollowinglist.following,
+				];
+				state.followinglistTotalNumber =
+					payload.data.followinglistTotalNumber;
+			}
 		},
 		[fetchUserFollowingList.rejected]: (state, action) => {
 			state.fetchingFollowingListStatus = "failed";
@@ -611,7 +669,16 @@ const userSlice = createSlice({
 		},
 		[fetchWhoViewedUserProfile.fulfilled]: (state, { payload }) => {
 			state.whoViewUserProfileStatus = "success";
-			state.whoViewUserProfile = payload.userWhoViewProfile;
+			if (
+				payload.whoViewUserProfileCount > state.whoViewUserProfile.length
+			) {
+				state.whoViewUserProfile = [
+					...state.whoViewUserProfile,
+					...payload.userWhoViewProfile,
+				];
+			}
+
+			state.whoViewUserProfileCount = payload.whoViewUserProfileCount;
 		},
 		[fetchWhoViewedUserProfile.rejected]: (state, action) => {
 			state.whoViewUserProfileStatus = "failed";
@@ -702,6 +769,18 @@ const userSlice = createSlice({
 			state.updatePasswordStatus = "failed";
 			toast.error(payload?.message);
 		},
+		[changeEmail.pending]: (state) => {
+			state.changeEmailStatus = "loading";
+		},
+		[changeEmail.fulfilled]: (state, { payload }) => {
+			toast.success(payload?.message);
+			state.changeEmailStatus = "success";
+		},
+		[changeEmail.rejected]: (state, action) => {
+			state.changeEmailStatus = "failed";
+			const error = action?.payload?.message || action?.error?.message;
+			toast.error(error);
+		},
 	},
 });
 
@@ -714,4 +793,7 @@ export const {
 	updateFollowersListPageNumber,
 	setFirstFetchFollowingUser,
 	setFirstFetchFollowersUser,
+	setChangeEmail,
+	clearWhoViewedUserProfile,
+	setSearchTermInStore,
 } = userSlice.actions;

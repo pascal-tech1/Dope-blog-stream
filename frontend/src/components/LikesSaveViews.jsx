@@ -23,7 +23,7 @@ const LikesSaveViews = ({ post }) => {
 		dispatch(likeOrDislikePost({ choice: "disLike", postId: id }));
 	};
 	return (
-		<div className=" text-sm flex gap-2 items-center mt-3 font-light flex-wrap justify-start  ">
+		<div className=" text-sm flex gap-2 items-center font-light flex-wrap justify-start  ">
 			<span className="flex gap-1 items-center">
 				<button
 					onClick={() => handleLikes(post?._id)}

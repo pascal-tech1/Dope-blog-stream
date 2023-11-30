@@ -28,6 +28,9 @@ import ProfilePhoto from "./ProfilePhoto";
 import LazyLoadImg from "./LazyLoadImg";
 import ForgotPassword from "./ForgotPassword";
 import UserDashboardMenu from "./UserDashboardMenu";
+import ChangeEmailForm from "./ChangeEmailForm";
+import MessageSkeleton from "./MessageSkeleton";
+import ChartSkeleton from "./chartSkeleton";
 
 export {
 	DashboardSideBar,
@@ -60,4 +63,7 @@ export {
 	LazyLoadImg,
 	ForgotPassword,
 	UserDashboardMenu,
+	ChangeEmailForm,
+	MessageSkeleton,
+	ChartSkeleton
 };

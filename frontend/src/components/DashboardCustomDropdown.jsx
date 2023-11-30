@@ -35,10 +35,9 @@ const DashboardCustomDropdown = ({
 			<button
 				type="button"
 				onClick={toggleDropdown}
-				className="bg-white border whitespace-nowrap justify-center px-2 flex font-inter  items-center  rounded  py-1 text-gray-700 focus:outline-none focus:border-gray-500"
+				className="bg-white border capitalize whitespace-nowrap justify-center px-2 flex font-inter  items-center  rounded  py-1 text-gray-700 focus:outline-none focus:border-gray-500"
 			>
-				{selectedFilter.charAt(0).toUpperCase() +
-					selectedFilter.slice(1).toLowerCase()}
+				{selectedFilter}
 				{isOpen ? <IoIosArrowUp /> : <IoIosArrowDown />}
 			</button>
 

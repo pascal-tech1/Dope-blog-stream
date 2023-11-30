@@ -29,7 +29,7 @@ export const FollowingBtn = ({ userToFollowOrUnfollow, className }) => {
 	return (
 		<button onClick={handleFollowUser} className={className}>
 			{user?.following?.includes(userToFollowOrUnfollow?._id) ? (
-				<h3>unfollow</h3>
+				<h3>following</h3>
 			) : (
 				<h3>follow</h3>
 			)}

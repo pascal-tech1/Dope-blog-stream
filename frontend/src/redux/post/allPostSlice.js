@@ -5,8 +5,11 @@ import customFetch from "../../utils/axios";
 export const fetchPostByCategory = createAsyncThunk(
 	"fetch/PostByCategory",
 	async (params, { getState, rejectWithValue, dispatch }) => {
-		const { page, postNumberPerPage, activeCategory, searchQuery } =
+		let { page, postNumberPerPage, activeCategory, searchQuery } =
 			getState().allPostSlice;
+		if (params?.where === "morePost") {
+			searchQuery = "";
+		}
 		const newPage = params?.page || page;
 		const newPostNumberPerPaage =
 			params?.postNumberPerPage || postNumberPerPage;
@@ -53,6 +56,7 @@ const allPostSlice = createSlice({
 		},
 		setEmptySearch: (state, { payload }) => {
 			state.searchQuery = "";
+
 			state.allPost = [];
 			state.page = 1;
 			state.hasMore = true;

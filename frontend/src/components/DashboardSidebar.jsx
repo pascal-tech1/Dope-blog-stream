@@ -44,10 +44,13 @@ const DashboardSideBar = () => {
 			hasSubMenu: true,
 			submenu: [
 				{
-					title: "view",
+					title: "View",
 				},
 				{
-					title: "Edit",
+					title: "Message",
+				},
+				{
+					title: "Profile Views",
 				},
 			],
 		},

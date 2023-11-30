@@ -23,8 +23,10 @@ const AllUsersPosts = () => {
 		MyPostSelectedFilter,
 		adminAllPostStatus,
 		adminAllPostTotalNumber,
+		
 	} = useSelector((store) => store.adminSlice);
-	const id = useSelector((store) => store.userSlice?.user?._id);
+	const {user,dashboardSearchTerm} = useSelector((store) => store.userSlice);
+	const id = user?._id
 
 	const dispatch = useDispatch();
 	const observer = useRef();
@@ -61,7 +63,7 @@ const AllUsersPosts = () => {
 				filter: MyPostSelectedFilter,
 			})
 		);
-	}, [MyPostSelectedFilter]);
+	}, [MyPostSelectedFilter,dashboardSearchTerm]);
 
 	const posts = [
 		{

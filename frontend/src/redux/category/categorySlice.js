@@ -6,8 +6,11 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 export const fetchAllCategorys = createAsyncThunk(
 	"fetch/AllCategories",
 	async (_, { getState, rejectWithValue }) => {
+		const { dashboardSearchTerm } = getState().userSlice;
 		try {
-			const resp = await customFetch("/categorys");
+			const resp = await customFetch(
+				`/categorys?searchTerm=${dashboardSearchTerm}`
+			);
 			return resp.data;
 		} catch (error) {
 			if (!error.response) {

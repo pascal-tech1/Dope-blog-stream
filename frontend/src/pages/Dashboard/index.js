@@ -14,7 +14,7 @@ import PostHistory from "./PostHistory";
 import MyPosts from "./MyPosts";
 import DashboardCustomDropdown from "../../components/DashboardCustomDropdown";
 import Following from "./Following";
-
+import ProfileViews from "./ProfileViews";
 export {
 	Layout,
 	Dashboard,
@@ -32,4 +32,5 @@ export {
 	PostHistory,
 	MyPosts,
 	DashboardCustomDropdown,
+	ProfileViews,
 };

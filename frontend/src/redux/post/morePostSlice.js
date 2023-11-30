@@ -37,9 +37,37 @@ export const fetchMorePost = createAsyncThunk(
 		}
 	}
 );
+
+export const fetchSavedPosts = createAsyncThunk(
+	"fetch/SavedPosts",
+	async (page, { getState, rejectWithValue }) => {
+		console.log("im her histsssssssssssss");
+		const { postNumberPerPage } = getState().morePostSlice;
+
+		try {
+			const resp = await customFetch(
+				`/posts/user-savedPost?page=${page}&postNumberPerPage=${postNumberPerPage}`,
+				{
+					headers: {
+						Authorization: `Bearer ${getState().userSlice.token}`,
+					},
+				}
+			);
+			console.log(resp.data);
+			return resp.data;
+		} catch (error) {
+			console.log(error);
+			if (!error?.response) {
+				throw new Error(error);
+			}
+			return rejectWithValue(error?.response?.data);
+		}
+	}
+);
 export const fetchUserPostHistory = createAsyncThunk(
 	"fetch/userPostHistory",
 	async (historyPageNumber, { getState, rejectWithValue }) => {
+		console.log("im her history");
 		const { postNumberPerPage } = getState().morePostSlice;
 
 		try {
@@ -51,31 +79,10 @@ export const fetchUserPostHistory = createAsyncThunk(
 					},
 				}
 			);
+			console.log(resp.data);
 			return resp.data;
 		} catch (error) {
-			if (!error?.response) {
-				throw new Error(error);
-			}
-			return rejectWithValue(error?.response?.data);
-		}
-	}
-);
-export const fetchUserSavedPost = createAsyncThunk(
-	"fetch/savedPost",
-	async (savedPostPageNumber, { getState, rejectWithValue }) => {
-		const { postNumberPerPage } = getState().morePostSlice;
-		try {
-			const resp = await customFetch(
-				`/posts/user-savedPost?page=${savedPostPageNumber}&postNumberPerPage=${postNumberPerPage}`,
-				{
-					headers: {
-						Authorization: `Bearer ${getState().userSlice.token}`,
-					},
-				}
-			);
-
-			return resp.data;
-		} catch (error) {
+			console.log(error);
 			if (!error?.response) {
 				throw new Error(error);
 			}
@@ -149,13 +156,18 @@ const morePostSlice = createSlice({
 		},
 		setSavedPostFirstSearch: (state) => {
 			state.userSavedPost = [];
-			state.savedPostPageNumber = 1;
 			state.savedPostHasMore = true;
 		},
 		updateUserViewHistory: (state, { payload }) => {
+			state.userPostHistory = state.userPostHistory.filter(
+				(post) => post._id !== payload._id
+			);
 			state.userPostHistory = [payload, ...state.userPostHistory];
 		},
 		updateUserSavedPost: (state, { payload }) => {
+			state.userSavedPost = state.userSavedPost.filter(
+				(post) => post._id !== payload._id
+			);
 			state.userSavedPost = [payload, ...state.userSavedPost];
 		},
 	},
@@ -187,31 +199,34 @@ const morePostSlice = createSlice({
 			state.userPostHistoryStatus = "loading";
 		},
 		[fetchUserPostHistory.fulfilled]: (state, { payload }) => {
-			console.log(payload.posts);
 			state.userPostHistoryStatus = "success";
-			if (payload.posts.length < 10) {
-				state.historyHasMore = false;
-			} else {
+			if (state.userPostHistory.length < payload.totalPostHistory) {
 				state.historyHasMore = true;
+				state.userPostHistory = [
+					...state.userPostHistory,
+					...payload.posts,
+				];
+			} else {
+				state.historyHasMore = false;
 			}
-			state.userPostHistory = [...state.userPostHistory, ...payload.posts];
 		},
 		[fetchUserPostHistory.rejected]: (state, action) => {
 			state.userPostHistoryStatus = "failed";
 		},
-		[fetchUserSavedPost.pending]: (state, action) => {
+		[fetchSavedPosts.pending]: (state, action) => {
 			state.userSavedPostStatus = "loading";
 		},
-		[fetchUserSavedPost.fulfilled]: (state, { payload }) => {
+		[fetchSavedPosts.fulfilled]: (state, { payload }) => {
 			state.userSavedPostStatus = "success";
-			if (payload.posts.length < 10) {
-				state.savedPostHasMore = false;
-			} else {
+			if (state.userSavedPost.length < payload.totalSavedPosts) {
 				state.savedPostHasMore = true;
+				state.userSavedPost = [...state.userSavedPost, ...payload.posts];
+			} else {
+				state.savedPostHasMore = false;
 			}
-			state.userSavedPost = [...state.userSavedPost, ...payload.posts];
 		},
-		[fetchUserSavedPost.rejected]: (state, action) => {
+		[fetchSavedPosts.rejected]: (state, action) => {
+			console.log(action);
 			state.userSavedPostStatus = "failed";
 		},
 	},
@@ -227,5 +242,5 @@ export const {
 	setSavedPostFirstSearch,
 	updateUserViewHistory,
 	updateUserSavedPost,
-	clearUserPost
+	clearUserPost,
 } = morePostSlice.actions;

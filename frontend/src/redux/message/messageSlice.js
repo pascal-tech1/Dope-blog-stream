@@ -22,6 +22,7 @@ export const sendMsg = createAsyncThunk(
 export const fetchMsg = createAsyncThunk(
 	"fetch/message",
 	async (data, { getState, rejectWithValue, dispatch }) => {
+		console.log(data.page);
 		try {
 			const resp = await customFetch(
 				`/message?page=${data.page}&numberPerPage=${data.limit}`,
@@ -42,13 +43,18 @@ export const fetchMsg = createAsyncThunk(
 
 const initialState = {
 	msg: [],
+	receivedMessageCount: 0,
 };
 
 const messageSlice = createSlice({
 	name: "messageSlice",
 	initialState,
 
-	reducers: {},
+	reducers: {
+		clearMsg: (state, action) => {
+			state.msg = [];
+		},
+	},
 	extraReducers: {
 		[sendMsg.pending]: (state) => {
 			state.SendingMessageStatus = "loading";
@@ -67,7 +73,10 @@ const messageSlice = createSlice({
 		},
 		[fetchMsg.fulfilled]: (state, { payload }) => {
 			state.fetchMessageStatus = "success";
-			state.msg = payload.receivedMessages;
+			if (state.msg.length < payload.receivedMessageCount) {
+				state.msg = [...state.msg, ...payload.receivedMessages];
+			}
+			state.receivedMessageCount = payload.receivedMessageCount;
 		},
 		[fetchMsg.rejected]: (state) => {
 			state.fetchMessageStatus = "failed";
@@ -75,4 +84,5 @@ const messageSlice = createSlice({
 	},
 });
 
+export const { clearMsg } = messageSlice.actions;
 export default messageSlice.reducer;
