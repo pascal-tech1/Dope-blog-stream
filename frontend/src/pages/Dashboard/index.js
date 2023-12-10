@@ -6,15 +6,14 @@ import Messages from "./Messages";
 import CreatePost from "./CreatePost";
 import Comments from "./Comments";
 import ProfileView from "./ProfileView";
-import MessagesView from "./MessagesView";
-import MessagesSend from "./MessagesSend";
+
 import ProfileEdit from "./ProfileEdit";
 import SavedPost from "./SavedPost";
 import PostHistory from "./PostHistory";
 import MyPosts from "./MyPosts";
 import DashboardCustomDropdown from "../../components/DashboardCustomDropdown";
 import Following from "./Following";
-import ProfileViews from "./ProfileViews";
+import WhoViewedMyProfile from "./WhoViewedMYProfileViews";
 export {
 	Layout,
 	Dashboard,
@@ -26,11 +25,9 @@ export {
 	Comments,
 	ProfileView,
 	ProfileEdit,
-	MessagesSend,
-	MessagesView,
 	SavedPost,
 	PostHistory,
 	MyPosts,
 	DashboardCustomDropdown,
-	ProfileViews,
+	WhoViewedMyProfile,
 };

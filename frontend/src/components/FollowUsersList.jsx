@@ -15,7 +15,7 @@ const FollowUsersList = ({
 	return (
 		<div className=" my-4 flex flex-col ">
 			{list?.map((user, index) => {
-				console.log(title,user)
+				
 				return <UserToFollow user={user} index={index} />;
 			})}
 
@@ -31,7 +31,7 @@ const FollowUsersList = ({
 						onClick={(e) => {
 							fetchAction(e);
 						}}
-						className="self-center rounded-lg px-2  border bg-blue-300 drop-shadow-md text-white border-gray-300 hover:bg-gray-300 transition-all delay-75"
+						className="self-center rounded-md px-2  border dark:border-slate-800 bg-blue-400 drop-shadow-md text-white border-gray-300 hover:bg-blue-600 transition-all delay-75"
 					>
 						{isProfileView ? `see all ${listTotalNumber}` : "load more"}
 					</button>

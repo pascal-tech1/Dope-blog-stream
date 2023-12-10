@@ -15,9 +15,23 @@ import Modal from "../components/Modal";
 import DashboardCustomDropdown from "../components/DashboardCustomDropdown";
 import { formatDate } from "../utils/dataFormatter";
 import Spinner from "../components/Spinner";
-import { BlockOrUnblockUser, MessageUser, Tooltip } from "../components";
+import {
+	BlockOrUnblockUser,
+	EditPostBtn,
+	MessageUser,
+	Tooltip,
+} from "../components";
+import {
+	setIsSearchBArNeeded,
+	setSearchTermInStore,
+} from "../redux/user/userSlice";
 
 const AllUsers = () => {
+	useEffect(() => {
+		console.log("im her runninbg ");
+		dispatch(setIsSearchBArNeeded(true));
+		dispatch(setSearchTermInStore(""));
+	}, []);
 	const {
 		allUsers,
 		AdminAllUserSelectedFilter,
@@ -25,8 +39,8 @@ const AllUsers = () => {
 		adminAllUsersTotalNumber,
 		AdminFetchUsersHasMore,
 		adminFetchUsersHasMore,
+		MyPostSelectedFilter,
 	} = useSelector((store) => store.adminSlice);
-
 	const { dashboardSearchTerm } = useSelector((store) => store.userSlice);
 
 	const dispatch = useDispatch();
@@ -38,9 +52,7 @@ const AllUsers = () => {
 			if (adminAllUsersStatus !== "loading") {
 				if (observer.current) observer.current.disconnect();
 				observer.current = new IntersectionObserver((entries) => {
-					console.log(adminFetchUsersHasMore);
 					if (entries[0].isIntersecting && adminFetchUsersHasMore) {
-						console.log("im here intersecting");
 						dispatch(increaseAdminAllUsersPageNumber());
 						dispatch(
 							fetchAllUsers({
@@ -66,24 +78,8 @@ const AllUsers = () => {
 		);
 	}, [AdminAllUserSelectedFilter, dashboardSearchTerm]);
 
-	const tableItems = [
-		{
-			all: "box",
-			_id: "User Id",
-			firstName: "First Name",
-			lastName: "Last Name",
-			email: "email",
-			createdAt: "Join Date",
-			postsCount: "Post Count",
-			followersCount: "Followers",
-			followingCount: "Following",
-			action: "action",
-		},
-
-		...allUsers,
-	];
-	const handleCheckedItemcsChange = (_id) => {
-		if (_id === "User Id") {
+	const handleCheckedItemcsChange = (_id, tableItems) => {
+		if (_id === "All") {
 			if (checkedItems.length === tableItems.length) {
 				setCheckedItemId([]);
 			} else {
@@ -91,10 +87,6 @@ const AllUsers = () => {
 				setCheckedItemId(allItemId);
 			}
 		} else {
-			checkedItems.includes("User Id") &&
-				setCheckedItemId((prev) =>
-					prev.filter((item) => item !== "User Id")
-				);
 			if (checkedItems.includes(_id)) {
 				setCheckedItemId((prev) =>
 					prev.filter((prevId) => prevId !== _id)
@@ -106,6 +98,7 @@ const AllUsers = () => {
 	};
 
 	const allFilter = [
+		"check",
 		"Newest User",
 		"Oldest User",
 		"highest Followers",
@@ -139,22 +132,24 @@ const AllUsers = () => {
 	};
 
 	return (
-		<div className=" tableContainer overflow-x-scroll min-w-[1200px] relative ">
+		<div className="font-inter overflow-hidden shadow-md relative">
 			{/* modal */}
-			<Modal
-				isOpen={isModalOpen}
-				onClose={closeModal}
-				onContinue={continueAction}
-			>
-				<div>
-					<h1>
-						Do you want to continue to delete {checkedItems.length} user
-					</h1>
-					<h3>Remember this Action cannot be undone</h3>
-				</div>
-			</Modal>
+			<div className=" z-[1000]">
+				<Modal
+					isOpen={isModalOpen}
+					onClose={closeModal}
+					onContinue={continueAction}
+				>
+					<div>
+						<h1>
+							Do you want to continue to delete {checkedItems.length} user
+						</h1>
+						<h3>Remember this Action cannot be undone</h3>
+					</div>
+				</Modal>
+			</div>
 			{/* table actions buttons */}
-			<div className="tableActionStyle ">
+			<div className="flex gap-4 ml-10 flex-wrap">
 				<button
 					onClick={openModal}
 					className="  py-[0.15] rounded-lg hover:text-red-700 text-red-400 outline-none"
@@ -173,95 +168,106 @@ const AllUsers = () => {
 				</h3>
 			</div>
 			{/* table */}
-			<div className="tableBaginsStyle relative">
-				{tableItems.map((user, index) => {
-					return (
-						<div
-							ref={
-								tableItems.length === index + 1 && tableItems.length > 1
-									? lastPostRef
-									: null
-							}
-							className={`${
-								user.action === "action"
-									? "tableHeading  -top-0 items-center z-30  bg-gray-500  text-white "
-									: ""
-							} grid grid-cols-12 gap-2 text-start border py-3 items-cente `}
-						>
-							<div className=" px-2 flex gap-2 items-center  ">
-								<input
-									type="checkbox"
-									name="check"
-									id={user._id}
-									checked={checkedItems.includes(user._id)}
-									onChange={() => handleCheckedItemcsChange(user._id)}
-									className="checkboxStyle"
-								/>
+			<div className=" max-h-[85vh] overflow-auto  min-w-[300px] custom-scrollbar mx-3">
+				<table className="">
+					<thead className="tableHeading -top-10 bg-gray-800  text-white z-50 ">
+						<tr>
+							<th className=" bg-gray-800">
+								<Tooltip info={"select All"}>
+									<input
+										type="checkbox"
+										name="check"
+										id="All"
+										checked={checkedItems.length === allUsers.length}
+										onChange={() =>
+											handleCheckedItemcsChange("All", allUsers)
+										}
+										className="checkboxStyle"
+									/>
+								</Tooltip>
+							</th>
+							<th>User Id</th>
+							<th>Frst Name</th>
+							<th>Last Name</th>
+							<th>Email</th>
+							<th>Join Date</th>
+							<th>No Posts</th>
+							<th>No followers</th>
+							<th>No following</th>
+							<th className="bg-gray-800">Action</th>
+						</tr>
+					</thead>
 
-								<Link to={`/profile/${user._id}`} className=" col-span-3">
-									<Tooltip info={user._id}>
-										<h3>{user._id}</h3>
+					<tbody className="">
+						{allUsers.map((user, index) => (
+							<tr
+								key={index}
+								ref={
+									allUsers.length === index + 1 && allUsers.length > 1
+										? lastPostRef
+										: null
+								}
+								className="transition duration-300 ease-in-out hover:bg-neutral-100  dark:hover:bg-gray-800"
+							>
+								<td className="bg-white dark:bg-[#1C1C1C]">
+									<input
+										type="checkbox"
+										name="check"
+										className="checkboxStyle"
+										id={user._id}
+										checked={checkedItems.includes(user._id)}
+										onChange={() => handleCheckedItemcsChange(user._id)}
+									/>
+								</td>
+
+								<td>
+									<Link to={`/profile/${user._id}`}>
+										<Tooltip info={user._id}>{user._id}</Tooltip>
+									</Link>
+								</td>
+								<td>
+									<Tooltip info={user.firstName}>{user.firstName}</Tooltip>
+								</td>
+								<td>
+									<Tooltip info={user.lastName}>{user.lastName}</Tooltip>
+								</td>
+								<td>
+									<Tooltip info={user.email}>{user.email}</Tooltip>
+								</td>
+								<td>
+									<Tooltip info={formatDate(user.createdAt)}>
+										{formatDate(user.createdAt)}
 									</Tooltip>
-								</Link>
-							</div>
+								</td>
+								<td>{user.postsCount}</td>
+								<td>{user.followersCount}</td>
+								<td>{user.followingCount}</td>
 
-							<div className=" col-start-4">
-								<Tooltip info={user.firstName}>
-									<h3>{user.firstName}</h3>
-								</Tooltip>
-							</div>
+								<td className="flex bg-white dark:bg-[#1C1C1C] gap-2 items-center ">
+									<MessageUser receiverId={user._id} />
 
-							<Tooltip info={user.lastName}>
-								<h3>{user.lastName}</h3>
-							</Tooltip>
-							<div className=" col-start-6 col-span-2 px-4">
-								<Tooltip info={user.email}>
-									<h3>{user.email}</h3>
-								</Tooltip>
-							</div>
-							<Tooltip info={formatDate(user.createdAt)}>
-								<h3>
-									{user.createdAt === "Join Date"
-										? "Join Date"
-										: formatDate(user.createdAt)}
-								</h3>
-							</Tooltip>
+									<BlockOrUnblockUser user={user} />
+								</td>
+							</tr>
+						))}
+					</tbody>
+					<td className="stickyBottom ">
+						{adminAllUsersStatus === "loading" && <Spinner />}
+					</td>
 
-							<h3 className="">{user.postsCount}</h3>
-							<h3 className="">{user.followersCount}</h3>
-							<h3 className="">{user.followingCount}</h3>
-							<div className=" relative self-start  ">
-								{user.action === "action" ? (
-									"Action"
-								) : (
-									<div className="flex gap-1 items-center right-4 sticky right-0 ">
-										<MessageUser receiverId={user?._id} />
-										<BlockOrUnblockUser user={user} />
-									</div>
-								)}
-							</div>
-						</div>
-					);
-				})}
-				<div className="my-2 place-self-center">
-					{adminAllUsersStatus === "loading" && <Spinner />}
-				</div>
-				<div className=" place-self-center">
 					{!adminFetchUsersHasMore &&
 						adminAllUsersStatus === "success" && (
-							<div className=" text-yellow-600 my-4">
+							<td className=" text-yellow-400  stickyBottom bg-white dark:bg-[#1C1C1C] ">
 								No more user
-							</div>
+							</td>
 						)}
-				</div>
-				<div className=" place-self-center">
-					{allUsers.length===0 &&
-						adminAllUsersStatus === "success" && (
-							<div className=" text-yellow-600 my-4">
-								No User found
-							</div>
-						)}
-				</div>
+
+					{allUsers.length === 0 && adminAllUsersStatus === "success" && (
+						<td className="  text-yellow-400  stickyBottom bg-white dark:bg-[#1C1C1C] ">
+							No User found
+						</td>
+					)}
+				</table>
 			</div>
 		</div>
 	);

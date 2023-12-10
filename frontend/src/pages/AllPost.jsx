@@ -7,6 +7,7 @@ import {
 	fetchPostByCategory,
 	setEmptySearch,
 } from "../redux/post/allPostSlice";
+import { MdCancel } from "react-icons/md";
 
 const AllPost = () => {
 	const dispatch = useDispatch();
@@ -52,9 +53,9 @@ const AllPost = () => {
 							dispatch(setEmptySearch());
 							dispatch(fetchPostByCategory());
 						}}
-						className=" bg-red-400 text-xs px-1 text-white rounded-lg hover:bg-red-300 transition-all delay-75"
+						className=" text-2xl text-red-400 px-1  rounded-lg hover:text-red-600 drop-shadow-md transition-all delay-75"
 					>
-						clear
+						<MdCancel />
 					</button>
 				</div>
 			)}
@@ -63,7 +64,7 @@ const AllPost = () => {
 					<div
 						key={index}
 						ref={allPost.length === index + 1 ? lastPostRef : null}
-						className=" border-t pt-2 mt-4 mb-6 "
+						className=" mt-4  pr-[2px] "
 					>
 						{/* The post info's including the user info */}
 						<PostInfo post={post} />

@@ -53,10 +53,10 @@ const AdditionalUserProfile = () => {
 	return (
 		<form
 			onSubmit={formik.handleSubmit}
-			className=" col-start-5 col-span-2 px-4 bg-white row-start-1 lg:shadow-sm lg:rounded-md"
+			className=" col-start-5 col-span-2 px-4 bg-white row-start-1 lg:shadow-sm lg:rounded-md dark:bg-[#171717]"
 		>
 			<div className=" flex justify-between mr-4 ">
-				<h1 className=" font-bold text-gray-900 ">Additional Details</h1>
+				<h1 className=" font-bold text-blue-400">Additional Details</h1>
 				<button type="submit" className="flex gap-1">
 					<MdEdit className=" text-blue-500" />
 					<h3 className="font-bold text-gray-600 hover:text-gray-900 text-xs">

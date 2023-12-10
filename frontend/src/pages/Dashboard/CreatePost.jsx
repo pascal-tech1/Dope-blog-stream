@@ -1,8 +1,14 @@
 import React, { useState, useEffect } from "react";
-import ReactQuill from "react-quill";
+import ReactQuill, { Quill } from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { modules } from "../../utils/quil";
 import { useDispatch, useSelector } from "react-redux";
+
+import ImageUploader from "quill-image-uploader";
+import BlotFormatter from "quill-blot-formatter/dist/BlotFormatter";
+
+import "quill-image-uploader/dist/quill.imageUploader.min.css";
+
 import {
 	clearSinglesliceState,
 	createPost,
@@ -18,6 +24,9 @@ import {
 import DashboardCustomDropdown from "../../components/DashboardCustomDropdown";
 import { fetchAllCategorys } from "../../redux/category/categorySlice";
 import { toast } from "react-toastify";
+Quill.register("modules/imageUploader", ImageUploader);
+
+Quill.register("modules/blotFormatter", BlotFormatter);
 
 const CreatePost = () => {
 	const dispatch = useDispatch();
@@ -52,7 +61,7 @@ const CreatePost = () => {
 					content,
 				},
 			});
-			dispatch(clearSinglesliceState("idle"));
+			dispatch(clearSinglesliceState());
 			setSelectedFilter("General");
 		}
 	}, [postEditingStatus]);
@@ -97,10 +106,11 @@ const CreatePost = () => {
 			</div>
 		);
 	}
-	const handleFocus = (e) => {
+
+	const handleQuilFocus = () => {
 		setQuillIsFocus(true);
 	};
-	const handleBlur = (e) => {
+	const handleOnBlur = () => {
 		setQuillIsFocus(false);
 	};
 
@@ -127,7 +137,7 @@ const CreatePost = () => {
 							type="text"
 							name="title"
 							id="title"
-							className=" col-start-2 col-span-full  w-full px-2 rounded-lg py-2 outline-none border border-blue-300 focus:border-blue-800 "
+							className=" col-start-2 col-span-full  w-full px-2 rounded-lg py-2 outline-none border border-blue-300 focus:border-blue-800  dark:bg-[#1C1C1C] "
 						/>
 						<div className=" relative mb-2 place-self-end">
 							<h1 className=" form-error-text">
@@ -162,7 +172,7 @@ const CreatePost = () => {
 							type="text"
 							name="description"
 							id="description"
-							className=" col-start-2 col-span-full w-full rounded-lg px-2 py-2 outline-none border border-blue-300 focus:border-blue-800"
+							className=" col-start-2 col-span-full w-full rounded-lg px-2 py-2 outline-none border dark:bg-[#1C1C1C] border-blue-300 focus:border-blue-800"
 						/>
 						<div className=" relative mb-2 place-self-end">
 							<h1 className=" form-error-text">
@@ -219,9 +229,8 @@ const CreatePost = () => {
 							)}
 						</button>
 					</div>
+					{console.log(quillIsFocus)}
 					<div
-						onBlur={handleBlur}
-						onFocus={handleFocus}
 						className={`my-6 ${
 							quillIsFocus
 								? "  h-[80vh]  relative top-0  z-50"
@@ -234,6 +243,8 @@ const CreatePost = () => {
 							value={formik.values.content}
 							onChange={formik.handleChange("content")}
 							className="h-full py-6"
+							onFocus={handleQuilFocus}
+							onBlur={handleOnBlur}
 						/>
 					</div>
 				</div>

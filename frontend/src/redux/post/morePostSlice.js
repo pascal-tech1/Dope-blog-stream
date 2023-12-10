@@ -41,12 +41,11 @@ export const fetchMorePost = createAsyncThunk(
 export const fetchSavedPosts = createAsyncThunk(
 	"fetch/SavedPosts",
 	async (page, { getState, rejectWithValue }) => {
-		console.log("im her histsssssssssssss");
 		const { postNumberPerPage } = getState().morePostSlice;
-
+		const { dashboardSearchTerm } = getState().userSlice;
 		try {
 			const resp = await customFetch(
-				`/posts/user-savedPost?page=${page}&postNumberPerPage=${postNumberPerPage}`,
+				`/posts/user-savedPost?page=${page}&postNumberPerPage=${postNumberPerPage}&searchTerm=${dashboardSearchTerm}`,
 				{
 					headers: {
 						Authorization: `Bearer ${getState().userSlice.token}`,
@@ -67,12 +66,13 @@ export const fetchSavedPosts = createAsyncThunk(
 export const fetchUserPostHistory = createAsyncThunk(
 	"fetch/userPostHistory",
 	async (historyPageNumber, { getState, rejectWithValue }) => {
-		console.log("im her history");
+	
 		const { postNumberPerPage } = getState().morePostSlice;
+		const { dashboardSearchTerm } = getState().userSlice;
 
 		try {
 			const resp = await customFetch(
-				`/posts/user-history?page=${historyPageNumber}&postNumberPerPage=${postNumberPerPage}`,
+				`/posts/user-history?page=${historyPageNumber}&postNumberPerPage=${postNumberPerPage}&searchTerm=${dashboardSearchTerm}`,
 				{
 					headers: {
 						Authorization: `Bearer ${getState().userSlice.token}`,
@@ -170,6 +170,12 @@ const morePostSlice = createSlice({
 			);
 			state.userSavedPost = [payload, ...state.userSavedPost];
 		},
+		clearSavedPost: (state, { payload }) => {
+			state.userSavedPost = [];
+		},
+		clearPostHistory: (state, { payload }) => {
+			state.userPostHistory = [];
+		},
 	},
 	extraReducers: {
 		// fetch  user creator Post
@@ -243,4 +249,6 @@ export const {
 	updateUserViewHistory,
 	updateUserSavedPost,
 	clearUserPost,
+	clearSavedPost,
+	clearPostHistory,
 } = morePostSlice.actions;

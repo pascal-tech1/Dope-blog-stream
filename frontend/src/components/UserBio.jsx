@@ -39,7 +39,7 @@ const UserBio = () => {
 			className="  rounded-xl flex flex-col px-4 mt-4 mb-4"
 		>
 			<div className=" flex justify-between mr-4 mt-4">
-				<h1 className=" font-bold text-gray-900 ">Summary</h1>
+				<h1 className=" font-bold text-blue-400 ">Summary</h1>
 				<button type="submit" className="flex gap-1">
 					<MdEdit className=" text-blue-500" />
 					<h3 className="font-bold text-gray-600 hover:text-gray-900 text-xs">

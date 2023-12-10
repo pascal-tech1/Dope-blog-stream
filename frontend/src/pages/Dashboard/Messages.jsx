@@ -1,10 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchMsg } from "../../redux/message/messageSlice";
-import { Spinner } from "../../components";
+import { LazyLoadImg, MessagesComp, Spinner } from "../../components";
 import { Link } from "react-router-dom";
+import { setIsSearchBArNeeded } from "../../redux/user/userSlice";
 
 const Messages = () => {
+	useEffect(() => {
+		dispatch(setIsSearchBArNeeded(false));
+	}, []);
 	const dispatch = useDispatch();
 	const { msg, fetchMessageStatus, receivedMessageCount } = useSelector(
 		(store) => store?.messageSlice
@@ -13,30 +17,13 @@ const Messages = () => {
 
 	useEffect(() => {
 		if (pageNumber === 1 && msg.length > 0) return;
-		dispatch(fetchMsg({ page: pageNumber, limit: 1 }));
+		dispatch(fetchMsg({ page: pageNumber, limit: 2 }));
 	}, [pageNumber]);
 	return (
 		<div>
-			<div className="flex gap-6 flex-col">
-				{msg.map((message) => {
-					return (
-						<div className="flex gap-2">
-							<Link to={`/profile/${message?.sender?._id}`}>
-								<img
-									src={message?.sender?.profilePhoto}
-									alt=""
-									className=" self-start border bg-blue-400 w-10 h10 rounded-lg"
-								/>
-							</Link>
-							<div className=" text-xs font-medium flex gap-1 flex-col">
-								<h3 className="  text-pink-400">
-									{`${message?.sender?.firstName} ${message?.sender?.lastName}`}
-								</h3>
-								<h3>{message?.message}</h3>
-							</div>
-						</div>
-					);
-				})}
+			<div className="flex gap-6 flex-col dark:bg-[#171717] p-4 drop-shadow-sm">
+				<MessagesComp msg={msg} />
+
 				{receivedMessageCount > msg.length && (
 					<div>
 						{fetchMessageStatus === "loading" ? (

@@ -7,7 +7,7 @@ const PostDashboard = ({ posts, status, title, page }) => {
 	return (
 		<div>
 			<div className="flex justify-between">
-				<h3 className=" font-bold text-gray-800 mb-3 text-xs ">{title}</h3>
+				<h3 className=" font-bold text-gray-800 dark:text-slate-200 mb-3 text-xs ">{title}</h3>
 				<Link
 					to={`${page}`}
 					className="text-xs font-medium text-blue-500 hover:text-blue-900 transition-all duration-75"
@@ -18,17 +18,11 @@ const PostDashboard = ({ posts, status, title, page }) => {
 			<div className="  overflow-x-scroll custom-scrollbar flex gap-4 ">
 				{posts?.map((item) => (
 					<Link to={`/single-post/${item?.post?._id}`} className=" ">
-						<div className=" hover:cursor-pointer w-30 h-30 flex gap-1 flex-col overflow-hidden items-center py-1 ">
-							{/* <img
-							src={post?.image}
-							alt=""
-							className=" w-full h-20 object-cover  border border-gray-300"
-						/> */}
-
+						<div className=" hover:cursor-pointer w-30  overflow-y-hidden pb-4 flex gap-1 flex-col  items-center  ">
 							<LazyLoadImg
-								backgroundClassName={"   w-full h-20  relative"}
+								backgroundClassName={" rounded-lg  w-full  relative"}
 								imgClassName={
-									"absolute inset-0 w-full h-full  object-cover "
+									"absolute inset-0 w-full h-full rounded-lg  object-cover "
 								}
 								originalImgUrl={item?.post?.image}
 								blurImageStr={item?.post?.blurImageUrl}
@@ -36,11 +30,11 @@ const PostDashboard = ({ posts, status, title, page }) => {
 								paddingBottom={"80%"}
 							/>
 
-							<h3 className=" font-medium text-xs w-[9rem] mb-2 px-1">
-								<Tooltip info={`${item?.post?.title?.slice(0, 20)}...`}>
-									<h1>{item?.post?.title}</h1>
+							<div className=" font-medium text-xs w-[8rem] self-start ">
+								<Tooltip info={item?.post?.title}>
+									<h1>{`${item?.post?.title.slice(0,30)}...`}</h1>
 								</Tooltip>
-							</h3>
+							</div>
 						</div>
 					</Link>
 				))}

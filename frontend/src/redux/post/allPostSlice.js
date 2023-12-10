@@ -7,9 +7,7 @@ export const fetchPostByCategory = createAsyncThunk(
 	async (params, { getState, rejectWithValue, dispatch }) => {
 		let { page, postNumberPerPage, activeCategory, searchQuery } =
 			getState().allPostSlice;
-		if (params?.where === "morePost") {
-			searchQuery = "";
-		}
+
 		const newPage = params?.page || page;
 		const newPostNumberPerPaage =
 			params?.postNumberPerPage || postNumberPerPage;
@@ -103,6 +101,10 @@ const allPostSlice = createSlice({
 			state.morePost = [];
 			state.morePostHasMore = true;
 		},
+		clearSearchAndCategory: (state, { payload }) => {
+			state.searchQuery = "";
+			state.activeCategory = "all";
+		},
 	},
 
 	extraReducers: {
@@ -148,5 +150,6 @@ export const {
 	setActiveCategory,
 	setEmptySearch,
 	clearMorePost,
+	clearSearchAndCategory,
 } = allPostSlice.actions;
 export default allPostSlice.reducer;

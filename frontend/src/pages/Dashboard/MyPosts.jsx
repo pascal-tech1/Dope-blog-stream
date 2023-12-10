@@ -12,8 +12,17 @@ import { formatDate } from "../../utils/dataFormatter";
 import { EditPostBtn, Modal, Spinner, Tooltip } from "../../components";
 import DashboardCustomDropdown from "../../components/DashboardCustomDropdown";
 import { toast } from "react-toastify";
+import {
+	setIsSearchBArNeeded,
+	setSearchTermInStore,
+} from "../../redux/user/userSlice";
+import { LoadingSpinner } from "../../utils/Spinner";
 
 const MyPosts = () => {
+	useEffect(() => {
+		dispatch(setIsSearchBArNeeded(true));
+		dispatch(setSearchTermInStore(""));
+	}, []);
 	const {
 		creatorPostStatus,
 		creatorAllPost,
@@ -28,7 +37,7 @@ const MyPosts = () => {
 	const id = user?._id;
 	const dispatch = useDispatch();
 	const observer = useRef();
-	const [checkedPostId, setCheckedPostid] = useState([]);
+	const [checkedItems, setCheckedItemId] = useState([]);
 	let page = 1;
 	const lastPostRef = useCallback(
 		(node) => {
@@ -81,24 +90,21 @@ const MyPosts = () => {
 
 		...creatorAllPost,
 	];
-	const handleCheckedPostChange = (_id) => {
+	const handleCheckedItemcsChange = (_id, tableItems) => {
 		if (_id === "All") {
-			if (checkedPostId.length === posts.length - 1) {
-				setCheckedPostid([]);
+			if (checkedItems.length === tableItems.length) {
+				setCheckedItemId([]);
 			} else {
-				const allPostIds = posts
-					.filter((post) => post._id !== "All") // Exclude "All"
-					.map((post) => post._id);
-
-				setCheckedPostid(allPostIds);
+				const allItemId = tableItems.map((item) => item._id);
+				setCheckedItemId(allItemId);
 			}
 		} else {
-			if (checkedPostId.includes(_id)) {
-				setCheckedPostid((prev) =>
+			if (checkedItems.includes(_id)) {
+				setCheckedItemId((prev) =>
 					prev.filter((prevId) => prevId !== _id)
 				);
 			} else {
-				setCheckedPostid((prev) => [...prev, _id]);
+				setCheckedItemId((prev) => [...prev, _id]);
 			}
 		}
 	};
@@ -133,7 +139,7 @@ const MyPosts = () => {
 	};
 
 	return (
-		<div className="tableContainer  ">
+		<div className="  font-inter overflow-hidden shadow-md  ">
 			{/* modal */}
 			<Modal
 				isOpen={isModalOpen}
@@ -142,20 +148,20 @@ const MyPosts = () => {
 			>
 				<div>
 					<h1>
-						Do you want to continue to delete {checkedPostId.length} post
+						Do you want to continue to delete {checkedItems.length} post
 					</h1>
 					<h3>Remember this Action cannot be undone</h3>
 				</div>
 			</Modal>
-			{/* table action buttons */}
-			<div className="tableActionStyle">
+			{/* table actions buttons */}
+			<div className="flex gap-4 ml-10 flex-wrap  ">
 				<button
 					onClick={openModal}
-					className="  py-[0.15] rounded-lg hover:text-red-700 text-red-400 outline-none"
+					className="  py-[0.15] rounded-lg  hover:bg-red-400 hover:text-slate-200 px-1 transition-all duration-75 text-red-400 outline-none"
 				>
 					delete
 				</button>
-				<div>
+				<div className="">
 					<DashboardCustomDropdown
 						allFilters={allFilter}
 						setSelectedFilter={setMyPostSelectedFilter}
@@ -166,86 +172,116 @@ const MyPosts = () => {
 					Total Post :<span>{creatoPostTotalNumber}</span>
 				</h3>
 			</div>
-			<div className="tableBaginsStyle min-w-[800px]">
-				{posts.map((post, index) => {
-					return (
-						<div
-							ref={
-								posts.length === index + 1 && posts.length > 1
-									? lastPostRef
-									: null
-							}
-							className={`${
-								post.action === "action" ? " bg-gray-500  text-white" : ""
-							}  grid grid-cols-10   border-b py-3  text-start items-center`}
-						>
-							<div className="col-start-1 col-span-3 px-2 flex gap-2">
-								<input
-									type="checkbox"
-									name="check"
-									id={posts._id}
-									checked={checkedPostId.includes(post._id)}
-									onChange={() => handleCheckedPostChange(post._id)}
-									className="checkboxStyle"
-								/>
-								<Link to={`/single-post/${post._id}`}>
-									<Tooltip
-										info={`${post.title.toString().slice(0, 20)}...`}
-									>
-										<h3>{post.title}</h3>
-									</Tooltip>
-								</Link>
-							</div>
-							<h3 className=" col-start-4 col-span-2">
-								{post.createdAt === "Created"
-									? "Created"
-									: formatDate(post.createdAt)}
-							</h3>
+			{/* table */}
 
-							<div className="col-start-6 col-span-1">
-								{post.category.length > 10 ? (
-									<Tooltip
-										info={`${post.category.toString().slice(0, 10)}...`}
-									>
-										<h3>{post.category}</h3>
-									</Tooltip>
-								) : (
-									<h3>{post.category}</h3>
-								)}
-							</div>
-							<h3 className="  col-start-7 col-span-1 text-center ">
-								{post.numViews}
-							</h3>
-							<h3 className="  col-start-8 col-span-1">
-								{post.likes === "likes" ? "Like" : post.likes.length}
-							</h3>
-							<h3
-								className="  col-start-9
-						 col-span-1"
+			<div className=" max-h-[85vh] overflow-auto custom-scrollbar  min-w-[300px]   ">
+				<table className="">
+					<thead className="tableHeading -top-10 bg-gray-500 dark:bg-gray-900  text-white ">
+						<tr>
+							<th className=" dark:bg-gray-900 z-10">
+								<Tooltip info={"select All"}>
+									<input
+										type="checkbox"
+										name="check"
+										id="All"
+										checked={checkedItems.length === creatorAllPost.length}
+										onChange={() =>
+											handleCheckedItemcsChange("All", creatorAllPost)
+										}
+										className="checkboxStyle "
+									/>
+								</Tooltip>
+							</th>
+							<th className="">Post Id</th>
+							<th>created At</th>
+							<th>number views</th>
+							<th>Catgegory</th>
+							<th>likes</th>
+							<th>DisLikes</th>
+							<th className=" dark:bg-gray-900 z-10">Actions</th>
+						</tr>
+					</thead>
+
+					<tbody className=" ">
+						{creatorAllPost.map((post, index) => (
+							<tr
+								ref={
+									creatorAllPost.length === index + 1 &&
+									creatorAllPost.length > 1
+										? lastPostRef
+										: null
+								}
+								className="border-b transition duration-300 ease-in-out hover:bg-neutral-100 dark:hover:bg-gray-600 dark:border-neutral-100 "
 							>
-								{post.disLikes === "disLikes"
-									? "disLikes"
-									: post.disLikes.length}
-							</h3>
+								<td className=" bg-white dark:bg-[#1C1C1C] ">
+									<input
+										type="checkbox"
+										name="check"
+										className="checkboxStyle   "
+										id={post._id}
+										checked={checkedItems.includes(post._id)}
+										onChange={() => handleCheckedItemcsChange(post._id)}
+									/>
+								</td>
 
-							<h3 className="col-start-10 col-span-1 ">
-								{post.action === "action" ? (
-									"Action"
-								) : (
+								<td>
+									<Link to={`/single-post/${post?._id}`}>
+										<Tooltip info={post.title}>{post.title}</Tooltip>
+									</Link>
+								</td>
+
+								<td>
+									<Tooltip info={formatDate(post.createdAt)}>
+										{formatDate(post.createdAt)}
+									</Tooltip>
+								</td>
+								<td>
+									<Tooltip info={post.numViews}>{post.numViews}</Tooltip>
+								</td>
+								<td>
+									<Tooltip info={post.category}>{post.category}</Tooltip>
+								</td>
+
+								<td>
+									<Tooltip info={post.likes.length}>
+										{post.likes.length}
+									</Tooltip>
+								</td>
+								<td>{post.disLikes.length}</td>
+								<td className=" bg-white dark:bg-[#1C1C1C] ">
 									<EditPostBtn postId={post._id} />
-								)}
-							</h3>
-						</div>
-					);
-				})}
-				<div className="my-2 place-self-center">
-					{creatorPostStatus === "loading" && <Spinner />}
-				</div>
-				<div className=" place-self-center">
-					{!hasMore && creatorPostStatus === "success" && (
-						<div className=" text-yellow-600 my-4">No more Post Buddy</div>
+								</td>
+							</tr>
+						))}
+					</tbody>
+					{/* conditionary rendering post status */}
+					{creatorPostStatus === "loading" && (
+						<tr>
+							<td className="bg-white dark:bg-[#1C1C1C]"></td>
+							<td className=" bg-white dark:bg-[#1C1C1C]">
+								<LoadingSpinner />
+							</td>
+						</tr>
 					)}
-				</div>
+
+					{!hasMore &&
+						creatorPostStatus === "success" &&
+						creatorAllPost.length > 0 && (
+							<tr className=" bg-white dark:bg-[#1C1C1C]">
+								<td className="bg-white dark:bg-[#1C1C1C]"></td>
+								<td className=" text-yellow-400  stickyBottom bg-white dark:bg-[#1C1C1C] ">
+									No more User
+								</td>
+							</tr>
+						)}
+
+					{creatorAllPost.length === 0 &&
+						creatorPostStatus === "success" && (
+							<td className=" text-yellow-400  stickyBottom bg-white dark:bg-[#1C1C1C] ">
+								No User Found
+							</td>
+						)}
+				</table>
 			</div>
 		</div>
 	);

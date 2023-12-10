@@ -39,7 +39,7 @@ const UserProfile = () => {
 				location: values.location || "None",
 				profession: values.profession || "none",
 			};
-			dispatch(updateUser(user));
+			!isUserProfileClicked && dispatch(updateUser(user));
 		},
 		validationSchema: formSchema,
 	});

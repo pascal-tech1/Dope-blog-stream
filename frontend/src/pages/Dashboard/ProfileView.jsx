@@ -16,15 +16,14 @@ import {
 	updateFollowingListPageNumber,
 	setFirstFetchFollowersUser,
 	setFirstFetchFollowingUser,
-	updateUser,
-	uploadProfilePhoto,
+	setIsSearchBArNeeded,
 } from "../../redux/user/userSlice";
 import { useNavigate } from "react-router-dom";
-import { BiCamera } from "react-icons/bi";
-import Image from "../../Adoh/image";
-import Cropper from "../../Adoh/image";
 
 const ProfileView = () => {
+	useEffect(() => {
+		dispatch(setIsSearchBArNeeded(false));
+	}, []);
 	const {
 		user,
 		userfollowinglist,
@@ -58,12 +57,11 @@ const ProfileView = () => {
 	if (!user) {
 		return <h3 className=" text-black text-3xl">Loading ....</h3>;
 	}
-	console.log(userfollowinglist);
 
 	return (
 		<>
-			<div className=" flex flex-col row-span-2 md:grid grid-cols-6 col-start-1 col-span-4 rounded-xl  lg:mb-6 lg:shadow-sm lg:rounded-md lg:ml-0  font-inter gap-5 bg-white lg:bg-transparent">
-				<div className=" col-start-1 col-span-4  bg-white lg:shadow-sm lg:rounded-md">
+			<div className=" flex flex-col row-span-2 md:grid grid-cols-6 col-start-1 col-span-4 rounded-xl  lg:mb-6 lg:shadow-sm lg:rounded-md lg:ml-0  font-inter gap-5 bg-whitedark:bg-[#1C1C1C] lg:bg-transparent">
+				<div className=" col-start-1 col-span-4  bg-white dark:bg-[#171717] lg:shadow-sm lg:rounded-md">
 					<div className="w-full relative ">
 						<div className=" w-full  ">
 							<CoverPhoto user={user} />
@@ -81,8 +79,8 @@ const ProfileView = () => {
 				<AdditionalUserProfile />
 
 				{/* following  */}
-				<div className=" md:col-start-1 col-span-3 px-4 bg-white rounded-md ">
-					<h1 className="font-semibold  max-w-max pt-3 pb-1 ">
+				<div className=" md:col-start-1 col-span-3 px-4 bg-white dark:bg-[#171717] rounded-md ">
+					<h1 className="font-semibold  max-w-max pt-3 pb-1 text-blue-400 ">
 						following
 					</h1>
 
@@ -97,8 +95,8 @@ const ProfileView = () => {
 					/>
 				</div>
 				{/* followers  */}
-				<div className=" md:col-start-4 col-span-full bg-white px-4 rounded-md">
-					<h1 className="font-semibold  max-w-max pt-3 pb-1 ">
+				<div className=" md:col-start-4 col-span-full bg-white dark:bg-[#171717] px-4 rounded-md">
+					<h1 className="font-semibold  max-w-max pt-3 pb-1 text-blue-400 ">
 						followers
 					</h1>
 

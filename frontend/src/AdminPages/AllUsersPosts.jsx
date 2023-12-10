@@ -15,6 +15,9 @@ import DashboardCustomDropdown from "../components/DashboardCustomDropdown";
 import { formatDate } from "../utils/dataFormatter";
 import Spinner from "../components/Spinner";
 import { MessageUser, Tooltip } from "../components";
+import { RiFolderUserLine } from "react-icons/ri";
+import { LoadingSpinner } from "../utils/Spinner";
+import { BiUser } from "react-icons/bi";
 
 const AllUsersPosts = () => {
 	const {
@@ -23,14 +26,15 @@ const AllUsersPosts = () => {
 		MyPostSelectedFilter,
 		adminAllPostStatus,
 		adminAllPostTotalNumber,
-		
 	} = useSelector((store) => store.adminSlice);
-	const {user,dashboardSearchTerm} = useSelector((store) => store.userSlice);
-	const id = user?._id
+	const { user, dashboardSearchTerm } = useSelector(
+		(store) => store.userSlice
+	);
+	const id = user?._id;
 
 	const dispatch = useDispatch();
 	const observer = useRef();
-	const [checkedPostId, setCheckedPostid] = useState([]);
+	const [checkedItems, setCheckedItemId] = useState([]);
 
 	const lastPostRef = useCallback(
 		(node) => {
@@ -63,39 +67,23 @@ const AllUsersPosts = () => {
 				filter: MyPostSelectedFilter,
 			})
 		);
-	}, [MyPostSelectedFilter,dashboardSearchTerm]);
+	}, [MyPostSelectedFilter, dashboardSearchTerm]);
 
-	const posts = [
-		{
-			all: "box",
-			_id: "Post Id",
-			createdAt: "Created At",
-			category: "Category",
-			numViews: "views",
-			likes: "likes",
-			disLikes: "disLikes",
-			action: "action",
-		},
-
-		...allPost,
-	];
-	const handleCheckedPostChange = (_id) => {
-		if (_id === "Post Id") {
-			if (checkedPostId.length === posts.length) {
-				setCheckedPostid([]);
+	const handleCheckedItemcsChange = (_id, tableItems) => {
+		if (_id === "All") {
+			if (checkedItems.length === tableItems.length) {
+				setCheckedItemId([]);
 			} else {
-				const allPostIds = posts
-					.filter((post) => post._id !== "All") // Exclude "All"
-					.map((post) => post._id);
-				setCheckedPostid(allPostIds);
+				const allItemId = tableItems.map((item) => item._id);
+				setCheckedItemId(allItemId);
 			}
 		} else {
-			if (checkedPostId.includes(_id)) {
-				setCheckedPostid((prev) =>
+			if (checkedItems.includes(_id)) {
+				setCheckedItemId((prev) =>
 					prev.filter((prevId) => prevId !== _id)
 				);
 			} else {
-				setCheckedPostid((prev) => [...prev, _id]);
+				setCheckedItemId((prev) => [...prev, _id]);
 			}
 		}
 	};
@@ -114,7 +102,7 @@ const AllUsersPosts = () => {
 
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const openModal = () => {
-		checkedPostId.length > 0
+		checkedItems.length > 0
 			? setIsModalOpen(true)
 			: toast.error("select post to delete");
 	};
@@ -123,36 +111,39 @@ const AllUsersPosts = () => {
 	};
 	const continueAction = () => {
 		closeModal();
-		if (checkedPostId.length === 0) {
+		if (checkedItems.length === 0) {
 			toast.warning("Please Select Post To delete");
 			return;
 		}
-		dispatch(deletePostAdmin(checkedPostId));
+		dispatch(deletePostAdmin(checkedItems));
 	};
 
 	return (
-		<div className="tableContainer min-w-[900px]   ">
-			<Modal
-				isOpen={isModalOpen}
-				onClose={closeModal}
-				onContinue={continueAction}
-			>
-				<div>
-					<h1>
-						Do you want to continue to delete {checkedPostId.length} post
-					</h1>
-					<h3>Remember this Action cannot be undone</h3>
-				</div>
-			</Modal>
-			{/* table action buttons */}
-			<div className="tableActionStyle">
+		<div className=" font-inter shadow-md  overflow-hidden ">
+			{/* modal */}
+			<div className="">
+				<Modal
+					isOpen={isModalOpen}
+					onClose={closeModal}
+					onContinue={continueAction}
+				>
+					<div>
+						<h1>
+							Do you want to continue to delete {checkedItems.length} post
+						</h1>
+						<h3>Remember this Action cannot be undone</h3>
+					</div>
+				</Modal>
+			</div>
+			{/* table actions buttons */}
+			<div className="flex gap-4 ml-10 flex-wrap ">
 				<button
 					onClick={openModal}
 					className="  py-[0.15] rounded-lg hover:text-red-700 text-red-400 outline-none"
 				>
 					delete
 				</button>
-				<div>
+				<div className="">
 					<DashboardCustomDropdown
 						allFilters={allFilter}
 						setSelectedFilter={setMyPostSelectedFilter}
@@ -163,89 +154,118 @@ const AllUsersPosts = () => {
 					Total Post :<span>{adminAllPostTotalNumber}</span>
 				</h3>
 			</div>
-			{/* table begin */}
-			<div className="tableBaginsStyle ">
-				{posts.map((post, index) => {
-					return (
-						<div
-							ref={
-								posts.length === index + 1 && posts.length > 1
-									? lastPostRef
-									: null
-							}
-							className={`${
-								post.action === "action" ? " bg-gray-500  text-white" : ""
-							}  grid grid-cols-10 text-start items-center gap-2  border-b py-3 px-2`}
-						>
-							<div className="col-start-1 col-span-2 px-2 flex gap-2">
-								<input
-									type="checkbox"
-									name="check"
-									id={posts._id}
-									checked={checkedPostId.includes(post._id)}
-									onChange={() => handleCheckedPostChange(post._id)}
-									className="checkboxStyle"
-								/>
+			{/* table */}
+			<div className=" max-h-[85vh] overflow-auto custom-scrollbar  min-w-[300px]">
+				<table className="">
+					<thead className="tableHeading -top-10 bg-gray-800  text-white">
+						<tr>
+							<th className="bg-gray-800">
+								<Tooltip info={"select All"}>
+									<input
+										type="checkbox"
+										name="check"
+										id="All"
+										checked={checkedItems.length === allPost.length}
+										onChange={() =>
+											handleCheckedItemcsChange("All", allPost)
+										}
+										className="checkboxStyle"
+									/>
+								</Tooltip>
+							</th>
+							<th>Post Id</th>
+							<th>created At</th>
+							<th>number views</th>
+							<th>category</th>
+							<th>Likes</th>
+							<th>DisLikes</th>
+							<th className="bg-gray-800">Action</th>
+						</tr>
+					</thead>
 
-								<Link to={`/single-post/${post._id}`}>
-									<Tooltip info={`${post._id.toString().slice(0, 12)}...`}>
-										<h3>{post._id}</h3>
+					<tbody>
+						{allPost.map((post, index) => (
+							<tr
+								key={index}
+								ref={
+									allPost.length === index + 1 && allPost.length > 1
+										? lastPostRef
+										: null
+								}
+								className="border-b transition duration-300 ease-in-out hover:bg-neutral-100 dark:border-neutral-100 dark:hover:bg-gray-800"
+							>
+								<td className="bg-white dark:bg-[#1C1C1C]">
+									<input
+										type="checkbox"
+										name="check"
+										className="checkboxStyle"
+										id={post._id}
+										checked={checkedItems.includes(post._id)}
+										onChange={() => handleCheckedItemcsChange(post._id)}
+									/>
+								</td>
+
+								<td>
+									<Link to={`/single-post/${post._id}`}>
+										<Tooltip info={post._id}>{post._id}</Tooltip>
+									</Link>
+								</td>
+								<td>
+									<Tooltip info={formatDate(post.createdAt)}>
+										{formatDate(post.createdAt)}
 									</Tooltip>
-								</Link>
-							</div>
-							<h3 className="  col-start-3 col-span-2  ">
-								{post.createdAt === "Created At"
-									? "Created"
-									: formatDate(post.createdAt)}
-							</h3>
-
-							<div className="col-start-5 col-span-1">
-								{post.category.length > 10 ? (
-									<Tooltip
-										info={`${post.category.toString().slice(0, 10)}...`}
-									>
-										<h3>{post.category}</h3>
+								</td>
+								<td>
+									<Tooltip info={post.numViews}>{post.numViews}</Tooltip>
+								</td>
+								<td>
+									<Tooltip info={post.category}>{post.category}</Tooltip>
+								</td>
+								<td>
+									<Tooltip info={post.likes.length}>
+										{post.likes.length}
 									</Tooltip>
-								) : (
-									<h3>{post.category}</h3>
-								)}
-							</div>
-							<h3 className="col-start-6 col-span-1 ">{post.numViews}</h3>
-							<h3 className="col-start-7 col-span-1">
-								{post.likes === "likes" ? "Like" : post.likes.length}
-							</h3>
-							<h3 className="col-start-8 col-span-1">
-								{post.disLikes === "disLikes"
-									? "disLikes"
-									: post.disLikes.length}
-							</h3>
+								</td>
+								<td>
+									<Tooltip info={post.likes.length}>
+										{post.disLikes.length}
+									</Tooltip>
+								</td>
 
-							<h3 className="col-span-2 col-start-9">
-								{post.action === "action" ? (
-									"Action"
-								) : (
-									<div className="flex items-center gap-2">
-										<Link
-											to={`/profile/${post.user._id}`}
-											className=" whitespace-nowrap bg-blue-400 text-white rounded-lg px-1 py-[0.6px] hover:bg-blue-300 drop-shadow-md transition-all delay-75 hover:drop-shadow-none"
-										>
-											view user
-										</Link>
-										<MessageUser receiverId={post.user?._id} />
-									</div>
-								)}
-							</h3>
-						</div>
-					);
-				})}
-				<div className="my-2 place-self-center">
-					{adminAllPostStatus === "loading" && <Spinner />}
-				</div>
-				<div className=" place-self-center">
-					{!hasMore && adminAllPostStatus === "success" && (
-						<div className=" text-yellow-600 my-4">No more Post Buddy</div>
+								<td className="flex items-center px-3 gap-2  bg-white dark:bg-[#1C1C1C] ">
+									<Link to={`/profile/${post.user._id}`} className=" p-2 hover:bg-blue-200 transition-all duration-75 rounded-full">
+										<BiUser className=" text-blue-400 text-lg " />
+									</Link>
+
+									<MessageUser receiverId={post.user?._id} />
+								</td>
+							</tr>
+						))}
+					</tbody>
+					{adminAllPostStatus === "loading" && (
+						<tr>
+							<td className="text-yellow-400  stickyBottom bg-white dark:bg-[#1C1C1C] "></td>
+							<td className="text-yellow-400  stickyBottom bg-white dark:bg-[#1C1C1C] ">
+								<LoadingSpinner />
+							</td>
+						</tr>
 					)}
-				</div>
+					{allPost.length === 0 && adminAllPostStatus === "success" && (
+						<td className="text-yellow-400  stickyBottom bg-white dark:bg-[#1C1C1C] ">
+							No User Foundr
+						</td>
+					)}
+					{!hasMore &&
+						adminAllPostStatus === "success" &&
+						allPost.length > 0 && (
+							<tr className=" bg-white">
+								<td></td>
+								<td className="text-yellow-400  stickyBottom bg-white dark:bg-[#1C1C1C] ">
+									No more User
+								</td>
+							</tr>
+						)}
+				</table>
 			</div>
 		</div>
 	);

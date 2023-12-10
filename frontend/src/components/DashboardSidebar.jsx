@@ -7,6 +7,8 @@ import { CiUser } from "react-icons/ci";
 import {
 	MdAdminPanelSettings,
 	MdOutlineAdminPanelSettings,
+	MdOutlineArrowDropDown,
+	MdOutlineArrowDropUp,
 	MdOutlineSignpost,
 } from "react-icons/md";
 import { GiShadowFollower } from "react-icons/gi";
@@ -123,7 +125,7 @@ const DashboardSideBar = () => {
 	];
 
 	return (
-		<aside className=" flex flex-col  font-medium  h-screen  ">
+		<aside className=" flex flex-col  font-medium  ">
 			<Link to="/" className="mt-4 self-center md:flex">
 				<img
 					src="../../public/blogvana.png"
@@ -152,7 +154,7 @@ const DashboardSideBar = () => {
 						case "AiOutlineComment":
 							IconComponent = AiOutlineComment;
 							break;
-						
+
 						case "LuLayoutDashboard":
 							IconComponent = LuLayoutDashboard;
 							break;
@@ -163,21 +165,25 @@ const DashboardSideBar = () => {
 							IconComponent = AiOutlineComment; // Default icon
 					}
 					return (
-						<div key={index} className=" flex justify-start items-center px-4 mt-3 ">
+						<div
+							key={index}
+							className=" flex justify-start items-center px-4 mt-4 "
+						>
 							{sideBarItem.hasSubMenu ? (
 								<div className="flex flex-col">
 									<div
 										onClick={() => {
 											toggleMenuOption(sideBarItem.title);
 										}}
-										className=" hover:bg-blue-400 hover:text-white flex gap-2 items-center pl-[0.35rem] cursor-pointer py-2 w-full rounded-lg"
+										className=" hover:bg-blue-400 hover:text-white  flex items-center gap-2  pl-[0.35rem] cursor-pointer py-[0.2rem] rounded-lg"
 									>
 										<IconComponent className=" text-lg" />
-										<span className=" ">{sideBarItem.title}</span>
-										<IoMdArrowDropdown className=" self-end" />
+										<h1 className=" text-lg">{sideBarItem.title}</h1>
+										
+										{isMenuOpen[sideBarItem.title]? <MdOutlineArrowDropUp  className=" text-center" />: <MdOutlineArrowDropDown className=" text-center" />}
 									</div>
 
-									<div className=" flex flex-col items-center justify-start border-l ">
+									<div className=" flex flex-col items-start ml-2 border-l dark:border-l-gray-800 justify-start ">
 										{sideBarItem.submenu?.map((submenuItem, index) => {
 											return (
 												<NavLink
@@ -188,9 +194,9 @@ const DashboardSideBar = () => {
 													to={`${sideBarItem.title}-${submenuItem?.title}`}
 													className={`${
 														sideBarItem.menuOpen ? "" : "hidden"
-													}  flex mt-1   py-1 px-2 hover:text-white hover:bg-blue-400   w-max aria-[current=page]:text-white rounded-lg aria-[current=page]:bg-blue-400`}
+													}  flex mt-1   py-[0.2rem] px-2 hover:text-white hover:bg-blue-400   w-max aria-[current=page]:text-white rounded-lg aria-[current=page]:bg-blue-400`}
 												>
-													<h3 className="">{submenuItem.title}</h3>
+													<h3 className=" text-lg">{submenuItem.title}</h3>
 												</NavLink>
 											);
 										})}
@@ -199,11 +205,11 @@ const DashboardSideBar = () => {
 							) : (
 								<NavLink
 									to={sideBarItem.title}
-									className="flex gap-2 items-center px-2  pl-[0.35rem] hover:text-white hover:bg-blue-400 py-2 w-full rounded-lg aria-[current=page]:text-white aria-[current=page]:bg-blue-400"
+									className="flex gap-2 items-center px-2  pl-[0.35rem] hover:text-white hover:bg-blue-400 py-[0.2rem] w-full rounded-lg aria-[current=page]:text-white aria-[current=page]:bg-blue-400"
 								>
 									<IconComponent className=" text-lg " />
-									{/* <IconComponent className="  text-lg "></IconComponent> */}
-									<span className=" font-inter">{sideBarItem.title}</span>
+
+									<span className=" font-inter ">{sideBarItem.title}</span>
 								</NavLink>
 							)}
 						</div>

@@ -24,9 +24,6 @@ const ComfirmEmailPage = () => {
 
 	return (
 		<div className=" font-inter">
-			<div>
-				<NavBar />
-			</div>
 			<div className=" flex items-center justify-center h-[80vh] w-screen">
 				{confirmSentEmailStatus === "loading" && <Spinner />}
 				{confirmSentEmailStatus === "failed" && (

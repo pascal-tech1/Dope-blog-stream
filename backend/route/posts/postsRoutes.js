@@ -14,6 +14,7 @@ const {
 	fetchUserPostHistoryCtrl,
 	fetchUserSavedPostCtrl,
 	fetchAllUserPostCtrl,
+	postImageCtrl,
 } = require("../../controllers/posts/postsCtrl");
 const authMiddleWare = require("../../middlewares/authentication/authMiddleWare");
 const {
@@ -41,7 +42,13 @@ postsRoutes.post(
 	postImageResize,
 	createPostCtrl
 );
-
+postsRoutes.post(
+	"/upload-image",
+	authMiddleWare,
+	postImageUpload.single("image"),
+	postImageResize,
+	postImageCtrl
+);
 postsRoutes.put(
 	"/update/:id",
 	authMiddleWare,

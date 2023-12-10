@@ -79,7 +79,7 @@ const fetchMsgCtrl = expressAsyncHandler(async (req, res) => {
 				limit: numberPerPage,
 				populate: {
 					path: "sender",
-					select: ["_id", "firstName", "lastName", "profilePhoto"],
+					select: ["_id", "firstName", "lastName", "profilePhoto","blurProfilePhoto"],
 				},
 			})
 			.select("receivedMessages");

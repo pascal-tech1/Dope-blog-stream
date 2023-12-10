@@ -44,7 +44,7 @@ const Login = () => {
 	});
 
 	return (
-		<div className="h-screen flex justify-center md:grid place-items-center place-content-center px-3 grid-cols-2 md:p-8  font-helvetica font-light">
+		<div className=" flex justify-center md:grid place-items-center  grid-cols-2  font-inter h-[90vh] dark:text-slate-200">
 			<div
 				className={` z-[1000] fixed top-0 left-0 w-full h-full flex justify-center items-center bg-black bg-opacity-40  ${
 					isOpen ? "" : "hidden"
@@ -52,16 +52,16 @@ const Login = () => {
 			>
 				<ForgotPassword setIsOpen={setIsOpen} />
 			</div>
-			<NavBar />
-			<div className=" hidden md:flex flex-col p-9 bg-gray-100 mr-6 shadow-sm justify-center items-center">
+			
+			<div className=" hidden md:flex flex-col p-9 bg-gray-100 mr-6 shadow-sm justify-center items-center dark:bg-[#171717] border dark:border-gray-800 ">
 				<h1 className=" font-medium">Get Ready to Be Inspired</h1>
 				<p className=" font-light text-gray-400 text-xs mt-5 mb-[3.5rem] max-w-md">
 					Explore our latest blog posts and embark on a journey of
 					discovery
 				</p>
 				<img
-					className=" w-[22rem] h-[11rem] rounded-lg"
-					src="win1.jpg"
+					className=" h-[11rem] rounded-lg"
+					src="../../public/blogvana.png"
 					alt=""
 				/>
 			</div>
@@ -69,7 +69,7 @@ const Login = () => {
 			{/* form starts here */}
 			<form
 				onSubmit={formik.handleSubmit}
-				className="flex flex-col w-full  items-center px-8 py-6 lg:px-20"
+				className="flex flex-col w-full  items-center px-8 lg:px-20 dark:bg-[#171717] rounded-md p-2 border dark:border-gray-800"
 			>
 				<div className=" items-center flex flex-col  mb-6">
 					<p className=" text-lg font-medium mb-3">Welcome Back</p>
@@ -109,7 +109,7 @@ const Login = () => {
 						{formik.touched.password && formik.errors.password}
 					</h1>
 				</div>
-				<button type="submit" className="form-btn mt-4">
+				<button type="submit" className="form-btn mt-4 font-inter">
 					{isLoading ? <LoadingSpinner /> : "login"}
 				</button>
 
@@ -120,8 +120,8 @@ const Login = () => {
 					forget password
 				</h3>
 
-				<div className=" mt-8">
-					<h3 className=" font-light font-helvetica text-gray-500">
+				<div className=" mt-8 ">
+					<h3 className=" font-light text-gray-500 font-inter">
 						Don't Have an account?
 						<span>
 							<Link

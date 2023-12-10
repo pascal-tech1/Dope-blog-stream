@@ -23,7 +23,7 @@ const MessageUser = ({ receiverId }) => {
 	};
 
 	return (
-		<div>
+		<div className="">
 			<Modal
 				isOpen={isModalOpen}
 				onClose={closeModal}
@@ -37,15 +37,15 @@ const MessageUser = ({ receiverId }) => {
 						name="message"
 						id="message"
 						placeholder="Enter your message"
-						className=" bg-gray-100 py-2 px-2  border rounded-md outline-none focus:border-gray-400"
+						className=" bg-gray-100 dark:bg-[#171717] py-2 px-2  border rounded-md outline-none focus:border-gray-400"
 					/>
 				</div>
 			</Modal>
 			<div
 				onClick={openModal}
-				className=" cursor-pointer w-6 h-6 rounded-full hover:bg-gray-300 hover:rounded-full hover:p-1 flex items-center justify-center text-white transition-all delay-75 "
+				className=" cursor-pointer p-2 rounded-full hover:bg-gray-500 hover:rounded-full flex items-center justify-center text-white transition-all delay-75 "
 			>
-				<LuSend className=" text-2xl fill-slate-600 " />
+				<LuSend className=" text-lg  " />
 			</div>
 		</div>
 	);

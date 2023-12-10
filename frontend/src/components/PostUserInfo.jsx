@@ -12,7 +12,7 @@ const PostUserInfo = ({ post }) => {
 	return (
 		<>
 			{user?.firstName && (
-				<div className="flex text-xs gap-3 text-gray-400 ">
+				<div className="flex max-[350px]:flex-col text-xs gap-3 text-gray-400 ">
 					<Link
 						to={loginUser?._id ? `/profile/${user._id}` : `/login`}
 						className="flex gap-2 self-center"
@@ -37,14 +37,16 @@ const PostUserInfo = ({ post }) => {
 						</div>
 					</Link>
 					{/* if its not the user that created the post render the follow button else render the edit button */}
-					{loginUser?._id !== post?.user?._id ? (
-						<FollowingBtn
-							userToFollowOrUnfollow={post?.user}
-							className=" border self-center py-[0.2rem] text-blue-600 px-2 rounded-lg hover:bg-blue-400 hover:text-white transition-all delay-75 "
-						/>
-					) : (
-						<EditPostBtn post={post} postId={post?._id} />
-					)}
+					<div>
+						{loginUser?._id !== post?.user?._id ? (
+							<FollowingBtn
+								userToFollowOrUnfollow={post?.user}
+								className="  text-blue-300 border dark:border-slate-700 hover:dark:bg-gray-700  px-2 my-[0.2rem] rounded-lg hover:bg-blue-200 transition-all delay-75  text-sm  "
+							/>
+						) : (
+							<EditPostBtn post={post} postId={post?._id} />
+						)}
+					</div>
 				</div>
 			)}
 		</>

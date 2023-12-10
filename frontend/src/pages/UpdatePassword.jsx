@@ -70,103 +70,96 @@ const UpdatePassword = () => {
 		}
 	}, [updatePasswordStatus]);
 	return (
-		<div className=" font-inter">
-			<div>
-				<NavBar />
-			</div>
-			<div className=" flex items-center justify-center h-[80vh] w-screen flex-col gap-4 px-6">
-				{/* form */}
-				<form
-					className="flex flex-col gap-1"
-					onSubmit={formik.handleSubmit}
-				>
-					<h1 className=" mb-3">
-						fill in your old and your new password to continue to change
-						your password
-					</h1>
-					{/* oldPassword */}
-					<label className=" form-label" htmlFor="password">
-						old password
-					</label>
-					<div className=" relative">
-						<input
-							type={showPassword.oldPassword ? "text" : "password"}
-							className="form-input "
-							value={formik.values.oldPassword}
-							onChange={formik.handleChange("oldPassword")}
-							onBlur={formik.handleBlur("oldPassword")}
-						/>
-						<span
-							className=" absolute top-[30%] right-2"
-							onClick={() => togglePasswordVisibility("oldPassword")}
-						>
-							{showPassword.oldPassword ? <BsEye /> : <BsEyeSlash />}
-						</span>
-						<div className=" relative mb-2 self-start">
-							<h1 className=" form-error-text">
-								{formik.touched.oldPassword && formik.errors.oldPassword}
-							</h1>
-						</div>
-					</div>
-
-					{/* new password */}
-					<label className=" form-label" htmlFor="oldPassword">
-						new Password
-					</label>
-					<div className=" relative">
-						<input
-							type={showPassword.password ? "text" : "password"}
-							className="form-input "
-							value={formik.values.password}
-							onChange={formik.handleChange("password")}
-							onBlur={formik.handleBlur("password")}
-						/>
-						<span
-							className=" absolute top-[30%] right-2"
-							onClick={() => togglePasswordVisibility("password")}
-						>
-							{showPassword.password ? <BsEye /> : <BsEyeSlash />}
-						</span>
-					</div>
-					<div className=" relative mb-2 self-start">
-						<h1 className=" form-error-text">
-							{formik.touched.password && formik.errors.password}
-						</h1>
-					</div>
-
-					{/* confirm Password */}
-					<label className=" form-label" htmlFor="oldPassword">
-						Confirm Password
-					</label>
-					<div className="relative">
-						<input
-							type={showPassword.confirmPassword ? "text" : "password"}
-							className="form-input "
-							value={formik.values.confirmPassword}
-							onChange={formik.handleChange("confirmPassword")}
-							onBlur={formik.handleBlur("confirmPassword")}
-						/>
-						<span
-							className=" absolute top-[30%] right-2"
-							onClick={() => togglePasswordVisibility("confirmPassword")}
-						>
-							{showPassword.confirmPassword ? <BsEye /> : <BsEyeSlash />}
-						</span>
-					</div>
-					<div className=" relative mb-2 self-start">
-						<h1 className=" form-error-text">
-							{formik.touched.confirmPassword &&
-								formik.errors.confirmPassword}
-						</h1>
-					</div>
-					<button
-						className=" self-center text-center bg-blue-400 mt-4 px-2 py-1 rounded-lg text-white hover:bg-blue-600 transition-all duration-75"
-						type="submit"
+		<div className="font-inter flex items-center justify-center h-[80vh] w-screen flex-col gap-4 px-6 dark:text-slate-200 ">
+			<h1 className="text-blue-400">Update your password</h1>
+			{/* form */}
+			<form className="flex flex-col gap-1 dark:bg-[#171717]  px-4 py-10 rounded-lg" onSubmit={formik.handleSubmit}>
+				<h1 className=" mb-3">
+					fill in your old and your new password to continue to change your
+					password
+				</h1>
+				{/* oldPassword */}
+				<label className=" form-label" htmlFor="password">
+					old password
+				</label>
+				<div className=" relative">
+					<input
+						type={showPassword.oldPassword ? "text" : "password"}
+						className="form-input "
+						value={formik.values.oldPassword}
+						onChange={formik.handleChange("oldPassword")}
+						onBlur={formik.handleBlur("oldPassword")}
+					/>
+					<span
+						className=" absolute top-[30%] right-2"
+						onClick={() => togglePasswordVisibility("oldPassword")}
 					>
-						{updatePasswordStatus === "loading" ? <Spinner /> : "Submit"}
-					</button>
-				</form>
-			</div>
+						{showPassword.oldPassword ? <BsEye /> : <BsEyeSlash />}
+					</span>
+					<div className=" relative mb-2 self-start">
+						<h1 className=" form-error-text">
+							{formik.touched.oldPassword && formik.errors.oldPassword}
+						</h1>
+					</div>
+				</div>
+
+				{/* new password */}
+				<label className=" form-label" htmlFor="oldPassword">
+					new Password
+				</label>
+				<div className=" relative">
+					<input
+						type={showPassword.password ? "text" : "password"}
+						className="form-input "
+						value={formik.values.password}
+						onChange={formik.handleChange("password")}
+						onBlur={formik.handleBlur("password")}
+					/>
+					<span
+						className=" absolute top-[30%] right-2"
+						onClick={() => togglePasswordVisibility("password")}
+					>
+						{showPassword.password ? <BsEye /> : <BsEyeSlash />}
+					</span>
+				</div>
+				<div className=" relative mb-2 self-start">
+					<h1 className=" form-error-text">
+						{formik.touched.password && formik.errors.password}
+					</h1>
+				</div>
+
+				{/* confirm Password */}
+				<label className=" form-label" htmlFor="oldPassword">
+					Confirm Password
+				</label>
+				<div className="relative">
+					<input
+						type={showPassword.confirmPassword ? "text" : "password"}
+						className="form-input "
+						value={formik.values.confirmPassword}
+						onChange={formik.handleChange("confirmPassword")}
+						onBlur={formik.handleBlur("confirmPassword")}
+					/>
+					<span
+						className=" absolute top-[30%] right-2"
+						onClick={() => togglePasswordVisibility("confirmPassword")}
+					>
+						{showPassword.confirmPassword ? <BsEye /> : <BsEyeSlash />}
+					</span>
+				</div>
+				<div className=" relative mb-2 self-start">
+					<h1 className=" form-error-text">
+						{formik.touched.confirmPassword &&
+							formik.errors.confirmPassword}
+					</h1>
+				</div>
+				<button
+					className=" self-center text-center bg-blue-400 mt-4 px-2 py-1 rounded-lg text-white hover:bg-blue-600 transition-all duration-75"
+					type="submit"
+				>
+					{updatePasswordStatus === "loading" ? <Spinner /> : "Submit"}
+				</button>
+			</form>
 		</div>
 	);
 };

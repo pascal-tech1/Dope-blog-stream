@@ -20,7 +20,7 @@ export default {
 			},
 			colors: {
 				dark: {
-					background: "#242424",
+					// background: "#242424",
 					// ... and so on for other properties
 				},
 			},

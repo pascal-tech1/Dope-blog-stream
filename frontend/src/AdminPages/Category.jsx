@@ -13,14 +13,15 @@ import * as Yup from "yup";
 import { MdDoneAll, MdEdit } from "react-icons/md";
 import { BsSaveFill } from "react-icons/bs";
 import { toast } from "react-toastify";
+import { setIsSearchBArNeeded } from "../redux/user/userSlice";
 
 const AdminAllCategory = () => {
+	useEffect(() => {
+		dispatch(setIsSearchBArNeeded(true));
+		
+	}, []);
 	const { dashboardSearchTerm } = useSelector((store) => store.userSlice);
 	const dispatch = useDispatch();
-
-	useEffect(() => {
-		dispatch(fetchAllCategorys());
-	}, [dashboardSearchTerm]);
 	const {
 		allCategory,
 		categorystatus,
@@ -28,6 +29,11 @@ const AdminAllCategory = () => {
 		activeEditingCategory,
 	} = useSelector((store) => store.categorySlice);
 	const [checkedItems, setCheckedItemId] = useState([]);
+
+	useEffect(() => {
+		dispatch(fetchAllCategorys());
+	}, [dashboardSearchTerm]);
+	
 
 	const formSchema = Yup.object().shape({
 		activeEditingCategory: Yup.string()
@@ -132,7 +138,7 @@ const AdminAllCategory = () => {
 					<h3>Remember this Action cannot be undone</h3>
 				</div>
 			</Modal>
-			<h2 className=" text-gray-900 font-medium  text-center">
+			<h2 className=" text-gray-900 font-medium dark:text-blue-400  text-center">
 				All Categories
 			</h2>
 			<div className="flex items-center justify-between w-full px-11 mb-2 mt-4">
@@ -178,7 +184,7 @@ const AdminAllCategory = () => {
 				</button>
 			</div>
 			<div className=" h-full flex flex-col gap-6 px-6  ">
-				<div className="border rounded-lg px-2 py-2 mx-3 drop-shadow-md  h-[50%] overflow-y-auto custom-scrollbar">
+				<div className="border dark:border-gray-800 rounded-lg px-2 py-2 mx-3 drop-shadow-md  h-[50%] overflow-y-auto custom-scrollbar">
 					<AdminCategory
 						checkedItems={checkedItems}
 						handleCheckedItemcsChange={handleCheckedItemcsChange}
@@ -200,7 +206,7 @@ const AdminAllCategory = () => {
 							type="text"
 							name="category"
 							id="category"
-							className="border  px-4 py-2 rounded-lg outline-none focus:border-gray-600 border-gray-400  "
+							className="border  px-4 py-2 rounded-lg outline-none dark:bg-[#171717]  focus:border-gray-600 dark:border-gray-800 border-gray-400  "
 						/>
 						<div className=" relative mb-2 self-start">
 							<h1 className=" form-error-text ">

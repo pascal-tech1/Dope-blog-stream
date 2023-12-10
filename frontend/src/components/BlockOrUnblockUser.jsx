@@ -4,6 +4,8 @@ import { blockOrUnblockUser } from "../redux/admin/adminSlice";
 import { useDispatch } from "react-redux";
 import { BiBlock } from "react-icons/bi";
 import { BsUnlock } from "react-icons/bs";
+import { MdLockOpen, MdLockPerson, MdLockReset } from "react-icons/md";
+import { IoMdUnlock } from "react-icons/io";
 
 const BlockOrUnblockUser = ({ user }) => {
 	console.log(user.isBlocked);
@@ -43,9 +45,17 @@ const BlockOrUnblockUser = ({ user }) => {
 			</Modal>
 			<button
 				onClick={() => openModal()}
-				className=" px-2 py-1 text-sm  drop-shadow-sm rounded-xl text-red-400 hover:drop-shadow-none hover:bg-red-300 transition-all delay-75"
+				className="  p-2 text-lg  drop-shadow-sm rounded-xl hover:drop-shadow-none "
 			>
-				{user.isBlocked ? <BiBlock /> : <BsUnlock />}
+				{user.isBlocked ? (
+					<div className="text-red-400 hover:bg-red-100 rounded-full p-2 transition-all delay-75">
+						<MdLockPerson className=" text-lg " />
+					</div>
+				) : (
+					<div className="text-green-400 hover:bg-green-100 p-2 rounded-full  transition-all delay-75">
+						<MdLockOpen className=" text-lg" />
+					</div>
+				)}
 			</button>
 		</div>
 	);

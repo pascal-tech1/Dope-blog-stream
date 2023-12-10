@@ -12,6 +12,7 @@ const path = require("path");
 const { filterCriteria } = require("../../utils/filterSortCriteria");
 const PostViewedHistory = require("../../model/postHistory/PostViewedHistory");
 const { isValidObjectId } = require("mongoose");
+const cheerio = require("cheerio");
 
 // '''''''''''''''''''''''''''''''''''''''''
 //   Create Post conttoller
@@ -214,12 +215,13 @@ const fetchSinglePostsCtrl = expressAsyncHandler(async (req, res) => {
 //   update post controller
 // '''''''''''''''''''''''''''''''''''''''''''''
 const updatePostCtrl = expressAsyncHandler(async (req, res) => {
-	const postId = req?.params?.id;
-	const loginUserId = req?.user?._id;
-	validateMongoDbUserId(postId);
-	validateMongoDbUserId(loginUserId);
-
 	try {
+		// const $ = cheerio.load(req.body.content);
+
+		const postId = req?.params?.id;
+		const loginUserId = req?.user?._id;
+		validateMongoDbUserId(loginUserId);
+		validateMongoDbUserId(postId);
 		let user = await User.findById(loginUserId);
 		let post = await Post.findById(postId);
 
@@ -491,32 +493,48 @@ const fetchPostByCategoryCtrl = expressAsyncHandler(async (req, res) => {
 
 const fetchUserPostHistoryCtrl = expressAsyncHandler(async (req, res) => {
 	const { _id } = req.user;
+	const { searchTerm } = req.query;
+	const page = parseInt(req.query.page) || 1;
+	const numberPerPage = parseInt(req.query.postNumberPerPage) || 10;
+	const regexPattern = new RegExp(`.*${searchTerm}.*`, "i");
 
-	const page = parseInt(req.query.page) || 1; // Current page number, default to 1
-	const numberPerPage = parseInt(req.query.postNumberPerPage) || 10; // Number of items per page
+	let searchQuery = {};
+	if (searchTerm) {
+		searchQuery = { title: { $regex: regexPattern } };
+	}
 
 	try {
-		const postHistoryForLength = await User.findById(_id).populate({
+		const user = await User.findById(_id).populate({
 			path: "postViewHistory",
-		});
-
-		const postHistoryTotalCount =
-			postHistoryForLength.postViewHistory.length;
-
-		const { postViewHistory } = await User.findById(_id).populate({
-			path: "postViewHistory",
-			options: { sort: { updatedAt: -1 } },
-			skip: (page - 1) * numberPerPage,
-			limit: numberPerPage,
 			populate: {
 				path: "post",
 				select: ["image", "title", "createdAt", "blurImageUrl"],
 			},
+
+			options: { sort: { updatedAt: -1 } },
 		});
 
+		// Filter the post history array based on the search criteria
+
+		const filteredpostViewHistory = user.postViewHistory.filter(
+			(postViewHistory) => {
+				return (
+					postViewHistory.post &&
+					postViewHistory.post.title.match(regexPattern)
+				);
+			}
+		);
+		
+		const postViewHistoryTotalCount = filteredpostViewHistory.length;
+
+		const paginatedpostViewHistory = filteredpostViewHistory.slice(
+			(page - 1) * numberPerPage,
+			page * numberPerPage
+		);
+	
 		res.json({
-			totalPostHistory: postHistoryTotalCount,
-			posts: postViewHistory,
+			totalPostHistory: postViewHistoryTotalCount,
+			posts: paginatedpostViewHistory,
 		});
 	} catch (error) {
 		console.log(error);
@@ -526,36 +544,66 @@ const fetchUserPostHistoryCtrl = expressAsyncHandler(async (req, res) => {
 
 const fetchUserSavedPostCtrl = expressAsyncHandler(async (req, res) => {
 	const { _id } = req.user;
+	const { searchTerm } = req.query;
+	const page = parseInt(req.query.page) || 1;
+	const numberPerPage = parseInt(req.query.postNumberPerPage) || 10;
+	const regexPattern = new RegExp(`.*${searchTerm}.*`, "i");
 
-	const page = parseInt(req.query.page) || 1; // Current page number, default to 1
-	const numberPerPage = parseInt(req.query.postNumberPerPage) || 10; // Number of items per page
+	let searchQuery = {};
+	if (searchTerm) {
+		searchQuery = { title: { $regex: regexPattern } };
+	}
 
 	try {
-		const savedPostForLength = await User.findById(_id).populate({
+		const user = await User.findById(_id).populate({
 			path: "savedPost",
-		});
-
-		const savedPosTotalCount = savedPostForLength.savedPost.length;
-
-		const { savedPost } = await User.findById(_id).populate({
-			path: "savedPost",
-			options: { sort: { updatedAt: -1 } },
-			skip: (page - 1) * numberPerPage,
-			limit: numberPerPage,
 			populate: {
 				path: "post",
 				select: ["image", "title", "createdAt", "blurImageUrl"],
 			},
+
+			options: { sort: { updatedAt: -1 } },
 		});
+
+		// Filter the savedPost array based on the search criteria
+		const filteredSavedPost = user.savedPost.filter((savedPost) => {
+			return savedPost.post && savedPost.post.title.match(regexPattern);
+		});
+
+		const savedPosTotalCount = filteredSavedPost.length;
+
+		const paginatedSavedPost = filteredSavedPost.slice(
+			(page - 1) * numberPerPage,
+			page * numberPerPage
+		);
 
 		res.json({
 			totalSavedPosts: savedPosTotalCount,
-			posts: savedPost,
+			posts: paginatedSavedPost,
 		});
 	} catch (error) {
 		console.log(error);
 		res.status(500).json({ message: error.message });
 	}
+});
+
+const postImageCtrl = expressAsyncHandler(async (req, res) => {
+	const user = req.user;
+	const imageLocalPath = `public/images/posts/${req?.file?.fileName}`;
+	uploadedImage = await handleCloudinaryUpload(
+		imageLocalPath,
+		`mern-blog-app/${user?.email}/postImage`
+	);
+	// remove the file
+	fs.unlink(imageLocalPath, (err) => {
+		if (err) {
+			res.status(500).json({ message: "failed to edit post" });
+			return;
+		} else {
+			console.log("File deleted successfully");
+		}
+	});
+	res.status(200).json(uploadedImage);
 });
 
 module.exports = {
@@ -571,4 +619,5 @@ module.exports = {
 	fetchUserPostHistoryCtrl,
 	fetchUserSavedPostCtrl,
 	fetchAllUserPostCtrl,
+	postImageCtrl,
 };

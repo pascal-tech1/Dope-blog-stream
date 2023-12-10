@@ -44,19 +44,19 @@ const Carousel = () => {
 				return (
 					<div
 						key={testimony.id}
-						className={`  rounded-lg w-80  h-40 py-4 px-4 bg-blue-100 space-x-3 gap-1 flex items-center flex-col ${
+						className={` w-80 dark:bg-[#1C1C1C] rounded-md p-2 font-inter dark:text-slate-200  border dark:border-gray-800 h-40 py-4 px-4 bg-blue-100 space-x-3 gap-1 flex items-center flex-col ${
 							currentIndex === index ? " order-2" : "hidden"
 						}`}
 					>
-						<div className="flex space-x-3 items-center ">
+						<div className="flex space-x-3 items-center  ">
 							<img
 								src={testimony.image}
 								alt=""
-								className="w-10 rounded-full  object-cover h-10"
+								className="w-10 rounded-full  object-cover h-10 "
 							/>
-							<h3 className=" text-gray-400 ">{testimony.name}</h3>
+							<h3 className="  ">{testimony.name}</h3>
 						</div>
-						<h3 className=" text-gray-900 text-center">
+						<h3 className=" text-center">
 							{testimony.text}
 						</h3>
 					</div>

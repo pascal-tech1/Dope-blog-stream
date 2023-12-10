@@ -31,13 +31,93 @@
 
 /* Custom Scrollbar Styling */
 
-.tableHeading {
-	position: sticky;
-	
-	/* background-color: white; Set background color as needed */
-	z-index: 10; /* Ensure it's above other elements */
+table {
+	border-collapse: collapse;
+	margin-top: 10px;
+	width: 100%;
 }
 
+
+.ql-toolbar.ql-snow {
+	background:#bfcbda;
+	color: white !important;
+	border: none;
+	
+}
+
+
+
+
+
+th,
+td {
+	
+	border: 1px solid #333030;
+	padding: 10px;
+	box-sizing: border-box;
+	white-space: nowrap;
+	text-align: start;
+	z-index: -1;
+	/* font-size: 0.875rem 
+	line-height: 1.25rem  */
+}
+td:last-child,
+th:last-child {
+	position: sticky;
+	right: 0;
+	/* width: 85px; */
+}
+td:first-child,
+th:first-child {
+	position: sticky;
+	left: 0px;
+
+	width: 90px;
+	padding: 0 10px;
+}
+
+th:first-child,
+th:last-child {
+	z-index: 10;
+}
+td:first-child,
+td:last-child {
+	z-index: 1;
+}
+
+.stickyRight {
+	position: sticky;
+	top: 0;
+	height: 100vh;
+	overflow-y: auto;
+}
+.stickyBottom {
+	position: sticky;
+	left: 0;
+}
+.categorySticky {
+	position: sticky;
+	top: 0;
+	z-index: 10;
+	background-color: white;
+	padding: 10px 0;
+}
+th {
+	border: none;
+	z-index: 100;
+}
+
+.tableHeading {
+	position: sticky;
+	top: 0;
+	z-index: 10;
+}
+
+.tableAction {
+	position: sticky;
+
+	/* background-color: white; Set background color as needed */
+}
 /* loaidng skeletal */
 .loader {
 	width: 100%;
@@ -55,6 +135,7 @@
 	top: 15px;
 	left: 15px;
 	position: absolute;
+
 	background-image: linear-gradient(
 			100deg,
 			transparent,
@@ -108,12 +189,7 @@
 	background-color: transparent;
 	border-radius: 6px;
 }
-.tableLayout {
-	display: grid;
-	grid-template-rows: 2rem 1fr;
-	height: 90vh;
-	overflow-y: auto;
-}
+
 .dashboardLayout {
 	display: grid;
 	grid-template-rows: 3rem 1fr;
@@ -125,7 +201,7 @@
 }
 
 .form-input {
-	@apply my-1   rounded-lg py-1 border border-gray-400 focus:outline-none focus:border focus:border-b-blue-400 w-full px-2;
+	@apply my-1 dark:bg-[#1C1C1C]   rounded-lg py-1 border-b border-b-gray-400 dark:border-b-gray-700 focus:outline-none drop-shadow-md focus:border-b-blue-400 dark:focus:border-b-gray-400 w-full px-2;
 }
 
 .form-container {
@@ -140,7 +216,7 @@
 }
 
 .tableContainer {
-	@apply shadow-md rounded-lg  font-medium tableLayout gap-4  -mx-2;
+	@apply shadow-md rounded-lg  font-medium  gap-4  -mx-2;
 }
 .checkboxStyle {
 	@apply w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600;
@@ -150,5 +226,5 @@
 	@apply flex justify-between items-start fixed z-50  mx-6 gap-4 row-start-1 row-span-1;
 }
 .tableBaginsStyle {
-	@apply overflow-x-auto overflow-y-auto row-start-2 flex flex-col custom-scrollbar;
+	@apply overflow-y-auto row-start-2 flex flex-col custom-scrollbar;
 }

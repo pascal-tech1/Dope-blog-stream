@@ -12,7 +12,7 @@ const UserToFollow = ({ user, index, date, numberOfView }) => {
 	return (
 		<div
 			key={index}
-			className="flex justify-between gap-3  py-2 items-start"
+			className="flex justify-between gap-3  py-2 items-start text-slate-300"
 		>
 			<Link
 				to={loginUser?._id ? `/profile/${user._id}` : `/login`}
@@ -33,7 +33,7 @@ const UserToFollow = ({ user, index, date, numberOfView }) => {
 				</div>
 
 				<div>
-					<div className=" flex items-center gap-2 font-light text-xs text-gray-90">
+					<div className=" flex items-center gap-2 font-light  text-gray-90">
 						<div className=" flex flex-wrap gap-1">
 							<h1 className=" capitalize">{user?.firstName}</h1>
 							<h1 className=" capitalize">{user?.lastName}</h1>
@@ -42,7 +42,7 @@ const UserToFollow = ({ user, index, date, numberOfView }) => {
 
 					{date && (
 						<div>
-							<h3 className=" text-gray-400 text-xs lowercase">{` ${formatDate(
+							<h3 className=" text-gray-400 lowercase">{` ${formatDate(
 								date
 							)}`}</h3>
 						</div>
@@ -60,7 +60,7 @@ const UserToFollow = ({ user, index, date, numberOfView }) => {
 				<div>
 					<FollowingBtn
 						userToFollowOrUnfollow={user}
-						className="border border-blue-200  px-2 my-[0.2rem] rounded-lg hover:bg-blue-200 transition-all delay-75  text-sm "
+						className=" text-blue-300 border dark:border-slate-700 hover:dark:bg-gray-700  px-2 my-[0.2rem] rounded-lg hover:bg-blue-200 transition-all delay-75  text-sm "
 					/>
 				</div>
 			)}

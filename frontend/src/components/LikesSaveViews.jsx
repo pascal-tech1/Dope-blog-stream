@@ -47,7 +47,10 @@ const LikesSaveViews = ({ post }) => {
 				<span className="  ">{post?.numViews}</span>
 				{post?.numViews > 1 ? "views" : "view"}
 			</h3>
-			<button onClick={() => dispatch(savePost(post?._id))}>
+			<button
+				onClick={() => dispatch(savePost(post?._id))}
+				className=" hover:bg-gray-400 p-1 rounded-full hover:text-white"
+			>
 				<MdOutlineBookmarkAdd />
 			</button>
 			<Link
@@ -57,7 +60,7 @@ const LikesSaveViews = ({ post }) => {
 					dispatch(setFetchFirstCategory(post?.category));
 					dispatch(fetchPostByCategory());
 				}}
-				className="whitespace-nowrap gap-2 mt-1 text-sm delay-75 cursor-pointer flex bg-gray-200 hover:bg-gray-300 rounded-xl py-[0.2rem] px-4"
+				className="whitespace-nowrap gap-2 mt-1 text-sm delay-75 cursor-pointer flex bg-gray-200 hover:bg-gray-300 rounded-md dark:text-slate-300 dark:bg-[#1C1C1C] hover:dark:bg-gray-700 py-[0.1rem] px-4"
 			>
 				{post?.category?.charAt(0).toUpperCase() +
 					post?.category?.slice(1).toLowerCase()}

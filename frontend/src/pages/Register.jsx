@@ -10,8 +10,8 @@ import { LoadingSpinner } from "../utils/Spinner";
 import VerifyEmail from "../components/VerifyEmail";
 
 const Register = () => {
-	const registerUserStatus = useSelector(
-		(store) => store.userSlice.registerUserStatus
+	const { registerUserStatus } = useSelector(
+		(store) => store.userSlice
 	);
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
@@ -20,12 +20,10 @@ const Register = () => {
 	useEffect(() => {
 		setIsRegistered(false);
 		if (registerUserStatus === "success" && isRegistering) {
-			console.log("im here")
 			dispatch(verifyEmail());
 			setIsRegistered(true);
 		}
 	}, [registerUserStatus]);
-	console.log(isRegistered)
 
 	const formSchema = Yup.object().shape({
 		firstName: Yup.string()
@@ -56,8 +54,7 @@ const Register = () => {
 	});
 
 	return (
-		<div className="h-screen flex justify-center md:grid place-items-center place-content-center px-3 grid-cols-2 md:p-8  font-helvetica font-light">
-			<NavBar />
+		<div className="h-[90vh] flex justify-center md:grid place-items-center place-content-center grid-cols-2 font-inter font-light dark:text-slate-200">
 			<div
 				className={` z-[1000] fixed top-0 left-0 w-full h-full flex justify-center items-center bg-black bg-opacity-40  ${
 					isRegistered ? "" : "hidden"
@@ -65,7 +62,7 @@ const Register = () => {
 			>
 				<VerifyEmail setIsRegistered={setIsRegistered} />
 			</div>
-			<div className=" hidden md:flex flex-col p-9 bg-gray-100 mr-6 shadow-sm justify-center items-center">
+			<div className=" hidden md:flex flex-col p-9 bg-gray-100 mr-6 shadow-sm justify-center items-center dark:bg-[#171717] border dark:border-gray-800">
 				<h1 className=" font-medium">
 					Join Our Community and Start Sharing Your Story!
 				</h1>
@@ -79,7 +76,7 @@ const Register = () => {
 			{/* form starts here */}
 			<form
 				onSubmit={formik.handleSubmit}
-				className="flex flex-col w-full  items-center px-8 py-6 lg:px-20"
+				className="flex flex-col w-full  items-center px-8 lg:px-20 dark:bg-[#171717] rounded-md p-2 border dark:border-gray-800"
 			>
 				<div className=" items-center flex flex-col  mb-6">
 					<p className=" text-lg font-medium mb-3">Get Started</p>
@@ -120,7 +117,7 @@ const Register = () => {
 						{formik.touched.lastName && formik.errors.lastName}
 					</h1>
 				</div>
-				<label className=" form-label" htmlFor="email">
+				<label className=" form-label font-inter" htmlFor="email">
 					Email
 				</label>
 				<input
@@ -165,7 +162,7 @@ const Register = () => {
 				</button>
 
 				<div className=" mt-8">
-					<h3 className=" font-light font-helvetica text-gray-500">
+					<h3 className=" font-light font-inter text-gray-500">
 						Already Have an account?
 						<span>
 							<Link

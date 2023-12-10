@@ -2,6 +2,10 @@ import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { logOutUser, setChangeEmail } from "../redux/user/userSlice";
 import { useNavigate } from "react-router-dom";
+import { BsLock, BsMessenger, BsPerson } from "react-icons/bs";
+import { CiUser } from "react-icons/ci";
+import { IoMdHelp } from "react-icons/io";
+import { FiLogOut } from "react-icons/fi";
 
 const UserDashboardMenu = ({ isMenuOpen, setIsMenuOpen }) => {
 	const navigate = useNavigate();
@@ -26,31 +30,60 @@ const UserDashboardMenu = ({ isMenuOpen, setIsMenuOpen }) => {
 		navigate("/");
 	};
 
-	const menuItem = [
-		{ title: "profile", action: handleProfileClick },
-		{ title: "update password", action: handleUupdatePassword },
-		{ title: "change email", action: handleChangeEmail },
-		{ title: "FAQ", action: handleFaqClick },
-		{ title: "log Out", action: handleLogOut },
-	];
-
 	return (
 		<>
-			<div className="absolute top-8 right-4 drop-shadow-lg h-[50vh] rounded-lg z-[500]   bg-white">
+			<div className="absolute top-8 right-4 drop-shadow-lg h-[50vh] rounded-lg z-[500] dark:bg-[#171717] border dark:border-gray-700   bg-white">
 				<div className=" flex flex-col px-4 justify-start whitespace-nowrap  items-start font-inter gap-3 py-3 text-sm  ">
-					{menuItem.map((item) => (
-						<button
-							onClick={() => {
-								item.action();
-								setIsMenuOpen(!isMenuOpen);
-							}}
-							className={`${
-								item.title === "log Out" && " text-red-400"
-							} hover:bg-blue-100  py-1 px-2 rounded-lg transition-all delay-75`}
-						>
-							{item.title}
-						</button>
-					))}
+					<button
+						onClick={() => {
+							handleProfileClick();
+							setIsMenuOpen(!isMenuOpen);
+						}}
+						className=" hover:bg-blue-100 dark:hover:bg-gray-800 flex gap-2 items-center py-1 px-2 rounded-lg transition-all delay-75"
+					>
+						<CiUser />
+						profile
+					</button>
+					<button
+						onClick={() => {
+							handleUupdatePassword();
+							setIsMenuOpen(!isMenuOpen);
+						}}
+						className=" hover:bg-blue-100 dark:hover:bg-gray-800 flex gap-2 items-center  py-1 px-2 rounded-lg transition-all delay-75"
+					>
+						<BsLock />
+						update password
+					</button>
+					<button
+						onClick={() => {
+							handleChangeEmail();
+							setIsMenuOpen(!isMenuOpen);
+						}}
+						className=" hover:bg-blue-100 dark:hover:bg-gray-800 flex gap-2 items-center  py-1 px-2 rounded-lg transition-all delay-75"
+					>
+						<BsMessenger />
+						change email
+					</button>
+					<button
+						onClick={() => {
+							handleFaqClick();
+							setIsMenuOpen(!isMenuOpen);
+						}}
+						className=" hover:bg-blue-100 dark:hover:bg-gray-800 flex gap-2 items-center  py-1 px-2 rounded-lg transition-all delay-75"
+					>
+						<IoMdHelp/>
+						FAQ
+					</button>
+					<button
+						onClick={() => {
+							handleLogOut();
+							setIsMenuOpen(!isMenuOpen);
+						}}
+						className=" hover:bg-blue-100 dark:hover:bg-gray-800 flex gap-2 items-center text-red-400  py-1 px-2 rounded-lg transition-all delay-75"
+					>
+						<FiLogOut/>
+						logout
+					</button>
 				</div>
 			</div>
 		</>

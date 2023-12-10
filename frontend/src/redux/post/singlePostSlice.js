@@ -78,7 +78,7 @@ export const updatePost = createAsyncThunk(
 	"update/post",
 	async (post, { getState, rejectWithValue, dispatch }) => {
 		const postId = getState().singlePostSlice.postToBeEdited?._id;
-
+		console.log(post);
 		try {
 			const resp = await customFetch.put(`/posts/update/${postId}`, post, {
 				headers: {
@@ -97,6 +97,38 @@ export const updatePost = createAsyncThunk(
 		}
 	}
 );
+
+
+export const uploadImage = createAsyncThunk(
+	"upload/image",
+	async (_, { getState, rejectWithValue }) => {
+		console.log('im here')
+		try {
+			
+			const resp = await customFetch.post(
+				`/posts/upload-image`,
+
+				{
+					headers: {
+						Authorization: `Bearer ${getState().userSlice.token} `,
+					},
+				}
+			);
+			console.log(resp.data);
+			return resp.data;
+		} catch (error) {
+			console.log(error);
+			if (!error?.response) {
+				throw new Error(error);
+			}
+			return rejectWithValue(error?.response?.data);
+		}
+	}
+);
+
+
+
+
 const initialState = {
 	post: null,
 	status: "idle",

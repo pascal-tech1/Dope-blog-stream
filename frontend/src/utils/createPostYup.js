@@ -6,8 +6,8 @@ export const formSchema = Yup.object().shape({
 		.min(3, "title is too short - should be 3 minimum"),
 	description: Yup.string()
 		.required("Description is required.")
-		.min(100, "Description is too short - should be 50 minimum"),
-
+		.min(30, "Description is too short - should be 30 minimum")
+		.max(100, "Description is too long it should be 100 max"),
 	image: Yup.mixed()
 		.required("Image is required")
 		.test(
@@ -18,8 +18,7 @@ export const formSchema = Yup.object().shape({
 });
 export const isEditingFormSchema = Yup.object().shape({
 	title: Yup.string().min(3, "title is too short - should be 3 minimum"),
-	description: Yup.string().min(
-		100,
-		"Description is too short - should be 50 minimum"
-	),
+	description: Yup.string()
+		.min(30, "Description is too short - should be 30 minimum")
+		.max(100, "Description is too long it should be 100 max"),
 });

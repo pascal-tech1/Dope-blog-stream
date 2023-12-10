@@ -3,11 +3,16 @@ import { useDispatch, useSelector } from "react-redux";
 import {
 	fetchUserFollowersList,
 	setFirstFetchFollowersUser,
+	setIsSearchBArNeeded,
 	updateFollowersListPageNumber,
 } from "../../redux/user/userSlice";
 import { FollowUsersList } from "../../components";
 
 const Following = () => {
+	useEffect(() => {
+		dispatch(setIsSearchBArNeeded(true));
+		
+	}, []);
 	const {
 		user,
 		userFollowerslist,
@@ -16,6 +21,7 @@ const Following = () => {
 	} = useSelector((store) => store?.userSlice);
 	const dispatch = useDispatch();
 	const _id = user?.id;
+	const { dashboardSearchTerm } = useSelector((store) => store.userSlice);
 
 	const handleFetchMoreButtonClicked = (e) => {
 		e.preventDefault();
@@ -28,7 +34,7 @@ const Following = () => {
 		dispatch(setFirstFetchFollowersUser());
 		dispatch(fetchUserFollowersList());
 		dispatch(updateFollowersListPageNumber());
-	}, [_id]);
+	}, [_id,dashboardSearchTerm]);
 
 	return (
 		<div className=" grid max-w-md w-full ">
@@ -36,7 +42,7 @@ const Following = () => {
 				{" "}
 				Your followers
 			</h1>
-			<h3 className=" font-medium text-gray-900 drop-shadow-md">
+			<h3 className=" font-medium text-gray-900 md:text-slate-300 drop-shadow-md">
 				total followers : <span>{followerslistTotalNumber} </span>{" "}
 			</h3>
 

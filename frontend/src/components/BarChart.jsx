@@ -42,13 +42,15 @@ export function BarChart() {
 				position: "top",
 				align: "end",
 				labels: {
-					boxWidth: 10, // Adjust the width of the legend item
-					padding: 20, // Adjust the padding between legend items
+					boxWidth: 10,
+					padding: 20,
+					color: "white", // Set legend label color to white
 				},
 			},
 			title: {
 				display: true,
 				text: `${chartSelectedFilter.toUpperCase()} CHART`,
+				color: "white", // Set title color to white
 			},
 		},
 		tooltips: {
@@ -61,20 +63,21 @@ export function BarChart() {
 				},
 			},
 		},
-
 		scales: {
 			x: {
 				ticks: {
 					callback: function (value) {
 						return value;
 					},
+					color: "white", // Set x-axis label color to white
 				},
 			},
 			y: {
 				ticks: {
 					callback: function (value) {
-						return value >= 1000 ? value / 1000 + "k" : value; // Convert values greater than or equal to 1000 to "1k" format
+						return value >= 1000 ? value / 1000 + "k" : value;
 					},
+					color: "white", // Set y-axis label color to white
 				},
 			},
 		},
@@ -102,12 +105,12 @@ export function BarChart() {
 			{
 				label: "Likes",
 				data: userPostImpression?.likesDataset,
-				backgroundColor: "rgba(255, 99, 132, 0.5)",
+				backgroundColor: "#1081E8",
 			},
 			{
 				label: "Dislikes",
 				data: userPostImpression?.disLikesDataset,
-				backgroundColor: "rgba(53, 162, 235, 0.5)",
+				backgroundColor: "rgb(255, 99, 133)",
 			},
 		];
 	}
@@ -130,8 +133,8 @@ export function BarChart() {
 	const allFilter = ["likes and dislikes", "number of views"];
 
 	return (
-		<div className="w-full h-[300px]  flex flex-col  py-2 rounded-lg">
-			<div className=" px-2 self-start ">
+		<div className="w-full h-[300px]  flex flex-col  py-2 rounded-lg   ">
+			<div className=" px-2 self-start ml-10 ">
 				<DashboardCustomDropdown
 					allFilters={allFilter}
 					setSelectedFilter={setChartSelectedFilter}

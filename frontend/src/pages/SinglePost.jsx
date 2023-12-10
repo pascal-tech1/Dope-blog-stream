@@ -6,7 +6,6 @@ import NavBar from "../components/NavBar";
 
 import { LazyLoadImg, LikesSaveViews, MessageUser } from "../components";
 
-
 import {
 	clearUserPost,
 	fetchMorePost,
@@ -21,7 +20,9 @@ import {
 } from "../components";
 import {
 	clearMorePost,
+	clearSearchAndCategory,
 	fetchPostByCategory,
+	setEmptySearch,
 } from "../redux/post/allPostSlice";
 
 const SinglePost = () => {
@@ -74,7 +75,7 @@ const SinglePost = () => {
 					dispatch(
 						fetchUserPost({ postId: post?._id, userId: post?.user?._id })
 					);
-
+					dispatch(clearSearchAndCategory());
 					dispatch(
 						fetchPostByCategory({
 							page: 1,
@@ -95,6 +96,7 @@ const SinglePost = () => {
 	}, [id]);
 
 	useEffect(() => {
+		dispatch(clearSearchAndCategory());
 		pageNumber > 1 &&
 			dispatch(
 				fetchPostByCategory({
@@ -120,11 +122,10 @@ const SinglePost = () => {
 	if (post)
 		return (
 			<div className="">
-				<NavBar />
-				<div className=" mt-16 px-8 font-inter   md:mx-auto max-w-[50rem] gap-[0.5rem] -z-50 ">
+				<div className=" font-inter   md:mx-auto max-w-[50rem] gap-[0.5rem] -z-50 ">
 					<div className=" flex flex-col gap-2">
 						<div>
-							<h1 className=" font-bold text-sm md:text-2xl my-2 md:my-4">
+							<h1 className=" font-bold text-sm md:text-2xl my-2 md:my-4 dark:text-slate-200">
 								{post?.title}
 							</h1>
 						</div>
@@ -133,9 +134,11 @@ const SinglePost = () => {
 							<PostUserInfo post={post} />
 							<LikesSaveViews post={post} />
 						</div>
+						<div>
+							<h3>{post?.description}</h3>
+						</div>
 
 						<div className=" flex items-center ">
-							{/* <img className="" src={post?.image} alt="" /> */}
 							<LazyLoadImg
 								backgroundClassName={
 									" w-full h-auto rounded-md relative overflow-hidden"
@@ -144,14 +147,14 @@ const SinglePost = () => {
 									"absolute inset-0 w-full h-auto object-cover rounded-md"
 								}
 								originalImgUrl={post?.image}
-								blurImageStr={post.blurImageUrl}
+								blurImageStr={post?.blurImageUrl}
 								optimizationStr={`q_auto,f_auto,w_800`}
 							/>
 						</div>
 					</div>
-					{/* insert the post content in the dom */}
+					{/*  the post content in the dom */}
 					<div
-						className=" mt-4 "
+						className=" mt-4 dark:text-slate-300"
 						dangerouslySetInnerHTML={{ __html: post?.content }}
 					></div>
 					{/* when the user scroll to this div with lasPostRef a fetch request for 
@@ -165,7 +168,7 @@ const SinglePost = () => {
 							/>
 
 							<div className=" flex justify-between  items-center">
-								<h3 className=" font-md mt-3 text-2xl">
+								<h3 className=" font-md mt-3 text-2xl dark:text-slate-200">
 									Written by{" "}
 									<span>
 										{post?.user?.firstName} {post?.user?.lastName}
@@ -175,7 +178,7 @@ const SinglePost = () => {
 									{/* followingBtn component */}
 									<FollowingBtn
 										userToFollowOrUnfollow={post?.user}
-										className={` border self-center hover:bg-blue-800 text-center py-1 px-2 bg-blue-900 text-white hover:text-white rounded-lg transition-all delay-75`}
+										className={` border self-center hover:bg-blue-800 text-center px-2 bg-blue-900 text-white hover:text-white rounded-lg transition-all delay-75`}
 									/>
 
 									{/* message component */}
@@ -184,7 +187,7 @@ const SinglePost = () => {
 							</div>
 							<div className="flex gap-3">
 								<h3>
-									{post?.user?.followers.length}
+									{post?.user?.followers?.length}
 									<span className=" ml-1">Followers</span>
 								</h3>
 								<h3>{post?.user?.profession}</h3>
@@ -194,7 +197,7 @@ const SinglePost = () => {
 
 					{/* more post from the user */}
 					<div className=" my-6">
-						<h1 className=" text-center font-bold text-xl">
+						<h1 className=" text-center font-bold text-xl dark:text-slate-200">
 							More Posts from{" "}
 							{`${post?.user?.firstName} ${post?.user?.lastName}`}
 						</h1>
@@ -209,7 +212,7 @@ const SinglePost = () => {
 
 					{/* more post from blogvana */}
 					<div className=" my-6 flex flex-col">
-						<h1 className=" flex items-center gap-3  justify-center font-bold text-xl mb-4">
+						<h1 className=" flex items-center gap-3  justify-center font-bold text-xl mb-4 dark:text-slate-200">
 							More Posts from Blogvana{" "}
 							<span>
 								<img
@@ -223,7 +226,7 @@ const SinglePost = () => {
 							<MorePost
 								post={morePost}
 								status={isLoading}
-								titleLength={43}
+							
 							/>
 						)}
 

@@ -162,10 +162,11 @@ export const fetchUserFollowingList = createAsyncThunk(
 	async (_id, { getState, rejectWithValue }) => {
 		const { followingListPageNumber, followsNumberPerPage } =
 			getState().userSlice;
+		const { dashboardSearchTerm } = getState().userSlice;
 
 		try {
 			const resp = await customFetch(
-				`/users/following?userId=${_id}&pageNumber=${followingListPageNumber}&numberPerPage=${followsNumberPerPage}`
+				`/users/following?userId=${_id}&pageNumber=${followingListPageNumber}&numberPerPage=${followsNumberPerPage}&searchTerm=${dashboardSearchTerm}`
 			);
 			return { data: resp.data, followingUserId: _id };
 		} catch (error) {
@@ -182,10 +183,11 @@ export const fetchUserFollowersList = createAsyncThunk(
 	async (_, { getState, rejectWithValue }) => {
 		const { followersListPageNumber, followsNumberPerPage, user } =
 			getState().userSlice;
+		const { dashboardSearchTerm } = getState().userSlice;
 
 		try {
 			const resp = await customFetch(
-				`/users/followers?userId=${user._id}&pageNumber=${followersListPageNumber}&numberPerPage=${followsNumberPerPage}`
+				`/users/followers?userId=${user._id}&pageNumber=${followersListPageNumber}&numberPerPage=${followsNumberPerPage}&searchTerm=${dashboardSearchTerm}`
 			);
 
 			return resp.data;
@@ -428,6 +430,7 @@ const initialState = {
 	followingUserListForNonLoginUser: [],
 	followingUserListForNonLoginUserTotalNumber: 0,
 	dashboardSearchTerm: "",
+	isSearchBarNeeded: false,
 };
 const userSlice = createSlice({
 	name: "userSlice",
@@ -476,6 +479,7 @@ const userSlice = createSlice({
 
 			state.followingUserListForNonLoginUser = [];
 		},
+
 		setFirstFetchFollowersUser: (state, action) => {
 			state.followerslistTotalNumber = 0;
 			state.followersListPageNumber = 1;
@@ -488,7 +492,11 @@ const userSlice = createSlice({
 			state.whoViewUserProfile = [];
 		},
 		setSearchTermInStore: (state, { payload }) => {
+			console.log(payload);
 			state.dashboardSearchTerm = payload;
+		},
+		setIsSearchBArNeeded: (state, { payload }) => {
+			state.isSearchBarNeeded = payload;
 		},
 	},
 	extraReducers: {
@@ -796,4 +804,6 @@ export const {
 	setChangeEmail,
 	clearWhoViewedUserProfile,
 	setSearchTermInStore,
+	setIsSearchBArNeeded,
+	SetverifyEmailStatus,
 } = userSlice.actions;

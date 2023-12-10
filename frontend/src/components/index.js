@@ -1,4 +1,4 @@
-import DashboardSideBar from "./DashboardSideBar";
+import DashboardSideBar from "./DashboardSidebar";
 import NavBar from "./NavBar";
 import DashboardNavBAr from "./DashboardNavBAr";
 import UserDetailsCount from "./UserDetailsCount";
@@ -31,6 +31,7 @@ import UserDashboardMenu from "./UserDashboardMenu";
 import ChangeEmailForm from "./ChangeEmailForm";
 import MessageSkeleton from "./MessageSkeleton";
 import ChartSkeleton from "./chartSkeleton";
+import MessagesComp from "./MessagesComp";
 
 export {
 	DashboardSideBar,
@@ -65,5 +66,6 @@ export {
 	UserDashboardMenu,
 	ChangeEmailForm,
 	MessageSkeleton,
-	ChartSkeleton
+	ChartSkeleton,
+	MessagesComp,
 };

@@ -370,14 +370,14 @@ const sendAcctVerificationEmailCtrl = expressAsyncHandler(
 
 			mailTransporter.sendMail(mailDetails, function (err, data) {
 				if (err) {
-					throw new Error(err);
+					res.status(400).json({ message: "sending email failed try again", mailDetails });
+					return;
 				} else {
 					res.json({ message: "email sent successfully", mailDetails });
 					return;
 				}
 			});
 		} catch (error) {
-			console.log(error);
 			res.status(400).json({
 				status: "failed",
 				message: error.message,
@@ -736,16 +736,29 @@ const fetchRandomUserCtrl = expressAsyncHandler(async (req, res) => {
 
 const fetchUserFollowingListCtrl = expressAsyncHandler(
 	async (req, res) => {
+		const { searchTerm } = req.query;
+
 		const pageNumber = parseInt(req.query.pageNumber) || 1; // Current page number, default to 1
 		const numberPerPage = parseInt(req.query.numberPerPage) || 10; // Number of items per page
-
+		const regexPattern = new RegExp(`.*${searchTerm}.*`, "i");
 		const userId = req.query.userId;
 		const skip = (pageNumber - 1) * numberPerPage;
+
+		let searchQuery = {};
+		if (searchTerm) {
+			searchQuery = {
+				$or: [
+					{ firstName: { $regex: regexPattern } },
+					{ lastName: { $regex: regexPattern } },
+				],
+			};
+		}
 
 		try {
 			const { following } = await User.findById(userId)
 				.populate({
 					path: "following",
+					match: searchQuery,
 				})
 				.select("following");
 			const userfollowinglist = await User.findById(userId)
@@ -760,6 +773,7 @@ const fetchUserFollowingListCtrl = expressAsyncHandler(
 						"blurProfilePhoto",
 						"profession",
 					],
+					match: searchQuery,
 					limit: numberPerPage,
 					skip: skip,
 				})
@@ -778,16 +792,29 @@ const fetchUserFollowingListCtrl = expressAsyncHandler(
 );
 const fetchUserFollowersListCtrl = expressAsyncHandler(
 	async (req, res) => {
+		const { searchTerm } = req.query;
+		const regexPattern = new RegExp(`.*${searchTerm}.*`, "i");
 		const pageNumber = parseInt(req.query.pageNumber) || 1; // Current page number, default to 1
 		const numberPerPage = parseInt(req.query.numberPerPage) || 10; // Number of items per page
 
 		const userId = req.query.userId;
 		const skip = (pageNumber - 1) * numberPerPage;
 
+		let searchQuery = {};
+		if (searchTerm) {
+			searchQuery = {
+				$or: [
+					{ firstName: { $regex: regexPattern } },
+					{ lastName: { $regex: regexPattern } },
+				],
+			};
+		}
+
 		try {
 			const { followers } = await User.findById(userId)
 				.populate({
 					path: "followers",
+					match: searchQuery,
 				})
 				.select("followers");
 			const userfollowerslist = await User.findById(userId)
@@ -802,6 +829,7 @@ const fetchUserFollowersListCtrl = expressAsyncHandler(
 						"blurProfilePhoto",
 						"profession",
 					],
+					match: searchQuery,
 					limit: numberPerPage,
 					skip: skip,
 				})

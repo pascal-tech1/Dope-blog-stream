@@ -13,7 +13,7 @@ const Category = ({ allCategory, className, handleSelected,isActive }) => {
 						onClick={() => {
 							handleSelected(category);
 						}}
-						className={`${isActive === category && "bg-gray-400"} whitespace-nowrap gap-2 mt-1 text-sm delay-75 cursor-pointer flex bg-gray-200 hover:bg-gray-300 rounded-xl py-[0.2rem] px-4 }`}
+						className={`${isActive === category && " dark:bg-slate-800 bg-gray-400"} text-white dark:text-slate-300 dark:bg-[#171717] bg-gray-200 whitespace-nowrap gap-2 mt-1 delay-75 cursor-pointer flex hover:dark:bg-[#1C1C1C]  hover:bg-gray-300 rounded-md py-[0.15rem] px-2 }`}
 					>
 						{category.charAt(0).toUpperCase() +
 							category.slice(1).toLowerCase()}
