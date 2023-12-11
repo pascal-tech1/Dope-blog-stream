@@ -6,7 +6,6 @@ import { useDispatch, useSelector } from "react-redux";
 
 import ImageUploader from "quill-image-uploader";
 import BlotFormatter from "quill-blot-formatter/dist/BlotFormatter";
-
 import "quill-image-uploader/dist/quill.imageUploader.min.css";
 
 import {
@@ -15,7 +14,6 @@ import {
 	updatePost,
 } from "../../redux/post/singlePostSlice";
 import { useFormik } from "formik";
-
 import { Spinner } from "../../components";
 import {
 	formSchema,
@@ -24,8 +22,8 @@ import {
 import DashboardCustomDropdown from "../../components/DashboardCustomDropdown";
 import { fetchAllCategorys } from "../../redux/category/categorySlice";
 import { toast } from "react-toastify";
-Quill.register("modules/imageUploader", ImageUploader);
 
+Quill.register("modules/imageUploader", ImageUploader);
 Quill.register("modules/blotFormatter", BlotFormatter);
 
 const CreatePost = () => {
@@ -83,6 +81,7 @@ const CreatePost = () => {
 		},
 
 		onSubmit: (values) => {
+			console.log(values.content);
 			if (values.content.length <= 100) {
 				toast.error(
 					"content is required and cannot be less than 100 characters"
@@ -233,7 +232,7 @@ const CreatePost = () => {
 					<div
 						className={`my-6 ${
 							quillIsFocus
-								? "  h-[80vh]  relative top-0  z-50"
+								? "  h-[85vh]  relative top-0  z-50"
 								: "h-[40vh]"
 						}`}
 					>

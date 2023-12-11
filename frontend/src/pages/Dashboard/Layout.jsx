@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { useState } from "react";
 import { Outlet } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 
 import {
 	DashboardSideBar,
@@ -8,8 +9,15 @@ import {
 	ChangeEmailForm,
 	Modal,
 } from "../../components";
+import { useSelector } from "react-redux";
 
 const Layout = () => {
+	const { token, user } = useSelector((store) => store.userSlice);
+
+	if (!token) {
+		return <Navigate to="/login" />;
+	}
+
 	const [isDrpDownOpen, setIsDropDownOpen] = useState(false);
 
 	const handleToggleSideBarMenu = (data) => {

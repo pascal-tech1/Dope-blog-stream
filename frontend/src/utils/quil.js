@@ -4,32 +4,40 @@ import customFetch from "./axios";
 import { store } from "../redux/Store";
 import { uptimizeCloudinaryImage } from "./imageCloudinaryOptimizer";
 import { toast } from "react-toastify";
+import BlotFormatter, {
+	AlignAction,
+	DeleteAction,
+	ImageSpec,
+} from "quill-blot-formatter";
 
 const toolbarOptions = [
 	["bold", "italic", "underline", "strike"], // toggled buttons
 	["blockquote", "code-block"],
-
-	// [{ header: 1 }, { header: 2 }], // custom button values
 	[{ list: "ordered" }, { list: "bullet" }],
-	[{ script: "sub" }, { script: "super" }], // superscript/subscript
-	[{ indent: "-1" }, { indent: "+1" }], // outdent/indent
-	[{ direction: "rtl" }], // text direction
-
-	// [{ size: ["small", false, "large", "huge"] }], // custom dropdown
+	[{ script: "sub" }, { script: "super" }],
+	[{ indent: "-1" }, { indent: "+1" }],
+	[{ direction: "rtl" }],
 	[{ header: [1, 2, 3, 4, 5, 6, false] }],
-
-	[{ color: [] }, { background: [] }], // dropdown with defaults from theme
-
+	[{ color: [] }, { background: [] }],
 	[{ align: [] }],
-	["link", "image", "video"],
-
-	["clean"], // remove formatting button
+	["link", "image", "video", "iframeVideo"], // Include the new "iframeVideo" button
+	["clean"],
 ];
+class CustomImageSpec extends ImageSpec {
+	getActions() {
+		return [AlignAction, DeleteAction];
+	}
+}
 export const modules = {
 	toolbar: toolbarOptions,
 	blotFormatter: {
-		// see config options below
+		overlay: {
+			style: {
+				border: "2px solid blue",
+			},
+		},
 	},
+
 	imageUploader: {
 		upload: (file) => {
 			return new Promise((resolve, reject) => {
@@ -52,10 +60,9 @@ export const modules = {
 					)
 
 					.then((result) => {
-						console.log(result);
 						resolve(
 							uptimizeCloudinaryImage(
-								"f_auto,q_auto,w_400",
+								"f_auto,q_auto,w_800",
 								result.data.url
 							)
 						);

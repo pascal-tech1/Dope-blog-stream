@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
 import {
 	Home,
@@ -18,7 +18,6 @@ import {
 	Dashboard,
 	Followers,
 	Layout,
-	
 	CreatePost,
 	ProfileEdit,
 	ProfileView,
@@ -33,7 +32,7 @@ import {
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { getUserFromLocalStorage } from "./utils/localStorage";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { loginUserWithToken } from "./redux/user/userSlice";
 import { AllUsers, AllUsersPost, AdminAllCategory } from "./AdminPages";
 import Image from "./Adoh/image";
@@ -43,17 +42,25 @@ import PagesLayout from "./pages/PagesLayout";
 const App = () => {
 	const dispatch = useDispatch();
 	const userToken = getUserFromLocalStorage();
-	if (userToken) {
-		dispatch(loginUserWithToken());
-	}
-
+	useEffect(() => {
+		if (userToken) {
+			dispatch(loginUserWithToken());
+		}
+	}, []);
+	const { user } = useSelector((store) => store.userSlice);
 	return (
 		<BrowserRouter>
 			<Routes>
 				<Route element={<PagesLayout />}>
 					<Route path="/" element={<Home />} />
-					<Route path="login" element={<Login />} />
-					<Route path="register" element={<Register />} />
+					<Route
+						path="login"
+						element={user ? <Navigate to="/" /> : <Login />}
+					/>
+					<Route
+						path="register"
+						element={user ? <Navigate to="/" /> : <Register />}
+					/>
 					<Route path="/image" element={<Image />} />
 					<Route path="/single-post/:id" element={<SinglePost />} />
 					<Route
@@ -81,7 +88,7 @@ const App = () => {
 					<Route path="post-History" element={<PostHistory />} />
 					<Route path="post-Saved" element={<SavedPost />} />
 					<Route path="followers" element={<Followers />} />
-				
+
 					<Route path="follows-followers" element={<Followers />} />
 					<Route path="follows-following" element={<Following />} />
 					<Route path="comments" element={<Comments />} />
