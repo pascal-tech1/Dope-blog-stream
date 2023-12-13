@@ -10,7 +10,6 @@
 		"preview": "vite preview"
 	},
 	"dependencies": {
-		"@apoiase/quill-image-resize": "^4.0.1",
 		"@hookform/resolvers": "^3.3.2",
 		"@reduxjs/toolkit": "^1.9.5",
 		"axios": "^1.5.0",
@@ -19,10 +18,7 @@
 		"moment": "^2.29.4",
 		"quill": "^1.3.7",
 		"quill-blot-formatter": "^1.0.5",
-		"quill-image-resize": "^3.0.9",
-		"quill-image-resize-module--fix-imports-error": "^3.0.0",
-		"quill-image-resize-module-react": "^3.0.0",
-		"quill-image-resize-module-withfix": "^4.0.1",
+	
 		"quill-image-uploader": "^1.3.0",
 		"react": "^18.2.0",
 		"react-chartjs-2": "^5.2.0",

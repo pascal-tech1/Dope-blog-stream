@@ -60,7 +60,7 @@ const ProfileView = () => {
 
 	return (
 		<>
-			<div className=" flex flex-col row-span-2 md:grid grid-cols-6 col-start-1 col-span-4 rounded-xl  lg:mb-6 lg:shadow-sm lg:rounded-md lg:ml-0  font-inter gap-5 bg-whitedark:bg-[#1C1C1C] lg:bg-transparent">
+			<div className=" flex flex-col row-span-2 md:grid grid-cols-6 col-start-1 col-span-4 rounded-xl  lg:mb-6 lg:shadow-sm lg:rounded-md lg:ml-0  font-inter gap-5  backdrop:dark:bg-[#1C1C1C] ">
 				<div className=" col-start-1 col-span-4  bg-white dark:bg-[#171717] lg:shadow-sm lg:rounded-md">
 					<div className="w-full relative ">
 						<div className=" w-full  ">

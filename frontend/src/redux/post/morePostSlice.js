@@ -66,7 +66,6 @@ export const fetchSavedPosts = createAsyncThunk(
 export const fetchUserPostHistory = createAsyncThunk(
 	"fetch/userPostHistory",
 	async (historyPageNumber, { getState, rejectWithValue }) => {
-	
 		const { postNumberPerPage } = getState().morePostSlice;
 		const { dashboardSearchTerm } = getState().userSlice;
 
@@ -159,10 +158,12 @@ const morePostSlice = createSlice({
 			state.savedPostHasMore = true;
 		},
 		updateUserViewHistory: (state, { payload }) => {
-			state.userPostHistory = state.userPostHistory.filter(
-				(post) => post._id !== payload._id
-			);
-			state.userPostHistory = [payload, ...state.userPostHistory];
+			if (state.user) {
+				state.userPostHistory = state.userPostHistory.filter(
+					(post) => post._id !== payload._id
+				);
+				state.userPostHistory = [payload, ...state.userPostHistory];
+			}
 		},
 		updateUserSavedPost: (state, { payload }) => {
 			state.userSavedPost = state.userSavedPost.filter(

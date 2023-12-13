@@ -13,6 +13,10 @@ const userSchema = new mongoose.Schema(
 			required: [true, "Last name is required"],
 			type: String,
 		},
+		isOwner: {
+			type: Boolean,
+			default: false,
+		},
 		blurProfilePhoto: {
 			type: String,
 		},

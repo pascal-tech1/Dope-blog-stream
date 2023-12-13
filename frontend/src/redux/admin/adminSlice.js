@@ -9,7 +9,7 @@ export const fetchAllUsersPost = createAsyncThunk(
 		const postNumberPerPage = 12;
 		const { adminAllPostPageNumber } = getState().adminSlice;
 		const { dashboardSearchTerm } = getState().userSlice;
-		
+
 		try {
 			const resp = await customFetch(
 				`/posts/admin-all-post?page=${adminAllPostPageNumber}&postNumberPerPage=${postNumberPerPage}&filter=${params.filter}&searchTerm=${dashboardSearchTerm}`,
@@ -119,6 +119,31 @@ export const blockOrUnblockUser = createAsyncThunk(
 
 			return resp.data;
 		} catch (error) {
+			if (!error?.response) {
+				throw new Error(error);
+			}
+			return rejectWithValue(error?.response?.data);
+		}
+	}
+);
+
+export const toggleUserAdmin = createAsyncThunk(
+	"toggle/AdminSTatus",
+	async (params, { getState, rejectWithValue }) => {
+		try {
+			const resp = await customFetch.post(
+				`/users/toggleAdminStatus`,
+				params,
+				{
+					headers: {
+						Authorization: `Bearer ${getState().userSlice.token} `,
+					},
+				}
+			);
+
+			return resp.data;
+		} catch (error) {
+			console.log(error);
 			if (!error?.response) {
 				throw new Error(error);
 			}
@@ -268,6 +293,30 @@ const adminSlice = createSlice({
 		[blockOrUnblockUser.rejected]: (state, action) => {
 			state.blockOrUnblockUserStatus = "falied";
 			toast.error(payload.message);
+		},
+		[toggleUserAdmin.pending]: (state) => {
+			state.toggleUserAdminStatus = "loading";
+		},
+		[toggleUserAdmin.fulfilled]: (state, { payload }) => {
+			toast.success(payload?.message);
+			state.allUsers.map((user) => {
+				if (user._id === payload.userId) {
+					if (payload.action === "enableAdmin") {
+						user.isAdmin = true;
+					}
+					if (payload.action === "disableAdmin") {
+						user.isAdmin = false;
+					}
+				}
+				return user;
+			});
+
+			state.toggleUserAdminStatus = "success";
+		},
+		[toggleUserAdmin.rejected]: (state, action) => {
+			state.toggleUserAdminStatus = "failed";
+			const error = action?.payload?.message || action?.error?.message;
+			toast.error(error);
 		},
 	},
 });

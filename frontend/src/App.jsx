@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { Suspense, lazy, useEffect } from "react";
 
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
@@ -35,9 +35,12 @@ import { getUserFromLocalStorage } from "./utils/localStorage";
 import { useDispatch, useSelector } from "react-redux";
 import { loginUserWithToken } from "./redux/user/userSlice";
 import { AllUsers, AllUsersPost, AdminAllCategory } from "./AdminPages";
-import Image from "./Adoh/image";
+import { CropImage } from "./components";
 import ComfirmEmailPage from "./pages/ComfirmEmailPage";
 import PagesLayout from "./pages/PagesLayout";
+const AdminProtectedPage = lazy(() =>
+	import("./pages/AdminProtectedPage")
+);
 
 const App = () => {
 	const dispatch = useDispatch();
@@ -47,7 +50,8 @@ const App = () => {
 			dispatch(loginUserWithToken());
 		}
 	}, []);
-	const { user } = useSelector((store) => store.userSlice);
+	const { user, token } = useSelector((store) => store.userSlice);
+
 	return (
 		<BrowserRouter>
 			<Routes>
@@ -55,24 +59,32 @@ const App = () => {
 					<Route path="/" element={<Home />} />
 					<Route
 						path="login"
-						element={user ? <Navigate to="/" /> : <Login />}
+						element={token ? <Navigate to="/" /> : <Login />}
 					/>
 					<Route
 						path="register"
-						element={user ? <Navigate to="/" /> : <Register />}
+						element={token ? <Navigate to="/" /> : <Register />}
 					/>
-					<Route path="/image" element={<Image />} />
+					<Route path="/image" element={<CropImage />} />
 					<Route path="/single-post/:id" element={<SinglePost />} />
 					<Route
 						path="/reset-password/:token"
 						element={<PasswordReset />}
 					/>
-					<Route path="/profile/:userId" element={<UserPage />} />
+					<Route
+						path="/profile/:userId"
+						element={token ? <UserPage /> : <Login />}
+					/>
 					<Route path="/update-password" element={<UpdatePassword />} />
 					<Route
 						path="/confirm-sent-email/:token"
 						element={<ComfirmEmailPage />}
 					/>
+					<Route
+						path="/send-email-verification"
+						element={<VerifyEmail />}
+					/>
+					<Route path="*" element={<Error />} />
 				</Route>
 
 				<Route element={<Layout />}>
@@ -92,12 +104,39 @@ const App = () => {
 					<Route path="follows-followers" element={<Followers />} />
 					<Route path="follows-following" element={<Following />} />
 					<Route path="comments" element={<Comments />} />
-					<Route path="Admin-All Users" element={<AllUsers />} />
-					<Route path="Admin-All Posts" element={<AllUsersPost />} />
-					<Route path="Admin-Category" element={<AdminAllCategory />} />
+					<Route
+						element={
+							<Suspense fallback={<div>loading..</div>}>
+								<AdminProtectedPage />
+							</Suspense>
+						}
+					>
+						<Route
+							path="Admin-All Users"
+							element={
+								<Suspense>
+									<AllUsers />
+								</Suspense>
+							}
+						/>
+						<Route
+							path="Admin-All Posts"
+							element={
+								<Suspense>
+									<AllUsersPost />
+								</Suspense>
+							}
+						/>
+						<Route
+							path="Admin-Category"
+							element={
+								<Suspense>
+									<AdminAllCategory />
+								</Suspense>
+							}
+						/>
+					</Route>
 				</Route>
-
-				<Route path="*" element={<Error />} />
 			</Routes>
 			<ToastContainer position="top-center" />
 		</BrowserRouter>

@@ -37,17 +37,14 @@ const Home = () => {
 	}, []);
 
 	const handleSelected = (filter) => {
-		console.log(filter)
 		dispatch(setActiveCategory(filter));
 		dispatch(setFetchFirstCategory(filter));
 		dispatch(fetchPostByCategory());
 		navigate("/");
 	};
 
-	const theme = "dark";
-
 	return (
-		<div className={`bg-${theme}-background font-inter mt-2 `}>
+		<div className={`font-inter mt-2 `}>
 			<div className=" md:grid grid-cols-5 ">
 				{/* right section */}
 				<main className=" col-span-3 pr-2 lg:pr-4 md:border-r md:dark:border-r-[#171717] ">
@@ -74,7 +71,7 @@ const Home = () => {
 				</main>
 				{/* left section */}
 
-				<div className="hidden md:flex flex-col col-start-4 col-span-full  stickyRight custom-scrollbar mb-6 pl-4 pr-8  pt-2 ">
+				<div className="hidden md:flex flex-col col-start-4 col-span-full  stickyRight custom-scrollbar mb-6 px-4  pt-2 ">
 					<div className="flex gap-2  bg-gray-100 justify-between py-2 text-sm px-2 rounded-lg dark:bg-[#171717] dark:text-slate-300  ">
 						<div className="flex flex-col justify-center items-center text-center gap-2">
 							<h3 className=" font-medium hidden lg:flex ">

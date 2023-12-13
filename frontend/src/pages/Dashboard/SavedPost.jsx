@@ -8,10 +8,11 @@ import {
 	fetchUserPostHistory,
 	setSavedPostFirstSearch,
 } from "../../redux/post/morePostSlice";
-import { LazyLoadImg, Spinner } from "../../components";
+import { ClearSearch, LazyLoadImg, Spinner } from "../../components";
 
 import { Link } from "react-router-dom";
 import { formatDate } from "../../utils/dataFormatter";
+import { setSearchTermInStore } from "../../redux/user/userSlice";
 
 const Saved = () => {
 	const dispatch = useDispatch();
@@ -82,10 +83,22 @@ const Saved = () => {
 		return acc;
 	}, {});
 
+	const handleClearSearch = () => {
+		dispatch(setSearchTermInStore(""));
+	};
+
 	return (
 		<div className=" font-inter">
+			{/* clear search */}
+			<ClearSearch
+				searchQuery={dashboardSearchTerm}
+				handleClearSearch={handleClearSearch}
+			/>
 			{Object.keys(organizedPosts).map((dateKey, firstIndex) => (
-				<div key={dateKey} className=" border-b dark:border-b-gray-800 pb-3">
+				<div
+					key={dateKey}
+					className=" border-b dark:border-b-gray-800 pb-3"
+				>
 					<h2 className=" text-blue-400  py-3">{dateKey}</h2>
 					<div className=" grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 ">
 						{organizedPosts[dateKey].map((item, index) => {
@@ -118,7 +131,9 @@ const Saved = () => {
 												className="rounded-lg w-full  h-[100px] object-cover mb-3 border border-gray-300"
 											/> */}
 											<LazyLoadImg
-												backgroundClassName={"  rounded-lg  w-full h-20  relative"}
+												backgroundClassName={
+													"  rounded-lg  w-full h-20  relative"
+												}
 												imgClassName={
 													"absolute inset-0 w-full h-full rounded-lg  object-cover "
 												}
@@ -141,7 +156,22 @@ const Saved = () => {
 			<div className="grid place-content-center">
 				{userSavedPostStatus === "loading" && <Spinner />}
 			</div>
-			<div>{!savedPostHasMore && <h3 className=" text-center text-yellow-400 py-4">No more Post</h3>}</div>
+			<div>
+				{userSavedPost.length === 0 && (
+					<h3 className=" text-center text-yellow-400 py-4">
+						No Post found
+					</h3>
+				)}
+			</div>
+
+			<div>
+				{!savedPostHasMore && userSavedPost.length !== 0 &&(
+					<h3 className=" text-center text-yellow-400 py-4">
+						No more Post
+					</h3>
+				)}
+			</div>
+			
 		</div>
 	);
 };

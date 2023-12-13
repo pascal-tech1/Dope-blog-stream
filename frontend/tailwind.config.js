@@ -13,17 +13,14 @@ export default {
 	theme: {
 		extend: {
 			fontFamily: {
-				helvetica: ['"Geologica"'],
-			},
-			fontFamily: {
 				inter: ["Inter", "sans-serif"],
 			},
-			colors: {
-				dark: {
-					// background: "#242424",
-					// ... and so on for other properties
-				},
-			},
+			// colors: {
+			// 	dark: {
+			// 		// background: "#242424",
+			// 		// ... and so on for other properties
+			// 	},
+			// },
 		},
 	},
 	plugins: [],

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { BiCamera } from "react-icons/bi";
 import { uploadProfilePhoto } from "../redux/user/userSlice";
-import Image from "../Adoh/image";
+import { CropImage, LazyLoadImg } from "../components";
 
 const CoverPhoto = ({ user }) => {
 	const [image, setImage] = useState(null);
@@ -11,11 +11,10 @@ const CoverPhoto = ({ user }) => {
 		e.preventDefault();
 		let files;
 		if (e.dataTransfer) {
-			console.log("im here now");
 			files = e.dataTransfer.files;
 		} else if (e.target) {
 			files = e.target.files;
-			console.log(files[0].name);
+
 			if (files[0].name) setFileName(files[0].name);
 			else setFileName("blogVanaImage");
 		}
@@ -28,19 +27,23 @@ const CoverPhoto = ({ user }) => {
 	return (
 		<div className=" w-full relative">
 			{image && (
-				<Image
+				<CropImage
 					image={image}
 					handleFileChange={handleFileChange}
 					setImage={setImage}
 					fileName={fileName}
 					uploadAction={uploadProfilePhoto}
-					whatUploading ={"coverPhoto"}
+					whatUploading={"coverPhoto"}
 				/>
 			)}
-			<img
-				src={user?.coverPhoto}
-				alt=""
-				className=" h-[25vw] min-[400px]:h-[20vw] md:h-[12vw] lg:h-[10vw]  w-full rounded-md  "
+
+			<LazyLoadImg
+				backgroundClassName={"   w-full h-full  relative rounded-md"}
+				imgClassName={"absolute inset-0 w-full h-full rounded-md "}
+				originalImgUrl={user?.coverPhoto}
+				blurImageStr={user?.blurCoverPhoto}
+				optimizationStr={"q_auto,f_auto,w_1000"}
+				paddingBottom={"18%"}
 			/>
 			<label className=" absolute bottom-0 right-0  text-center px-1 flex items-center justify-center bg-blue-200 drop-shadow-md hover:drop-shadow-sm hover:bg-blue-300 transition-all delay-75  h-8 w-8 rounded-full ">
 				<input

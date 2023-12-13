@@ -44,13 +44,13 @@ export function BarChart() {
 				labels: {
 					boxWidth: 10, // Adjust the width of the legend item
 					padding: 20, // Adjust the padding between legend items
-					color:"white"
+					color:"#94bef9"
 				},
 			},
 			title: {
 				display: true,
 				text: `${chartSelectedFilter.toUpperCase()} CHART`,
-				color:"white"
+				color:"#94bef9"
 			},
 		},
 		tooltips: {
@@ -71,7 +71,7 @@ export function BarChart() {
 					callback: function (value) {
 						return value;
 					},
-					color:"white"
+					color:"#94bef9"
 				},
 			},
 			y: {
@@ -79,7 +79,7 @@ export function BarChart() {
 					callback: function (value) {
 						return value >= 1000 ? value / 1000 + "k" : value; // Convert values greater than or equal to 1000 to "1k" format
 					},
-					color:"white"
+					color:"#94bef9"
 				},
 			},
 		},

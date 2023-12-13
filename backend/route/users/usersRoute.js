@@ -26,6 +26,7 @@ const {
 	fetchPostImpressionsCount,
 	blockOrUnblockUserCtrl,
 	ChangeEmailCtrl,
+	toggleAdminUserCtrl,
 } = require("../../controllers/users/usersCtrl");
 const {
 	profilePhotoUpload,
@@ -74,5 +75,6 @@ userRoutes.post("/follow", authMiddleWare, followingUserCtrl);
 userRoutes.post("/unfollow", authMiddleWare, unFollowingUserCtrl);
 userRoutes.post("/update-password", authMiddleWare, updatePasswordCtrl);
 userRoutes.put("/:USERID", authMiddleWare, updateUserDetailsCtrl);
+userRoutes.post("/toggleAdminStatus", authMiddleWare, toggleAdminUserCtrl);
 
 module.exports = userRoutes;

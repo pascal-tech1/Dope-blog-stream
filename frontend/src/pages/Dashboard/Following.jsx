@@ -4,9 +4,10 @@ import {
 	fetchUserFollowingList,
 	setFirstFetchFollowingUser,
 	setIsSearchBArNeeded,
+	setSearchTermInStore,
 	updateFollowingListPageNumber,
 } from "../../redux/user/userSlice";
-import { FollowUsersList } from "../../components";
+import { ClearSearch, FollowUsersList } from "../../components";
 
 const Following = ({ id }) => {
 	useEffect(() => {
@@ -43,9 +44,17 @@ const Following = ({ id }) => {
 		dispatch(fetchUserFollowingList(_id));
 		dispatch(updateFollowingListPageNumber());
 	}, [_id, dashboardSearchTerm]);
+	const handleClearSearch = () => {
+		dispatch(setSearchTermInStore(""));
+	};
 
 	return (
 		<div className=" grid max-w-md w-full ">
+			{/* clear search */}
+			<ClearSearch
+				searchQuery={dashboardSearchTerm}
+				handleClearSearch={handleClearSearch}
+			/>
 			{!id && (
 				<h1 className="font-semibold place-self-center text-blue-400   max-w-max pb-1 ">
 					Users you are following

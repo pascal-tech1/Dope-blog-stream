@@ -4,7 +4,7 @@ import { NavBar } from "../components";
 
 const PagesLayout = () => {
 	return (
-		<section className="dashboardLayout  dark:bg-[#1C1C1C] dark:text-slate-400">
+		<section className="dashboardLayout br dark:bg-[#1C1C1C] dark:text-slate-400">
 			<div className=" row-start-1 row-span-1  "> 
 				<NavBar />
 			</div>

@@ -2,27 +2,23 @@ import React, { useEffect, useState } from "react";
 import { NavBar } from "../components";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import Carousel from "../utils/carousel";
 import { RegisterUser, verifyEmail } from "../redux/user/userSlice";
 import { useSelector, useDispatch } from "react-redux";
 import { LoadingSpinner } from "../utils/Spinner";
-import VerifyEmail from "../components/VerifyEmail";
+import VerifyEmail from "./VerifyEmail";
 
 const Register = () => {
-	const { registerUserStatus } = useSelector(
-		(store) => store.userSlice
-	);
+	const { registerUserStatus } = useSelector((store) => store.userSlice);
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
-	const [isRegistered, setIsRegistered] = useState(false);
+
 	const [isRegistering, setIsRegistering] = useState(false);
 	useEffect(() => {
-		setIsRegistered(false);
-		if (registerUserStatus === "success" && isRegistering) {
-			dispatch(verifyEmail());
-			setIsRegistered(true);
-		}
+		registerUserStatus === "success" &&
+			isRegistering &&
+			navigate("/send-email-verification");
 	}, [registerUserStatus]);
 
 	const formSchema = Yup.object().shape({
@@ -55,13 +51,6 @@ const Register = () => {
 
 	return (
 		<div className="h-[90vh] flex justify-center md:grid place-items-center place-content-center grid-cols-2 font-inter font-light dark:text-slate-200">
-			<div
-				className={` z-[1000] fixed top-0 left-0 w-full h-full flex justify-center items-center bg-black bg-opacity-40  ${
-					isRegistered ? "" : "hidden"
-				}`}
-			>
-				<VerifyEmail setIsRegistered={setIsRegistered} />
-			</div>
 			<div className=" hidden md:flex flex-col p-9 bg-gray-100 mr-6 shadow-sm justify-center items-center dark:bg-[#171717] border dark:border-gray-800">
 				<h1 className=" font-medium">
 					Join Our Community and Start Sharing Your Story!

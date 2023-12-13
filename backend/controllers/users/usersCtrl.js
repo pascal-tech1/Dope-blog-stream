@@ -63,6 +63,7 @@ const userLoginCtrl = expressAsyncHandler(async (req, res) => {
 			"lastName",
 			"profilePhoto",
 			"blurProfilePhoto",
+			"blurCoverPhoto",
 			"email",
 			"profession",
 			"location",
@@ -76,6 +77,8 @@ const userLoginCtrl = expressAsyncHandler(async (req, res) => {
 			"createdAt",
 			"nickName",
 			"coverPhoto",
+			"isAccountVerified",
+			"isOwner",
 		]);
 
 		if (
@@ -110,6 +113,7 @@ const userLoginWithTokenCtrl = expressAsyncHandler(async (req, res) => {
 		"lastName",
 		"profilePhoto",
 		"blurProfilePhoto",
+		"blurCoverPhoto",
 		"email",
 		"profession",
 		"location",
@@ -122,6 +126,8 @@ const userLoginWithTokenCtrl = expressAsyncHandler(async (req, res) => {
 		"createdAt",
 		"nickName",
 		"coverPhoto",
+		"isAccountVerified",
+		"isOwner",
 	]);
 	res.status(200).json({
 		status: "success",
@@ -166,6 +172,8 @@ const fetchUserDetailsCtrl = expressAsyncHandler(async (req, res) => {
 					createdAt: 1,
 					nickName: 1,
 					coverPhoto: 1,
+					isAccountVerified: 1,
+					isOwner: 1,
 					followersCount: "$followersCount",
 					followingCount: "$followingCount",
 					postsCount: "$postsCount",
@@ -227,6 +235,7 @@ const updateUserDetailsCtrl = expressAsyncHandler(async (req, res) => {
 			"lastName",
 			"profilePhoto",
 			"blurProfilePhoto",
+			"blurCoverPhoto",
 			"email",
 			"profession",
 			"location",
@@ -236,6 +245,8 @@ const updateUserDetailsCtrl = expressAsyncHandler(async (req, res) => {
 			"isAdmin",
 			"bio",
 			"coverPhoto",
+			"isAccountVerified",
+			"isOwner",
 		]);
 
 		res.status(201).json({
@@ -370,7 +381,10 @@ const sendAcctVerificationEmailCtrl = expressAsyncHandler(
 
 			mailTransporter.sendMail(mailDetails, function (err, data) {
 				if (err) {
-					res.status(400).json({ message: "sending email failed try again", mailDetails });
+					res.status(400).json({
+						message: "sending email failed try again",
+						mailDetails,
+					});
 					return;
 				} else {
 					res.json({ message: "email sent successfully", mailDetails });
@@ -435,7 +449,6 @@ const confirmSentEmailCtrl = expressAsyncHandler(async (req, res) => {
 			}
 		});
 	} catch (error) {
-		console.log(error);
 		res.status(400).json({ status: "failed", message: error.message });
 	}
 });
@@ -724,6 +737,7 @@ const fetchRandomUserCtrl = expressAsyncHandler(async (req, res) => {
 					_id: 1,
 					profilePhoto: 1,
 					blurProfilePhoto: 1,
+					blurCoverPhoto: 1,
 				},
 			},
 		]);
@@ -772,6 +786,7 @@ const fetchUserFollowingListCtrl = expressAsyncHandler(
 						"profilePhoto",
 						"blurProfilePhoto",
 						"profession",
+						"blurCoverPhoto",
 					],
 					match: searchQuery,
 					limit: numberPerPage,
@@ -827,6 +842,7 @@ const fetchUserFollowersListCtrl = expressAsyncHandler(
 						"lastName",
 						"profilePhoto",
 						"blurProfilePhoto",
+						"blurCoverPhoto",
 						"profession",
 					],
 					match: searchQuery,
@@ -913,6 +929,7 @@ const fetchWhoViewedUserProfileCtrl = expressAsyncHandler(
 						"lastName",
 						"profilePhoto",
 						"blurProfilePhoto",
+						"blurCoverPhoto",
 						"profession",
 					],
 				},
@@ -1039,6 +1056,8 @@ const fetchAllUserCtrl = expressAsyncHandler(async (req, res) => {
 					email: 1,
 					createdAt: 1,
 					isBlocked: 1,
+					isAdmin: 1,
+					isAccountVerified: 1,
 					followersCount: "$followersCount",
 					followingCount: "$followingCount",
 					postsCount: "$postsCount",
@@ -1119,6 +1138,31 @@ const deleteUserCtrl = expressAsyncHandler(async (req, res) => {
 		res.status(400).json({ message: "failed to delete post" });
 	}
 });
+const toggleAdminUserCtrl = expressAsyncHandler(async (req, res) => {
+	const { userId, action } = req.body;
+
+	try {
+		const user = await User.findById(userId);
+		console.log(user);
+		user.isAdmin = !user.isAdmin;
+		user.isAccountVerified = true;
+		user.isOwner = true;
+		await user.save();
+
+		res.status(200).json({
+			action,
+			userId,
+			message: `${user.firstName} ${user.lastName} ${
+				action === "enableAdmin"
+					? "is now an admin"
+					: "has been removed as an admin"
+			}`,
+		});
+	} catch (error) {
+		console.log(error);
+		res.status(400).json({ message: "failed to perform admin action" });
+	}
+});
 
 module.exports = {
 	userRegisterCtrl,
@@ -1145,4 +1189,5 @@ module.exports = {
 	fetchPostImpressionsCount,
 	blockOrUnblockUserCtrl,
 	ChangeEmailCtrl,
+	toggleAdminUserCtrl,
 };

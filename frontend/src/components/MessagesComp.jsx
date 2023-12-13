@@ -28,9 +28,9 @@ const MessagesComp = ({ msg, length }) => {
 									{`${message?.sender?.firstName} ${message?.sender?.lastName}`}
 								</h3>
 								{length ? (
-									<h3>{`${message?.message.slice(0, length)}...`}</h3>
+									<h3 className="text-sm">{`${message?.message.slice(0, length)}...`}</h3>
 								) : (
-									<h3>{`${message?.message}...`}</h3>
+									<h3>{message?.message}</h3>
 								)}
 							</div>
 						</Link>

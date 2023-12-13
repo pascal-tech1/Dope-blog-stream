@@ -13,7 +13,7 @@ export const MorePost = ({ post, status }) => {
 			<div className="  grid grid-cols-1 text-sm   gap-12 min-[600px]:grid-cols-2 w-[100%]">
 				{post?.map((post) => (
 					<div
-						className=" max-w-[384px] col-span-1 flex gap-3 flex-col dark:bg-[#171717] rounded-md
+						className=" max-w-[384px] col-span-1 flex gap-3 flex-col dark:bg-[#171717] bg-gray-100 rounded-md
 					"
 					>
 						<Link

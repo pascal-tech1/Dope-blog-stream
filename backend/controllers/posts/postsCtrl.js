@@ -203,8 +203,10 @@ const fetchSinglePostsCtrl = expressAsyncHandler(async (req, res) => {
 				path: "post",
 				select: ["image", "title", "createdAt", "blurImageUrl"],
 			});
+			res.json({ post, userViewedPost });
+			return;
 		}
-		res.json({ post, userViewedPost });
+		res.json({ post });
 	} catch (error) {
 		console.log(error);
 		res.json({ message: "fetching post failed try again" });
@@ -524,14 +526,14 @@ const fetchUserPostHistoryCtrl = expressAsyncHandler(async (req, res) => {
 				);
 			}
 		);
-		
+
 		const postViewHistoryTotalCount = filteredpostViewHistory.length;
 
 		const paginatedpostViewHistory = filteredpostViewHistory.slice(
 			(page - 1) * numberPerPage,
 			page * numberPerPage
 		);
-	
+
 		res.json({
 			totalPostHistory: postViewHistoryTotalCount,
 			posts: paginatedpostViewHistory,

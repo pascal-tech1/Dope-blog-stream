@@ -5,7 +5,6 @@ import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import {
 	clearAdminAllUser,
-	deletePostAdmin,
 	deleteUserAdmin,
 	fetchAllUsers,
 	increaseAdminAllUsersPageNumber,
@@ -17,7 +16,7 @@ import { formatDate } from "../utils/dataFormatter";
 import Spinner from "../components/Spinner";
 import {
 	BlockOrUnblockUser,
-	EditPostBtn,
+	ClearSearch,
 	MessageUser,
 	Tooltip,
 } from "../components";
@@ -25,10 +24,11 @@ import {
 	setIsSearchBArNeeded,
 	setSearchTermInStore,
 } from "../redux/user/userSlice";
+import { MdAdminPanelSettings } from "react-icons/md";
+import MakeAdmin from "./MakeAdmin";
 
 const AllUsers = () => {
 	useEffect(() => {
-		console.log("im her runninbg ");
 		dispatch(setIsSearchBArNeeded(true));
 		dispatch(setSearchTermInStore(""));
 	}, []);
@@ -41,7 +41,9 @@ const AllUsers = () => {
 		adminFetchUsersHasMore,
 		MyPostSelectedFilter,
 	} = useSelector((store) => store.adminSlice);
-	const { dashboardSearchTerm } = useSelector((store) => store.userSlice);
+	const { dashboardSearchTerm, user } = useSelector(
+		(store) => store.userSlice
+	);
 
 	const dispatch = useDispatch();
 	const observer = useRef();
@@ -130,9 +132,17 @@ const AllUsers = () => {
 
 		dispatch(deleteUserAdmin(checkedItems));
 	};
+	const handleClearSearch = () => {
+		dispatch(setSearchTermInStore(""));
+	};
 
 	return (
 		<div className="font-inter overflow-hidden shadow-md relative">
+			{/* clear search */}
+			<ClearSearch
+				searchQuery={dashboardSearchTerm}
+				handleClearSearch={handleClearSearch}
+			/>
 			{/* modal */}
 			<div className=" z-[1000]">
 				<Modal
@@ -187,6 +197,7 @@ const AllUsers = () => {
 								</Tooltip>
 							</th>
 							<th>User Id</th>
+							<th>Verified</th>
 							<th>Frst Name</th>
 							<th>Last Name</th>
 							<th>Email</th>
@@ -199,7 +210,7 @@ const AllUsers = () => {
 					</thead>
 
 					<tbody className="">
-						{allUsers.map((user, index) => (
+						{allUsers.map((singleUser, index) => (
 							<tr
 								key={index}
 								ref={
@@ -207,63 +218,81 @@ const AllUsers = () => {
 										? lastPostRef
 										: null
 								}
-								className="transition duration-300 ease-in-out hover:bg-neutral-100  dark:hover:bg-gray-800"
+								className="transition duration-300 ease-in-out hover:bg-neutral-200  dark:hover:bg-neutral-800"
 							>
-								<td className="bg-white dark:bg-[#1C1C1C]">
+								<td className="bg-gray-50 tableData  dark:bg-[#1C1C1C]">
 									<input
 										type="checkbox"
 										name="check"
 										className="checkboxStyle"
-										id={user._id}
-										checked={checkedItems.includes(user._id)}
-										onChange={() => handleCheckedItemcsChange(user._id)}
+										id={singleUser._id}
+										checked={checkedItems.includes(singleUser._id)}
+										onChange={() =>
+											handleCheckedItemcsChange(singleUser._id)
+										}
 									/>
 								</td>
 
-								<td>
-									<Link to={`/profile/${user._id}`}>
-										<Tooltip info={user._id}>{user._id}</Tooltip>
+								<td className="tableData ">
+									<Link to={`/profile/${singleUser._id}`}>
+										<Tooltip info={singleUser._id}>
+											{singleUser._id}
+										</Tooltip>
 									</Link>
 								</td>
-								<td>
-									<Tooltip info={user.firstName}>{user.firstName}</Tooltip>
-								</td>
-								<td>
-									<Tooltip info={user.lastName}>{user.lastName}</Tooltip>
-								</td>
-								<td>
-									<Tooltip info={user.email}>{user.email}</Tooltip>
-								</td>
-								<td>
-									<Tooltip info={formatDate(user.createdAt)}>
-										{formatDate(user.createdAt)}
+								<td className="tableData ">
+									<Tooltip
+										info={singleUser.isAccountVerified ? "Yes" : "NO"}
+									>
+										{singleUser.isAccountVerified ? "Yes" : "NO"}
 									</Tooltip>
 								</td>
-								<td>{user.postsCount}</td>
-								<td>{user.followersCount}</td>
-								<td>{user.followingCount}</td>
+								<td className="tableData ">
+									<Tooltip info={singleUser.firstName}>
+										{singleUser.firstName}
+									</Tooltip>
+								</td>
+								<td className="tableData ">
+									<Tooltip info={singleUser.lastName}>
+										{singleUser.lastName}
+									</Tooltip>
+								</td>
+								<td className="tableData ">
+									<Tooltip info={singleUser.email}>
+										{singleUser.email}
+									</Tooltip>
+								</td>
+								<td className="tableData ">
+									<Tooltip info={formatDate(singleUser.createdAt)}>
+										{formatDate(singleUser.createdAt)}
+									</Tooltip>
+								</td>
+								<td className="tableData ">{singleUser.postsCount}</td>
+								<td className="tableData ">{singleUser.followersCount}</td>
+								<td className="tableData ">{singleUser.followingCount}</td>
 
-								<td className="flex bg-white dark:bg-[#1C1C1C] gap-2 items-center ">
-									<MessageUser receiverId={user._id} />
+								<td className="flex   bg-gray-50 tableData  dark:bg-[#1C1C1C] items-center ">
+									<MessageUser receiverId={singleUser._id} />
 
-									<BlockOrUnblockUser user={user} />
+									<BlockOrUnblockUser user={singleUser} />
+									{user?.isOwner && <MakeAdmin user={singleUser} />}
 								</td>
 							</tr>
 						))}
 					</tbody>
-					<td className="stickyBottom ">
+					<td className="stickyBottom tableData ">
 						{adminAllUsersStatus === "loading" && <Spinner />}
 					</td>
 
 					{!adminFetchUsersHasMore &&
 						adminAllUsersStatus === "success" && (
-							<td className=" text-yellow-400  stickyBottom bg-white dark:bg-[#1C1C1C] ">
-								No more user
+							<td className=" text-yellow-400  stickyBottom bg-gray-50 tableData dark:bg-[#1C1C1C] ">
+								No more User
 							</td>
 						)}
 
 					{allUsers.length === 0 && adminAllUsersStatus === "success" && (
-						<td className="  text-yellow-400  stickyBottom bg-white dark:bg-[#1C1C1C] ">
+						<td className="  text-yellow-400  stickyBottom bg-gray-50 tableData  dark:bg-[#1C1C1C] ">
 							No User found
 						</td>
 					)}

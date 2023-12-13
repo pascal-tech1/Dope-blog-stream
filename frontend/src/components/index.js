@@ -32,6 +32,8 @@ import ChangeEmailForm from "./ChangeEmailForm";
 import MessageSkeleton from "./MessageSkeleton";
 import ChartSkeleton from "./chartSkeleton";
 import MessagesComp from "./MessagesComp";
+import CropImage from "./CropImage";
+import ClearSearch from "./ClearSearch";
 
 export {
 	DashboardSideBar,
@@ -68,4 +70,6 @@ export {
 	MessageSkeleton,
 	ChartSkeleton,
 	MessagesComp,
+	CropImage,
+	ClearSearch,
 };

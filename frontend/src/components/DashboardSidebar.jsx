@@ -13,14 +13,20 @@ import {
 } from "react-icons/md";
 import { GiShadowFollower } from "react-icons/gi";
 import { IoMdArrowDropdown } from "react-icons/io";
+import { useDispatch, useSelector } from "react-redux";
+import { setIsAdmin } from "../redux/user/userSlice";
 
 const DashboardSideBar = () => {
+	const dispatch = useDispatch();
+	const { user } = useSelector((store) => store.userSlice);
 	const [isMenuOpen, setIsMenuOpen] = useState({
 		profile: false,
 		messages: false,
 		post: false,
 		follows: false,
 	});
+	console.log(user);
+	user?.firstName === "Humble" && dispatch(setIsAdmin(true));
 
 	const toggleMenuOption = (title) => {
 		setIsMenuOpen((prev) => ({
@@ -90,39 +96,27 @@ const DashboardSideBar = () => {
 				},
 			],
 		},
-		{
-			title: "Admin",
-			icon: "MdOutlineAdminPanelSettings",
-			menuOpen: isMenuOpen.Admin,
-			hasSubMenu: true,
-			submenu: [
-				{
-					title: "All Users",
-				},
-				{
-					title: "All Posts",
-				},
-				{
-					title: "Category",
-				},
-			],
-		},
-
-		// {
-		// 	title: "messages",
-		// 	icon: "BiMessageDetail",
-		// 	menuOpen: isMenuOpen.messages,
-		// 	hasSubMenu: true,
-		// 	submenu: [
-		// 		{
-		// 			title: "view",
-		// 		},
-		// 		{
-		// 			title: "Send",
-		// 		},
-		// 	],
-		// },
 	];
+
+	const AdminObject = {
+		title: "Admin",
+		icon: "MdOutlineAdminPanelSettings",
+		menuOpen: isMenuOpen.Admin,
+		hasSubMenu: true,
+		submenu: [
+			{
+				title: "All Users",
+			},
+			{
+				title: "All Posts",
+			},
+			{
+				title: "Category",
+			},
+		],
+	};
+
+	user?.isAdmin && sideBarItems.push(AdminObject);
 
 	return (
 		<aside className=" flex flex-col  font-medium  ">
@@ -179,8 +173,12 @@ const DashboardSideBar = () => {
 									>
 										<IconComponent className=" text-lg" />
 										<h1 className=" text-lg">{sideBarItem.title}</h1>
-										
-										{isMenuOpen[sideBarItem.title]? <MdOutlineArrowDropUp  className=" text-center" />: <MdOutlineArrowDropDown className=" text-center" />}
+
+										{isMenuOpen[sideBarItem.title] ? (
+											<MdOutlineArrowDropUp className=" text-center" />
+										) : (
+											<MdOutlineArrowDropDown className=" text-center" />
+										)}
 									</div>
 
 									<div className=" flex flex-col items-start ml-2 border-l dark:border-l-gray-800 justify-start ">

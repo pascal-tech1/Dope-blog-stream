@@ -12,7 +12,7 @@ const UserToFollow = ({ user, index, date, numberOfView }) => {
 	return (
 		<div
 			key={index}
-			className="flex justify-between gap-3  py-2 items-start text-slate-300"
+			className="flex justify-between gap-3  py-2 items-start text-sm dark:text-slate-300"
 		>
 			<Link
 				to={loginUser?._id ? `/profile/${user._id}` : `/login`}
@@ -33,7 +33,7 @@ const UserToFollow = ({ user, index, date, numberOfView }) => {
 				</div>
 
 				<div>
-					<div className=" flex items-center gap-2 font-light  text-gray-90">
+					<div className=" flex items-center gap-2 font-light">
 						<div className=" flex flex-wrap gap-1">
 							<h1 className=" capitalize">{user?.firstName}</h1>
 							<h1 className=" capitalize">{user?.lastName}</h1>

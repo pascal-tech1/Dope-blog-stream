@@ -27,6 +27,7 @@ export const fetchSinglePost = createAsyncThunk(
 			dispatch(updateUserViewHistory(resp.data.userViewedPost));
 			return resp.data.post;
 		} catch (error) {
+			console.log(error);
 			if (!error?.response) {
 				throw new Error();
 			}
@@ -98,13 +99,11 @@ export const updatePost = createAsyncThunk(
 	}
 );
 
-
 export const uploadImage = createAsyncThunk(
 	"upload/image",
 	async (_, { getState, rejectWithValue }) => {
-		console.log('im here')
+		console.log("im here");
 		try {
-			
 			const resp = await customFetch.post(
 				`/posts/upload-image`,
 
@@ -125,9 +124,6 @@ export const uploadImage = createAsyncThunk(
 		}
 	}
 );
-
-
-
 
 const initialState = {
 	post: null,
@@ -186,6 +182,7 @@ const singlePostSlice = createSlice({
 			state.appErr = undefined;
 		},
 		[fetchSinglePost.rejected]: (state, action) => {
+			console.log(action);
 			state.status = "error";
 			state.serverErr = action?.error?.message;
 			state.appErr = action?.payload?.message;

@@ -1,28 +1,33 @@
 import React, { useEffect } from "react";
-import { NavBar, Spinner } from ".";
+import { NavBar, Spinner } from "../components";
 import {
 	SetverifyEmailStatus,
 	verifyEmail,
 } from "../redux/user/userSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { MdCancel } from "react-icons/md";
+import { LoadingSpinner } from "../utils/Spinner";
 
 function VerifyEmail({ setIsRegistered }) {
 	const dispatch = useDispatch();
-
 	const { user, verifyEmailStatus } = useSelector(
 		(store) => store.userSlice
 	);
+	useEffect(() => {
+		!user.isAccountVerified && dispatch(verifyEmail(user?.email));
+	}, []);
+
+	if (verifyEmailStatus === "loading") {
+		return (
+			<div className=" grid place-content-center">
+				<Spinner />
+			</div>
+		);
+	}
 
 	return (
-		<div className="">
+		<div className=" flex items-center justify-center">
 			<div className=" py-4 relative text-sm  font-inter h-[90vh] lg:h-[80vh] w-[90vw] lg:w-[60vw] bg-white grid place-content-center z-[500] rounded-md dark:bg-[#171717] border  dark:border-gray-800  ">
-				<div
-					onClick={() => setIsRegistered(false)}
-					className=" absolute top-1 right-2"
-				>
-					<MdCancel className=" text-3xl text-red-400 drop-shadow-md hover:drop-shadow-none transition-all delay-75" />
-				</div>
 				{user?.isAccountVerified === true ? (
 					<div className="flex justify-center items-center h-[80vh] w-screen  mx-auto  ">
 						<h1> your Account is Already Verified</h1>
@@ -75,12 +80,12 @@ function VerifyEmail({ setIsRegistered }) {
 							together, we need to verify your email address.
 						</p>
 						<p className=" text-red-400 mt-3">
-							Sorry Sending you email verification failed click the Resend Button
-							below to resend
+							Sorry Sending you email verification failed click the Resend
+							Button below to resend
 						</p>
 						<button
 							disabled={verifyEmailStatus === "loading"}
-							onClick={() => dispatch(verifyEmail())}
+							onClick={() => dispatch(verifyEmail(user?.email))}
 							className=" bg-blue-400 drop-shadow-sm px-1 rounded-sm hover:bg-blue-500 transition-all delay-75 text-white mt-4"
 						>
 							{verifyEmailStatus === "loading" ? <Spinner /> : "Resend"}

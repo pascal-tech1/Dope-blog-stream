@@ -52,7 +52,7 @@ const Login = () => {
 			>
 				<ForgotPassword setIsOpen={setIsOpen} />
 			</div>
-			
+
 			<div className=" hidden md:flex flex-col p-9 bg-gray-100 mr-6 shadow-sm justify-center items-center dark:bg-[#171717] border dark:border-gray-800 ">
 				<h1 className=" font-medium">Get Ready to Be Inspired</h1>
 				<p className=" font-light text-gray-400 text-xs mt-5 mb-[3.5rem] max-w-md">

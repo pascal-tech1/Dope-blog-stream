@@ -3,7 +3,10 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { MessageSkeleton, Spinner, UserToFollow } from "../../components";
 
-import { fetchWhoViewedUserProfile, setIsSearchBArNeeded } from "../../redux/user/userSlice";
+import {
+	fetchWhoViewedUserProfile,
+	setIsSearchBArNeeded,
+} from "../../redux/user/userSlice";
 
 const WhoViewedMyProfile = () => {
 	useEffect(() => {
@@ -27,6 +30,13 @@ const WhoViewedMyProfile = () => {
 	return (
 		<div>
 			<div className="flex gap-3  flex-col  dark:bg-[#171717] px-4">
+				<h1 className="font-semibold place-self-center text-blue-400   max-w-max pb-1 ">
+					Who view your profile
+				</h1>
+
+				<h3 className=" font-medium text-gray-900 drop-shadow-md dark:text-slate-200">
+					who viewed your profile count: <span>{whoViewUserProfileCount} </span>{" "}
+				</h3>
 				{whoViewUserProfile.map((users, index) =>
 					users?.viewedBy?.map((viewedBy, index) => (
 						<div key={index}>

@@ -22,11 +22,15 @@ import {
 import DashboardCustomDropdown from "../../components/DashboardCustomDropdown";
 import { fetchAllCategorys } from "../../redux/category/categorySlice";
 import { toast } from "react-toastify";
+import { setIsSearchBArNeeded } from "../../redux/user/userSlice";
 
 Quill.register("modules/imageUploader", ImageUploader);
 Quill.register("modules/blotFormatter", BlotFormatter);
 
 const CreatePost = () => {
+	useEffect(() => {
+		dispatch(setIsSearchBArNeeded(false));
+	}, []);
 	const dispatch = useDispatch();
 	const {
 		status,

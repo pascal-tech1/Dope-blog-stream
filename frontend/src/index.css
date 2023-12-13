@@ -37,22 +37,14 @@ table {
 	width: 100%;
 }
 
-
 .ql-toolbar.ql-snow {
-	background:#bfcbda;
+	background: #bfcbda;
 	color: white !important;
 	border: none;
-	
 }
-
-
-
-
 
 th,
 td {
-	
-	border: 1px solid #333030;
 	padding: 10px;
 	box-sizing: border-box;
 	white-space: nowrap;
@@ -201,7 +193,7 @@ th {
 }
 
 .form-input {
-	@apply my-1 dark:bg-[#1C1C1C]   rounded-lg py-1 border-b border-b-gray-400 dark:border-b-gray-700 focus:outline-none drop-shadow-md focus:border-b-blue-400 dark:focus:border-b-gray-400 w-full px-2;
+	@apply my-1 dark:bg-[#1C1C1C]   rounded-lg py-1 border  border-gray-200 dark:border-gray-800 focus:outline-none  focus:border-b-blue-400 dark:focus:border-b-gray-500 w-full px-2;
 }
 
 .form-container {
@@ -227,4 +219,7 @@ th {
 }
 .tableBaginsStyle {
 	@apply overflow-y-auto row-start-2 flex flex-col custom-scrollbar;
+}
+.tableData {
+	@apply border border-gray-200 dark:border-neutral-800;
 }

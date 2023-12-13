@@ -22,6 +22,14 @@ const Messages = () => {
 	return (
 		<div>
 			<div className="flex gap-6 flex-col dark:bg-[#171717] p-4 drop-shadow-sm">
+				<h1 className="font-semibold place-self-center text-blue-400   max-w-max pb-1 ">
+					messages
+				</h1>
+
+				<h3 className=" font-medium text-gray-900 drop-shadow-md dark:text-slate-200">
+					All message count: <span>{receivedMessageCount} </span>{" "}
+				</h3>
+
 				<MessagesComp msg={msg} />
 
 				{receivedMessageCount > msg.length && (

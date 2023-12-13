@@ -18,12 +18,12 @@ const PostInfo = ({ post }) => {
 			<div className="flex flex-col  min-[350px]:flex-row  justify-between gap-4 mt-3">
 				<div className=" self-start">
 					<Link to={`/single-post/${post?._id}`}>
-						<h3 className=" font-semibold min-[350px]:text-sm  lg:text-lg mb-2 text-slate-100 ">
+						<h3 className=" font-semibold min-[350px]:text-sm  lg:text-lg mb-2 dark:text-slate-100 ">
 							{post?.title}
 						</h3>
 					</Link>
 					<div className=" hidden min-[870px]:flex ">
-						<p className="">
+						<p className=" text-sm">
 							{post?.description.slice(0,150)}
 
 							<Link

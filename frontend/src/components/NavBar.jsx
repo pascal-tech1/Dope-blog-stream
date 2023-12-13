@@ -64,7 +64,7 @@ const NavBar = () => {
 				className="relative w-1/3 justify-center  items-center"
 			>
 				<input
-					className=" text-xs md:text-base px-1 font-sm py-[0.1rem] border-b border-b-slate-600  rounded-lg border-blue-200 text-center focus:outline-none focus:border-blue-400  w-full bg-transparent "
+					className=" text-xs md:text-base px-1 font-sm py-[0.1rem] border-b dark:border-b-slate-600  rounded-lg border-blue-200 text-center focus:outline-none focus:border-blue-400  w-full bg-transparent "
 					type="search"
 					name="search"
 					id="seearch"

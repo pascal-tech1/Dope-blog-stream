@@ -269,7 +269,6 @@ export const fetchPostImpressionsCount = createAsyncThunk(
 export const uploadProfilePhoto = createAsyncThunk(
 	"uploadProfile/Photo",
 	async (userImage, { getState, rejectWithValue }) => {
-		console.log(userImage.file);
 		try {
 			const resp = await customFetch.post(
 				`/users/profile-picture-upload`,
@@ -296,6 +295,7 @@ export const verifyEmail = createAsyncThunk(
 	"verify/Email",
 	async (emailParam, { getState, rejectWithValue }) => {
 		const email = emailParam || getState().userSlice.userEmail;
+		console.log(email);
 		try {
 			const resp = await customFetch.post(`/users/send-email`, {
 				email,
@@ -405,6 +405,7 @@ export const changeEmail = createAsyncThunk(
 	}
 );
 
+
 const initialState = {
 	user: null,
 	token: getUserFromLocalStorage(),
@@ -492,11 +493,13 @@ const userSlice = createSlice({
 			state.whoViewUserProfile = [];
 		},
 		setSearchTermInStore: (state, { payload }) => {
-			console.log(payload);
 			state.dashboardSearchTerm = payload;
 		},
 		setIsSearchBArNeeded: (state, { payload }) => {
 			state.isSearchBarNeeded = payload;
+		},
+		setIsAdmin: (state, { payload }) => {
+			state.user.isAdmin = payload;
 		},
 	},
 	extraReducers: {
@@ -789,6 +792,7 @@ const userSlice = createSlice({
 			const error = action?.payload?.message || action?.error?.message;
 			toast.error(error);
 		},
+	
 	},
 });
 
@@ -806,4 +810,5 @@ export const {
 	setSearchTermInStore,
 	setIsSearchBArNeeded,
 	SetverifyEmailStatus,
+	setIsAdmin,
 } = userSlice.actions;

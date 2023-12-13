@@ -13,11 +13,12 @@ import {
 import Modal from "../components/Modal";
 import DashboardCustomDropdown from "../components/DashboardCustomDropdown";
 import { formatDate } from "../utils/dataFormatter";
-import Spinner from "../components/Spinner";
-import { MessageUser, Tooltip } from "../components";
-import { RiFolderUserLine } from "react-icons/ri";
+
+import { ClearSearch, MessageUser, Tooltip } from "../components";
+
 import { LoadingSpinner } from "../utils/Spinner";
 import { BiUser } from "react-icons/bi";
+import { setSearchTermInStore } from "../redux/user/userSlice";
 
 const AllUsersPosts = () => {
 	const {
@@ -117,9 +118,17 @@ const AllUsersPosts = () => {
 		}
 		dispatch(deletePostAdmin(checkedItems));
 	};
+	const handleClearSearch = () => {
+		dispatch(setSearchTermInStore(""));
+	};
 
 	return (
 		<div className=" font-inter shadow-md  overflow-hidden ">
+			{/* clear search */}
+			<ClearSearch
+				searchQuery={dashboardSearchTerm}
+				handleClearSearch={handleClearSearch}
+			/>
 			{/* modal */}
 			<div className="">
 				<Modal
@@ -155,10 +164,10 @@ const AllUsersPosts = () => {
 				</h3>
 			</div>
 			{/* table */}
-			<div className=" max-h-[85vh] overflow-auto custom-scrollbar  min-w-[300px]">
+			<div className=" max-h-[85vh] overflow-auto custom-scrollbar  min-w-[300px] ">
 				<table className="">
 					<thead className="tableHeading -top-10 bg-gray-800  text-white">
-						<tr>
+						<tr className="">
 							<th className="bg-gray-800">
 								<Tooltip info={"select All"}>
 									<input
@@ -192,9 +201,9 @@ const AllUsersPosts = () => {
 										? lastPostRef
 										: null
 								}
-								className="border-b transition duration-300 ease-in-out hover:bg-neutral-100 dark:border-neutral-100 dark:hover:bg-gray-800"
+								className=" transition duration-300 ease-in-out hover:bg-neutral-200  dark:hover:bg-neutral-800"
 							>
-								<td className="bg-white dark:bg-[#1C1C1C]">
+								<td className=" bg-gray-50 tableData dark:bg-[#1C1C1C]">
 									<input
 										type="checkbox"
 										name="check"
@@ -205,35 +214,38 @@ const AllUsersPosts = () => {
 									/>
 								</td>
 
-								<td>
+								<td className="tableData ">
 									<Link to={`/single-post/${post._id}`}>
 										<Tooltip info={post._id}>{post._id}</Tooltip>
 									</Link>
 								</td>
-								<td>
+								<td className="tableData ">
 									<Tooltip info={formatDate(post.createdAt)}>
 										{formatDate(post.createdAt)}
 									</Tooltip>
 								</td>
-								<td>
+								<td className="tableData ">
 									<Tooltip info={post.numViews}>{post.numViews}</Tooltip>
 								</td>
-								<td>
+								<td className="tableData ">
 									<Tooltip info={post.category}>{post.category}</Tooltip>
 								</td>
-								<td>
+								<td className="tableData ">
 									<Tooltip info={post.likes.length}>
 										{post.likes.length}
 									</Tooltip>
 								</td>
-								<td>
+								<td className="tableData ">
 									<Tooltip info={post.likes.length}>
 										{post.disLikes.length}
 									</Tooltip>
 								</td>
 
-								<td className="flex items-center px-3 gap-2  bg-white dark:bg-[#1C1C1C] ">
-									<Link to={`/profile/${post.user._id}`} className=" p-2 hover:bg-blue-200 transition-all duration-75 rounded-full">
+								<td className="flex items-center px-3 gap-2   bg-gray-50 tableData dark:bg-[#1C1C1C] ">
+									<Link
+										to={`/profile/${post.user._id}`}
+										className=" p-2 hover:bg-blue-200 transition-all duration-75 rounded-full"
+									>
 										<BiUser className=" text-blue-400 text-lg " />
 									</Link>
 
@@ -244,23 +256,23 @@ const AllUsersPosts = () => {
 					</tbody>
 					{adminAllPostStatus === "loading" && (
 						<tr>
-							<td className="text-yellow-400  stickyBottom bg-white dark:bg-[#1C1C1C] "></td>
-							<td className="text-yellow-400  stickyBottom bg-white dark:bg-[#1C1C1C] ">
+							<td className="text-yellow-400  stickyBottom  bg-gray-50 tableData dark:bg-[#1C1C1C] "></td>
+							<td className="text-yellow-400  stickyBottom  bg-gray-50 tableData dark:bg-[#1C1C1C] ">
 								<LoadingSpinner />
 							</td>
 						</tr>
 					)}
 					{allPost.length === 0 && adminAllPostStatus === "success" && (
-						<td className="text-yellow-400  stickyBottom bg-white dark:bg-[#1C1C1C] ">
-							No User Foundr
+						<td className="text-yellow-400  stickyBottom  bg-gray-50 tableData dark:bg-[#1C1C1C] ">
+							No User Found
 						</td>
 					)}
 					{!hasMore &&
 						adminAllPostStatus === "success" &&
 						allPost.length > 0 && (
-							<tr className=" bg-white">
+							<tr className="  bg-gray-50 tableData">
 								<td></td>
-								<td className="text-yellow-400  stickyBottom bg-white dark:bg-[#1C1C1C] ">
+								<td className="text-yellow-400  stickyBottom  bg-gray-50 tableData dark:bg-[#1C1C1C] ">
 									No more User
 								</td>
 							</tr>

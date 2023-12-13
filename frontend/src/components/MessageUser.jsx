@@ -43,7 +43,7 @@ const MessageUser = ({ receiverId }) => {
 			</Modal>
 			<div
 				onClick={openModal}
-				className=" cursor-pointer p-2 rounded-full hover:bg-gray-500 hover:rounded-full flex items-center justify-center text-white transition-all delay-75 "
+				className=" cursor-pointer p-2 rounded-full hover:bg-gray-500 hover:rounded-full flex items-center justify-center dark:text-white text-gray-600 transition-all delay-75 "
 			>
 				<LuSend className=" text-lg  " />
 			</div>

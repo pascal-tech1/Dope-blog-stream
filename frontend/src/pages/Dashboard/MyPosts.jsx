@@ -9,7 +9,13 @@ import {
 	setMyPostSelectedFilter,
 } from "../../redux/post/generalPostSlice";
 import { formatDate } from "../../utils/dataFormatter";
-import { EditPostBtn, Modal, Spinner, Tooltip } from "../../components";
+import {
+	ClearSearch,
+	EditPostBtn,
+	Modal,
+	Spinner,
+	Tooltip,
+} from "../../components";
 import DashboardCustomDropdown from "../../components/DashboardCustomDropdown";
 import { toast } from "react-toastify";
 import {
@@ -137,9 +143,18 @@ const MyPosts = () => {
 		}
 		dispatch(deletePost(checkedPostId));
 	};
+	const handleClearSearch = () => {
+		dispatch(setSearchTermInStore(""));
+		
+	};
 
 	return (
 		<div className="  font-inter overflow-hidden shadow-md  ">
+			{/* clear search */}
+			<ClearSearch
+				searchQuery={dashboardSearchTerm}
+				handleClearSearch={handleClearSearch}
+			/>
 			{/* modal */}
 			<Modal
 				isOpen={isModalOpen}
@@ -176,9 +191,9 @@ const MyPosts = () => {
 
 			<div className=" max-h-[85vh] overflow-auto custom-scrollbar  min-w-[300px]   ">
 				<table className="">
-					<thead className="tableHeading -top-10 bg-gray-500 dark:bg-gray-900  text-white ">
+					<thead className="tableHeading -top-10 bg-gray-500 dark:bg-gray-900  border  text-white ">
 						<tr>
-							<th className=" dark:bg-gray-900 z-10">
+							<th className="bg-gray-500 dark:bg-gray-900 z-10">
 								<Tooltip info={"select All"}>
 									<input
 										type="checkbox"
@@ -198,11 +213,13 @@ const MyPosts = () => {
 							<th>Catgegory</th>
 							<th>likes</th>
 							<th>DisLikes</th>
-							<th className=" dark:bg-gray-900 z-10">Actions</th>
+							<th className="bg-gray-500 dark:bg-gray-900 z-10">
+								Actions
+							</th>
 						</tr>
 					</thead>
 
-					<tbody className=" ">
+					<tbody className="">
 						{creatorAllPost.map((post, index) => (
 							<tr
 								ref={
@@ -213,7 +230,7 @@ const MyPosts = () => {
 								}
 								className="border-b transition duration-300 ease-in-out hover:bg-neutral-100 dark:hover:bg-gray-600 dark:border-neutral-100 "
 							>
-								<td className=" bg-white dark:bg-[#1C1C1C] ">
+								<td className=" bg-gray-50  dark:bg-[#1C1C1C] tableData ">
 									<input
 										type="checkbox"
 										name="check"
@@ -224,31 +241,31 @@ const MyPosts = () => {
 									/>
 								</td>
 
-								<td>
+								<td className="tableData">
 									<Link to={`/single-post/${post?._id}`}>
 										<Tooltip info={post.title}>{post.title}</Tooltip>
 									</Link>
 								</td>
 
-								<td>
+								<td className="tableData">
 									<Tooltip info={formatDate(post.createdAt)}>
 										{formatDate(post.createdAt)}
 									</Tooltip>
 								</td>
-								<td>
+								<td className="tableData">
 									<Tooltip info={post.numViews}>{post.numViews}</Tooltip>
 								</td>
-								<td>
+								<td className="tableData">
 									<Tooltip info={post.category}>{post.category}</Tooltip>
 								</td>
 
-								<td>
+								<td className="tableData">
 									<Tooltip info={post.likes.length}>
 										{post.likes.length}
 									</Tooltip>
 								</td>
-								<td>{post.disLikes.length}</td>
-								<td className=" bg-white dark:bg-[#1C1C1C] ">
+								<td className="tableData">{post.disLikes.length}</td>
+								<td className=" bg-gray-50 tableData  dark:bg-[#1C1C1C] ">
 									<EditPostBtn postId={post._id} />
 								</td>
 							</tr>
@@ -257,8 +274,8 @@ const MyPosts = () => {
 					{/* conditionary rendering post status */}
 					{creatorPostStatus === "loading" && (
 						<tr>
-							<td className="bg-white dark:bg-[#1C1C1C]"></td>
-							<td className=" bg-white dark:bg-[#1C1C1C]">
+							<td className="bg-gray-50  tableData dark:bg-[#1C1C1C]"></td>
+							<td className=" bg-gray-50 tableData dark:bg-[#1C1C1C]">
 								<LoadingSpinner />
 							</td>
 						</tr>
@@ -267,9 +284,9 @@ const MyPosts = () => {
 					{!hasMore &&
 						creatorPostStatus === "success" &&
 						creatorAllPost.length > 0 && (
-							<tr className=" bg-white dark:bg-[#1C1C1C]">
-								<td className="bg-white dark:bg-[#1C1C1C]"></td>
-								<td className=" text-yellow-400  stickyBottom bg-white dark:bg-[#1C1C1C] ">
+							<tr className=" bg-gray-50  dark:bg-[#1C1C1C]">
+								<td className="bg-gray-50 tableData dark:bg-[#1C1C1C]"></td>
+								<td className=" text-yellow-400 tableData  stickyBottom bg-white dark:bg-[#1C1C1C] ">
 									No more User
 								</td>
 							</tr>
@@ -277,7 +294,7 @@ const MyPosts = () => {
 
 					{creatorAllPost.length === 0 &&
 						creatorPostStatus === "success" && (
-							<td className=" text-yellow-400  stickyBottom bg-white dark:bg-[#1C1C1C] ">
+							<td className=" text-yellow-400 tableData stickyBottom bg-gray-50  dark:bg-[#1C1C1C] ">
 								No User Found
 							</td>
 						)}

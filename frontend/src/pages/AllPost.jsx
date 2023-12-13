@@ -1,7 +1,7 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useRef, useCallback } from "react";
-import { PostInfo, Spinner } from "../components";
+import { ClearSearch, PostInfo, Spinner } from "../components";
 import {
 	IncreasePageNumber,
 	fetchPostByCategory,
@@ -35,30 +35,17 @@ const AllPost = () => {
 		},
 		[isLoading, hasMore]
 	);
-
+	const handleClearSearch = () => {
+		dispatch(setEmptySearch());
+		dispatch(fetchPostByCategory());
+	};
 	return (
 		<>
-			{searchQuery.length !== 0 && (
-				<div className="flex gap-2 my-2">
-					<h3>
-						All Post found for
-						<span className=" ml-1 text-blue-400">{searchQuery} in </span>
-						<span className=" ml-1 text-blue-400">
-							{activeCategory.toUpperCase()} category
-						</span>
-					</h3>
-					<button
-						onClick={(e) => {
-							e.preventDefault();
-							dispatch(setEmptySearch());
-							dispatch(fetchPostByCategory());
-						}}
-						className=" text-2xl text-red-400 px-1  rounded-lg hover:text-red-600 drop-shadow-md transition-all delay-75"
-					>
-						<MdCancel />
-					</button>
-				</div>
-			)}
+			<ClearSearch
+				searchQuery={searchQuery}
+				handleClearSearch={handleClearSearch}
+			/>
+
 			{allPost.map((post, index) => {
 				return (
 					<div

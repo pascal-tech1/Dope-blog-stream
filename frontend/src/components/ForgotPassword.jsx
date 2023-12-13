@@ -1,12 +1,16 @@
 import React from "react";
 import { sendForgotPasswordEmail } from "../redux/user/userSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { MdCancel } from "react-icons/md";
+import { LoadingSpinner } from "../utils/Spinner";
 
 const ForgotPassword = ({ setIsOpen }) => {
 	const dispatch = useDispatch();
+	const { sendForgotPasswordEmailStatus } = useSelector(
+		(store) => store.userSlice
+	);
 
 	const formSchema = Yup.object().shape({
 		email: Yup.string().email().required("Email is Required."),
@@ -18,13 +22,11 @@ const ForgotPassword = ({ setIsOpen }) => {
 		},
 		validationSchema: formSchema,
 		onSubmit: (values) => {
-			console.log(values);
 			dispatch(sendForgotPasswordEmail(values));
 		},
 	});
 	return (
-		<div className=" w-[90vw] h-[90vh] lg:w-[60vw] bg-white flex gap-4  items-center justify-center flex-col rounded-s-lg px-4 relative rounded-lg">
-
+		<div className=" w-[90vw] h-[90vh] lg:w-[60vw] bg-white dark:bg-[#171717] border dark:border-gray-900 flex gap-4  items-center justify-center flex-col rounded-s-lg px-4 relative rounded-lg">
 			<div
 				onClick={() => setIsOpen(false)}
 				className=" absolute top-1 right-2"
@@ -57,7 +59,9 @@ const ForgotPassword = ({ setIsOpen }) => {
 					type="submit"
 					className="mt-4  bg-blue-600 px-2 rounded-md hover:bg-blue-800 transition-all delay-75  text-white  "
 				>
-					submit
+					{sendForgotPasswordEmailStatus === "loading"
+						? LoadingSpinner
+						: "submit"}
 				</button>
 			</form>
 		</div>

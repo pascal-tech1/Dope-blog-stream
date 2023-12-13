@@ -4,9 +4,10 @@ import {
 	fetchUserFollowersList,
 	setFirstFetchFollowersUser,
 	setIsSearchBArNeeded,
+	setSearchTermInStore,
 	updateFollowersListPageNumber,
 } from "../../redux/user/userSlice";
-import { FollowUsersList } from "../../components";
+import { ClearSearch, FollowUsersList } from "../../components";
 
 const Following = () => {
 	useEffect(() => {
@@ -35,14 +36,23 @@ const Following = () => {
 		dispatch(fetchUserFollowersList());
 		dispatch(updateFollowersListPageNumber());
 	}, [_id,dashboardSearchTerm]);
+	const handleClearSearch = () => {
+		dispatch(setSearchTermInStore(""));
+		
+	};
 
 	return (
 		<div className=" grid max-w-md w-full ">
+			{/* clear search */}
+			<ClearSearch
+				searchQuery={dashboardSearchTerm}
+				handleClearSearch={handleClearSearch}
+			/>
 			<h1 className="font-semibold place-self-center text-blue-400   max-w-max pt-3 pb-1 ">
 				{" "}
 				Your followers
 			</h1>
-			<h3 className=" font-medium text-gray-900 md:text-slate-300 drop-shadow-md">
+			<h3 className=" font-medium dark:text-gray-400 text-gray-800">
 				total followers : <span>{followerslistTotalNumber} </span>{" "}
 			</h3>
 

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { AdminCategory, Category, Modal, Spinner } from "../components";
+import { AdminCategory, Category, ClearSearch, Modal, Spinner } from "../components";
 import { useDispatch, useSelector } from "react-redux";
 import {
 	createCategory,
@@ -13,12 +13,11 @@ import * as Yup from "yup";
 import { MdDoneAll, MdEdit } from "react-icons/md";
 import { BsSaveFill } from "react-icons/bs";
 import { toast } from "react-toastify";
-import { setIsSearchBArNeeded } from "../redux/user/userSlice";
+import { setIsSearchBArNeeded, setSearchTermInStore } from "../redux/user/userSlice";
 
 const AdminAllCategory = () => {
 	useEffect(() => {
 		dispatch(setIsSearchBArNeeded(true));
-		
 	}, []);
 	const { dashboardSearchTerm } = useSelector((store) => store.userSlice);
 	const dispatch = useDispatch();
@@ -33,7 +32,6 @@ const AdminAllCategory = () => {
 	useEffect(() => {
 		dispatch(fetchAllCategorys());
 	}, [dashboardSearchTerm]);
-	
 
 	const formSchema = Yup.object().shape({
 		activeEditingCategory: Yup.string()
@@ -122,9 +120,17 @@ const AdminAllCategory = () => {
 
 		dispatch(deleteCategory({ categoryIds: checkedItems }));
 	};
+	const handleClearSearch = () => {
+		dispatch(setSearchTermInStore(""));
+	};
 
 	return (
 		<section className="flex  flex-col py-3  items-center h-screen">
+			{/* clear search */}
+			<ClearSearch
+				searchQuery={dashboardSearchTerm}
+				handleClearSearch={handleClearSearch}
+			/>
 			<Modal
 				isOpen={isModalOpen}
 				onClose={closeModal}
