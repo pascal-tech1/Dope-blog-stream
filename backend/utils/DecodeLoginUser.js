@@ -8,7 +8,7 @@ const User = require("../model/user/User");
 // '''''''''''''''''''''''''''''''''''''''''''''
 
 const decodeToken = async (token) => {
-	console.log("im here decoded token");
+	
 	// checking if the user entered header for authorization
 	try {
 		//   verify the user entered token with jwt

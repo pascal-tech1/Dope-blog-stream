@@ -26,7 +26,6 @@ const createCategoryCtrl = expressAsyncHandler(async (req, res) => {
 			.status(201)
 			.json({ message: `category ${category} `, createdCategory });
 	} catch (error) {
-		console.log(error);
 		res.json({ message: "faliled to create Category" });
 	}
 });
@@ -36,7 +35,7 @@ const createCategoryCtrl = expressAsyncHandler(async (req, res) => {
 // ''''''''''''''''''''''''''''''''''''''''''''
 const fetchAllCategorysCtrl = expressAsyncHandler(async (req, res) => {
 	const { searchTerm } = req.query;
-	console.log("category", searchTerm);
+
 	const regexPattern = new RegExp(`.*${searchTerm}.*`, "i");
 	let searchQuery;
 
@@ -107,7 +106,6 @@ const updateCategoryCtrl = expressAsyncHandler(async (req, res) => {
 			category,
 		});
 	} catch (error) {
-		console.log(error);
 		res.status(500).json({ status: "failed", message: error.messasge });
 	}
 });

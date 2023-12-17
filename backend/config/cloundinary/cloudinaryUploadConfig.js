@@ -7,7 +7,6 @@ cloudinary.config({
 });
 
 const handleCloudinaryUpload = async (file, folderName) => {
-	
 	try {
 		const options = {
 			resource_type: "auto",
@@ -15,10 +14,9 @@ const handleCloudinaryUpload = async (file, folderName) => {
 		};
 
 		const data = await cloudinary.uploader.upload(file, options);
-		console.log("im cloudinary");
+
 		return { url: data?.secure_url };
 	} catch (error) {
-		console.log(error)
 		throw new Error("image upload to database failed");
 	}
 };

@@ -25,7 +25,6 @@ const createCommentCtrl = expressAsyncHandler(async (req, res) => {
 //   fetch all comments
 // ''''''''''''''''''''''''''''''''''''''''''''
 const fetchAllCommentsCtrl = expressAsyncHandler(async (req, res) => {
-	console.log("im here");
 	try {
 		const allComments = await Comment.find({});
 		res.json(allComments);
@@ -73,7 +72,7 @@ const updateCommentCtrl = expressAsyncHandler(async (req, res) => {
 const deleteCommentCtrl = expressAsyncHandler(async (req, res) => {
 	const { commentId } = req?.params;
 	validateMongoDbUserId(commentId);
-	console.log('im here')
+
 	try {
 		const comment = await Comment.findByIdAndDelete(commentId, {
 			new: true,

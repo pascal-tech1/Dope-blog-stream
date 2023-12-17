@@ -1,5 +1,4 @@
 const filterUserCriteria = (filter) => {
-	console.log("filter user: ", filter);
 	if (filter === "Newest User") return { createdAt: -1 };
 	if (filter === "Oldest User") return { createdAt: 1 };
 	if (filter === "highest Followers") return { followersCount: -1 };
@@ -13,7 +12,6 @@ const filterUserCriteria = (filter) => {
 };
 
 const filterCriteria = (filter) => {
-	console.log("im here filterPosts");
 	if (filter === "Highest likes") return { likes: -1 };
 	if (filter === "Lowest likes") return { likes: 1 };
 	if (filter === "Latest") return { createdAt: -1 };

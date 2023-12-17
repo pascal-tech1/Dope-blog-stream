@@ -94,7 +94,6 @@ const userLoginCtrl = expressAsyncHandler(async (req, res) => {
 			});
 		} else throw new Error("login failed, invalid credentials");
 	} catch (error) {
-		console.log(error);
 		res.status(400).json({
 			status: "failed",
 			message: error.message,
@@ -207,7 +206,6 @@ const fetchUserDetailsCtrl = expressAsyncHandler(async (req, res) => {
 
 		res.status(200).json({ foundUser: foundUser[0] });
 	} catch (error) {
-		console.log(error);
 		res.status(500).json(error);
 	}
 });
@@ -232,6 +230,7 @@ const updateUserDetailsCtrl = expressAsyncHandler(async (req, res) => {
 		).select([
 			"_id",
 			"firstName",
+			"following",
 			"lastName",
 			"profilePhoto",
 			"blurProfilePhoto",
@@ -582,7 +581,6 @@ const ChangeEmailCtrl = expressAsyncHandler(async (req, res) => {
 			throw new Error("old and new Email can't be the same");
 		if (email !== loginUser.email) throw new Error("invalid credentials");
 
-		// console.log(loginUser)
 		const foundUser = await User.findOne({ email: email });
 		const isPasswordMatch = await foundUser.isPasswordCorrect(password);
 		if (!isPasswordMatch) throw new Error("invalid credentials");
@@ -657,8 +655,6 @@ const profilePhotoUploadCtrl = expressAsyncHandler(async (req, res) => {
 			if (err) {
 				res.status(500).json({ message: "failed to  upload image" });
 				return;
-			} else {
-				console.log("File deleted successfully");
 			}
 		});
 
@@ -717,7 +713,6 @@ const savePostCtrl = expressAsyncHandler(async (req, res) => {
 			.status(200)
 			.json({ message: "Post saved successfully", savedPost });
 	} catch (error) {
-		console.log(error);
 		res
 			.status(500)
 			.json({ status: "faild", message: "saving post failed try again" });
@@ -800,7 +795,6 @@ const fetchUserFollowingListCtrl = expressAsyncHandler(
 				userfollowinglist: userfollowinglist,
 			});
 		} catch (error) {
-			console.log(error);
 			res.status(500).json({ message: "Internal Server Error" });
 		}
 	}
@@ -891,7 +885,6 @@ const fetchUserCountsCtrl = expressAsyncHandler(async (req, res) => {
 			followingCount,
 		});
 	} catch (error) {
-		console.log(error);
 		res.status(500).json({
 			status: "failed",
 			message: "fetching User details count failed try again",
@@ -941,11 +934,10 @@ const fetchWhoViewedUserProfileCtrl = expressAsyncHandler(
 				whoViewUserProfileCount,
 			});
 		} catch (error) {
-			console.log(error);
 			res.status(500).json({ status: "failed", message: error.message });
 		}
 		// const deleted = await User.updateMany({}, { $unset: { viewedBy: 1 } });
-		// console.log(deleted);
+
 		// res.status(200).json({
 		// 	message: `successfully deleted ${deleted}`,
 		// });
@@ -956,10 +948,7 @@ const fetchPostImpressionsCount = expressAsyncHandler(async (req, res) => {
 	const userId = req.user._id;
 
 	const { filter } = req.query;
-	const page = parseInt(req.query.page) || 1; // Current page number, default to 1
-	const numberPerPage = parseInt(req.query.numberPerPage) || 10; // Number of items per page
-	// "likes and dislikes", "number of views";
-	// console.log(filter);
+
 	try {
 		const { Posts } = await User.findById(userId).populate({
 			path: "Posts",
@@ -1081,7 +1070,6 @@ const fetchAllUserCtrl = expressAsyncHandler(async (req, res) => {
 
 const blockOrUnblockUserCtrl = expressAsyncHandler(async (req, res) => {
 	const { action, userId } = req.body;
-	const foundUser = await User.findById(userId);
 
 	try {
 		if (action === "block") {
@@ -1117,7 +1105,7 @@ const blockOrUnblockUserCtrl = expressAsyncHandler(async (req, res) => {
 			return;
 		}
 	} catch (error) {
-		console.log(error);
+		res.status(500).json("internal server error");
 	}
 });
 
@@ -1134,7 +1122,6 @@ const deleteUserCtrl = expressAsyncHandler(async (req, res) => {
 			userIds,
 		});
 	} catch (error) {
-		console.log(error);
 		res.status(400).json({ message: "failed to delete post" });
 	}
 });
@@ -1143,7 +1130,7 @@ const toggleAdminUserCtrl = expressAsyncHandler(async (req, res) => {
 
 	try {
 		const user = await User.findById(userId);
-		console.log(user);
+
 		user.isAdmin = !user.isAdmin;
 		user.isAccountVerified = true;
 		user.isOwner = true;
@@ -1159,7 +1146,6 @@ const toggleAdminUserCtrl = expressAsyncHandler(async (req, res) => {
 			}`,
 		});
 	} catch (error) {
-		console.log(error);
 		res.status(400).json({ message: "failed to perform admin action" });
 	}
 });

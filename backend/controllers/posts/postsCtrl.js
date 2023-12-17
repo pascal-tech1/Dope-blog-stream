@@ -49,7 +49,6 @@ const createPostCtrl = expressAsyncHandler(async (req, res) => {
 				res.status(500).json({ message: "failed to edit post" });
 				return;
 			} else {
-				console.log("File deleted successfully");
 			}
 		});
 
@@ -208,7 +207,6 @@ const fetchSinglePostsCtrl = expressAsyncHandler(async (req, res) => {
 		}
 		res.json({ post });
 	} catch (error) {
-		console.log(error);
 		res.json({ message: "fetching post failed try again" });
 	}
 });
@@ -260,7 +258,6 @@ const updatePostCtrl = expressAsyncHandler(async (req, res) => {
 					res.status(500).json({ message: "failed to edit post" });
 					return;
 				} else {
-					console.log("File deleted successfully");
 				}
 			});
 
@@ -277,7 +274,6 @@ const updatePostCtrl = expressAsyncHandler(async (req, res) => {
 		).populate("user");
 		res.json(post);
 	} catch (error) {
-		console.log(error);
 		res.status(500).json({ messsage: error.message });
 	}
 });
@@ -488,7 +484,6 @@ const fetchPostByCategoryCtrl = expressAsyncHandler(async (req, res) => {
 		res.status(200).json(posts);
 		return;
 	} catch (error) {
-		console.log(error);
 		res.status(500).json({ error: "Internal Server Error" });
 	}
 });
@@ -539,7 +534,6 @@ const fetchUserPostHistoryCtrl = expressAsyncHandler(async (req, res) => {
 			posts: paginatedpostViewHistory,
 		});
 	} catch (error) {
-		console.log(error);
 		res.status(500).json({ message: error.message });
 	}
 });
@@ -584,7 +578,6 @@ const fetchUserSavedPostCtrl = expressAsyncHandler(async (req, res) => {
 			posts: paginatedSavedPost,
 		});
 	} catch (error) {
-		console.log(error);
 		res.status(500).json({ message: error.message });
 	}
 });
@@ -601,8 +594,6 @@ const postImageCtrl = expressAsyncHandler(async (req, res) => {
 		if (err) {
 			res.status(500).json({ message: "failed to edit post" });
 			return;
-		} else {
-			console.log("File deleted successfully");
 		}
 	});
 	res.status(200).json(uploadedImage);

@@ -7,9 +7,6 @@ const expressAsyncHandler = require("express-async-handler");
 const adminMiddleWare = expressAsyncHandler(async (req, res, next) => {
 	if (!req.user.admin) {
 		throw new Error("only admin allow");
-		console.log("im here true");
-	} else {
-		console.log("not and admin");
 	}
 	next();
 });

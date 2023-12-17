@@ -49,9 +49,7 @@ const createMsgCtrl = expressAsyncHandler(async (req, res) => {
 					status: "success",
 					message: "Message sent successfully",
 				});
-			} catch (error) {
-				console.log(error);
-			}
+			} catch (error) {}
 		}
 	});
 });
@@ -79,7 +77,13 @@ const fetchMsgCtrl = expressAsyncHandler(async (req, res) => {
 				limit: numberPerPage,
 				populate: {
 					path: "sender",
-					select: ["_id", "firstName", "lastName", "profilePhoto","blurProfilePhoto"],
+					select: [
+						"_id",
+						"firstName",
+						"lastName",
+						"profilePhoto",
+						"blurProfilePhoto",
+					],
 				},
 			})
 			.select("receivedMessages");
@@ -88,7 +92,6 @@ const fetchMsgCtrl = expressAsyncHandler(async (req, res) => {
 			.status(200)
 			.json({ status: "success", receivedMessages, receivedMessageCount });
 	} catch (error) {
-		console.log(error);
 		res.status(500).json({
 			status: "failed",
 			messages: "fetching messages failed try again",
