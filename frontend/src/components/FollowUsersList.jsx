@@ -1,8 +1,6 @@
 import React from "react";
-
-
 import UserToFollow from "./UserToFollow";
-import Spinner from "./Spinner";
+import { LoadingSpinner } from "../components";
 
 const FollowUsersList = ({
 	list,
@@ -15,14 +13,12 @@ const FollowUsersList = ({
 	return (
 		<div className=" my-4 flex flex-col ">
 			{list?.map((user, index) => {
-				
-				return <UserToFollow user={user} index={index} />;
+				return <UserToFollow key={index} user={user} index={index} />;
 			})}
 
 			{fetchingListStatus === "loading" && (
 				<div className=" self-center">
-				
-					<Spinner />
+					<LoadingSpinner />
 				</div>
 			)}
 			{listTotalNumber !== list?.length &&

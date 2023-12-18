@@ -12,8 +12,8 @@ import { formatDate } from "../../utils/dataFormatter";
 import {
 	ClearSearch,
 	EditPostBtn,
+	LoadingSpinner,
 	Modal,
-	Spinner,
 	Tooltip,
 } from "../../components";
 import DashboardCustomDropdown from "../../components/DashboardCustomDropdown";
@@ -22,7 +22,6 @@ import {
 	setIsSearchBArNeeded,
 	setSearchTermInStore,
 } from "../../redux/user/userSlice";
-import { LoadingSpinner } from "../../utils/Spinner";
 
 const MyPosts = () => {
 	useEffect(() => {
@@ -145,7 +144,6 @@ const MyPosts = () => {
 	};
 	const handleClearSearch = () => {
 		dispatch(setSearchTermInStore(""));
-		
 	};
 
 	return (
@@ -169,7 +167,7 @@ const MyPosts = () => {
 				</div>
 			</Modal>
 			{/* table actions buttons */}
-			<div className="flex gap-4 ml-10 flex-wrap  ">
+			<div className="flex gap-4 flex-wrap items-center justify-center pb-4 ">
 				<button
 					onClick={openModal}
 					className="  py-[0.15] rounded-lg  hover:bg-red-400 hover:text-slate-200 px-1 transition-all duration-75 text-red-400 outline-none"
@@ -222,6 +220,7 @@ const MyPosts = () => {
 					<tbody className="">
 						{creatorAllPost.map((post, index) => (
 							<tr
+								key={post._id}
 								ref={
 									creatorAllPost.length === index + 1 &&
 									creatorAllPost.length > 1
@@ -270,34 +269,34 @@ const MyPosts = () => {
 								</td>
 							</tr>
 						))}
-					</tbody>
-					{/* conditionary rendering post status */}
-					{creatorPostStatus === "loading" && (
-						<tr>
-							<td className="bg-gray-50  tableData dark:bg-[#1C1C1C]"></td>
-							<td className=" bg-gray-50 tableData dark:bg-[#1C1C1C]">
-								<LoadingSpinner />
-							</td>
-						</tr>
-					)}
-
-					{!hasMore &&
-						creatorPostStatus === "success" &&
-						creatorAllPost.length > 0 && (
-							<tr className=" bg-gray-50  dark:bg-[#1C1C1C]">
-								<td className="bg-gray-50 tableData dark:bg-[#1C1C1C]"></td>
-								<td className=" text-yellow-400 tableData  stickyBottom bg-white dark:bg-[#1C1C1C] ">
-									No more User
+						{/* conditionary rendering post status */}
+						{creatorPostStatus === "loading" && (
+							<tr>
+								<td className="bg-gray-50  tableData dark:bg-[#1C1C1C]"></td>
+								<td className=" bg-gray-50 tableData dark:bg-[#1C1C1C]">
+									<LoadingSpinner />
 								</td>
 							</tr>
 						)}
 
-					{creatorAllPost.length === 0 &&
-						creatorPostStatus === "success" && (
-							<td className=" text-yellow-400 tableData stickyBottom bg-gray-50  dark:bg-[#1C1C1C] ">
-								No User Found
-							</td>
-						)}
+						{!hasMore &&
+							creatorPostStatus === "success" &&
+							creatorAllPost.length > 0 && (
+								<tr className=" bg-gray-50  dark:bg-[#1C1C1C]">
+									<td className="bg-gray-50 tableData dark:bg-[#1C1C1C]"></td>
+									<td className=" text-yellow-400 tableData  stickyBottom bg-white dark:bg-[#1C1C1C] ">
+										No more User
+									</td>
+								</tr>
+							)}
+
+						{creatorAllPost.length === 0 &&
+							creatorPostStatus === "success" && (
+								<td className=" text-yellow-400 tableData stickyBottom bg-gray-50  dark:bg-[#1C1C1C] ">
+									No User Found
+								</td>
+							)}
+					</tbody>
 				</table>
 			</div>
 		</div>

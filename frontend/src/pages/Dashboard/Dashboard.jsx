@@ -2,8 +2,6 @@ import React, { useEffect } from "react";
 
 import {
 	BarChart,
-	LazyLoadImg,
-	MessageSkeleton,
 	MessagesComp,
 	PostDashboard,
 	Spinner,
@@ -12,14 +10,12 @@ import {
 } from "../../components";
 import { useDispatch, useSelector } from "react-redux";
 import {
-	IncreaseHistoryPageNumber,
-	IncreaseSavedPostPageNumber,
 	fetchUserPostHistory,
 	fetchSavedPosts,
 	setSavedPostFirstSearch,
 	setHistoryFirstSearch,
 } from "../../redux/post/morePostSlice";
-import { Link } from "react-router-dom";
+
 import { clearMsg, fetchMsg } from "../../redux/message/messageSlice";
 import {
 	clearWhoViewedUserProfile,
@@ -33,7 +29,6 @@ import { BsEye, BsPostcardFill } from "react-icons/bs";
 import { AiFillDislike, AiFillLike } from "react-icons/ai";
 import { MdOutlineFollowTheSigns } from "react-icons/md";
 
-
 const Dashboard = () => {
 	useEffect(() => {
 		dispatch(setIsSearchBArNeeded(false));
@@ -44,9 +39,7 @@ const Dashboard = () => {
 		userDetailsCount,
 		whoViewUserProfile,
 		chartSelectedFilter,
-		userPostImpression,
 		whoViewUserProfileStatus,
-		userDetailsCountStatus,
 	} = useSelector((store) => store?.userSlice);
 
 	const {
@@ -87,7 +80,7 @@ const Dashboard = () => {
 	}, [chartSelectedFilter, _id]);
 
 	return (
-		<div className=" flex flex-col gap-4   min-[1200px]:grid grid-cols-12 lg:gap-8  lg:mx-0 font-inter antialiased dark:text-slate-200">
+		<div className=" flex flex-col gap-4   min-[1200px]:grid grid-cols-12 lg:gap-8  lg:mx-0 font-inter antialiased dark:text-slate-200 text-sm">
 			<div className="col-start-1 row-start-1 col-span-9 ">
 				<div className=" grid grid-cols-1 min-[350px]:grid-cols-2 min-[500px]:grid-cols-3 gap-2 ">
 					<div className="">
@@ -186,7 +179,6 @@ const Dashboard = () => {
 					<Spinner />
 				) : (
 					<MessagesComp msg={msg} length={25} />
-				
 				)}
 			</div>
 			{/* post history */}

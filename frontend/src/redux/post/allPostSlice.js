@@ -19,7 +19,6 @@ export const fetchPostByCategory = createAsyncThunk(
 
 			return { data: resp.data, fromWhere: params?.where };
 		} catch (error) {
-			console.log(error);
 			if (!error?.response) {
 				throw new Error(error);
 			}

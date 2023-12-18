@@ -29,7 +29,6 @@ export const fetchMorePost = createAsyncThunk(
 			);
 			return resp.data;
 		} catch (error) {
-			console.log(error);
 			if (!error?.response) {
 				throw new Error(error);
 			}
@@ -52,10 +51,9 @@ export const fetchSavedPosts = createAsyncThunk(
 					},
 				}
 			);
-			console.log(resp.data);
+
 			return resp.data;
 		} catch (error) {
-			console.log(error);
 			if (!error?.response) {
 				throw new Error(error);
 			}
@@ -78,10 +76,9 @@ export const fetchUserPostHistory = createAsyncThunk(
 					},
 				}
 			);
-			console.log(resp.data);
+
 			return resp.data;
 		} catch (error) {
-			console.log(error);
 			if (!error?.response) {
 				throw new Error(error);
 			}
@@ -199,7 +196,6 @@ const morePostSlice = createSlice({
 			state.morePostStatus = "success";
 		},
 		[fetchMorePost.rejected]: (state, action) => {
-			console.log(action.payload);
 			state.morePostStatus = "failed";
 		},
 		[fetchUserPostHistory.pending]: (state, action) => {
@@ -233,7 +229,6 @@ const morePostSlice = createSlice({
 			}
 		},
 		[fetchSavedPosts.rejected]: (state, action) => {
-			console.log(action);
 			state.userSavedPostStatus = "failed";
 		},
 	},

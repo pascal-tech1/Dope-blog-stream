@@ -146,7 +146,7 @@ export const CropImage = ({
 			<div
 				className={` ${
 					!isPreview && "justify-between"
-				}  flex items-center flex-col bg-white h-[90vh] dark:bg-[#171717] mt-4 dark:border dark:border-gray-900 w-[100vw] lg:w-[80vw] shadow-lg rounded-lg mx-2  relative px-4  `}
+				}  flex items-center  flex-col bg-white h-[90vh] dark:bg-[#171717] mt-4 dark:border dark:border-gray-900 w-[100vw] lg:w-[80vw] shadow-lg rounded-lg mx-2  relative px-4  `}
 			>
 				<button
 					onClick={(e) => {

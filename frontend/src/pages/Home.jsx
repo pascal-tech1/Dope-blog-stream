@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
-import { Category, NavBar, UserToFollow } from "../components";
-import { MdOutlineCalendarMonth } from "react-icons/md";
+import { Category, UserToFollow } from "../components";
+
 import AllPost from "./AllPost";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchRandomUser } from "../redux/user/userSlice";

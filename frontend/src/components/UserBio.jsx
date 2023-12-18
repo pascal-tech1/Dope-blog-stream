@@ -42,7 +42,7 @@ const UserBio = () => {
 				<h1 className=" font-bold text-blue-400 ">Summary</h1>
 				<button type="submit" className="flex gap-1">
 					<MdEdit className=" text-blue-500" />
-					<h3 className="font-bold text-gray-600 hover:text-gray-900 text-xs">
+					<h3 className="font-bold text-gray-600 hover:text-gray-900 text-xs dark:hover:text-gray-400">
 						{isUserProfileClicked ? "save" : "Edit"}
 					</h3>
 				</button>
@@ -56,7 +56,7 @@ const UserBio = () => {
 					id="summary"
 					cols="30"
 					rows="5"
-					className=" border rounded-lg border-blue-400 outline-none focus:border-blue-800 px-2 py-2 mt-2"
+					className="  form-input"
 				></textarea>
 			) : (
 				<p className=" text-sm">{user?.bio}</p>

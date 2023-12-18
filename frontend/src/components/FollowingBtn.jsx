@@ -1,12 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { followOrUnfollowUser } from "../redux/user/userSlice";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import {
 	fetchPostToBeEdited,
 	setIsEditingPost,
 } from "../redux/post/singlePostSlice";
-import { Spinner } from "../components/index";
+import Spinner from "./Spinner";
+
 
 export const FollowingBtn = ({ userToFollowOrUnfollow, className }) => {
 	const navigate = useNavigate();

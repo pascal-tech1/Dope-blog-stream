@@ -7,7 +7,7 @@ import AllPost from "./AllPost";
 import UserPage from "./userPage";
 import VerifyEmail from "./VerifyEmail";
 import ConfirmEmailPage from "./ComfirmEmailPage";
-import Error from "./Error";
+import Error from "../components/Error";
 import PasswordReset from "./PasswordReset";
 import UpdatePassword from "./UpdatePassword";
 

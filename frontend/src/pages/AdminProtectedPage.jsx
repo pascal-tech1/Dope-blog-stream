@@ -5,7 +5,7 @@ import { Error } from ".";
 
 const AdminProtectedPage = () => {
 	const { user } = useSelector((store) => store.userSlice);
-	console.log(user);
+
 	if (!user?.isAdmin) {
 		return <Error />;
 	}

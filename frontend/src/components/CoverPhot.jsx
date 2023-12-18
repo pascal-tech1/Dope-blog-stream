@@ -1,11 +1,15 @@
 import React, { useState } from "react";
 import { BiCamera } from "react-icons/bi";
 import { uploadProfilePhoto } from "../redux/user/userSlice";
-import { CropImage, LazyLoadImg } from "../components";
+import { CropImage, LazyLoadImg, Spinner } from "../components";
+import { useSelector } from "react-redux";
 
 const CoverPhoto = ({ user }) => {
 	const [image, setImage] = useState(null);
 	const [fileName, setFileName] = useState("blogVanaImage");
+	const { profilePictureUploadStatus, whatUploading } = useSelector(
+		(store) => store.userSlice
+	);
 
 	const handleFileChange = (e) => {
 		e.preventDefault();
@@ -45,16 +49,24 @@ const CoverPhoto = ({ user }) => {
 				optimizationStr={"q_auto,f_auto,w_1000"}
 				paddingBottom={"18%"}
 			/>
-			<label className=" absolute bottom-0 right-0  text-center px-1 flex items-center justify-center bg-blue-200 drop-shadow-md hover:drop-shadow-sm hover:bg-blue-300 transition-all delay-75  h-8 w-8 rounded-full ">
+			<label className=" absolute bottom-0 cursor-pointer right-0 text-center px-1 flex items-center justify-center bg-blue-200 drop-shadow-md hover:drop-shadow-sm hover:bg-blue-300 transition-all delay-75  h-8 w-8 rounded-full ">
 				<input
 					onChange={(e) => handleFileChange(e)}
 					type="file"
 					name="image"
+					accept="image/*"
 					id="image"
 					className="hidden z-50"
 				/>
 
-				<BiCamera className=" text-4xl fill-white -rotate-3" />
+				{profilePictureUploadStatus === "loading" &&
+				whatUploading === "coverPhoto" ? (
+					<div className=" self-center w-[2.1rem] h-[2.1rem] ml-2 mt-1">
+						<Spinner />
+					</div>
+				) : (
+					<BiCamera className=" text-4xl fill-white -rotate-3" />
+				)}
 			</label>
 		</div>
 	);

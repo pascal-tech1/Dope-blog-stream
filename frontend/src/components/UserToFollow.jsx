@@ -3,7 +3,7 @@ import { FollowingBtn } from "./FollowingBtn";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { formatDate } from "../utils/dataFormatter";
-import { BsEye } from "react-icons/bs";
+
 import MessageUser from "./MessageUser";
 import LazyLoadImg from "./LazyLoadImg";
 

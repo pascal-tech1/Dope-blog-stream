@@ -1,8 +1,8 @@
 import React, { useEffect } from "react";
-import { useDispatch, useSelector, useStore } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { confirmSentEmail, verifyEmail } from "../redux/user/userSlice";
-import { NavBar, Spinner } from "../components";
+import { Spinner } from "../components";
 
 const ComfirmEmailPage = () => {
 	const { token } = useParams();
@@ -13,12 +13,12 @@ const ComfirmEmailPage = () => {
 	const searchParams = new URLSearchParams(location.search);
 
 	const email = searchParams.get("email");
-	console.log(token, email);
+
 	useEffect(() => {
 		dispatch(confirmSentEmail(token));
 	}, []);
 
-	const { confirmSentEmailStatus, user, verifyEmailStatus } = useSelector(
+	const { confirmSentEmailStatus } = useSelector(
 		(store) => store.userSlice
 	);
 

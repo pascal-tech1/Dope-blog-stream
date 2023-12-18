@@ -2,15 +2,10 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchSinglePost, setStatus } from "../redux/post/singlePostSlice";
 import { useParams } from "react-router-dom";
-import NavBar from "../components/NavBar";
 
 import { LazyLoadImg, LikesSaveViews, MessageUser } from "../components";
 
-import {
-	clearUserPost,
-	fetchMorePost,
-	fetchUserPost,
-} from "../redux/post/morePostSlice";
+import { clearUserPost, fetchUserPost } from "../redux/post/morePostSlice";
 
 import {
 	FollowingBtn,
@@ -22,8 +17,8 @@ import {
 	clearMorePost,
 	clearSearchAndCategory,
 	fetchPostByCategory,
-	setEmptySearch,
 } from "../redux/post/allPostSlice";
+import { addCopyButtons } from "../utils/PostCopyButton";
 
 const SinglePost = () => {
 	const { id } = useParams();
@@ -37,29 +32,13 @@ const SinglePost = () => {
 	const { userPost, userPostStatus } = useSelector(
 		(store) => store.morePostSlice
 	);
+	// Call the function to add copy buttons after the component renders
+	useEffect(() => {
+		console.log('i have run')
+		addCopyButtons();
+	}, [status]);
 
 	const observer = useRef();
-	const [screenWidth, setScreenWidth] = useState(window.innerWidth);
-
-	useEffect(() => {
-		// Function to update screen width
-
-		const updateScreenWidth = () => {
-			const newScreenWidth = window.innerWidth;
-			const updatedWith = newScreenWidth > 800 ? 850 : newScreenWidth;
-			if (newScreenWidth > screenWidth) {
-				setScreenWidth(updatedWith);
-			}
-		};
-
-		// Attach event listener to update width on window resize
-		window.addEventListener("resize", updateScreenWidth);
-
-		// Cleanup: remove event listener on component unmount
-		return () => {
-			window.removeEventListener("resize", updateScreenWidth);
-		};
-	}, [screenWidth]); // Empty dependency array ensures the effect runs only once on mount
 
 	const lastPostRef = useCallback(
 		(node) => {
@@ -156,7 +135,8 @@ const SinglePost = () => {
 					<div
 						className=" mt-4 dark:text-slate-300"
 						dangerouslySetInnerHTML={{ __html: post?.content }}
-					></div>
+					/>
+
 					{/* when the user scroll to this div with lasPostRef a fetch request for 
 					userPost and morePost is trigered in the useCallBackHook */}
 					<div ref={lastPostRef} className=" border-y py-4 my-4 ">
@@ -222,13 +202,7 @@ const SinglePost = () => {
 								/>
 							</span>
 						</h1>
-						{morePost && (
-							<MorePost
-								post={morePost}
-								status={isLoading}
-							
-							/>
-						)}
+						{morePost && <MorePost post={morePost} status={isLoading} />}
 
 						<div className=" self-center">
 							{morePostHasMore ? (

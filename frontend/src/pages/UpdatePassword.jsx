@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector, useStore } from "react-redux";
-import { useNavigate, useParams } from "react-router-dom";
 
-import { NavBar, Spinner } from "../components";
+import { Spinner } from "../components";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 
@@ -56,10 +55,8 @@ const UpdatePassword = () => {
 		},
 	});
 	useEffect(() => {
-		console.log(updatePassword);
 		if (updatePasswordStatus === "loading") return;
 		if (updatePasswordStatus === "success") {
-			console.log("im here");
 			formik.resetForm({
 				values: {
 					password: "",
@@ -73,7 +70,10 @@ const UpdatePassword = () => {
 		<div className="font-inter flex items-center justify-center h-[80vh] w-screen flex-col gap-4 px-6 dark:text-slate-200 ">
 			<h1 className="text-blue-400">Update your password</h1>
 			{/* form */}
-			<form className="flex flex-col gap-1 dark:bg-[#171717]  px-4 py-10 rounded-lg" onSubmit={formik.handleSubmit}>
+			<form
+				className="flex flex-col gap-1 dark:bg-[#171717]  px-4 py-10 rounded-lg"
+				onSubmit={formik.handleSubmit}
+			>
 				<h1 className=" mb-3">
 					fill in your old and your new password to continue to change your
 					password

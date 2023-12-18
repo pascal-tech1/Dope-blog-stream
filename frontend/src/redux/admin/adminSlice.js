@@ -92,7 +92,7 @@ export const deleteUserAdmin = createAsyncThunk(
 					},
 				}
 			);
-			console.log(resp.data);
+
 			return resp.data;
 		} catch (error) {
 			if (!error?.response) {
@@ -143,7 +143,6 @@ export const toggleUserAdmin = createAsyncThunk(
 
 			return resp.data;
 		} catch (error) {
-			console.log(error);
 			if (!error?.response) {
 				throw new Error(error);
 			}
@@ -228,7 +227,7 @@ const adminSlice = createSlice({
 			state.adminAllUsersTotalNumber = payload.totalNumber;
 			state.allUsers = [...state.allUsers, ...payload.users];
 			state.adminAllUsersTotalPages = payload.totalPages;
-			console.log(payload.totalPages, payload.currentPage);
+
 			if (payload.totalPages === payload.currentPage)
 				state.adminFetchUsersHasMore = false;
 			else state.adminFetchUsersHasMore = true;
@@ -246,7 +245,7 @@ const adminSlice = createSlice({
 		[deletePostAdmin.fulfilled]: (state, { payload }) => {
 			state.deletingPostStatus = "success";
 			const { postIds } = payload;
-			console.log(postIds);
+
 			state.adminAllPostTotalNumber -= 1;
 			state.allPost = state.allPost.filter(
 				(post) => !postIds.includes(post._id)
@@ -279,13 +278,12 @@ const adminSlice = createSlice({
 		},
 		[blockOrUnblockUser.fulfilled]: (state, { payload }) => {
 			state.blockOrUnblockUserStatus = "success";
-			console.log(payload);
+
 			state.allUsers = state.allUsers.map((post) => {
 				if (post._id === payload.user._id) {
-					console.log("im here update user");
 					post.isBlocked = payload.user.isBlocked;
 				}
-				console.log(post);
+
 				return post;
 			});
 			toast.success(payload.message);

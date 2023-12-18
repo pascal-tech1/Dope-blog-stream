@@ -4,8 +4,8 @@ import * as Yup from "yup";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { loginUser } from "../redux/user/userSlice";
-import { LoadingSpinner } from "../utils/Spinner";
-import { ForgotPassword, NavBar } from "../components";
+
+import { ForgotPassword, LoadingSpinner } from "../components";
 
 const Login = () => {
 	const dispatch = useDispatch();

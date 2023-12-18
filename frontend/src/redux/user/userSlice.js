@@ -16,7 +16,6 @@ export const loginUser = createAsyncThunk(
 			const resp = await customFetch.post("/users/login", user);
 			return resp.data;
 		} catch (error) {
-			console.log(error);
 			if (!error.response) {
 				throw new Error();
 			}
@@ -170,7 +169,6 @@ export const fetchUserFollowingList = createAsyncThunk(
 			);
 			return { data: resp.data, followingUserId: _id };
 		} catch (error) {
-			console.log(error);
 			if (!error.response) {
 				throw new Error();
 			}
@@ -209,7 +207,7 @@ export const fetchUserDetailsCounts = createAsyncThunk(
 					authorization: `Bearer ${getState().userSlice?.token}`,
 				},
 			});
-			console.log(resp.data);
+
 			return resp.data;
 		} catch (error) {
 			if (!error.response) {
@@ -280,7 +278,6 @@ export const uploadProfilePhoto = createAsyncThunk(
 					},
 				}
 			);
-			console.log(resp.data);
 
 			return resp.data;
 		} catch (error) {
@@ -295,15 +292,14 @@ export const verifyEmail = createAsyncThunk(
 	"verify/Email",
 	async (emailParam, { getState, rejectWithValue }) => {
 		const email = emailParam || getState().userSlice.userEmail;
-		console.log(email);
+
 		try {
 			const resp = await customFetch.post(`/users/send-email`, {
 				email,
 			});
-			console.log(resp.data);
+
 			return resp.data;
 		} catch (error) {
-			console.log(error);
 			if (!error?.response) {
 				throw new Error(error);
 			}
@@ -319,10 +315,9 @@ export const confirmSentEmail = createAsyncThunk(
 			const resp = await customFetch.post(`/users/confirm-sent-email`, {
 				token,
 			});
-			console.log(resp.data);
+
 			return resp.data;
 		} catch (error) {
-			console.log(error);
 			if (!error?.response) {
 				throw new Error(error);
 			}
@@ -351,10 +346,9 @@ export const resetPassword = createAsyncThunk(
 	async (user, { getState, rejectWithValue }) => {
 		try {
 			const resp = await customFetch.post(`/users/reset-password`, user);
-			console.log(resp.data);
+
 			return resp.data;
 		} catch (error) {
-			console.log(error);
 			if (!error?.response) {
 				throw new Error(error);
 			}
@@ -372,10 +366,9 @@ export const updatePassword = createAsyncThunk(
 					Authorization: `Bearer ${getState().userSlice.token} `,
 				},
 			});
-			console.log(resp.data);
+
 			return resp.data;
 		} catch (error) {
-			console.log(error);
 			if (!error?.response) {
 				throw new Error(error);
 			}
@@ -393,10 +386,9 @@ export const changeEmail = createAsyncThunk(
 					Authorization: `Bearer ${getState().userSlice.token} `,
 				},
 			});
-			console.log(resp.data);
+
 			return resp.data;
 		} catch (error) {
-			console.log(error);
 			if (!error?.response) {
 				throw new Error(error);
 			}
@@ -404,7 +396,6 @@ export const changeEmail = createAsyncThunk(
 		}
 	}
 );
-
 
 const initialState = {
 	user: null,
@@ -622,9 +613,8 @@ const userSlice = createSlice({
 		},
 		[fetchUserFollowingList.fulfilled]: (state, { payload }) => {
 			state.fetchingFollowingListStatus = "success";
-			console.log(payload);
+
 			if (payload.followingUserId !== state.user._id) {
-				console.log("im her noon login");
 				state.followingUserListForNonLoginUser = [
 					...state.followingUserListForNonLoginUser,
 					...payload.data.userfollowinglist.following,
@@ -655,7 +645,6 @@ const userSlice = createSlice({
 				...payload.userfollowerlist.followers,
 			];
 			state.followerslistTotalNumber = payload.followerslistTotalNumber;
-			console.log(state.userFollowerslist);
 		},
 		[fetchUserFollowersList.rejected]: (state, action) => {
 			state.fetchingFollowersListStatus = "failed";
@@ -666,12 +655,10 @@ const userSlice = createSlice({
 			state.userDetailsCountStatus = "loading";
 		},
 		[fetchUserDetailsCounts.fulfilled]: (state, { payload }) => {
-			console.log(payload);
 			state.userDetailsCountStatus = "success";
 			state.userDetailsCount = payload;
 		},
 		[fetchUserDetailsCounts.rejected]: (state, action) => {
-			console.log(action.payload);
 			state.userDetailsCountStatus = "failed";
 			toast.error(action?.payload?.message);
 		},
@@ -712,13 +699,15 @@ const userSlice = createSlice({
 		[uploadProfilePhoto.fulfilled]: (state, { payload }) => {
 			if (payload.whatUploading === "profilePhoto") {
 				state.user.profilePhoto = payload.userImage;
+				state.whatUploading = payload.whatUploading;
 			}
 			if (payload.whatUploading === "coverPhoto") {
 				state.user.coverPhoto = payload.userImage;
+				state.whatUploading = payload.whatUploading;
 			}
 
 			toast.success(payload?.message);
-			console.log(payload);
+
 			state.profilePictureUploadStatus = "success";
 		},
 		[uploadProfilePhoto.rejected]: (state, action) => {
@@ -792,7 +781,6 @@ const userSlice = createSlice({
 			const error = action?.payload?.message || action?.error?.message;
 			toast.error(error);
 		},
-	
 	},
 });
 

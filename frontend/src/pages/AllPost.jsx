@@ -7,12 +7,12 @@ import {
 	fetchPostByCategory,
 	setEmptySearch,
 } from "../redux/post/allPostSlice";
-import { MdCancel } from "react-icons/md";
 
 const AllPost = () => {
 	const dispatch = useDispatch();
-	const { allPost, isLoading, searchQuery, hasMore, activeCategory } =
-		useSelector((store) => store.allPostSlice);
+	const { allPost, isLoading, searchQuery, hasMore } = useSelector(
+		(store) => store.allPostSlice
+	);
 
 	useEffect(() => {
 		allPost.length === 0 &&

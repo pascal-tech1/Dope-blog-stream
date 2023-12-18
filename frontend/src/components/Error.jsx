@@ -1,5 +1,5 @@
 import React from "react";
-import { NavBar } from "../components";
+
 import { Link } from "react-router-dom";
 
 const Error = () => {

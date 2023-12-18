@@ -14,9 +14,13 @@ import Modal from "../components/Modal";
 import DashboardCustomDropdown from "../components/DashboardCustomDropdown";
 import { formatDate } from "../utils/dataFormatter";
 
-import { ClearSearch, MessageUser, Tooltip } from "../components";
+import {
+	ClearSearch,
+	LoadingSpinner,
+	MessageUser,
+	Tooltip,
+} from "../components";
 
-import { LoadingSpinner } from "../utils/Spinner";
 import { BiUser } from "react-icons/bi";
 import { setSearchTermInStore } from "../redux/user/userSlice";
 
@@ -145,7 +149,7 @@ const AllUsersPosts = () => {
 				</Modal>
 			</div>
 			{/* table actions buttons */}
-			<div className="flex gap-4 ml-10 flex-wrap ">
+			<div className="flex gap-4 flex-wrap items-center justify-center pb-4 ">
 				<button
 					onClick={openModal}
 					className="  py-[0.15] rounded-lg hover:text-red-700 text-red-400 outline-none"
@@ -253,30 +257,31 @@ const AllUsersPosts = () => {
 								</td>
 							</tr>
 						))}
-					</tbody>
-					{adminAllPostStatus === "loading" && (
-						<tr>
-							<td className="text-yellow-400  stickyBottom  bg-gray-50 tableData dark:bg-[#1C1C1C] "></td>
-							<td className="text-yellow-400  stickyBottom  bg-gray-50 tableData dark:bg-[#1C1C1C] ">
-								<LoadingSpinner />
-							</td>
-						</tr>
-					)}
-					{allPost.length === 0 && adminAllPostStatus === "success" && (
-						<td className="text-yellow-400  stickyBottom  bg-gray-50 tableData dark:bg-[#1C1C1C] ">
-							No User Found
-						</td>
-					)}
-					{!hasMore &&
-						adminAllPostStatus === "success" &&
-						allPost.length > 0 && (
-							<tr className="  bg-gray-50 tableData">
-								<td></td>
+
+						{adminAllPostStatus === "loading" && (
+							<tr>
+								<td className="text-yellow-400  stickyBottom  bg-gray-50 tableData dark:bg-[#1C1C1C] "></td>
 								<td className="text-yellow-400  stickyBottom  bg-gray-50 tableData dark:bg-[#1C1C1C] ">
-									No more User
+									<LoadingSpinner />
 								</td>
 							</tr>
 						)}
+						{allPost.length === 0 && adminAllPostStatus === "success" && (
+							<td className="text-yellow-400  stickyBottom  bg-gray-50 tableData dark:bg-[#1C1C1C] ">
+								No User Found
+							</td>
+						)}
+						{!hasMore &&
+							adminAllPostStatus === "success" &&
+							allPost.length > 0 && (
+								<tr className="  bg-gray-50 tableData">
+									<td></td>
+									<td className="text-yellow-400  stickyBottom  bg-gray-50 tableData dark:bg-[#1C1C1C] ">
+										No more User
+									</td>
+								</tr>
+							)}
+					</tbody>
 				</table>
 			</div>
 		</div>

@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchMsg } from "../../redux/message/messageSlice";
-import { LazyLoadImg, MessagesComp, Spinner } from "../../components";
-import { Link } from "react-router-dom";
+import { MessagesComp, Spinner } from "../../components";
+
 import { setIsSearchBArNeeded } from "../../redux/user/userSlice";
 
 const Messages = () => {

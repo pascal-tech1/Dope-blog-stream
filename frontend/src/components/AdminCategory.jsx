@@ -9,7 +9,6 @@ import {
 import { useNavigate } from "react-router-dom";
 import { setActiveEditingCategory } from "../redux/category/categorySlice";
 
-
 const AdminCategory = ({
 	allCategory,
 	className,
@@ -28,7 +27,7 @@ const AdminCategory = ({
 		<div className={className}>
 			{allCategory?.map((category, index) => {
 				return (
-					<div className="flex gap-1 items-center">
+					<div key={index} className="flex gap-1 items-center">
 						{isCategoryEditing && (
 							<input
 								type="checkbox"

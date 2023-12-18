@@ -24,7 +24,6 @@ export const fetchAllCategorys = createAsyncThunk(
 export const createCategory = createAsyncThunk(
 	"create/Category",
 	async (category, { getState, rejectWithValue }) => {
-		console.log(category);
 		try {
 			const resp = await customFetch.post(`/categorys/create`, category, {
 				headers: {
@@ -54,10 +53,9 @@ export const editCategory = createAsyncThunk(
 					},
 				}
 			);
-			console.log(resp.data);
+
 			return resp.data;
 		} catch (error) {
-			console.log(error);
 			if (!error?.response) {
 				throw new Error(error);
 			}
@@ -69,17 +67,15 @@ export const editCategory = createAsyncThunk(
 export const deleteCategory = createAsyncThunk(
 	"Delete/Category",
 	async (category, { getState, rejectWithValue }) => {
-		console.log(category);
 		try {
 			const resp = await customFetch.put("/categorys/delete", category, {
 				headers: {
 					authorization: `Bearer ${getState().userSlice?.token}`,
 				},
 			});
-			console.log(resp.data);
+
 			return resp.data;
 		} catch (error) {
-			console.log(error);
 			if (!error?.response) {
 				throw new Error(error);
 			}
@@ -95,6 +91,8 @@ const initialState = {
 	deleteCategoryStatus: "idle",
 	isCategoryEditing: false,
 	activeEditingCategory: "",
+	isSideBarOpen: true,
+	theme: localStorage.getItem("theme"),
 };
 
 const categorySlice = createSlice({
@@ -107,6 +105,13 @@ const categorySlice = createSlice({
 		},
 		setActiveEditingCategory: (state, { payload }) => {
 			state.activeEditingCategory = payload;
+		},
+		setSideBarStateInStore: (state, { payload }) => {
+			state.isSideBarOpen = payload;
+		},
+
+		setThemeInStore: (state, { payload }) => {
+			state.theme = payload;
 		},
 	},
 	extraReducers: {
@@ -126,7 +131,6 @@ const categorySlice = createSlice({
 		},
 		[createCategory.fulfilled]: (state, { payload }) => {
 			state.categorystatus = "success";
-			console.log(payload.createdCategory);
 
 			state.allCategory = [...state.allCategory, payload.createdCategory];
 			toast.success(payload.message);
@@ -174,5 +178,9 @@ const categorySlice = createSlice({
 });
 
 export default categorySlice.reducer;
-export const { setIsCategoryEdting, setActiveEditingCategory } =
-	categorySlice.actions;
+export const {
+	setIsCategoryEdting,
+	setActiveEditingCategory,
+	setSideBarStateInStore,
+	setThemeInStore,
+} = categorySlice.actions;

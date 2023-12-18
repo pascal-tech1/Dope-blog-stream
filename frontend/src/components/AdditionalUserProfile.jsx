@@ -8,7 +8,6 @@ import { updateUser } from "../redux/user/userSlice";
 
 import {
 	MdEdit,
-	MdOutlineEmail,
 	MdOutlineLanguage,
 	MdOutlineVerifiedUser,
 	MdOutlineDateRange,
@@ -59,7 +58,7 @@ const AdditionalUserProfile = () => {
 				<h1 className=" font-bold text-blue-400">Additional Details</h1>
 				<button type="submit" className="flex gap-1">
 					<MdEdit className=" text-blue-500" />
-					<h3 className="font-bold text-gray-600 hover:text-gray-900 text-xs">
+					<h3 className="font-bold text-gray-600 hover:text-gray-900 text-xs dark:hover:text-gray-400">
 						{isUserProfileClicked ? <p>Save</p> : <p>Edit</p>}
 					</h3>
 				</button>
@@ -76,7 +75,7 @@ const AdditionalUserProfile = () => {
 							type="language"
 							name="language"
 							id="language"
-							className=" max-w-md  border border-blue-400 px-1 py-1 rounded-md outline-none focus:border-b-blue-800 "
+							className="  form-input"
 						/>
 						<div className=" text-red-500">
 							{formik.touched.language && formik.errors.language}
@@ -91,7 +90,7 @@ const AdditionalUserProfile = () => {
 							type="nickName"
 							name="nickName"
 							id="nickName"
-							className=" max-w-md  border border-blue-400 px-1 py-1 rounded-md outline-none focus:border-b-blue-800 "
+							className="  form-input"
 						/>
 						<div className=" text-red-500">
 							{formik.touched.nickName && formik.errors.nickName}
@@ -106,7 +105,7 @@ const AdditionalUserProfile = () => {
 							type="education"
 							name="education"
 							id="education"
-							className=" max-w-md s border border-blue-400 px-1 py-1 rounded-md outline-none focus:border-b-blue-800 "
+							className="  form-input "
 						/>
 						<div className=" text-red-500">
 							{formik.touched.education && formik.errors.education}

@@ -14,10 +14,7 @@ const {
 } = require("./middlewares/error/errorhandler");
 const messageRoutes = require("./route/message/messageRoutes");
 
-// dotenv init
-
 const app = express();
-// mongodb config init
 
 // defaut middleware
 app.use(express.json());

@@ -26,7 +26,6 @@ const ChangeEmailForm = () => {
 		},
 
 		onSubmit: (values) => {
-			console.log(values);
 			dispatch(changeEmail(values));
 		},
 		validationSchema: formSchema,

@@ -6,9 +6,7 @@ import {
 	LazyLoadImg,
 	MessageUser,
 	MorePost,
-	NavBar,
 	Spinner,
-	UserToFollow,
 } from "../components";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
@@ -18,8 +16,8 @@ import {
 	fetchPostCreatorProfile,
 } from "../redux/post/generalPostSlice";
 import Following from "./Dashboard/Following";
-import { LuLanguages } from "react-icons/lu";
-import { MdOutlineLanguage, MdWork, MdWorkOff } from "react-icons/md";
+
+import { MdOutlineLanguage, MdWork } from "react-icons/md";
 import { BiMap, BiSolidUserAccount } from "react-icons/bi";
 
 /////////////////////////////////////////////////////////////
@@ -29,15 +27,13 @@ const UserPage = () => {
 		postCreatorProfileStatus,
 		creatorPostStatus,
 		creatorAllPost,
-		creatorAllPostTotalPages,
+
 		hasMore,
 	} = useSelector((store) => store.generalPostSlice);
 	const loginUserId = useSelector((store) => store.userSlice?.user?._id);
 	const dispatch = useDispatch();
 	const { userId } = useParams();
 	const [page, setPage] = useState(1);
-	const [viewAll, setViewAll] = useState(1);
-	const navigate = useNavigate();
 
 	useEffect(() => {
 		dispatch(clearCreatorAllPost());

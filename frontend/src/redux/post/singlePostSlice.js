@@ -23,11 +23,10 @@ export const fetchSinglePost = createAsyncThunk(
 					numViews: resp.data.numViews,
 				})
 			);
-			console.log(resp.data);
+
 			dispatch(updateUserViewHistory(resp.data.userViewedPost));
 			return resp.data.post;
 		} catch (error) {
-			console.log(error);
 			if (!error?.response) {
 				throw new Error();
 			}
@@ -47,7 +46,6 @@ export const fetchPostToBeEdited = createAsyncThunk(
 
 			return resp.data;
 		} catch (error) {
-			console.log(error);
 			if (!error?.response) {
 				throw new Error();
 			}
@@ -79,7 +77,7 @@ export const updatePost = createAsyncThunk(
 	"update/post",
 	async (post, { getState, rejectWithValue, dispatch }) => {
 		const postId = getState().singlePostSlice.postToBeEdited?._id;
-		console.log(post);
+
 		try {
 			const resp = await customFetch.put(`/posts/update/${postId}`, post, {
 				headers: {
@@ -102,7 +100,6 @@ export const updatePost = createAsyncThunk(
 export const uploadImage = createAsyncThunk(
 	"upload/image",
 	async (_, { getState, rejectWithValue }) => {
-		console.log("im here");
 		try {
 			const resp = await customFetch.post(
 				`/posts/upload-image`,
@@ -113,10 +110,9 @@ export const uploadImage = createAsyncThunk(
 					},
 				}
 			);
-			console.log(resp.data);
+
 			return resp.data;
 		} catch (error) {
-			console.log(error);
 			if (!error?.response) {
 				throw new Error(error);
 			}
@@ -164,8 +160,6 @@ const singlePostSlice = createSlice({
 			state.postEditingStatus = payload;
 		},
 		setStatus: (state, { payload }) => {
-			console.log("im here");
-			console.log(payload);
 			state.status = payload;
 		},
 	},
@@ -182,7 +176,6 @@ const singlePostSlice = createSlice({
 			state.appErr = undefined;
 		},
 		[fetchSinglePost.rejected]: (state, action) => {
-			console.log(action);
 			state.status = "error";
 			state.serverErr = action?.error?.message;
 			state.appErr = action?.payload?.message;
@@ -223,9 +216,8 @@ const singlePostSlice = createSlice({
 			toast.success("Post Updated Successfully");
 		},
 		[updatePost.rejected]: (state, action) => {
-			console.log("updating failed");
 			state.postEditingStatus = "failed";
-			console.log(action.payload);
+
 			toast.error(action.payload.message);
 		},
 	},

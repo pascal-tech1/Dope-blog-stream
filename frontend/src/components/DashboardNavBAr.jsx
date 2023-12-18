@@ -13,22 +13,25 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import UserDashboardMenu from "./UserDashboardMenu";
 import { setSearchTermInStore } from "../redux/user/userSlice";
+import { useClickOutside } from "../customHooks";
+import { setSideBarStateInStore } from "../redux/category/categorySlice";
+import Theme from "./Theme";
 
-const DashboardNavBAr = ({ toggleSideMenu, action }) => {
+const DashboardNavBAr = ({ refOpt, screenWidth }) => {
 	const navigate = useNavigate();
 
 	const [searchTerm, setSearchTerm] = useState("");
 	const [isTyping, setIsTyping] = useState(false);
-	const [isSideBarMenuopen, setIsSideBarmenuOpen] = useState(true);
 	const [isMenuOpen, setIsMenuOpen] = useState(false);
 	const { user, isSearchBarNeeded } = useSelector(
 		(store) => store.userSlice
 	);
+	const { isSideBarOpen } = useSelector((store) => store.categorySlice);
+
 	const dispatch = useDispatch();
 	const handleOnclick = (e) => {
 		e.preventDefault();
-		setIsSideBarmenuOpen(!isSideBarMenuopen);
-		toggleSideMenu(isSideBarMenuopen);
+		dispatch(setSideBarStateInStore(!isSideBarOpen));
 	};
 
 	useEffect(() => {
@@ -58,21 +61,30 @@ const DashboardNavBAr = ({ toggleSideMenu, action }) => {
 		setSearchTerm(newSearchTerm);
 		setIsTyping(true);
 	};
+	// using custom hook to close the open UserDashboardMenu
+	const divRef = useRef();
+	const iconRef = useRef();
+	const isOutsideClicked = useClickOutside(divRef, iconRef);
 
+	useEffect(() => {
+		isMenuOpen && !isOutsideClicked && setIsMenuOpen(false);
+	}, [isOutsideClicked]);
 	return (
-		<div className=" flex  w-full bg-opacity-0 backdrop-blur top-0 right-0 justify-between dark:bg-[#171717]  border-b dark:border-b-gray-900 z-50 items-center relative   py-2 dark:text-slate-300 " >
+		<div className=" flex  w-full bg-opacity-0 backdrop-blur top-0 right-0 justify-between dark:bg-[#171717]  border-b dark:border-b-gray-900 z-50 items-center relative   py-2 dark:text-slate-300 ">
 			{isMenuOpen && (
-				<div className=" absolute right-0">
+				<div ref={divRef} className=" absolute right-0 ">
 					<UserDashboardMenu
 						isMenuOpen={isMenuOpen}
 						setIsMenuOpen={setIsMenuOpen}
 					/>
 				</div>
 			)}
-			<FiMenu
+			<div
+				ref={screenWidth <= 798 ? refOpt : null}
 				onClick={handleOnclick}
-				className=" text-xl ml-6  text-gray-900 dark:text-slate-300"
-			/>
+			>
+				<FiMenu className=" text-xl ml-6  text-gray-900 dark:text-slate-300" />
+			</div>
 			{isSearchBarNeeded && (
 				<input
 					className="w-1/2 outline-none mx-6 text-center border-b border-b-gray-300 dark:bg-[#171717]  transition-all rounded-lg focus:border-b-blue-400 placeholder:text-gray-400"
@@ -83,7 +95,11 @@ const DashboardNavBAr = ({ toggleSideMenu, action }) => {
 					onChange={handleInputChange}
 				/>
 			)}
-
+			{/* theme  */}
+			<div className="">
+				<Theme />
+			</div>
+			{/* user */}
 			<div className="flex space-x-3 mr-2 items-center ">
 				<h3 className=" hidden md:flex text-xs border-l pl-4  pr-1">
 					Hello, {user?.lastName}
@@ -110,6 +126,7 @@ const DashboardNavBAr = ({ toggleSideMenu, action }) => {
 				</Link>
 
 				<div
+					ref={iconRef}
 					onClick={() => setIsMenuOpen(!isMenuOpen)}
 					className=" p-1 rounded-full hover:cursor-pointer hover:bg-gray-400  transition-all delay-75 hover:text-white"
 				>

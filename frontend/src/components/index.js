@@ -12,14 +12,14 @@ import { MorePost } from "./MorPOst";
 import PostUserInfo from "./PostUserInfo";
 import UserToFollow from "./UserToFollow";
 import Category from "./Category";
-import CustomDropdown from "./Dropdown";
+
 import PostDashboard from "./PostDashboard";
 import FollowUsersList from "./FollowUsersList";
 import Modal from "./Modal";
 import MessageUser from "./MessageUser";
 import { BarChart } from "./BarChart";
 import Tooltip from "./Tooltip";
-import Spinner from "./Spinner";
+
 import AdminCategory from "./AdminCategory";
 import BlockOrUnblockUser from "./BlockOrUnblockUser";
 import CoverPhoto from "./CoverPhot";
@@ -29,11 +29,14 @@ import LazyLoadImg from "./LazyLoadImg";
 import ForgotPassword from "./ForgotPassword";
 import UserDashboardMenu from "./UserDashboardMenu";
 import ChangeEmailForm from "./ChangeEmailForm";
-import MessageSkeleton from "./MessageSkeleton";
-import ChartSkeleton from "./chartSkeleton";
+
 import MessagesComp from "./MessagesComp";
 import CropImage from "./CropImage";
 import ClearSearch from "./ClearSearch";
+import Theme from "./Theme";
+import { LoadingSpinner } from "./LoadingSpinner";
+import Carousel from "./carousel";
+import Spinner from "./Spinner";
 
 export {
 	DashboardSideBar,
@@ -43,7 +46,6 @@ export {
 	UserProfile,
 	AdditionalUserProfile,
 	UserBio,
-	Spinner,
 	FollowingBtn,
 	EditPostBtn,
 	PostInfo,
@@ -52,7 +54,6 @@ export {
 	UserToFollow,
 	LikesSaveViews,
 	Category,
-	CustomDropdown,
 	PostDashboard,
 	FollowUsersList,
 	Modal,
@@ -67,9 +68,11 @@ export {
 	ForgotPassword,
 	UserDashboardMenu,
 	ChangeEmailForm,
-	MessageSkeleton,
-	ChartSkeleton,
 	MessagesComp,
 	CropImage,
 	ClearSearch,
+	Theme,
+	LoadingSpinner,
+	Carousel,
+	Spinner,
 };

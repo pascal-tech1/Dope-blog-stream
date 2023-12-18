@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { NavBar } from "../components";
+
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { Link, Navigate, useNavigate } from "react-router-dom";
-import Carousel from "../utils/carousel";
-import { RegisterUser, verifyEmail } from "../redux/user/userSlice";
+import { Link, useNavigate } from "react-router-dom";
+
+import { RegisterUser } from "../redux/user/userSlice";
 import { useSelector, useDispatch } from "react-redux";
-import { LoadingSpinner } from "../utils/Spinner";
-import VerifyEmail from "./VerifyEmail";
+
+import { Carousel, LoadingSpinner } from "../components";
 
 const Register = () => {
 	const { registerUserStatus } = useSelector((store) => store.userSlice);
@@ -59,7 +59,7 @@ const Register = () => {
 					Be a part of our vibrant community where your voice matters. Sign
 					up now and let your journey as a blogger begin!
 				</p>
-				<Carousel />
+				<Carousel/>
 			</div>
 
 			{/* form starts here */}

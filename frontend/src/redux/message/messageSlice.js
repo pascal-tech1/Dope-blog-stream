@@ -22,7 +22,6 @@ export const sendMsg = createAsyncThunk(
 export const fetchMsg = createAsyncThunk(
 	"fetch/message",
 	async (data, { getState, rejectWithValue, dispatch }) => {
-		console.log(data.page);
 		try {
 			const resp = await customFetch(
 				`/message?page=${data.page}&numberPerPage=${data.limit}`,
@@ -32,7 +31,7 @@ export const fetchMsg = createAsyncThunk(
 					},
 				}
 			);
-			console.log(resp.data);
+
 			return resp.data;
 		} catch (error) {
 			if (!error.response) throw new Error(error);
@@ -64,7 +63,6 @@ const messageSlice = createSlice({
 			toast.success(payload.message);
 		},
 		[sendMsg.rejected]: (state, { payload }) => {
-			console.log(payload);
 			state.SendingMessageStatus = "failed";
 			toast.error(payload.message);
 		},

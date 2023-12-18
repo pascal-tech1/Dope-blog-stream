@@ -2,11 +2,8 @@ import React, { useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useCallback } from "react";
 import {
-	IncreaseSavedPostPageNumber,
 	clearSavedPost,
 	fetchSavedPosts,
-	fetchUserPostHistory,
-	setSavedPostFirstSearch,
 } from "../../redux/post/morePostSlice";
 import { ClearSearch, LazyLoadImg, Spinner } from "../../components";
 
@@ -46,32 +43,6 @@ const Saved = () => {
 		},
 		[savedPostHasMore]
 	);
-
-	// // Function to format the date as "Today", "Yesterday", or "Nov, 2023"
-	// const formatDate = (dateString) => {
-	// 	const date = new Date(dateString);
-	// 	const today = new Date();
-	// 	const yesterday = new Date();
-	// 	yesterday.setDate(today.getDate() - 1);
-
-	// 	if (
-	// 		date.getDate() === today.getDate() &&
-	// 		date.getMonth() === today.getMonth() &&
-	// 		date.getFullYear() === today.getFullYear()
-	// 	) {
-	// 		return "Today";
-	// 	} else if (
-	// 		date.getDate() === yesterday.getDate() &&
-	// 		date.getMonth() === yesterday.getMonth() &&
-	// 		date.getFullYear() === yesterday.getFullYear()
-	// 	) {
-	// 		return "Yesterday";
-	// 	} else {
-	// 		return `${date.toLocaleString("default", {
-	// 			month: "short",
-	// 		})}, ${date.getFullYear()}`;
-	// 	}
-	// };
 
 	// Organize userSavedPost by date
 	const organizedPosts = userSavedPost.reduce((acc, post) => {
@@ -125,11 +96,6 @@ const Saved = () => {
 										className="flex gap-4 justify-between"
 									>
 										<div className="hover:cursor-pointer flex-1">
-											{/* <img
-												src={post?.image}
-												alt=""
-												className="rounded-lg w-full  h-[100px] object-cover mb-3 border border-gray-300"
-											/> */}
 											<LazyLoadImg
 												backgroundClassName={
 													"  rounded-lg  w-full h-20  relative"
@@ -165,13 +131,12 @@ const Saved = () => {
 			</div>
 
 			<div>
-				{!savedPostHasMore && userSavedPost.length !== 0 &&(
+				{!savedPostHasMore && userSavedPost.length !== 0 && (
 					<h3 className=" text-center text-yellow-400 py-4">
 						No more Post
 					</h3>
 				)}
 			</div>
-			
 		</div>
 	);
 };

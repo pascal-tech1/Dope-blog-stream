@@ -2,13 +2,10 @@ import React, { useState } from "react";
 import Modal from "./Modal";
 import { blockOrUnblockUser } from "../redux/admin/adminSlice";
 import { useDispatch } from "react-redux";
-import { BiBlock } from "react-icons/bi";
-import { BsUnlock } from "react-icons/bs";
-import { MdLockOpen, MdLockPerson, MdLockReset } from "react-icons/md";
-import { IoMdUnlock } from "react-icons/io";
+
+import { MdLockOpen, MdLockPerson } from "react-icons/md";
 
 const BlockOrUnblockUser = ({ user }) => {
-	console.log(user.isBlocked);
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const dispatch = useDispatch();
 

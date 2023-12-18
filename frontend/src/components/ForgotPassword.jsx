@@ -4,7 +4,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { MdCancel } from "react-icons/md";
-import { LoadingSpinner } from "../utils/Spinner";
+import { LoadingSpinner } from "./LoadingSpinner";
+
 
 const ForgotPassword = ({ setIsOpen }) => {
 	const dispatch = useDispatch();

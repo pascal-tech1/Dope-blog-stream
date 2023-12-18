@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import {
 	Chart as ChartJS,
 	CategoryScale,
@@ -14,14 +14,11 @@ import DashboardCustomDropdown from "./DashboardCustomDropdown";
 
 import { setChartSelectedFilter } from "../redux/user/userSlice";
 import { useSelector } from "react-redux";
-import ChartSkeleton from "./chartSkeleton";
 
 export function BarChart() {
-	const {
-		chartSelectedFilter,
-		userPostImpression,
-		userPostImpressionStatus,
-	} = useSelector((store) => store.userSlice);
+	const { chartSelectedFilter, userPostImpression } = useSelector(
+		(store) => store.userSlice
+	);
 
 	ChartJS.register(
 		CategoryScale,
@@ -44,13 +41,13 @@ export function BarChart() {
 				labels: {
 					boxWidth: 10, // Adjust the width of the legend item
 					padding: 20, // Adjust the padding between legend items
-					color:"#94bef9"
+					color: "#94bef9",
 				},
 			},
 			title: {
 				display: true,
 				text: `${chartSelectedFilter.toUpperCase()} CHART`,
-				color:"#94bef9"
+				color: "#94bef9",
 			},
 		},
 		tooltips: {
@@ -62,7 +59,6 @@ export function BarChart() {
 					return data.labels[tooltipItem.dataIndex];
 				},
 			},
-			
 		},
 
 		scales: {
@@ -71,7 +67,7 @@ export function BarChart() {
 					callback: function (value) {
 						return value;
 					},
-					color:"#94bef9"
+					color: "#94bef9",
 				},
 			},
 			y: {
@@ -79,7 +75,7 @@ export function BarChart() {
 					callback: function (value) {
 						return value >= 1000 ? value / 1000 + "k" : value; // Convert values greater than or equal to 1000 to "1k" format
 					},
-					color:"#94bef9"
+					color: "#94bef9",
 				},
 			},
 		},

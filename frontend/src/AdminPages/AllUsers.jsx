@@ -13,10 +13,11 @@ import {
 import Modal from "../components/Modal";
 import DashboardCustomDropdown from "../components/DashboardCustomDropdown";
 import { formatDate } from "../utils/dataFormatter";
-import Spinner from "../components/Spinner";
+
 import {
 	BlockOrUnblockUser,
 	ClearSearch,
+	LoadingSpinner,
 	MessageUser,
 	Tooltip,
 } from "../components";
@@ -24,7 +25,7 @@ import {
 	setIsSearchBArNeeded,
 	setSearchTermInStore,
 } from "../redux/user/userSlice";
-import { MdAdminPanelSettings } from "react-icons/md";
+
 import MakeAdmin from "./MakeAdmin";
 
 const AllUsers = () => {
@@ -37,9 +38,7 @@ const AllUsers = () => {
 		AdminAllUserSelectedFilter,
 		adminAllUsersStatus,
 		adminAllUsersTotalNumber,
-		AdminFetchUsersHasMore,
 		adminFetchUsersHasMore,
-		MyPostSelectedFilter,
 	} = useSelector((store) => store.adminSlice);
 	const { dashboardSearchTerm, user } = useSelector(
 		(store) => store.userSlice
@@ -159,7 +158,7 @@ const AllUsers = () => {
 				</Modal>
 			</div>
 			{/* table actions buttons */}
-			<div className="flex gap-4 ml-10 flex-wrap">
+			<div className="flex gap-4 flex-wrap items-center justify-center pb-4 ">
 				<button
 					onClick={openModal}
 					className="  py-[0.15] rounded-lg hover:text-red-700 text-red-400 outline-none"
@@ -279,23 +278,35 @@ const AllUsers = () => {
 								</td>
 							</tr>
 						))}
-					</tbody>
-					<td className="stickyBottom tableData ">
-						{adminAllUsersStatus === "loading" && <Spinner />}
-					</td>
 
-					{!adminFetchUsersHasMore &&
-						adminAllUsersStatus === "success" && (
-							<td className=" text-yellow-400  stickyBottom bg-gray-50 tableData dark:bg-[#1C1C1C] ">
-								No more User
-							</td>
+						{/* conditionary rendering user status */}
+						{adminAllUsersStatus === "loading" && (
+							<tr>
+								<td className="bg-gray-50  tableData dark:bg-[#1C1C1C]"></td>
+								<td className=" bg-gray-50 tableData dark:bg-[#1C1C1C]">
+									<LoadingSpinner />
+								</td>
+							</tr>
 						)}
 
-					{allUsers.length === 0 && adminAllUsersStatus === "success" && (
-						<td className="  text-yellow-400  stickyBottom bg-gray-50 tableData  dark:bg-[#1C1C1C] ">
-							No User found
-						</td>
-					)}
+						{!adminFetchUsersHasMore &&
+							adminAllUsersStatus === "success" &&
+							allUsers.length > 0 && (
+								<tr className=" bg-gray-50  dark:bg-[#1C1C1C]">
+									<td className="bg-gray-50 tableData dark:bg-[#1C1C1C]"></td>
+									<td className=" text-yellow-400 tableData  stickyBottom bg-white dark:bg-[#1C1C1C] ">
+										No more User
+									</td>
+								</tr>
+							)}
+
+						{allUsers.length === 0 &&
+							adminAllUsersStatus === "success" && (
+								<td className=" text-yellow-400 tableData stickyBottom bg-gray-50  dark:bg-[#1C1C1C] ">
+									No User Found
+								</td>
+							)}
+					</tbody>
 				</table>
 			</div>
 		</div>

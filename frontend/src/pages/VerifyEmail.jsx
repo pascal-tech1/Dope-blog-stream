@@ -1,14 +1,11 @@
 import React, { useEffect } from "react";
-import { NavBar, Spinner } from "../components";
-import {
-	SetverifyEmailStatus,
-	verifyEmail,
-} from "../redux/user/userSlice";
+import { Spinner } from "../components";
+import { verifyEmail } from "../redux/user/userSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { MdCancel } from "react-icons/md";
-import { LoadingSpinner } from "../utils/Spinner";
 
-function VerifyEmail({ setIsRegistered }) {
+
+function VerifyEmail() {
 	const dispatch = useDispatch();
 	const { user, verifyEmailStatus } = useSelector(
 		(store) => store.userSlice

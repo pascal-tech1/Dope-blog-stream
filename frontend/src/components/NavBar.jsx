@@ -1,13 +1,11 @@
-import React, { useState } from "react";
-import { IoMdNotificationsOutline } from "react-icons/io";
+import React, { useEffect, useRef, useState } from "react";
+
 import { BsPencilSquare } from "react-icons/bs";
 import { Link, useNavigate } from "react-router-dom";
 import {
 	MdOutlineAppRegistration,
 	MdOutlineArrowDropDown,
 	MdOutlineArrowDropUp,
-	MdOutlineArrowUpward,
-	MdOutlineSearch,
 } from "react-icons/md";
 import { logOutUser } from "../redux/user/userSlice.js";
 import { useFormik } from "formik";
@@ -18,14 +16,16 @@ import {
 	setFirstSearch,
 } from "../redux/post/allPostSlice.js";
 import LazyLoadImg from "./LazyLoadImg.jsx";
-import { FiLogIn, FiLogOut, FiUser } from "react-icons/fi";
-import { CiLogin, CiMenuKebab } from "react-icons/ci";
-import { BiHome, BiLogIn, BiLogInCircle, BiRegistered } from "react-icons/bi";
-import { LuLogIn, LuLogOut } from "react-icons/lu";
+import { FiLogOut, FiUser } from "react-icons/fi";
+
+import { LuLogIn } from "react-icons/lu";
+import useClickOutside from "../customHooks/useClickOutside.js";
+
+import { Theme } from "../components";
 
 const NavBar = () => {
 	const user = useSelector((store) => store?.userSlice.user);
-	const [showLogOut, setShowLogOut] = useState(true);
+	const [showLogOut, setShowLogOut] = useState(false);
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 
@@ -49,6 +49,16 @@ const NavBar = () => {
 		},
 		validationSchema: formSchema,
 	});
+
+	// using custom hook to close the open UserDashboardMenu
+	const divRef = useRef();
+	const iconRef = useRef();
+	const isOutsideClicked = useClickOutside(divRef, iconRef);
+
+	useEffect(() => {
+		showLogOut && !isOutsideClicked && setShowLogOut(false);
+	}, [isOutsideClicked]);
+
 	return (
 		<div className=" flex justify-between w-full items-center gap-1  border-b  dark:border-b-slate-800 flex-wrap dark:bg-[#171717] px-4 md:px-8 dark:text-slate-200">
 			<Link to="/" className="">
@@ -73,9 +83,17 @@ const NavBar = () => {
 					onChange={formik.handleChange("search")}
 				/>
 			</form>
+
+			{/* theme  */}
+			<div className="">
+				<Theme />
+			</div>
+
+			{/* user */}
 			{user ? (
 				<div className=" flex gap-1 md:gap-4 place-items-center">
 					<button
+						ref={iconRef}
 						onClick={() => setShowLogOut(!showLogOut)}
 						className="flex items-center"
 					>
@@ -104,8 +122,9 @@ const NavBar = () => {
 					</button>
 
 					<div
+						ref={divRef}
 						className={`${
-							showLogOut ? "hidden" : ""
+							showLogOut ? "" : "hidden"
 						} flex flex-col gap-3 absolute drop-shadow-lg  top-12 z-50 right-11 md:right-20 border dark:border-slate-700 bg-slate-50 rounded-md px-6 py-6  transition-all dark:bg-[#171717] `}
 					>
 						<Link
@@ -137,14 +156,14 @@ const NavBar = () => {
 						to="/login"
 						className=" flex gap-2 items-center bg-blue-400 text-white  py-[0.15rem] px-2 rounded-lg   hover:bg-blue-600 transition-all"
 					>
-						<LuLogIn  className="hidden md:flex"/>
+						<LuLogIn className="hidden md:flex" />
 						login
 					</Link>
 					<Link
 						to="/register"
 						className="bg-red-400 flex gap-2 items-center  text-white py-[0.15rem] px-2 rounded-lg  hover:bg-red-500 transition-all"
 					>
-						<MdOutlineAppRegistration className="hidden md:flex"/>
+						<MdOutlineAppRegistration className="hidden md:flex" />
 						Register
 					</Link>
 				</div>

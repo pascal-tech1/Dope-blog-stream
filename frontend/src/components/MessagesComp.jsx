@@ -5,9 +5,9 @@ import { Link } from "react-router-dom";
 const MessagesComp = ({ msg, length }) => {
 	return (
 		<div className="flex gap-6 flex-col">
-			{msg.map((message) => {
+			{msg.map((message, index) => {
 				return (
-					<div className="flex gap-2">
+					<div key={index} className="flex gap-2">
 						<Link to={`/profile/${message?.sender?._id}`}>
 							<LazyLoadImg
 								backgroundClassName={
@@ -28,7 +28,10 @@ const MessagesComp = ({ msg, length }) => {
 									{`${message?.sender?.firstName} ${message?.sender?.lastName}`}
 								</h3>
 								{length ? (
-									<h3 className="text-sm">{`${message?.message.slice(0, length)}...`}</h3>
+									<h3 className="text-sm">{`${message?.message.slice(
+										0,
+										length
+									)}...`}</h3>
 								) : (
 									<h3>{message?.message}</h3>
 								)}

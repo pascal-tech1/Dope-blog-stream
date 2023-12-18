@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector, useStore } from "react-redux";
+import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 
 import { NavBar, Spinner } from "../components";
@@ -35,7 +35,6 @@ const PasswordReset = () => {
 		validationSchema: formSchema,
 		onSubmit: (values) => {
 			const user = { token: token, newPassword: values.password };
-			console.log(user);
 			dispatch(resetPassword(user));
 		},
 	});

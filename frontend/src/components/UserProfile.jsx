@@ -5,7 +5,7 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { updateUser } from "../redux/user/userSlice";
 
-import { MdApps, MdEdit, MdWork } from "react-icons/md";
+import { MdEdit, MdWork } from "react-icons/md";
 import { BiMap } from "react-icons/bi";
 
 const UserProfile = () => {
@@ -52,7 +52,7 @@ const UserProfile = () => {
 				<div className="flex gap-2 flex-col transition-all self-start">
 					<div className=" relative">
 						<input
-							className=" text-center px-1 py-1 outline-none focus:border-b-blue-800 border border-blue-400 rounded-md"
+							className=" form-input"
 							value={formik.values.firstName}
 							onChange={formik.handleChange("firstName")}
 							onBlur={formik.handleBlur("firstName")}
@@ -65,7 +65,7 @@ const UserProfile = () => {
 					</div>
 					<div className=" relative">
 						<input
-							className=" text-center px-1 py-1 outline-none focus:border-b-blue-800 border border-blue-400 rounded-md"
+							className=" form-input"
 							value={formik.values.lastName}
 							onChange={formik.handleChange("lastName")}
 							onBlur={formik.handleBlur("lastName")}
@@ -78,7 +78,7 @@ const UserProfile = () => {
 					</div>
 					<div className=" relative">
 						<input
-							className=" text-center px-1 py-1 outline-none focus:border-b-blue-800 border border-blue-400 rounded-md"
+							className=" form-input"
 							value={formik.values.profession}
 							onChange={formik.handleChange("profession")}
 							onBlur={formik.handleBlur("profession")}
@@ -91,7 +91,7 @@ const UserProfile = () => {
 
 					<div className=" relative">
 						<input
-							className=" text-center px-1 py-1 outline-none focus:border-b-blue-800 border border-blue-400 rounded-md"
+							className=" form-input"
 							value={formik.values.location}
 							onChange={formik.handleChange("location")}
 							onBlur={formik.handleBlur("location")}
@@ -120,10 +120,10 @@ const UserProfile = () => {
 			<button
 				onClick={() => setIsUserProfileClicked(!isUserProfileClicked)}
 				type="submit"
-				className="absolute top-0 right-3 flex items-center text-sm transition-all "
+				className="absolute top-0 right-3 flex hover:shadow-sm  items-center text-sm transition-all "
 			>
-				<MdEdit className=" text-blue-500" />
-				<h3 className="font-bold text-gray-600 hover:text-gray-900 text-xs">
+				<MdEdit className=" text-blue-500 " />
+				<h3 className="font-bold text-gray-600 hover:text-gray-900 dark:hover:text-gray-400 text-xs">
 					{isUserProfileClicked ? <p>Save</p> : <p>Edit</p>}
 				</h3>
 			</button>

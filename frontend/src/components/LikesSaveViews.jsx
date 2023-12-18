@@ -6,7 +6,7 @@ import { useDispatch } from "react-redux";
 import { likeOrDislikePost } from "../redux/post/generalPostSlice";
 import { MdOutlineBookmarkAdd } from "react-icons/md";
 import { savePost } from "../redux/user/userSlice";
-import { Category } from "../components";
+
 import { Link } from "react-router-dom";
 import {
 	fetchPostByCategory,

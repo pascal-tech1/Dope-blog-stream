@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useDispatch } from "react-redux";
 import { logOutUser, setChangeEmail } from "../redux/user/userSlice";
 import { useNavigate } from "react-router-dom";
-import { BsLock, BsMessenger, BsPerson } from "react-icons/bs";
+import { BsLock, BsMessenger } from "react-icons/bs";
 import { CiUser } from "react-icons/ci";
 import { IoMdHelp } from "react-icons/io";
 import { FiLogOut } from "react-icons/fi";
@@ -71,7 +71,7 @@ const UserDashboardMenu = ({ isMenuOpen, setIsMenuOpen }) => {
 						}}
 						className=" hover:bg-blue-100 dark:hover:bg-gray-800 flex gap-2 items-center  py-1 px-2 rounded-lg transition-all delay-75"
 					>
-						<IoMdHelp/>
+						<IoMdHelp />
 						FAQ
 					</button>
 					<button
@@ -81,7 +81,7 @@ const UserDashboardMenu = ({ isMenuOpen, setIsMenuOpen }) => {
 						}}
 						className=" hover:bg-blue-100 dark:hover:bg-gray-800 flex gap-2 items-center text-red-400  py-1 px-2 rounded-lg transition-all delay-75"
 					>
-						<FiLogOut/>
+						<FiLogOut />
 						logout
 					</button>
 				</div>

@@ -1,23 +1,19 @@
 import React, { useState } from "react";
-import { Link, NavLink, Outlet } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import { LuLayoutDashboard } from "react-icons/lu";
 import { AiOutlineComment } from "react-icons/ai";
 import { BiMessageDetail } from "react-icons/bi";
 import { CiUser } from "react-icons/ci";
 import {
-	MdAdminPanelSettings,
 	MdOutlineAdminPanelSettings,
 	MdOutlineArrowDropDown,
 	MdOutlineArrowDropUp,
 	MdOutlineSignpost,
 } from "react-icons/md";
 import { GiShadowFollower } from "react-icons/gi";
-import { IoMdArrowDropdown } from "react-icons/io";
-import { useDispatch, useSelector } from "react-redux";
-import { setIsAdmin } from "../redux/user/userSlice";
+import { useSelector } from "react-redux";
 
 const DashboardSideBar = () => {
-	const dispatch = useDispatch();
 	const { user } = useSelector((store) => store.userSlice);
 	const [isMenuOpen, setIsMenuOpen] = useState({
 		profile: false,
@@ -25,8 +21,6 @@ const DashboardSideBar = () => {
 		post: false,
 		follows: false,
 	});
-	console.log(user);
-	user?.firstName === "Humble" && dispatch(setIsAdmin(true));
 
 	const toggleMenuOption = (title) => {
 		setIsMenuOpen((prev) => ({

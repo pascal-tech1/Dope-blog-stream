@@ -85,7 +85,6 @@ const CreatePost = () => {
 		},
 
 		onSubmit: (values) => {
-			console.log(values.content);
 			if (values.content.length <= 100) {
 				toast.error(
 					"content is required and cannot be less than 100 characters"
@@ -232,7 +231,7 @@ const CreatePost = () => {
 							)}
 						</button>
 					</div>
-					{console.log(quillIsFocus)}
+
 					<div
 						className={`my-6 ${
 							quillIsFocus
@@ -248,6 +247,7 @@ const CreatePost = () => {
 							className="h-full py-6"
 							onFocus={handleQuilFocus}
 							onBlur={handleOnBlur}
+							// formats={formats}
 						/>
 					</div>
 				</div>

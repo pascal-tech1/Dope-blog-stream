@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { AdminCategory, Category, ClearSearch, Modal, Spinner } from "../components";
+import { AdminCategory, ClearSearch, Modal, Spinner } from "../components";
 import { useDispatch, useSelector } from "react-redux";
 import {
 	createCategory,
@@ -11,9 +11,12 @@ import {
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { MdDoneAll, MdEdit } from "react-icons/md";
-import { BsSaveFill } from "react-icons/bs";
+
 import { toast } from "react-toastify";
-import { setIsSearchBArNeeded, setSearchTermInStore } from "../redux/user/userSlice";
+import {
+	setIsSearchBArNeeded,
+	setSearchTermInStore,
+} from "../redux/user/userSlice";
 
 const AdminAllCategory = () => {
 	useEffect(() => {

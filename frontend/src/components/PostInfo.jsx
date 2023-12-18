@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import LikesSaveViews from "./LikesSaveViews";
 import PostUserInfo from "./PostUserInfo";
-import { uptimizeCloudinaryImage } from "../utils/imageCloudinaryOptimizer";
+
 import LazyLoadImg from "./LazyLoadImg";
 //
 
@@ -24,7 +24,7 @@ const PostInfo = ({ post }) => {
 					</Link>
 					<div className=" hidden min-[870px]:flex ">
 						<p className=" text-sm">
-							{post?.description.slice(0,150)}
+							{post?.description.slice(0, 150)}
 
 							<Link
 								to={`/single-post/${post?._id}`}

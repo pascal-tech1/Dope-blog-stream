@@ -31,6 +31,35 @@
 
 /* Custom Scrollbar Styling */
 
+.Toastify__toast--error {
+	border-left: 1px solid rgb(246, 76, 76);
+}
+.Toastify__toast-body {
+	margin: 0;
+	flex: 1 1 auto;
+	padding: 3px;
+	display: flex;
+	align-items: center;
+}
+.Toastify__toast--success {
+	border-left: 1px solid rgb(93, 220, 93);
+}
+.Toastify__toast--warn {
+	border-left: 1px solid rgb(218, 234, 75);
+}
+
+.copy-button {
+	background-color: rgb(106, 162, 218);
+	padding: 0 6px;
+	position: absolute;
+	top: 0;
+	right: 6px;
+	color: #fff;
+	border-radius: 5px;
+}
+.copy-button:hover {
+	background-color: rgb(37, 140, 235);
+}
 table {
 	border-collapse: collapse;
 	margin-top: 10px;
@@ -43,6 +72,22 @@ table {
 	border: none;
 }
 
+.ql-syntax::-webkit-scrollbar {
+	width: 10px;
+	height: 10px;
+	cursor: grab;
+}
+
+.ql-syntax::-webkit-scrollbar-thumb {
+	background-color: #c8c8c8;
+	border-radius: 6px;
+	height: 1rem;
+}
+
+.ql-syntax::-webkit-scrollbar-track {
+	background-color: transparent;
+	border-radius: 6px;
+}
 th,
 td {
 	padding: 10px;
@@ -110,60 +155,6 @@ th {
 
 	/* background-color: white; Set background color as needed */
 }
-/* loaidng skeletal */
-.loader {
-	width: 100%;
-	height: 100%;
-	margin: auto;
-	display: block;
-	position: relative;
-	background: #fff;
-	box-sizing: border-box;
-}
-.loader::after {
-	content: "";
-	width: calc(100% - 30px);
-	height: calc(100% - 30px);
-	top: 15px;
-	left: 15px;
-	position: absolute;
-
-	background-image: linear-gradient(
-			100deg,
-			transparent,
-			rgba(255, 255, 255, 0.5) 50%,
-			transparent 80%
-		),
-		linear-gradient(#ddd 56px, transparent 0),
-		linear-gradient(#ddd 24px, transparent 0),
-		linear-gradient(#ddd 18px, transparent 0),
-		linear-gradient(#ddd 66px, transparent 0);
-	background-repeat: no-repeat;
-	background-size: 75px 130px, 55px 56px, 160px 30px, 260px 20px,
-		290px 56px;
-	background-position: 0% 0, 0 0, 70px 5px, 70px 38px, 0px 66px;
-	box-sizing: border-box;
-	animation: animloader 1s linear infinite;
-}
-
-@keyframes animloader {
-	0% {
-		background-position: 0% 0, 0 0, 70px 5px, 70px 38px, 0px 66px;
-	}
-	100% {
-		background-position: 150% 0, 0 0, 70px 5px, 70px 38px, 0px 66px;
-	}
-}
-
-@keyframes animloader {
-	0% {
-		background-position: 0% 0, 120px 0, 120px 40px, 120px 80px;
-	}
-	100% {
-		background-position: 100% 0, 120px 0, 120px 40px, 120px 80px;
-	}
-}
-/* loading skeletal end */
 
 .custom-scrollbar::-webkit-scrollbar {
 	width: 10px;
@@ -222,4 +213,18 @@ th {
 }
 .tableData {
 	@apply border border-gray-200 dark:border-neutral-800;
+}
+.ql-syntax {
+	@apply max-h-[80vh] mx-auto !overflow-y-auto p-10 rounded-md shadow-inner;
+}
+.code-div {
+	@apply relative dark:bg-[#171717] bg-gray-50 rounded-lg  border dark:border-gray-600;
+}
+.copy-button {
+	@apply dark:bg-gray-900 drop-shadow-sm text-sm mr-6 mt-2
+	/* background-color: rgb(106, 162, 218); */
+	/* padding: 0 6px;
+	right: 6px;
+	color: #fff;
+	border-radius: 5px; */;
 }

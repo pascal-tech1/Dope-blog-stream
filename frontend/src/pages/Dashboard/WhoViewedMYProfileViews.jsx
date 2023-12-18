@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import { MessageSkeleton, Spinner, UserToFollow } from "../../components";
+import { Spinner, UserToFollow } from "../../components";
 
 import {
 	fetchWhoViewedUserProfile,
@@ -13,9 +13,7 @@ const WhoViewedMyProfile = () => {
 		dispatch(setIsSearchBArNeeded(false));
 	}, []);
 	const dispatch = useDispatch();
-	// const { msg, fetchMessageStatus, receivedMessageCount } = useSelector(
-	// 	(store) => store?.messageSlice
-	// );
+
 	const {
 		whoViewUserProfile,
 		whoViewUserProfileStatus,
@@ -35,7 +33,8 @@ const WhoViewedMyProfile = () => {
 				</h1>
 
 				<h3 className=" font-medium text-gray-900 drop-shadow-md dark:text-slate-200">
-					who viewed your profile count: <span>{whoViewUserProfileCount} </span>{" "}
+					who viewed your profile count:{" "}
+					<span>{whoViewUserProfileCount} </span>{" "}
 				</h3>
 				{whoViewUserProfile.map((users, index) =>
 					users?.viewedBy?.map((viewedBy, index) => (

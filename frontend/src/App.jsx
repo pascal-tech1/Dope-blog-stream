@@ -1,6 +1,12 @@
-import React, { Suspense, lazy, useEffect } from "react";
+import React, { Suspense, lazy, useEffect, useState } from "react";
 
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import {
+	BrowserRouter,
+	Routes,
+	Route,
+	Navigate,
+	useNavigate,
+} from "react-router-dom";
 
 import {
 	Home,
@@ -14,12 +20,9 @@ import {
 	UpdatePassword,
 } from "./pages";
 import {
-	Comments,
 	Dashboard,
 	Followers,
-	Layout,
 	CreatePost,
-	ProfileEdit,
 	ProfileView,
 	PostHistory,
 	SavedPost,
@@ -29,7 +32,7 @@ import {
 	WhoViewedMyProfile,
 } from "./pages/Dashboard";
 
-import { ToastContainer } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { getUserFromLocalStorage } from "./utils/localStorage";
 import { useDispatch, useSelector } from "react-redux";
@@ -38,19 +41,52 @@ import { AllUsers, AllUsersPost, AdminAllCategory } from "./AdminPages";
 import { CropImage } from "./components";
 import ComfirmEmailPage from "./pages/ComfirmEmailPage";
 import PagesLayout from "./pages/PagesLayout";
+import { useDarkMode } from "./customHooks";
 const AdminProtectedPage = lazy(() =>
 	import("./pages/AdminProtectedPage")
 );
 
+const Layout = lazy(() => import("./pages/Dashboard/Layout"));
 const App = () => {
+	const { token } = useSelector((store) => store.userSlice);
+	const theme = localStorage.getItem("theme");
+
+	const isSystemInDakMode = useDarkMode();
+
+	useEffect(() => {
+		if (!theme && isSystemInDakMode) {
+			document.documentElement.classList.add("dark");
+		} else if (!theme && !isSystemInDakMode) {
+			document.documentElement.classList.remove("dark");
+		} else if (theme === "dark") {
+			document.documentElement.classList.add("dark");
+		} else if (theme === "light") {
+			document.documentElement.classList.remove("dark");
+		}
+	}, [theme, isSystemInDakMode]);
 	const dispatch = useDispatch();
+
 	const userToken = getUserFromLocalStorage();
 	useEffect(() => {
 		if (userToken) {
 			dispatch(loginUserWithToken());
 		}
 	}, []);
-	const { user, token } = useSelector((store) => store.userSlice);
+
+	useEffect(() => {
+		const handleKeyPress = (e) => {
+			if (e.key === "Escape") {
+			}
+			if (e.key === "Enter") {
+			}
+		};
+
+		document.addEventListener("keydown", handleKeyPress);
+
+		return () => {
+			document.removeEventListener("keydown", handleKeyPress);
+		};
+	}, []);
 
 	return (
 		<BrowserRouter>
@@ -87,7 +123,13 @@ const App = () => {
 					<Route path="*" element={<Error />} />
 				</Route>
 
-				<Route element={<Layout />}>
+				<Route
+					element={
+						<Suspense fallback={<div>loading..</div>}>
+							<Layout />
+						</Suspense>
+					}
+				>
 					<Route index path="stats" element={<Dashboard />} />
 					<Route path="profile-view" element={<ProfileView />} />
 					<Route path="profile-Message" element={<Messages />} />
@@ -103,7 +145,7 @@ const App = () => {
 
 					<Route path="follows-followers" element={<Followers />} />
 					<Route path="follows-following" element={<Following />} />
-					<Route path="comments" element={<Comments />} />
+
 					<Route
 						element={
 							<Suspense fallback={<div>loading..</div>}>
@@ -138,7 +180,12 @@ const App = () => {
 					</Route>
 				</Route>
 			</Routes>
-			<ToastContainer position="top-center" />
+			<ToastContainer
+				position="top-right"
+				draggable={true}
+				className={` text-xs max-w-fit font-inter py-0 `}
+				theme={theme ? theme : isSystemInDakMode ? "dark" : "light"}
+			/>
 		</BrowserRouter>
 	);
 };
