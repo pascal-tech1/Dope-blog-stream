@@ -7,6 +7,7 @@ const DashboardCustomDropdown = ({
 	allFilters,
 	selectedFilter,
 	dropdownWidth,
+	left,
 	handleSelected,
 	setSelectedFilter,
 }) => {
@@ -33,12 +34,12 @@ const DashboardCustomDropdown = ({
 	handleSelected = handleSelected ? handleSelected : handleSelectedFilter;
 
 	return (
-		<div className="relative z-[50] flex flex-col font-inter">
+		<div className="relative z-[50] flex flex-col font-inter ">
 			<button
 				ref={iconRef}
 				type="button"
 				onClick={toggleDropdown}
-				className="bg-white dark:bg-[#1C1C1C] dark:text-slate-200 border dark:border-gray-700 py-[0.1rem] text-sm outline-none focus:border-gray-400 capitalize whitespace-nowrap justify-center px-2 flex font-inter  items-center  rounded-md text-gray-700 focus:outline-none "
+				className="bg-white dark:bg-[#1C1C1C] text-sm  dark:text-slate-200 border dark:border-gray-700 justify-center py-[0.3rem] md:text-sm outline-none focus:border-gray-400 capitalize whitespace-nowrap  px-2 flex font-inter  items-center  rounded-md text-gray-700 focus:outline-none "
 			>
 				{selectedFilter}
 				{isOpen ? <IoIosArrowUp /> : <IoIosArrowDown />}
@@ -47,9 +48,9 @@ const DashboardCustomDropdown = ({
 			{isOpen && (
 				<div
 					ref={divRef}
-					className={`${
-						dropdownWidth ? dropdownWidth : "max-w-[18rem]"
-					} absolute flex top-10 self-center text-sm gap-1 flex-wrap w-[50vw] max-h-[50vh] overflow-y-auto custom-scrollbar   px-2  items-center justify-center rounded border border-gray-300 dark:border-gray-700 bg-white dark:bg-[#1C1C1C] shadow-lg`}
+					className={`${left ? left : "-left-12"} ${
+						dropdownWidth ? dropdownWidth : " w-[80vw]"
+					}  absolute flex top-10 self-center md:text-sm gap-1 flex-wrap max-h-[50vh] z-50 overflow-y-auto custom-scrollbar justify-evenly  px-2  items-center  rounded border border-gray-300 dark:border-gray-700 bg-white dark:bg-[#1C1C1C] shadow-lg`}
 				>
 					{allFilters.map((filter, index) => (
 						<button
@@ -57,7 +58,7 @@ const DashboardCustomDropdown = ({
 							type="button"
 							className={`${
 								selectedFilter === filter && " border-b border-b-blue-600"
-							} bg-gray-100 dark:bg-[#1C1C1C] hover:bg-gray-200 dark:hover:bg-gray-800 transition-all delay-75 rounded-md text-sm px-2 py-[0.12rem] my-1 `}
+							} bg-gray-100 dark:bg-[#1C1C1C] hover:bg-gray-200 dark:hover:bg-gray-800 transition-all delay-75 rounded-md md:text-sm px-2 py-[0.12rem] my-1 `}
 							onClick={() => {
 								handleSelected(filter);
 							}}

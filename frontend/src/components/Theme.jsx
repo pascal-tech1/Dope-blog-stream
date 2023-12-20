@@ -30,27 +30,9 @@ const Theme = () => {
 			allFilters={filters}
 			handleSelected={handleSelected}
 			selectedFilter={theme}
-			dropdownWidth={"max-w-[6rem]"}
+			dropdownWidth={"max-w-[10rem]"}
+			left={"-left-3"}
 		/>
-		// <div className="flex flex-col items-start">
-		// 	{/* Your component content */}
-
-		// 	{/* Theme toggle buttons */}
-		// 	<button onClick={() => setTheme("light")} className="">Light</button>
-		// 	<button onClick={() => setTheme("dark")}>Dark</button>
-		// 	<button
-		// 		onClick={() => {
-		// 			localStorage.removeItem("theme");
-		// 			if (isSystemInDakMode) {
-		// 				document.documentElement.classList.add("dark");
-		// 			} else {
-		// 				document.documentElement.classList.remove("dark");
-		// 			}
-		// 		}}
-		// 	>
-		// 		System
-		// 	</button>
-		// </div>
 	);
 };
 

@@ -27,7 +27,7 @@ const AdminCategory = ({
 		<div className={className}>
 			{allCategory?.map((category, index) => {
 				return (
-					<div key={index} className="flex gap-1 items-center">
+					<div key={index} className="flex gap-1 items-center font-inter">
 						{isCategoryEditing && (
 							<input
 								type="checkbox"
@@ -51,7 +51,7 @@ const AdminCategory = ({
 									dispatch(setActiveEditingCategory(category));
 								}
 							}}
-							className={`whitespace-nowrap gap-2 mt-1 text-sm delay-75 cursor-pointer flex text-white bg-blue-400 hover:bg-blue-200 rounded-xl py-[0.2rem] px-4`}
+							className={`whitespace-nowrap gap-2 mt-1 md:text-sm delay-75 cursor-pointer flex text-white bg-blue-400 hover:bg-blue-200 rounded-xl py-[0.2rem] px-4`}
 						>
 							{category.title.charAt(0).toUpperCase() +
 								category.title.slice(1).toLowerCase()}

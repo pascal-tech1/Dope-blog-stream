@@ -38,7 +38,7 @@ const MakeAdmin = ({ user }) => {
 	}, [toggleUserAdminStatus, user._id]);
 
 	return (
-		<div>
+		<div className=" font-inter">
 			<button
 				onClick={handleMakeAdminClicked}
 				className={`p-[0.3rem] ${

@@ -42,7 +42,7 @@ const Following = () => {
 	};
 
 	return (
-		<div className=" grid max-w-md w-full ">
+		<div className=" grid max-w-md w-full font-inter ">
 			{/* clear search */}
 			<ClearSearch
 				searchQuery={dashboardSearchTerm}

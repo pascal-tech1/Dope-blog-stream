@@ -142,11 +142,11 @@ export const CropImage = ({
 		}
 	};
 	return (
-		<div className=" z-[1000] fixed left-0 top-10 w-full h-screen flex justify-center bg-black bg-opacity-80 backdrop-blur-sm   ">
+		<div className=" z-[1000] fixed left-0 top-10 w-full h-screen  overscroll-y-auto flex justify-center bg-black bg-opacity-80 backdrop-blur-sm font-inter   ">
 			<div
 				className={` ${
 					!isPreview && "justify-between"
-				}  flex items-center  flex-col bg-white h-[90vh] dark:bg-[#171717] mt-4 dark:border dark:border-gray-900 w-[100vw] lg:w-[80vw] shadow-lg rounded-lg mx-2  relative px-4  `}
+				}  flex items-center  flex-col bg-white h-[90vh] overscroll-y-auto dark:bg-[#171717] mt-4 dark:border dark:border-gray-900 w-[100vw] lg:w-[80vw] shadow-lg rounded-lg mx-2  relative px-4  `}
 			>
 				<button
 					onClick={(e) => {
@@ -192,7 +192,7 @@ export const CropImage = ({
 				</div>
 				{/* cropper image */}
 				<div className={`${isPreview && "hidden"}  `}>
-					<div className="flex gap-4 text-sm py-4">
+					<div className="flex gap-4  md:text-sm  py-4">
 						<button
 							onClick={handleSetCoverCropping}
 							className=" shadow-sm  rounded-md hover:shadow-none flex items-center justify-center flex-col"
@@ -234,37 +234,37 @@ export const CropImage = ({
 				<div
 					className={`${
 						isPreview ? "hidden" : ""
-					}  flex gap-4 flex-wrap  bg-slate-200 dark:bg-[#1C1C1C] drop-shadow-md border dark:border-gray-900 px-8 py-2 mb-4 rounded-md items-center mt-4  text-lg `}
+					}  flex gap-4 flex-wrap   bg-slate-200 dark:bg-[#1C1C1C] drop-shadow-md border dark:border-gray-900 px-8 py-2 mb-4 rounded-md items-center mt-4  text-lg `}
 				>
 					<button
 						className=" shadow-md hover:shadow-none rounded-md px-1"
 						onClick={handleZoomIn}
 					>
-						<BiZoomIn />
+						<BiZoomIn className=" text-2xl" />
 					</button>
 					<button
 						className=" shadow-md hover:shadow-none rounded-md px-1"
 						onClick={handleZoomOut}
 					>
-						<BiZoomOut />
+						<BiZoomOut className=" text-2xl" />
 					</button>
 					<button
 						className=" shadow-md hover:shadow-none rounded-md px-1"
 						onClick={handleRotateLeft}
 					>
-						<MdRotateLeft />
+						<MdRotateLeft className=" text-2xl" />
 					</button>
 					<button
 						className=" shadow-md hover:shadow-none rounded-md px-1"
 						onClick={handleRotateRight}
 					>
-						<MdRotateRight />
+						<MdRotateRight className=" text-2xl" />
 					</button>
 					<button
 						onClick={handleReset}
 						className=" shadow-md hover:shadow-none rounded-md px-1"
 					>
-						<BiReset />
+						<BiReset className=" text-2xl" />
 					</button>
 				</div>
 				{/* cropped image preview */}

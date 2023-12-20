@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 
 import {
 	BarChart,
+	LoadingSpinner,
 	MessagesComp,
 	PostDashboard,
 	Spinner,
@@ -80,7 +81,7 @@ const Dashboard = () => {
 	}, [chartSelectedFilter, _id]);
 
 	return (
-		<div className=" flex flex-col gap-4   min-[1200px]:grid grid-cols-12 lg:gap-8  lg:mx-0 font-inter antialiased dark:text-slate-200 text-sm">
+		<div className=" flex flex-col gap-4  min-[1200px]:grid grid-cols-12 lg:gap-8  lg:mx-0 font-inter antialiased dark:text-slate-200  md:text-sm">
 			<div className="col-start-1 row-start-1 col-span-9 ">
 				<div className=" grid grid-cols-1 min-[350px]:grid-cols-2 min-[500px]:grid-cols-3 gap-2 ">
 					<div className="">
@@ -146,12 +147,12 @@ const Dashboard = () => {
 						<BarChart />
 					</div>
 					{/* viewedBy */}
-					<div className=" col-start-8 col-span-4  lg:w-[37%]  bg-white dark:bg-[#171717] py-2  rounded-md shadow-sm px-4 ">
+					<div className=" col-start-8 col-span-4 font-inter  lg:w-[37%]  bg-white dark:bg-[#171717] py-2  rounded-md shadow-sm px-4 ">
 						<h1 className=" font-bold text-gray-800 mb-3 mt-10 lg:mt-0 dark:text-slate-300 ">
 							Who's Viewed your profile
 						</h1>
 						{whoViewUserProfileStatus === "loading" ? (
-							<Spinner />
+							<LoadingSpinner />
 						) : (
 							whoViewUserProfile.map((users, index) =>
 								users?.viewedBy?.map((viewedBy, index) => (
@@ -176,7 +177,7 @@ const Dashboard = () => {
 					Recent Mesaages
 				</h1>
 				{fetchMessageStatus === "loading" ? (
-					<Spinner />
+					<LoadingSpinner />
 				) : (
 					<MessagesComp msg={msg} length={25} />
 				)}

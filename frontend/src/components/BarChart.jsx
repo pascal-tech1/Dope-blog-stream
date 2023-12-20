@@ -131,7 +131,7 @@ export function BarChart() {
 	const allFilter = ["likes and dislikes", "number of views"];
 
 	return (
-		<div className="w-full h-[300px]  flex flex-col  py-2 rounded-lg">
+		<div className="w-full h-[300px]  flex flex-col  py-2 rounded-lg font-inter">
 			<div className=" px-2 self-start ">
 				<DashboardCustomDropdown
 					allFilters={allFilter}

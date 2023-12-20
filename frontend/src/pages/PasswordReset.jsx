@@ -44,7 +44,6 @@ const PasswordReset = () => {
 	if (resetPasswordStatus === "failed") {
 		return (
 			<div>
-				<NavBar />
 				<div className="flex items-center justify-center h-[80vh] w-screen flex-col">
 					<h1>Token is expired or invalid</h1>
 				</div>

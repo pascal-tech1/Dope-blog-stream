@@ -14,10 +14,10 @@ import {
 	Register,
 	SinglePost,
 	UserPage,
-	Error,
 	VerifyEmail,
 	PasswordReset,
 	UpdatePassword,
+	Error,
 } from "./pages";
 import {
 	Dashboard,
@@ -30,28 +30,37 @@ import {
 	Following,
 	Messages,
 	WhoViewedMyProfile,
+	Layout,
 } from "./pages/Dashboard";
 
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { getUserFromLocalStorage } from "./utils/localStorage";
+
 import { useDispatch, useSelector } from "react-redux";
 import { loginUserWithToken } from "./redux/user/userSlice";
 import { AllUsers, AllUsersPost, AdminAllCategory } from "./AdminPages";
-import { CropImage } from "./components";
+import { CropImage, LoadingSpinner } from "./components";
 import ComfirmEmailPage from "./pages/ComfirmEmailPage";
 import PagesLayout from "./pages/PagesLayout";
 import { useDarkMode } from "./customHooks";
+
 const AdminProtectedPage = lazy(() =>
 	import("./pages/AdminProtectedPage")
 );
 
-const Layout = lazy(() => import("./pages/Dashboard/Layout"));
 const App = () => {
-	const { token } = useSelector((store) => store.userSlice);
+	const { token, user, loginUserTokenStatus } = useSelector(
+		(store) => store.userSlice
+	);
+	useEffect(() => {
+		if (token) {
+			dispatch(loginUserWithToken());
+		}
+	}, []);
 	const theme = localStorage.getItem("theme");
 
 	const isSystemInDakMode = useDarkMode();
+	console.log(isSystemInDakMode);
 
 	useEffect(() => {
 		if (!theme && isSystemInDakMode) {
@@ -65,13 +74,6 @@ const App = () => {
 		}
 	}, [theme, isSystemInDakMode]);
 	const dispatch = useDispatch();
-
-	const userToken = getUserFromLocalStorage();
-	useEffect(() => {
-		if (userToken) {
-			dispatch(loginUserWithToken());
-		}
-	}, []);
 
 	useEffect(() => {
 		const handleKeyPress = (e) => {
@@ -87,107 +89,91 @@ const App = () => {
 			document.removeEventListener("keydown", handleKeyPress);
 		};
 	}, []);
-
-	return (
-		<BrowserRouter>
-			<Routes>
-				<Route element={<PagesLayout />}>
-					<Route path="/" element={<Home />} />
-					<Route
-						path="login"
-						element={token ? <Navigate to="/" /> : <Login />}
-					/>
-					<Route
-						path="register"
-						element={token ? <Navigate to="/" /> : <Register />}
-					/>
-					<Route path="/image" element={<CropImage />} />
-					<Route path="/single-post/:id" element={<SinglePost />} />
-					<Route
-						path="/reset-password/:token"
-						element={<PasswordReset />}
-					/>
-					<Route
-						path="/profile/:userId"
-						element={token ? <UserPage /> : <Login />}
-					/>
-					<Route path="/update-password" element={<UpdatePassword />} />
-					<Route
-						path="/confirm-sent-email/:token"
-						element={<ComfirmEmailPage />}
-					/>
-					<Route
-						path="/send-email-verification"
-						element={<VerifyEmail />}
-					/>
-					<Route path="*" element={<Error />} />
-				</Route>
-
-				<Route
-					element={
-						<Suspense fallback={<div>loading..</div>}>
-							<Layout />
-						</Suspense>
-					}
-				>
-					<Route index path="stats" element={<Dashboard />} />
-					<Route path="profile-view" element={<ProfileView />} />
-					<Route path="profile-Message" element={<Messages />} />
-					<Route
-						path="profile-Profile Views"
-						element={<WhoViewedMyProfile />}
-					/>
-					<Route path="post-My Posts" element={<MyPosts />} />
-					<Route path="post-Create" element={<CreatePost />} />
-					<Route path="post-History" element={<PostHistory />} />
-					<Route path="post-Saved" element={<SavedPost />} />
-					<Route path="followers" element={<Followers />} />
-
-					<Route path="follows-followers" element={<Followers />} />
-					<Route path="follows-following" element={<Following />} />
-
-					<Route
-						element={
-							<Suspense fallback={<div>loading..</div>}>
-								<AdminProtectedPage />
-							</Suspense>
-						}
-					>
+	if (loginUserTokenStatus === "loading") {
+		return (
+			<div className=" grid place-content-center place-items-center h-screen dark:bg-[#1C1C1C]">
+				<LoadingSpinner />
+			</div>
+		);
+	}
+	if (loginUserTokenStatus === "success" || "failed") {
+		return (
+			<BrowserRouter>
+				<Routes>
+					<Route element={<PagesLayout />}>
+						<Route path="/" element={<Home />} />
 						<Route
-							path="Admin-All Users"
-							element={
-								<Suspense>
-									<AllUsers />
-								</Suspense>
-							}
+							path="login"
+							element={token ? <Navigate to="/" /> : <Login />}
 						/>
 						<Route
-							path="Admin-All Posts"
-							element={
-								<Suspense>
-									<AllUsersPost />
-								</Suspense>
-							}
+							path="register"
+							element={token ? <Navigate to="/" /> : <Register />}
+						/>
+						<Route path="/image" element={<CropImage />} />
+						<Route path="/single-post/:id" element={<SinglePost />} />
+						<Route
+							path="/reset-password/:token"
+							element={<PasswordReset />}
 						/>
 						<Route
-							path="Admin-Category"
-							element={
-								<Suspense>
-									<AdminAllCategory />
-								</Suspense>
-							}
+							path="/profile/:userId"
+							element={token ? <UserPage /> : <Login />}
 						/>
+						<Route path="/update-password" element={<UpdatePassword />} />
+						<Route
+							path="/confirm-sent-email/:token"
+							element={<ComfirmEmailPage />}
+						/>
+						<Route
+							path="/send-email-verification"
+							element={<VerifyEmail />}
+						/>
+						<Route path="*" element={<Error />} />
 					</Route>
-				</Route>
-			</Routes>
-			<ToastContainer
-				position="top-right"
-				draggable={true}
-				className={` text-xs max-w-fit font-inter py-0 `}
-				theme={theme ? theme : isSystemInDakMode ? "dark" : "light"}
-			/>
-		</BrowserRouter>
-	);
+
+					<Route element={<Layout />}>
+						<Route index path="stats" element={<Dashboard />} />
+						<Route path="profile-view" element={<ProfileView />} />
+						<Route path="profile-Message" element={<Messages />} />
+						<Route
+							path="profile-Profile Views"
+							element={<WhoViewedMyProfile />}
+						/>
+						<Route path="post-My Posts" element={<MyPosts />} />
+						<Route path="post-Create" element={<CreatePost />} />
+						<Route path="post-History" element={<PostHistory />} />
+						<Route path="post-Saved" element={<SavedPost />} />
+						<Route path="followers" element={<Followers />} />
+
+						<Route path="follows-followers" element={<Followers />} />
+						<Route path="follows-following" element={<Following />} />
+
+						<Route
+							element={
+								<Suspense fallback={<div>loading..</div>}>
+									<AdminProtectedPage />
+								</Suspense>
+							}
+						>
+							<Route path="Admin-All Users" element={<AllUsers />} />
+							<Route path="Admin-All Posts" element={<AllUsersPost />} />
+							<Route
+								path="Admin-Category"
+								element={<AdminAllCategory />}
+							/>
+						</Route>
+					</Route>
+				</Routes>
+				<ToastContainer
+					position="top-right"
+					draggable={true}
+					className={` text-xs max-w-fit font-inter py-0 `}
+					theme={theme ? theme : isSystemInDakMode ? "dark" : "light"}
+				/>
+			</BrowserRouter>
+		);
+	}
 };
 
 export default App;

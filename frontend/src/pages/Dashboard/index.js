@@ -13,6 +13,7 @@ import MyPosts from "./MyPosts";
 import DashboardCustomDropdown from "../../components/DashboardCustomDropdown";
 import Following from "./Following";
 import WhoViewedMyProfile from "./WhoViewedMYProfileViews";
+import Error from "../Error";
 export {
 	Layout,
 	Dashboard,
@@ -26,4 +27,5 @@ export {
 	MyPosts,
 	DashboardCustomDropdown,
 	WhoViewedMyProfile,
+	Error,
 };

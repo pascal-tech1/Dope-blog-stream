@@ -16,6 +16,8 @@ const UserBio = () => {
 			.min(10, "bio must not be less than 10 characters")
 			.max(600, "bio must be less than 600 characters"),
 	});
+		console.log("im here summary");
+
 
 	const formik = useFormik({
 		initialValues: {
@@ -36,13 +38,13 @@ const UserBio = () => {
 	return (
 		<form
 			onSubmit={formik.handleSubmit}
-			className="  rounded-xl flex flex-col px-4 mt-4 mb-4"
+			className="  rounded-xl flex flex-col px-4 mt-4 mb-4 font-inter"
 		>
 			<div className=" flex justify-between mr-4 mt-4">
 				<h1 className=" font-bold text-blue-400 ">Summary</h1>
 				<button type="submit" className="flex gap-1">
 					<MdEdit className=" text-blue-500" />
-					<h3 className="font-bold text-gray-600 hover:text-gray-900 text-xs dark:hover:text-gray-400">
+					<h3 className="font-bold text-gray-600 md:text-sm hover:text-gray-900  dark:hover:text-gray-400">
 						{isUserProfileClicked ? "save" : "Edit"}
 					</h3>
 				</button>
@@ -59,7 +61,7 @@ const UserBio = () => {
 					className="  form-input"
 				></textarea>
 			) : (
-				<p className=" text-sm">{user?.bio}</p>
+				<h2 className=" text-sm md:text-base">{user.bio}</h2>
 			)}
 			<div className=" text-red-500">
 				{formik.touched.bio && formik.errors.bio}

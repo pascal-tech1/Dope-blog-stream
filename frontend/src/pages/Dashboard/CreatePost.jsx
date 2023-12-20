@@ -157,6 +157,7 @@ const CreatePost = () => {
 								allFilters={allCategorytitle}
 								setSelectedFilter={setSelectedFilter}
 								selectedFilter={selectedFilter}
+								dropdownWidth={"w-[50vw]"}
 							/>
 						</div>
 					</div>

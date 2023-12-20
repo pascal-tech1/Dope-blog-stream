@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { FiMenu } from "react-icons/fi";
-import { IoIosMenu } from "react-icons/io";
+
 import { BsPencilSquare } from "react-icons/bs";
 import { CiMenuKebab } from "react-icons/ci";
 
@@ -16,12 +16,14 @@ import { setSearchTermInStore } from "../redux/user/userSlice";
 import { useClickOutside } from "../customHooks";
 import { setSideBarStateInStore } from "../redux/category/categorySlice";
 import Theme from "./Theme";
+import { BiSearch } from "react-icons/bi";
 
 const DashboardNavBAr = ({ refOpt, screenWidth }) => {
 	const navigate = useNavigate();
 
 	const [searchTerm, setSearchTerm] = useState("");
 	const [isTyping, setIsTyping] = useState(false);
+	const [isSearching, setIsSearching] = useState(false);
 	const [isMenuOpen, setIsMenuOpen] = useState(false);
 	const { user, isSearchBarNeeded } = useSelector(
 		(store) => store.userSlice
@@ -44,13 +46,14 @@ const DashboardNavBAr = ({ refOpt, screenWidth }) => {
 			dispatch(setSearchTermInStore(searchTerm));
 			setIsTyping(false);
 			setSearchTerm("");
+			setIsSearching(false);
 		};
 
 		// Clear the previous timer to avoid multiple simultaneous searches
 		clearTimeout(timer);
 
 		// Set a new timer for the debounce effect
-		timer = setTimeout(debouncedSearch, 800);
+		timer = setTimeout(debouncedSearch, 700);
 
 		// Cleanup function to clear the timer if component unmounts or searchTerm changes
 		return () => clearTimeout(timer);
@@ -64,13 +67,27 @@ const DashboardNavBAr = ({ refOpt, screenWidth }) => {
 	// using custom hook to close the open UserDashboardMenu
 	const divRef = useRef();
 	const iconRef = useRef();
+	const searchBarIconRef = useRef();
+	const searchInputRef = useRef();
 	const isOutsideClicked = useClickOutside(divRef, iconRef);
+	const isSearchBarOutsideClick = useClickOutside(
+		searchBarIconRef,
+		searchInputRef
+	);
 
 	useEffect(() => {
 		isMenuOpen && !isOutsideClicked && setIsMenuOpen(false);
 	}, [isOutsideClicked]);
+
+	useEffect(() => {
+		isSearching && !isSearchBarOutsideClick && setIsSearching(false);
+	}, [isSearchBarOutsideClick]);
+
+	useEffect(() => {
+		isSearching && searchInputRef.current.focus();
+	}, [isSearching]);
 	return (
-		<div className=" flex  w-full bg-opacity-0 backdrop-blur top-0 right-0 justify-between dark:bg-[#171717]  border-b dark:border-b-gray-900 z-50 items-center relative   py-2 dark:text-slate-300 ">
+		<div className=" flex font-inter  w-full bg-opacity-0 backdrop-blur top-0 right-0 justify-between   dark:bg-[#171717]  border-b dark:border-b-gray-900 z-50 items-center relative   py-2 dark:text-slate-300 ">
 			{isMenuOpen && (
 				<div ref={divRef} className=" absolute right-0 ">
 					<UserDashboardMenu
@@ -83,28 +100,52 @@ const DashboardNavBAr = ({ refOpt, screenWidth }) => {
 				ref={screenWidth <= 798 ? refOpt : null}
 				onClick={handleOnclick}
 			>
-				<FiMenu className=" text-xl ml-6  text-gray-900 dark:text-slate-300" />
+				<FiMenu className=" text-2xl ml-4  text-gray-900 dark:text-slate-300" />
 			</div>
 			{isSearchBarNeeded && (
-				<input
-					className="w-1/2 outline-none mx-6 text-center border-b border-b-gray-300 dark:bg-[#171717]  transition-all rounded-lg focus:border-b-blue-400 placeholder:text-gray-400"
-					type="text"
-					id="searchInput"
-					placeholder="Search"
-					value={searchTerm}
-					onChange={handleInputChange}
-				/>
+				<div className="flex items-center">
+					<input
+						ref={searchInputRef}
+						className={`  ${
+							isSearching ? " w-[60vw] md:w-1/2 " : "hidden md:flex"
+						}   md:relative md:bottom-0 outline-none mx-6 text-center border-b border-b-gray-300 dark:bg-[#171717]  transition-all rounded-lg focus:border-b-blue-400 placeholder:text-gray-400`}
+						type="text"
+						id="searchInput"
+						placeholder="Search"
+						value={searchTerm}
+						onChange={handleInputChange}
+					/>
+					<div ref={searchBarIconRef}>
+						<BiSearch
+							onClick={(e) => {
+								e.preventDefault();
+								setIsSearching(!isSearching);
+							}}
+							className={`${
+								isSearching
+									? "hidden"
+									: " md:hidden text-2xl hover:cursor-pointer"
+							}`}
+						/>
+					</div>
+				</div>
 			)}
 			{/* theme  */}
-			<div className="">
+			<div className={`${isSearching ? "hidden md:flex  " : " flex  "}  `}>
 				<Theme />
 			</div>
 			{/* user */}
-			<div className="flex space-x-3 mr-2 items-center ">
-				<h3 className=" hidden md:flex text-xs border-l pl-4  pr-1">
+			<div
+				className={`${
+					isSearching
+						? "hidden md:flex gap-4 items-center mr-2  "
+						: " flex gap-4 items-center mr-2 "
+				}  `}
+			>
+				<h3 className=" hidden md:flex text-xs border-l pl-1">
 					Hello, {user?.lastName}
 				</h3>
-				<div className=" rounded-full w-6 h-6 text-blue-400 ">
+				<div className=" flex gap-2 rounded-full w-8 h-8 text-blue-400 ">
 					<img
 						src={user?.profilePhoto}
 						alt=""

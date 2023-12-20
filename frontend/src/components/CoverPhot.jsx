@@ -29,7 +29,7 @@ const CoverPhoto = ({ user }) => {
 		reader.readAsDataURL(files[0]);
 	};
 	return (
-		<div className=" w-full relative">
+		<div className=" w-full relative font-inter">
 			{image && (
 				<CropImage
 					image={image}

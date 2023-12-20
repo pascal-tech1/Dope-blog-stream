@@ -2,7 +2,7 @@ import React from "react";
 
 const Tooltip = ({ info, children }) => {
 	return (
-		<div className="flex w-full hover:cursor-pointer relative">
+		<div className="flex w-full hover:cursor-pointer relative font-inter">
 			<div className="group w-max overflow-hidden ">
 				<div className="">
 					<div className=" px-1">{children}</div>

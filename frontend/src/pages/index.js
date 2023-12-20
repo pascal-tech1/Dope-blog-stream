@@ -4,12 +4,13 @@ import { NavBar } from "../components";
 import Home from "./Home";
 import SinglePost from "./SinglePost";
 import AllPost from "./AllPost";
-import UserPage from "./userPage";
+
 import VerifyEmail from "./VerifyEmail";
 import ConfirmEmailPage from "./ComfirmEmailPage";
-import Error from "../components/Error";
 import PasswordReset from "./PasswordReset";
 import UpdatePassword from "./UpdatePassword";
+import UserPage from "./UserPage";
+import Error from "./Error";
 
 export {
 	Home,
@@ -19,9 +20,9 @@ export {
 	SinglePost,
 	AllPost,
 	UserPage,
-	Error,
 	VerifyEmail,
 	ConfirmEmailPage,
 	PasswordReset,
 	UpdatePassword,
+	Error,
 };

@@ -40,7 +40,7 @@ const ProfilePhoto = ({ user }) => {
 				/>
 			)}
 
-			<div className=" absolute -mt-[10%] h-[18vw] w-[18vw] md:h-[12vw] md:w-[12vw] lg:h-[10vw] lg:w-[10vw]   rounded-full border border-blue-600">
+			<div className=" font-inter absolute -mt-[10%] h-[18vw] w-[18vw] md:h-[12vw] md:w-[12vw] lg:h-[10vw] lg:w-[10vw]   rounded-full border border-blue-600">
 				<LazyLoadImg
 					backgroundClassName={"  rounded-full  w-full h-full  relative"}
 					imgClassName={

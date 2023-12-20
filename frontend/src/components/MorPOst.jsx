@@ -10,11 +10,11 @@ import { Spinner, Tooltip } from "../components";
 export const MorePost = ({ post, status }) => {
 	return (
 		<>
-			<div className="  grid grid-cols-1 text-sm   gap-12 min-[600px]:grid-cols-2 w-[100%]">
+			<div className="  font-inter grid grid-cols-1   gap-12 min-[600px]:grid-cols-2 w-[100%]">
 				{post?.map((post, index) => (
 					<div
 						key={index}
-						className=" max-w-[384px] col-span-1 flex gap-3 flex-col dark:bg-[#171717] bg-gray-100 rounded-md
+						className=" max-w-full col-span-1 flex gap-3 flex-col dark:text-slate-300 dark:bg-[#171717] bg-gray-100 rounded-md
 					"
 					>
 						<Link
@@ -22,9 +22,7 @@ export const MorePost = ({ post, status }) => {
 							className=" hover:cursor-pointer"
 						>
 							<LazyLoadImg
-								backgroundClassName={
-									" w-full  min-[600px]:w-full  rounded-md relative "
-								}
+								backgroundClassName={" w-full   rounded-md relative "}
 								imgClassName={
 									"absolute inset-0 w-full h-full object-cover rounded-md"
 								}

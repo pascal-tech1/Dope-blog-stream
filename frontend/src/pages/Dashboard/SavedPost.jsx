@@ -109,7 +109,7 @@ const Saved = () => {
 												paddingBottom={"80%"}
 											/>
 										</div>
-										<h3 className="font-medium text-xs flex-1 self-start py-2">
+										<h3 className="font-medium flex-1 self-start py-2">
 											{post?.title}
 										</h3>
 									</Link>

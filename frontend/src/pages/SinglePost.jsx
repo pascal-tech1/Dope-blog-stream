@@ -3,7 +3,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchSinglePost, setStatus } from "../redux/post/singlePostSlice";
 import { useParams } from "react-router-dom";
 
-import { LazyLoadImg, LikesSaveViews, MessageUser } from "../components";
+import {
+	LazyLoadImg,
+	LikesSaveViews,
+	MessageUser,
+	PostSearch,
+} from "../components";
 
 import { clearUserPost, fetchUserPost } from "../redux/post/morePostSlice";
 
@@ -34,7 +39,7 @@ const SinglePost = () => {
 	);
 	// Call the function to add copy buttons after the component renders
 	useEffect(() => {
-		console.log('i have run')
+		console.log("i have run");
 		addCopyButtons();
 	}, [status]);
 
@@ -100,11 +105,13 @@ const SinglePost = () => {
 
 	if (post)
 		return (
-			<div className="">
-				<div className=" font-inter   md:mx-auto max-w-[50rem] gap-[0.5rem] -z-50 ">
+			<div className="max-w-[90vw]  lg:max-w-[55rem] md:mx-auto">
+				<PostSearch />
+
+				<div className=" font-inter    overflow-x-hidden  gap-[0.5rem] -z-50 ">
 					<div className=" flex flex-col gap-2">
 						<div>
-							<h1 className=" font-bold text-sm md:text-2xl my-2 md:my-4 dark:text-slate-200">
+							<h1 className=" font-bold  text-xl my-2 md:my-4 dark:text-slate-200">
 								{post?.title}
 							</h1>
 						</div>
@@ -114,7 +121,9 @@ const SinglePost = () => {
 							<LikesSaveViews post={post} />
 						</div>
 						<div>
-							<h3>{post?.description}</h3>
+							<h3 className="text-xs text-gray-500 ">
+								{post?.description}
+							</h3>
 						</div>
 
 						<div className=" flex items-center ">
@@ -133,7 +142,7 @@ const SinglePost = () => {
 					</div>
 					{/*  the post content in the dom */}
 					<div
-						className=" mt-4 dark:text-slate-300"
+						className=" mt-4 dark:text-slate-300 "
 						dangerouslySetInnerHTML={{ __html: post?.content }}
 					/>
 
@@ -191,7 +200,7 @@ const SinglePost = () => {
 					)}
 
 					{/* more post from blogvana */}
-					<div className=" my-6 flex flex-col">
+					<div className=" my-6 flex flex-col justify-center items-center mx-auto ">
 						<h1 className=" flex items-center gap-3  justify-center font-bold text-xl mb-4 dark:text-slate-200">
 							More Posts from Blogvana{" "}
 							<span>
@@ -204,7 +213,7 @@ const SinglePost = () => {
 						</h1>
 						{morePost && <MorePost post={morePost} status={isLoading} />}
 
-						<div className=" self-center">
+						<div className=" ">
 							{morePostHasMore ? (
 								<button
 									onClick={() => {

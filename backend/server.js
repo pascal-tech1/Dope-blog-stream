@@ -16,6 +16,8 @@ const messageRoutes = require("./route/message/messageRoutes");
 
 const app = express();
 
+connectDB();
+
 // defaut middleware
 app.use(express.json());
 app.use(cors());
@@ -27,7 +29,7 @@ app.use("/api/message", messageRoutes);
 app.use("/api/categorys", categoryRoutes);
 app.use(NotFoundErrorhandler);
 app.use(generalErrorHandle);
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5100;
 
 app.listen(PORT, () => {
 	console.log(`server started on port ${PORT}`);

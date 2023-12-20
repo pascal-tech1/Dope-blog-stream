@@ -1,12 +1,16 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import { Outlet } from "react-router-dom";
-import { Error } from ".";
+import { Navigate, Outlet } from "react-router-dom";
+import Error from "./Error";
 
 const AdminProtectedPage = () => {
-	const { user } = useSelector((store) => store.userSlice);
+	const { user, token } = useSelector((store) => store.userSlice);
+	if (!token) {
+		return <Navigate to="/login" />;
+	}
 
-	if (!user?.isAdmin) {
+	if (user && !user?.isAdmin) {
+		console.log(user);
 		return <Error />;
 	}
 	return (

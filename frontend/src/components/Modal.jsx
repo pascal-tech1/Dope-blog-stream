@@ -35,7 +35,7 @@ function Modal({ isOpen, onClose, onContinue, children }) {
 	return isOpen
 		? createPortal(
 				<div
-					className={`fixed top-0 left-0 w-full h-full flex justify-center items-center bg-black bg-opacity-40 z-[9999] backdrop-blur-sm`}
+					className={`fixed  font-inter top-0 left-0 w-full h-full flex justify-center items-center bg-black bg-opacity-40 z-[9999] backdrop-blur-sm`}
 					onClick={(e) => handleBackdropClick(e)}
 				>
 					{/* ... modal content ... */}

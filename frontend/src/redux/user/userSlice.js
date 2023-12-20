@@ -17,7 +17,7 @@ export const loginUser = createAsyncThunk(
 			return resp.data;
 		} catch (error) {
 			if (!error.response) {
-				throw new Error();
+				toast.error(error.message);
 			}
 			return rejectWithValue(error?.response?.data);
 		}
@@ -25,7 +25,7 @@ export const loginUser = createAsyncThunk(
 );
 export const loginUserWithToken = createAsyncThunk(
 	"user/loginUserWithtoken",
-	async (_, { getState, rejectWithValue }) => {
+	async (_, { getState, dispatch, rejectWithValue }) => {
 		try {
 			const resp = await customFetch("/users/loginWithToken", {
 				headers: {
@@ -35,8 +35,10 @@ export const loginUserWithToken = createAsyncThunk(
 
 			return resp.data;
 		} catch (error) {
+			dispatch(logOutUser());
+
 			if (!error.response) {
-				throw new Error();
+				toast.error(error.message);
 			}
 			return rejectWithValue(error?.response?.data);
 		}
@@ -51,7 +53,7 @@ export const RegisterUser = createAsyncThunk(
 			return resp.data;
 		} catch (error) {
 			if (!error.response) {
-				throw new Error();
+				toast.error(error.message);
 			}
 			return rejectWithValue(error?.response?.data);
 		}
@@ -73,7 +75,7 @@ export const updateUser = createAsyncThunk(
 			return resp.data;
 		} catch (error) {
 			if (!error.response) {
-				throw new Error();
+				toast.error(error.message);
 			}
 			return rejectWithValue(error?.response?.data);
 		}
@@ -170,7 +172,7 @@ export const fetchUserFollowingList = createAsyncThunk(
 			return { data: resp.data, followingUserId: _id };
 		} catch (error) {
 			if (!error.response) {
-				throw new Error();
+				toast.error(error.message);
 			}
 			return rejectWithValue(error?.response?.data);
 		}
@@ -191,7 +193,7 @@ export const fetchUserFollowersList = createAsyncThunk(
 			return resp.data;
 		} catch (error) {
 			if (!error.response) {
-				throw new Error();
+				toast.error(error.message);
 			}
 			return rejectWithValue(error?.response?.data);
 		}
@@ -414,7 +416,7 @@ const initialState = {
 	chartSelectedFilter: "likes and dislikes",
 	userPostImpression: null,
 	followingListPageNumber: 1,
-	followsNumberPerPage: 2,
+	followsNumberPerPage: 10,
 	followersListPageNumber: 1,
 	confirmSentEmailStatus: "idle",
 	resetPasswordStatus: "idle",
@@ -507,18 +509,19 @@ const userSlice = createSlice({
 		},
 		[loginUser.rejected]: (state, { payload }) => {
 			state.isLoading = false;
+			console.log(payload);
 			const error = payload?.message || error?.message;
 			toast.error(error);
 		},
 		[loginUserWithToken.pending]: (state) => {
-			state.isLoading = true;
+			state.loginUserTokenStatus = "loading";
 		},
 		[loginUserWithToken.fulfilled]: (state, { payload }) => {
-			state.isLoading = false;
+			state.loginUserTokenStatus = "success";
 			state.user = payload.user;
 		},
 		[loginUserWithToken.rejected]: (state, action) => {
-			state.isLoading = false;
+			state.loginUserTokenStatus = "failed";
 			toast.error("login failed");
 		},
 		[RegisterUser.pending]: (state) => {
@@ -531,7 +534,9 @@ const userSlice = createSlice({
 		},
 		[RegisterUser.rejected]: (state, action) => {
 			state.registerUserStatus = "failed";
+
 			const error = action?.payload?.message || action?.error?.message;
+			console.log(error);
 			toast.error(error);
 		},
 		[updateUser.pending]: (state) => {

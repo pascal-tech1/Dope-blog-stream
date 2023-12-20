@@ -39,7 +39,7 @@ const Carousel = () => {
 	}, []);
 
 	return (
-		<div className="flex  ">
+		<div className="flex  font-inter ">
 			{testimonials.map((testimony, index) => {
 				return (
 					<div

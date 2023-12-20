@@ -52,14 +52,14 @@ const AdditionalUserProfile = () => {
 	return (
 		<form
 			onSubmit={formik.handleSubmit}
-			className=" col-start-5 col-span-2 px-4 bg-white row-start-1 lg:shadow-sm lg:rounded-md dark:bg-[#171717]"
+			className=" col-start-5 col-span-2 px-4 bg-white row-start-1 lg:shadow-sm font-inter lg:rounded-md dark:bg-[#171717]"
 		>
 			<div className=" flex justify-between mr-4 ">
 				<h1 className=" font-bold text-blue-400">Additional Details</h1>
 				<button type="submit" className="flex gap-1">
 					<MdEdit className=" text-blue-500" />
-					<h3 className="font-bold text-gray-600 hover:text-gray-900 text-xs dark:hover:text-gray-400">
-						{isUserProfileClicked ? <p>Save</p> : <p>Edit</p>}
+					<h3 className="font-bold text-gray-600 hover:text-gray-900 md:text-sm dark:hover:text-gray-400">
+						{isUserProfileClicked ? "Save " : "Edit"}
 					</h3>
 				</button>
 			</div>
@@ -126,14 +126,14 @@ const AdditionalUserProfile = () => {
 						<MdOutlineVerifiedUser className=" text-blue-400 font-medium text-lg" />
 						<div>
 							<h2 className=" text-blue-400">Nick name</h2>
-							<h3 className=" text-gray-400 text-xs">{user?.nickName}</h3>
+							<h3 className=" text-gray-400 ">{user?.nickName}</h3>
 						</div>
 					</div>
 					<div className=" flex gap-3 items-center">
 						<MdOutlineDateRange className=" text-blue-400 font-medium text-lg" />
 						<div>
 							<h2 className=" text-blue-400">Join Date</h2>
-							<h3 className=" text-gray-400 text-xs">
+							<h3 className=" text-gray-400 ">
 								{formatDate(user?.createdAt)}
 							</h3>
 						</div>
@@ -142,7 +142,7 @@ const AdditionalUserProfile = () => {
 						<MdOutlineSchool className=" text-blue-400 font-medium text-lg" />
 						<div>
 							<h2 className=" text-blue-400">Education</h2>
-							<h3 className=" text-gray-400 text-xs">{user?.education}</h3>
+							<h3 className=" text-gray-400 ">{user?.education}</h3>
 						</div>
 					</div>
 				</div>

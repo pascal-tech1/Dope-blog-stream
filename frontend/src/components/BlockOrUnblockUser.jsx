@@ -26,7 +26,7 @@ const BlockOrUnblockUser = ({ user }) => {
 	};
 
 	return (
-		<div>
+		<div className=" font-inter">
 			<Modal
 				isOpen={isModalOpen}
 				onClose={closeModal}

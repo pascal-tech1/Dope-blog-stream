@@ -19,38 +19,30 @@ const cheerio = require("cheerio");
 // '''''''''''''''''''''''''''''''''''''''''''''
 const createPostCtrl = expressAsyncHandler(async (req, res) => {
 	const { id } = req.user;
-	validateMongoDbUserId(id);
 
-	const user = await User.findById(id);
-
-	const enteredDetails =
-		req?.body?.title +
-		"" +
-		req?.body?.description +
-		"" +
-		req?.body?.content;
-
-	if (checkProfanity(enteredDetails)) {
-		user.isBlocked = true;
-		await user.save();
-		throw new Error(
-			"post creation failed, account has been block for using profane words"
-		);
-	}
 	try {
-		const imageLocalPath = `public/images/posts/${req?.file?.fileName}`;
+		validateMongoDbUserId(id);
+
+		const user = await User.findById(id);
+
+		const enteredDetails =
+			req?.body?.title +
+			"" +
+			req?.body?.description +
+			"" +
+			req?.body?.content;
+
+		if (checkProfanity(enteredDetails)) {
+			user.isBlocked = true;
+			await user.save();
+			throw new Error(
+				"post creation failed, account has been block for using profane words"
+			);
+		}
 		uploadedImage = await handleCloudinaryUpload(
-			imageLocalPath,
+			req.image,
 			`mern-blog-app/${user?.email}/postImage`
 		);
-		// remove the file
-		fs.unlink(imageLocalPath, (err) => {
-			if (err) {
-				res.status(500).json({ message: "failed to edit post" });
-				return;
-			} else {
-			}
-		});
 
 		const post = await Post.create({
 			...req.body,
@@ -241,25 +233,16 @@ const updatePostCtrl = expressAsyncHandler(async (req, res) => {
 				"post updpate failed, account has been block for using profane words"
 			);
 		}
-		const imageLocalPath = `public/images/posts/${req?.file?.fileName}`;
 
 		if (req?.file) {
 			uploadedImage = await handleCloudinaryUpload(
-				imageLocalPath,
+				req.image,
 				`mern-blog-app/${user?.email}/postImage`
 			);
 		}
 		let imageUrl;
 		req?.file ? (imageUrl = uploadedImage?.url) : (imageUrl = post.image);
 		// remove the file
-		req?.file &&
-			fs.unlink(imageLocalPath, (err) => {
-				if (err) {
-					res.status(500).json({ message: "failed to edit post" });
-					return;
-				} else {
-				}
-			});
 
 		post = await Post.findByIdAndUpdate(
 			postId,
@@ -584,18 +567,13 @@ const fetchUserSavedPostCtrl = expressAsyncHandler(async (req, res) => {
 
 const postImageCtrl = expressAsyncHandler(async (req, res) => {
 	const user = req.user;
-	const imageLocalPath = `public/images/posts/${req?.file?.fileName}`;
+	console.log('im here post ing ')
+
 	uploadedImage = await handleCloudinaryUpload(
-		imageLocalPath,
+		req.image,
 		`mern-blog-app/${user?.email}/postImage`
 	);
-	// remove the file
-	fs.unlink(imageLocalPath, (err) => {
-		if (err) {
-			res.status(500).json({ message: "failed to edit post" });
-			return;
-		}
-	});
+
 	res.status(200).json(uploadedImage);
 });
 

@@ -2,9 +2,9 @@ import React from "react";
 import LazyLoadImg from "./LazyLoadImg";
 import { Link } from "react-router-dom";
 
-const MessagesComp = ({ msg, length }) => {
+const MessagesComp = ({ msg, length, }) => {
 	return (
-		<div className="flex gap-6 flex-col">
+		<div className="flex gap-6 flex-col font-inter">
 			{msg.map((message, index) => {
 				return (
 					<div key={index} className="flex gap-2">

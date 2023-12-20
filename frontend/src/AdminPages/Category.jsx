@@ -128,7 +128,7 @@ const AdminAllCategory = () => {
 	};
 
 	return (
-		<section className="flex  flex-col py-3  items-center h-screen">
+		<section className="flex  flex-col py-3  items-center h-screen font-inter">
 			{/* clear search */}
 			<ClearSearch
 				searchQuery={dashboardSearchTerm}

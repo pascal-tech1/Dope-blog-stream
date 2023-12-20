@@ -6,14 +6,14 @@ import { LoadingSpinner } from "./LoadingSpinner";
 
 const PostDashboard = ({ posts, status, title, page }) => {
 	return (
-		<div>
+		<div className=" font-inter">
 			<div className="flex justify-between">
-				<h3 className=" font-bold text-gray-800 dark:text-slate-200 mb-3 text-xs ">
+				<h3 className=" font-bold text-gray-800 dark:text-slate-200 mb-3 text-sm ">
 					{title}
 				</h3>
 				<Link
 					to={`${page}`}
-					className="text-xs font-medium text-blue-500 hover:text-blue-900 transition-all duration-75"
+					className="text-sm font-medium text-blue-500 hover:text-blue-900 transition-all duration-75"
 				>
 					View All
 				</Link>
@@ -25,7 +25,7 @@ const PostDashboard = ({ posts, status, title, page }) => {
 						to={`/single-post/${item?.post?._id}`}
 						className=" "
 					>
-						<div className=" hover:cursor-pointer w-30  overflow-y-hidden pb-4 flex gap-1 flex-col  items-center  ">
+						<div className=" hover:cursor-pointer w-36  overflow-y-hidden pb-4 flex gap-1 flex-col  items-center  ">
 							<LazyLoadImg
 								backgroundClassName={" rounded-lg  w-full  relative"}
 								imgClassName={
@@ -37,7 +37,7 @@ const PostDashboard = ({ posts, status, title, page }) => {
 								paddingBottom={"80%"}
 							/>
 
-							<div className=" font-medium text-xs w-[8rem] self-start ">
+							<div className=" font-medium text-sm w-full self-start ">
 								<Tooltip info={item?.post?.title}>
 									<h1>{`${item?.post?.title.slice(0, 30)}...`}</h1>
 								</Tooltip>

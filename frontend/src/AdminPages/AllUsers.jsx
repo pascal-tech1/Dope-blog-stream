@@ -136,7 +136,7 @@ const AllUsers = () => {
 	};
 
 	return (
-		<div className="font-inter overflow-hidden shadow-md relative">
+		<div className="font-inter overflow-hidden shadow-md relative h-[85vh]">
 			{/* clear search */}
 			<ClearSearch
 				searchQuery={dashboardSearchTerm}
@@ -158,7 +158,7 @@ const AllUsers = () => {
 				</Modal>
 			</div>
 			{/* table actions buttons */}
-			<div className="flex gap-4 flex-wrap items-center justify-center pb-4 ">
+			<div className="flex gap-4 flex-wrap items-center pb-4 ">
 				<button
 					onClick={openModal}
 					className="  py-[0.15] rounded-lg hover:text-red-700 text-red-400 outline-none"
@@ -170,6 +170,7 @@ const AllUsers = () => {
 						allFilters={allFilter}
 						setSelectedFilter={setAllUsersSelectedFilter}
 						selectedFilter={AdminAllUserSelectedFilter}
+						dropdownWidth={"w-[50vw]"}
 					/>
 				</div>
 				<h3 className="flex gap-2 items-center ">
@@ -177,7 +178,7 @@ const AllUsers = () => {
 				</h3>
 			</div>
 			{/* table */}
-			<div className=" max-h-[85vh] overflow-auto  min-w-[300px] custom-scrollbar mx-3">
+			<div className=" max-h-[75vh] overflow-auto  min-w-[300px] custom-scrollbar mx-3">
 				<table className="">
 					<thead className="tableHeading -top-10 bg-gray-800  text-white z-50 ">
 						<tr>

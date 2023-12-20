@@ -23,7 +23,7 @@ const MessageUser = ({ receiverId }) => {
 	};
 
 	return (
-		<div className="">
+		<div className=" font-inter">
 			<Modal
 				isOpen={isModalOpen}
 				onClose={closeModal}

@@ -37,6 +37,7 @@ import Theme from "./Theme";
 import { LoadingSpinner } from "./LoadingSpinner";
 import Carousel from "./carousel";
 import Spinner from "./Spinner";
+import PostSearch from "./PostSearch";
 
 export {
 	DashboardSideBar,
@@ -75,4 +76,5 @@ export {
 	LoadingSpinner,
 	Carousel,
 	Spinner,
+	PostSearch,
 };

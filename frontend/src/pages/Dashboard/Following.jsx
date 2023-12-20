@@ -47,9 +47,9 @@ const Following = ({ id }) => {
 	const handleClearSearch = () => {
 		dispatch(setSearchTermInStore(""));
 	};
-
+console.log(userLists, status)
 	return (
-		<div className=" grid max-w-md w-full ">
+		<div className=" grid max-w-md w-full font-inter ">
 			{/* clear search */}
 			<ClearSearch
 				searchQuery={dashboardSearchTerm}
@@ -68,7 +68,7 @@ const Following = ({ id }) => {
 
 			<FollowUsersList
 				list={userLists}
-				listTotalNumber={status}
+				listTotalNumber={followinglistTotalNumber}
 				fetchingListStatus={fetchingFollowingListStatus}
 				fetchAction={handleFetchMoreButtonClicked}
 				_id={_id}

@@ -90,7 +90,7 @@ table {
 }
 th,
 td {
-	padding: 10px;
+	padding: 6px;
 	box-sizing: border-box;
 	white-space: nowrap;
 	text-align: start;
@@ -107,10 +107,8 @@ th:last-child {
 td:first-child,
 th:first-child {
 	position: sticky;
-	left: 0px;
-
-	width: 90px;
-	padding: 0 10px;
+	left: -5px;
+	width: 30px;
 }
 
 th:first-child,
@@ -146,7 +144,9 @@ th {
 
 .tableHeading {
 	position: sticky;
-	top: 0;
+	top: -5px;
+	border-top: none;
+	padding: 10px 0;
 	z-index: 10;
 }
 
@@ -215,7 +215,7 @@ th {
 	@apply border border-gray-200 dark:border-neutral-800;
 }
 .ql-syntax {
-	@apply max-h-[80vh] mx-auto !overflow-y-auto p-10 rounded-md shadow-inner;
+	@apply max-h-[80vh] mx-auto !overflow-y-auto p-2 py-8 rounded-md shadow-inner;
 }
 .code-div {
 	@apply relative dark:bg-[#171717] bg-gray-50 rounded-lg  border dark:border-gray-600;

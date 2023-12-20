@@ -5,9 +5,10 @@ const useClickOutside = (divRef, iconRef) => {
 
 	useEffect(() => {
 		const handleClick = (event) => {
+			
 			if (
 				(divRef.current && divRef.current.contains(event.target)) ||
-				(iconRef.current && iconRef.current.contains(event.target))
+				(iconRef?.current && iconRef?.current.contains(event.target))
 			) {
 				// Click occurred inside the div
 				setIsClicked(true);

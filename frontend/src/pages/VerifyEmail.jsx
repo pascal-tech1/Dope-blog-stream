@@ -2,8 +2,6 @@ import React, { useEffect } from "react";
 import { Spinner } from "../components";
 import { verifyEmail } from "../redux/user/userSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { MdCancel } from "react-icons/md";
-
 
 function VerifyEmail() {
 	const dispatch = useDispatch();
@@ -11,7 +9,7 @@ function VerifyEmail() {
 		(store) => store.userSlice
 	);
 	useEffect(() => {
-		!user.isAccountVerified && dispatch(verifyEmail(user?.email));
+		!user?.isAccountVerified && dispatch(verifyEmail(user?.email));
 	}, []);
 
 	if (verifyEmailStatus === "loading") {
@@ -25,11 +23,12 @@ function VerifyEmail() {
 	return (
 		<div className=" flex items-center justify-center">
 			<div className=" py-4 relative text-sm  font-inter h-[90vh] lg:h-[80vh] w-[90vw] lg:w-[60vw] bg-white grid place-content-center z-[500] rounded-md dark:bg-[#171717] border  dark:border-gray-800  ">
-				{user?.isAccountVerified === true ? (
+				{user?.isAccountVerified === true && (
 					<div className="flex justify-center items-center h-[80vh] w-screen  mx-auto  ">
 						<h1> your Account is Already Verified</h1>
 					</div>
-				) : verifyEmailStatus === "success" ? (
+				)}
+				{verifyEmailStatus === "success" && (
 					<div className=" px-6 flex justify-start items-center  gap-4 flex-col  ">
 						<h1 className=" text-xl bg-blue-400 p-4 py-1 rounded-md text-white ">
 							Welcome to blogVana!
@@ -66,7 +65,9 @@ function VerifyEmail() {
 							{verifyEmailStatus === "loading" ? <Spinner /> : "Resend"}
 						</button>
 					</div>
-				) : (
+				)}
+
+				{verifyEmailStatus === "failed" && (
 					<div className="px-6 flex justify-start items-center  gap-4 flex-col ">
 						<h1 className=" text-xl bg-blue-400 p-4 py-1 rounded-md text-white ">
 							Welcome to blogVana!
@@ -80,13 +81,6 @@ function VerifyEmail() {
 							Sorry Sending you email verification failed click the Resend
 							Button below to resend
 						</p>
-						<button
-							disabled={verifyEmailStatus === "loading"}
-							onClick={() => dispatch(verifyEmail(user?.email))}
-							className=" bg-blue-400 drop-shadow-sm px-1 rounded-sm hover:bg-blue-500 transition-all delay-75 text-white mt-4"
-						>
-							{verifyEmailStatus === "loading" ? <Spinner /> : "Resend"}
-						</button>
 					</div>
 				)}
 			</div>

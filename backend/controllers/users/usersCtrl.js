@@ -1,6 +1,6 @@
 const User = require("../../model/user/User");
 const fs = require("fs");
-const path = require("path");
+
 const generateJwtToken = require("../../config/token/generateJwtToken");
 const validateMongoDbUserId = require("../../utils/validateMongoDbUserId");
 const expressAsyncHandler = require("express-async-handler");
@@ -15,7 +15,7 @@ const { filterUserCriteria } = require("../../utils/filterSortCriteria");
 const Post = require("../../model/post/Post");
 const emailVerificationHtml = require("./sendEmailVerificationLink");
 const emailChangeVerificationHtml = require("./sendChangeEmailLink");
-const SavedPosts = require("../../model/savedPosts/savedPosts");
+const SavedPosts = require("../../model/savedPosts/SavedPosts");
 
 // '''''''''''''''''''''''''''''''''''''''''
 //         Register user
@@ -643,20 +643,10 @@ const profilePhotoUploadCtrl = expressAsyncHandler(async (req, res) => {
 		const user = await User.findById(id);
 		const data = req.body;
 
-		const imageLocalPath = `public/images/profile/${req?.file?.fileName}`;
-
 		uploadedImage = await handleCloudinaryUpload(
-			imageLocalPath,
+			req.photo,
 			`mern-blog-app/${user.email}/profilePhoto`
 		);
-
-		// remove the file
-		fs.unlink(imageLocalPath, (err) => {
-			if (err) {
-				res.status(500).json({ message: "failed to  upload image" });
-				return;
-			}
-		});
 
 		if (data.whatUploading === "profilePhoto") {
 			user.profilePhoto = uploadedImage.url;
@@ -788,7 +778,7 @@ const fetchUserFollowingListCtrl = expressAsyncHandler(
 					skip: skip,
 				})
 				.select("following");
-
+			console.log(pageNumber, userfollowinglist.following.length);
 			const followinglistTotalNumber = following.length;
 			res.status(200).json({
 				followinglistTotalNumber,
@@ -894,53 +884,73 @@ const fetchUserCountsCtrl = expressAsyncHandler(async (req, res) => {
 
 const fetchWhoViewedUserProfileCtrl = expressAsyncHandler(
 	async (req, res) => {
-		const page = req.query.page;
-		const numberPerPage = req.query.numberPerPage;
+		const page = parseInt(req.query.page);
+		const numberPerPage = parseInt(req.query.numberPerPage);
 		const { _id } = req.user;
 		if (!_id) throw new Error("User Id is Required");
 
 		try {
-			const usersViewedJustForLength = await User.findById(_id).populate({
-				path: "userWhoViewProfile",
-				populate: {
-					path: "viewedBy",
+			const pipeline = [
+				{
+					$match: {
+						_id: new mongoose.Types.ObjectId(_id), // Convert _id to ObjectId
+					},
 				},
-			});
+				{
+					$lookup: {
+						from: "users", // Replace with the actual collection name
+						localField: "userWhoViewProfile",
+						foreignField: "_id",
+						as: "userWhoViewProfile",
+					},
+				},
+				{
+					$unwind: "$userWhoViewProfile",
+				},
+				{
+					$lookup: {
+						from: "users", // Replace with the actual collection name
+						localField: "userWhoViewProfile.viewedBy",
+						foreignField: "_id",
+						as: "userWhoViewProfile.viewedBy",
+					},
+				},
+				{
+					$match: {
+						"userWhoViewProfile.viewedBy": { $ne: [] }, // Filter out documents where viewedBy is empty
+					},
+				},
+				{
+					$project: {
+						userWhoViewProfile: "$userWhoViewProfile.viewedBy",
+					},
+				},
+				{
+					$sort: {
+						"userWhoViewProfile.updatedAt": -1,
+					},
+				},
+				{
+					$skip: (page - 1) * numberPerPage,
+				},
+				{
+					$limit: numberPerPage,
+				},
+			];
 
-			const whoViewUserProfileCount =
-				usersViewedJustForLength.userWhoViewProfile.length;
-			const { userWhoViewProfile } = await User.findById(_id).populate({
-				path: "userWhoViewProfile",
-				options: { sort: { updatedAt: -1 } },
-				skip: (page - 1) * numberPerPage,
-				limit: numberPerPage,
-				populate: {
-					path: "viewedBy",
-					select: [
-						"_id",
-						"firstName",
-						"lastName",
-						"profilePhoto",
-						"blurProfilePhoto",
-						"blurCoverPhoto",
-						"profession",
-					],
-				},
-			});
+			const result = await User.aggregate(pipeline);
+			console.log(result);
+
+			const viewedBy = result.map((user) => user.userWhoViewProfile);
 
 			res.status(200).json({
 				status: "success",
-				userWhoViewProfile,
-				whoViewUserProfileCount,
+				userWhoViewProfile: viewedBy,
+				whoViewUserProfileCount: viewedBy.length,
 			});
 		} catch (error) {
 			res.status(500).json({ status: "failed", message: error.message });
 		}
-		// const deleted = await User.updateMany({}, { $unset: { viewedBy: 1 } });
-
-		// res.status(200).json({
-		// 	message: `successfully deleted ${deleted}`,
-		// });
 	}
 );
 

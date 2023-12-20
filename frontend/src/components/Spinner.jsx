@@ -6,7 +6,7 @@ const Spinner = ({ className }) => {
 		: ` w-8 h-8 mr-2 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600`;
 
 	return (
-		<div role="status" className="flex gap-[0.3px] items-center">
+		<div role="status" className="flex gap-[0.3px] items-center font-inter">
 			<svg
 				aria-hidden="true"
 				className={className}

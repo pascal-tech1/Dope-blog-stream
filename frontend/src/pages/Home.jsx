@@ -1,16 +1,15 @@
 import React, { useEffect } from "react";
-import { Category, UserToFollow } from "../components";
-
+import { Category, PostSearch, UserToFollow } from "../components";
 import AllPost from "./AllPost";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchRandomUser } from "../redux/user/userSlice";
-import { fetchAllCategorys } from "../redux/category/categorySlice";
+
 import {
 	fetchPostByCategory,
 	setActiveCategory,
 	setFetchFirstCategory,
 } from "../redux/post/allPostSlice";
-import DashboardCustomDropdown from "../components/DashboardCustomDropdown";
+
 import { useNavigate } from "react-router-dom";
 
 const Home = () => {
@@ -19,21 +18,12 @@ const Home = () => {
 
 	const { allCategory } = useSelector((store) => store.categorySlice);
 	const { randomUsers } = useSelector((store) => store.userSlice);
-	const { activeCategory } = useSelector((store) => store.allPostSlice);
 
 	let allCategoryArray = allCategory.map((category) => category.title);
 	allCategoryArray = ["all", ...allCategoryArray];
 
-	const displayedCategoryArray = [
-		activeCategory,
-		...allCategoryArray
-			.filter((category) => category != activeCategory)
-			.slice(0, 5),
-	];
-
 	useEffect(() => {
 		dispatch(fetchRandomUser(4));
-		dispatch(fetchAllCategorys());
 	}, []);
 
 	const handleSelected = (filter) => {
@@ -42,29 +32,13 @@ const Home = () => {
 		dispatch(fetchPostByCategory());
 		navigate("/");
 	};
-
 	return (
-		<div className={`font-inter mt-2 `}>
+		<div className={`font-inter mt-2 text-lg lg:text-base `}>
 			<div className=" md:grid grid-cols-5 ">
 				{/* right section */}
-				<main className=" col-span-3 pr-2 lg:pr-4 md:border-r md:dark:border-r-[#171717] ">
+				<main className=" col-span-3 md:border-r md:dark:border-r-[#171717] ">
 					<div className="">
-						<div className="flex flex-wrap  justify-center dark:bg-[#171717]  gap-4 categorySticky  shadow-sm">
-							<div className=" hidden md:flex ">
-								<Category
-									allCategory={displayedCategoryArray}
-									handleSelected={handleSelected}
-									isActive={activeCategory}
-								/>
-							</div>
-							<div className=" md:hidden">
-								<DashboardCustomDropdown
-									allFilters={allCategoryArray}
-									selectedFilter={activeCategory}
-									handleSelected={handleSelected}
-								/>
-							</div>
-						</div>
+						<PostSearch  />
 
 						<AllPost />
 					</div>
@@ -72,7 +46,7 @@ const Home = () => {
 				{/* left section */}
 
 				<div className="hidden md:flex flex-col col-start-4 col-span-full  stickyRight custom-scrollbar mb-6 px-4  pt-2 ">
-					<div className="flex gap-2  bg-gray-100 justify-between py-2 text-sm px-2 rounded-lg dark:bg-[#171717] dark:text-slate-300  ">
+					<div className="flex gap-2  bg-gray-100 justify-between py-2  text-lg  md:text-sm px-2 rounded-lg dark:bg-[#171717] dark:text-slate-300  ">
 						<div className="flex flex-col justify-center items-center text-center gap-2">
 							<h3 className=" font-medium hidden lg:flex ">
 								Get unlimited access to everything on BlogVana
@@ -83,14 +57,14 @@ const Home = () => {
 							</h1>
 						</div>
 						<img
-							src="../../public/blogvana.png"
+							src="/blogvana.png"
 							alt=""
 							className=" w-20 border border-blue-400 self-center mr-4"
 						/>
 					</div>
 					{/* followers section */}
 					<section className="">
-						<h2 className="  text-center font-medium my-4 place-self-center dark:text-slate-200">
+						<h2 className="  text-center font-medium my-3 place-self-center dark:text-slate-200">
 							People you might be interested in
 						</h2>
 						{/* renders random users */}

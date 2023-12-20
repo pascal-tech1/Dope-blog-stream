@@ -91,7 +91,7 @@ const initialState = {
 	deleteCategoryStatus: "idle",
 	isCategoryEditing: false,
 	activeEditingCategory: "",
-	isSideBarOpen: true,
+	isSideBarOpen: false,
 	theme: localStorage.getItem("theme"),
 };
 

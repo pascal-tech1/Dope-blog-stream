@@ -33,7 +33,7 @@ const UserDashboardMenu = ({ isMenuOpen, setIsMenuOpen }) => {
 	return (
 		<>
 			<div className="absolute top-8 right-4 drop-shadow-lg h-[50vh] rounded-lg z-[500] dark:bg-[#171717] border dark:border-gray-700   bg-white">
-				<div className=" flex flex-col px-4 justify-start whitespace-nowrap  items-start font-inter gap-3 py-3 text-sm  ">
+				<div className=" flex flex-col px-4 justify-start whitespace-nowrap  items-start font-inter gap-3 py-3 md:text-sm  ">
 					<button
 						onClick={() => {
 							handleProfileClick();

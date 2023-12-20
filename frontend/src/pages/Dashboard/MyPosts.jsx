@@ -147,7 +147,7 @@ const MyPosts = () => {
 	};
 
 	return (
-		<div className="  font-inter overflow-hidden shadow-md  ">
+		<div className="  font-inter overflow-hidden shadow-md h-[85vh] ">
 			{/* clear search */}
 			<ClearSearch
 				searchQuery={dashboardSearchTerm}
@@ -167,18 +167,19 @@ const MyPosts = () => {
 				</div>
 			</Modal>
 			{/* table actions buttons */}
-			<div className="flex gap-4 flex-wrap items-center justify-center pb-4 ">
+			<div className="flex gap-4 flex-wrap items-center  pb-4 ">
 				<button
 					onClick={openModal}
 					className="  py-[0.15] rounded-lg  hover:bg-red-400 hover:text-slate-200 px-1 transition-all duration-75 text-red-400 outline-none"
 				>
 					delete
 				</button>
-				<div className="">
+				<div className=" z-[1000]">
 					<DashboardCustomDropdown
 						allFilters={allFilter}
 						setSelectedFilter={setMyPostSelectedFilter}
 						selectedFilter={MyPostSelectedFilter}
+						dropdownWidth={"w-[40vw]"}
 					/>
 				</div>
 				<h3 className="flex gap-2 items-center ">
@@ -187,7 +188,7 @@ const MyPosts = () => {
 			</div>
 			{/* table */}
 
-			<div className=" max-h-[85vh] overflow-auto custom-scrollbar  min-w-[300px]   ">
+			<div className=" max-h-[75vh] overflow-auto custom-scrollbar  min-w-[300px]   ">
 				<table className="">
 					<thead className="tableHeading -top-10 bg-gray-500 dark:bg-gray-900  border  text-white ">
 						<tr>
@@ -229,7 +230,7 @@ const MyPosts = () => {
 								}
 								className="border-b transition duration-300 ease-in-out hover:bg-neutral-100 dark:hover:bg-gray-600 dark:border-neutral-100 "
 							>
-								<td className=" bg-gray-50  dark:bg-[#1C1C1C] tableData ">
+								<td className=" bg-gray-50 border-x-blue-600  dark:bg-[#1C1C1C] tableData ">
 									<input
 										type="checkbox"
 										name="check"
@@ -264,7 +265,7 @@ const MyPosts = () => {
 									</Tooltip>
 								</td>
 								<td className="tableData">{post.disLikes.length}</td>
-								<td className=" bg-gray-50 tableData  dark:bg-[#1C1C1C] ">
+								<td className="  flex bg-gray-50 tableData items-center dark:bg-[#1C1C1C] ">
 									<EditPostBtn postId={post._id} />
 								</td>
 							</tr>
@@ -292,9 +293,11 @@ const MyPosts = () => {
 
 						{creatorAllPost.length === 0 &&
 							creatorPostStatus === "success" && (
-								<td className=" text-yellow-400 tableData stickyBottom bg-gray-50  dark:bg-[#1C1C1C] ">
-									No User Found
-								</td>
+								<tr className=" bg-gray-50  dark:bg-[#1C1C1C]">
+									<td className=" text-yellow-400 tableData stickyBottom bg-gray-50  dark:bg-[#1C1C1C] ">
+										No User Found
+									</td>
+								</tr>
 							)}
 					</tbody>
 				</table>

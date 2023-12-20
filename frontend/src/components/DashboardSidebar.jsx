@@ -113,10 +113,10 @@ const DashboardSideBar = () => {
 	user?.isAdmin && sideBarItems.push(AdminObject);
 
 	return (
-		<aside className=" flex flex-col  font-medium  ">
+		<aside className=" flex flex-col  font-medium font-inter  ">
 			<Link to="/" className="mt-4 self-center md:flex">
 				<img
-					src="../../public/blogvana.png"
+					src="/blogvana.png"
 					alt=""
 					className="w-14 border h-14 border-blue-400"
 				/>
@@ -155,7 +155,7 @@ const DashboardSideBar = () => {
 					return (
 						<div
 							key={index}
-							className=" flex justify-start items-center px-4 mt-4 "
+							className=" flex justify-start items-center px-6 mt-4  text-lg md:text-base "
 						>
 							{sideBarItem.hasSubMenu ? (
 								<div className="flex flex-col">
@@ -166,7 +166,7 @@ const DashboardSideBar = () => {
 										className=" hover:bg-blue-400 hover:text-white  flex items-center gap-2  pl-[0.35rem] cursor-pointer py-[0.2rem] rounded-lg"
 									>
 										<IconComponent className=" text-lg" />
-										<h1 className=" text-lg">{sideBarItem.title}</h1>
+										<h1 className=" ">{sideBarItem.title}</h1>
 
 										{isMenuOpen[sideBarItem.title] ? (
 											<MdOutlineArrowDropUp className=" text-center" />
@@ -188,7 +188,7 @@ const DashboardSideBar = () => {
 														sideBarItem.menuOpen ? "" : "hidden"
 													}  flex mt-1   py-[0.2rem] px-2 hover:text-white hover:bg-blue-400   w-max aria-[current=page]:text-white rounded-lg aria-[current=page]:bg-blue-400`}
 												>
-													<h3 className=" text-lg">{submenuItem.title}</h3>
+													<h1 className=" ">{submenuItem.title}</h1>
 												</NavLink>
 											);
 										})}
@@ -199,9 +199,9 @@ const DashboardSideBar = () => {
 									to={sideBarItem.title}
 									className="flex gap-2 items-center px-2  pl-[0.35rem] hover:text-white hover:bg-blue-400 py-[0.2rem] w-full rounded-lg aria-[current=page]:text-white aria-[current=page]:bg-blue-400"
 								>
-									<IconComponent className=" text-lg " />
+									<IconComponent className="  " />
 
-									<span className=" font-inter ">{sideBarItem.title}</span>
+									<h1 className=" font-inter  ">{sideBarItem.title}</h1>
 								</NavLink>
 							)}
 						</div>

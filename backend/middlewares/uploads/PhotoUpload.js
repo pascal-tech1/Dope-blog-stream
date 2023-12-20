@@ -45,11 +45,14 @@ const ProfilePhotResize = async (req, res, next) => {
 			const base64String = outputBuffer.toString("base64");
 			req.blurProfilePhoto = base64String;
 		}
+		if (req.file) {
+			const outputBuffer = await sharp(req.file.buffer).toBuffer();
 
-		req.file.fileName = `user-${Date.now()} - ${req.file.originalname}`;
-		await sharp(req.file.buffer)
-			.jpeg({ quality: 90 })
-			.toFile(path.join(`public/images/profile/${req.file.fileName}`));
+			// Convert the buffer to a base64-encoded string
+			const base64String = outputBuffer.toString("base64");
+			req.photo = base64String;
+		}
+
 		next();
 	} catch (error) {
 		next(error);
@@ -70,12 +73,11 @@ const postImageResize = async (req, res, next) => {
 		}
 
 		if (file) {
-			const fileName = `user-${Date.now()} - ${file.originalname}`;
-			await sharp(file.buffer)
-				.toFormat("jpeg")
-				.toFile(path.join(`public/images/posts/${fileName}`));
+			const outputBuffer = await sharp(req.file.buffer).toBuffer();
 
-			req.file.fileName = fileName;
+			// Convert the buffer to a base64-encoded string
+			const base64String = outputBuffer.toString("base64");
+			req.image = base64String;
 		} else if (url && url.startsWith("/update")) {
 			// Handle the case where no file is provided but the URL starts with "/update".
 			next();
@@ -85,7 +87,6 @@ const postImageResize = async (req, res, next) => {
 			error.status = 400; // Bad Request
 			throw error;
 		}
-
 		next();
 	} catch (error) {
 		next(error);

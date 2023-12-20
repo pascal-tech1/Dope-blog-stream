@@ -46,7 +46,7 @@ const UserProfile = () => {
 	return (
 		<form
 			onSubmit={formik.handleSubmit}
-			className=" relative flex flex-col gap-2 items-center transition-all px-4 "
+			className=" relative flex flex-col gap-2 items-center transition-all px-4 font-inter "
 		>
 			{isUserProfileClicked ? (
 				<div className="flex gap-2 flex-col transition-all self-start">
@@ -123,8 +123,8 @@ const UserProfile = () => {
 				className="absolute top-0 right-3 flex hover:shadow-sm  items-center text-sm transition-all "
 			>
 				<MdEdit className=" text-blue-500 " />
-				<h3 className="font-bold text-gray-600 hover:text-gray-900 dark:hover:text-gray-400 text-xs">
-					{isUserProfileClicked ? <p>Save</p> : <p>Edit</p>}
+				<h3 className="font-bold text-gray-600 hover:text-gray-900 dark:hover:text-gray-400 md:text-sm">
+					{isUserProfileClicked ? "Save" : "Edit"}
 				</h3>
 			</button>
 		</form>

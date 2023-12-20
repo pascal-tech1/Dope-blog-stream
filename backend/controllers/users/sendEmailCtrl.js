@@ -1,6 +1,5 @@
 const sendAcctVerificationEmailCtrl = expressAsyncHandler(
 	async (req, res) => {
-		console.log(__dirname);
 		const loginUserId = req.user.id;
 		const foundUser = await User.findById(loginUserId);
 		const verificationToken = await foundUser.accountVerificationHandler();

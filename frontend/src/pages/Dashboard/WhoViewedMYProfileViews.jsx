@@ -23,22 +23,29 @@ const WhoViewedMyProfile = () => {
 
 	useEffect(() => {
 		if (pageNumber === 1 && whoViewUserProfile.length > 0) return;
-		dispatch(fetchWhoViewedUserProfile({ page: pageNumber, limit: 1 }));
+		dispatch(fetchWhoViewedUserProfile({ page: pageNumber, limit: 10 }));
 	}, [pageNumber]);
+	const users = whoViewUserProfile.map((user) => user.viewedBy);
+	console.log(users);
 	return (
 		<div>
-			<div className="flex gap-3  flex-col  dark:bg-[#171717] px-4">
+			<div className="flex gap-3 font-inter  flex-col  dark:bg-[#171717] px-4">
 				<h1 className="font-semibold place-self-center text-blue-400   max-w-max pb-1 ">
 					Who view your profile
 				</h1>
 
 				<h3 className=" font-medium text-gray-900 drop-shadow-md dark:text-slate-200">
 					who viewed your profile count:{" "}
-					<span>{whoViewUserProfileCount} </span>{" "}
+					<span>{whoViewUserProfileCount} </span>
 				</h3>
-				{whoViewUserProfile.map((users, index) =>
+				{console.log(whoViewUserProfile)}
+				{whoViewUserProfileCount === 0 && (
+					<h1>NO one have viewed your profile yet</h1>
+				)}
+				{whoViewUserProfile.map((users) =>
 					users?.viewedBy?.map((viewedBy, index) => (
 						<div key={index}>
+							{console.log(viewedBy)}
 							<UserToFollow
 								user={viewedBy}
 								index={index}

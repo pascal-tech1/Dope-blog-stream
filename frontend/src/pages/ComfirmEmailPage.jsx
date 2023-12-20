@@ -21,7 +21,7 @@ const ComfirmEmailPage = () => {
 	const { confirmSentEmailStatus } = useSelector(
 		(store) => store.userSlice
 	);
-
+i
 	return (
 		<div className=" font-inter">
 			<div className=" flex items-center justify-center h-[80vh] w-screen">

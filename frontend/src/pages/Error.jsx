@@ -5,11 +5,10 @@ import { Link } from "react-router-dom";
 const Error = () => {
 	return (
 		<div>
-			<div className="flex items-center justify-center flex-col mt-16">
+			<div className="flex font-inter items-center justify-center flex-col mt-16">
 				<img
-					src="../../public/undraw_page_not_found_re_e9o6.svg"
+					src="/undraw_page_not_found_re_e9o6.svg"
 					alt=""
-					srcset=""
 					className=" max-w-sm"
 				/>
 				<Link
