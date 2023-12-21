@@ -81,7 +81,7 @@ const UserPage = () => {
 		return (
 			<div>
 				<PostSearch />
-				<div className=" md:grid lg:grid-cols-3 mt-2  font-inter  gap-10 ">
+				<div className=" md:grid lg:grid-cols-3 mt-2  font-inter  gap-10 dark:bg-[#171717]  ">
 					<div className=" flex flex-col gap-4 col-start-1 col-span-2   md:pt-4 h-max ">
 						<div className="w-full">
 							<div className=" w-full  relative">

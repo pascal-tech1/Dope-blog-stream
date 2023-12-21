@@ -14,7 +14,7 @@ export const MorePost = ({ post, status }) => {
 				{post?.map((post, index) => (
 					<div
 						key={index}
-						className=" max-w-full col-span-1 flex gap-3 flex-col dark:text-slate-300 dark:bg-[#171717] bg-gray-100 rounded-md
+						className=" max-w-full col-span-1 flex gap-3 flex-col dark:text-slate-300 dark:bg-[#1C1C1C] bg-gray-100 rounded-lg
 					"
 					>
 						<Link

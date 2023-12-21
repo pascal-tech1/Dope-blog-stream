@@ -215,16 +215,12 @@ th {
 	@apply border border-gray-200 dark:border-neutral-800;
 }
 .ql-syntax {
-	@apply max-h-[60vh] mx-auto !overflow-y-auto p-2 py-8 rounded-md shadow-inner;
+	@apply max-h-[60vh] mx-auto !overflow-y-auto px-3 py-4 rounded-md;
 }
 .code-div {
-	@apply relative dark:bg-[#1b1b1b] bg-gray-50 rounded-lg   shadow-sm;
+	@apply relative dark:bg-[#272626] bg-gray-50 rounded-[1rem] drop-shadow-sm;
 }
 .copy-button {
 	@apply dark:bg-gray-900 drop-shadow-sm text-sm mr-6 mt-2
-	/* background-color: rgb(106, 162, 218); */
-	/* padding: 0 6px;
-	right: 6px;
-	color: #fff;
-	border-radius: 5px; */;
+
 }

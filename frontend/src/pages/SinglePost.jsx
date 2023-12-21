@@ -108,7 +108,7 @@ const SinglePost = () => {
 			<div className="max-w-[90vw]  lg:max-w-[55rem] md:mx-auto">
 				<PostSearch />
 
-				<div className=" font-inter    overflow-x-hidden  gap-[0.5rem] -z-50 ">
+				<div className=" font-inter    overflow-x-hidden  gap-[0.5rem] -z-50 dark:bg-[#171717] lg:px-10 ">
 					<div className=" flex flex-col gap-2">
 						<div>
 							<h1 className=" font-bold text-xl  lg:text-3xl  my-2 md:my-4 dark:text-slate-200">
