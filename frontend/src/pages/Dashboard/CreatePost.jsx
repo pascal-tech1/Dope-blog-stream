@@ -39,6 +39,7 @@ const CreatePost = () => {
 	const [postImage, setPostImage] = useState(null);
 	const [selectedFilter, setSelectedFilter] = useState("general");
 	const { isBlocked } = useSelector((store) => store.singlePostSlice);
+	const wordsPerMinute = 200;
 	const {
 		status,
 		isEditing,
@@ -94,16 +95,26 @@ const CreatePost = () => {
 			category: (isEditing && postToBeEdited?.category) || category,
 			image: null,
 			content: (isEditing && postToBeEdited?.content) || content,
+			readingTime: null,
 		},
 
 		onSubmit: (values) => {
-			if (values.content.length <= 100) {
-				toast.error(
-					"content is required and cannot be less than 100 characters"
-				);
-				return;
-			}
+			// if (values.content.length <= 100) {
+			// 	toast.error(
+			// 		"content is required and cannot be less than 100 characters"
+			// 	);
+			// 	return;
+			// }
+			const tempElement = document.createElement("div");
+			tempElement.innerHTML = values.content;
+
+			// Get the innerText of the temporary element
+			const wordCount = tempElement.innerText.split(" ").length;
+			console.log(wordCount);
+			const readingTime = Math.ceil(wordCount / wordsPerMinute);
+			console.log(readingTime);
 			values.category = selectedFilter;
+			values.readingTime = readingTime;
 
 			isEditing
 				? dispatch(updatePost(values))

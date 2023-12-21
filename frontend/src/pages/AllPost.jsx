@@ -51,7 +51,7 @@ const AllPost = () => {
 					<div
 						key={index}
 						ref={allPost.length === index + 1 ? lastPostRef : null}
-						className=" mt-4  pr-[2px] "
+						className=" pr-[2px] "
 					>
 						{/* The post info's including the user info */}
 						<PostInfo post={post} />

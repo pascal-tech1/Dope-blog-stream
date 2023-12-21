@@ -65,6 +65,9 @@ const LikesSaveViews = ({ post }) => {
 				{post?.category?.charAt(0).toUpperCase() +
 					post?.category?.slice(1).toLowerCase()}
 			</Link>
+			{post?.readingTime && (
+				<h3 className=" text-sm">{`${post?.readingTime} min read`}</h3>
+			)}
 		</div>
 	);
 };

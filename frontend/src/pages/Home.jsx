@@ -45,7 +45,7 @@ const Home = () => {
 				</main>
 				{/* left section */}
 
-				<div className="hidden md:flex flex-col col-start-4 col-span-full  stickyRight custom-scrollbar mb-6 px-4  pt-2 ">
+				<div className="hidden md:flex flex-col col-start-4 col-span-full  stickyRight custom-scrollbar mb-6 px-4 dark:bg-[#171717] pt-2 ">
 					<div className="flex gap-2  bg-gray-100 justify-between py-2  text-lg  md:text-sm px-2 rounded-lg dark:bg-[#171717] dark:text-slate-300  ">
 						<div className="flex flex-col justify-center items-center text-center gap-2">
 							<h3 className=" font-medium hidden lg:flex ">

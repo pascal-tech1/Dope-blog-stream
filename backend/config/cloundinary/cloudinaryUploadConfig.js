@@ -18,7 +18,6 @@ const handleCloudinaryUpload = async (file, folderName) => {
 
 		return { url: data?.secure_url };
 	} catch (error) {
-		console.log("cloud errro", error);
 		throw new Error("image upload to database failed");
 	}
 };

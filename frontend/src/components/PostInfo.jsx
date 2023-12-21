@@ -11,9 +11,9 @@ const PostInfo = ({ post }) => {
 	const user = useSelector((store) => store?.userSlice?.user);
 
 	return (
-		<div className="flex flex-col mt-3 mb-2 justify-self-center dark:bg-[#171717] rounded-md px-3 py-3">
+		<div className="flex flex-col mt-3 mb-2 justify-self-center py-6 dark:bg-[#171717] rounded-md px-3 ">
 			{/* user who created the post  */}
-			<div className=" self-start" >
+			<div className=" self-start">
 				<PostUserInfo post={post} />
 			</div>
 
@@ -39,6 +39,7 @@ const PostInfo = ({ post }) => {
 					<div className="text-md md:text-sm ">
 						<LikesSaveViews post={post} />
 					</div>
+					
 				</div>
 				<Link to={`/single-post/${post?._id}`} className=" self-start  ">
 					{/* lazyloadingImg */}

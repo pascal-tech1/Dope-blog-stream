@@ -218,9 +218,10 @@ const singlePostSlice = createSlice({
 			toast.success("Post Updated Successfully");
 		},
 		[updatePost.rejected]: (state, { payload }) => {
-			state.isBlocked = payload.isBlocked;
+			state.isBlocked = payload?.isBlocked;
 			state.postEditingStatus = "failed";
-			toast.error(payload?.message);
+			console.log("update", payload);
+			toast.error(payload?.messsage);
 		},
 	},
 });

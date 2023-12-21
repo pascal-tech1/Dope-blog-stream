@@ -215,10 +215,10 @@ th {
 	@apply border border-gray-200 dark:border-neutral-800;
 }
 .ql-syntax {
-	@apply max-h-[80vh] mx-auto !overflow-y-auto p-2 py-8 rounded-md shadow-inner;
+	@apply max-h-[60vh] mx-auto !overflow-y-auto p-2 py-8 rounded-md shadow-inner;
 }
 .code-div {
-	@apply relative dark:bg-[#1b1b1b] bg-gray-50 rounded-lg  border dark:border-gray-600;
+	@apply relative dark:bg-[#1b1b1b] bg-gray-50 rounded-lg   shadow-sm;
 }
 .copy-button {
 	@apply dark:bg-gray-900 drop-shadow-sm text-sm mr-6 mt-2
