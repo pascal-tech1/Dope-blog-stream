@@ -22,16 +22,23 @@ import {
 import DashboardCustomDropdown from "../../components/DashboardCustomDropdown";
 import { fetchAllCategorys } from "../../redux/category/categorySlice";
 import { toast } from "react-toastify";
-import { setIsSearchBArNeeded } from "../../redux/user/userSlice";
+import {
+	logOutUser,
+	setIsSearchBArNeeded,
+} from "../../redux/user/userSlice";
+import { useNavigate } from "react-router-dom";
 
 Quill.register("modules/imageUploader", ImageUploader);
 Quill.register("modules/blotFormatter", BlotFormatter);
 
 const CreatePost = () => {
-	useEffect(() => {
-		dispatch(setIsSearchBArNeeded(false));
-	}, []);
 	const dispatch = useDispatch();
+	const navigate = useNavigate();
+	const { allCategory } = useSelector((store) => store.categorySlice);
+	const [quillIsFocus, setQuillIsFocus] = useState(false);
+	const [postImage, setPostImage] = useState(null);
+	const [selectedFilter, setSelectedFilter] = useState("general");
+	const { isBlocked } = useSelector((store) => store.singlePostSlice);
 	const {
 		status,
 		isEditing,
@@ -42,11 +49,16 @@ const CreatePost = () => {
 		content,
 		category,
 	} = useSelector((store) => store.singlePostSlice);
+	useEffect(() => {
+		if (isBlocked) {
+			dispatch(logOutUser());
+			navigate("/");
+		}
+	}, [isBlocked]);
 
-	const { allCategory } = useSelector((store) => store.categorySlice);
-	const [quillIsFocus, setQuillIsFocus] = useState(false);
-	const [postImage, setPostImage] = useState(null);
-	const [selectedFilter, setSelectedFilter] = useState("general");
+	useEffect(() => {
+		dispatch(setIsSearchBArNeeded(false));
+	}, []);
 
 	const url = postImage
 		? URL.createObjectURL(postImage)

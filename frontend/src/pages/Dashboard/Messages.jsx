@@ -16,7 +16,12 @@ const Messages = () => {
 	const [pageNumber, setPageNumber] = useState(1);
 
 	useEffect(() => {
-		if (pageNumber === 1 && msg.length > 0) return;
+		if (
+			(pageNumber === 1 && msg.length > 0) ||
+			fetchMessageStatus === "loading" ||
+			fetchMessageStatus === "undefine"
+		)
+			return;
 		dispatch(fetchMsg({ page: pageNumber, limit: 2 }));
 	}, [pageNumber]);
 
@@ -34,7 +39,7 @@ const Messages = () => {
 						<h3 className=" font-medium text-gray-900 drop-shadow-md dark:text-slate-200">
 							All message count: <span>{receivedMessageCount} </span>{" "}
 						</h3>
-						<MessagesComp msg={msg} />
+						<MessagesComp msg={msg} IsMessage={true} />
 						{msg.length === 0 && <h1>you have no messages</h1>}
 					</div>
 				)}

@@ -133,6 +133,7 @@ const initialState = {
 	category: "",
 	description: "",
 	content: "",
+	isBlocked: false,
 };
 const singlePostSlice = createSlice({
 	name: "singlePostSlice",
@@ -200,9 +201,10 @@ const singlePostSlice = createSlice({
 
 			toast.success("post created successfully");
 		},
-		[createPost.rejected]: (state, action) => {
+		[createPost.rejected]: (state, { payload }) => {
+			state.isBlocked = payload?.isBlocked;
 			state.postEditingStatus = "failed";
-			toast.error(action?.payload?.message);
+			toast.error(payload?.message);
 		},
 		// update post
 		[updatePost.pending]: (state, action) => {
@@ -215,10 +217,10 @@ const singlePostSlice = createSlice({
 			state.isLoading = false;
 			toast.success("Post Updated Successfully");
 		},
-		[updatePost.rejected]: (state, action) => {
+		[updatePost.rejected]: (state, { payload }) => {
+			state.isBlocked = payload.isBlocked;
 			state.postEditingStatus = "failed";
-
-			toast.error(action.payload.message);
+			toast.error(payload?.message);
 		},
 	},
 });

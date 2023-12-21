@@ -40,7 +40,7 @@ const Home = () => {
 					<div className="">
 						<PostSearch  />
 
-						<AllPost />
+						<AllPost  />
 					</div>
 				</main>
 				{/* left section */}

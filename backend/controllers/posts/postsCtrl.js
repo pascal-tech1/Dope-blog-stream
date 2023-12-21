@@ -12,7 +12,7 @@ const path = require("path");
 const { filterCriteria } = require("../../utils/filterSortCriteria");
 const PostViewedHistory = require("../../model/postHistory/PostViewedHistory");
 const { isValidObjectId } = require("mongoose");
-const cheerio = require("cheerio");
+const DOMPurify = require("isomorphic-dompurify");
 
 // '''''''''''''''''''''''''''''''''''''''''
 //   Create Post conttoller
@@ -31,14 +31,26 @@ const createPostCtrl = expressAsyncHandler(async (req, res) => {
 			req?.body?.description +
 			"" +
 			req?.body?.content;
-
 		if (checkProfanity(enteredDetails)) {
-			user.isBlocked = true;
+			user.isProfaneCount += 1;
 			await user.save();
-			throw new Error(
-				"post creation failed, account has been block for using profane words"
-			);
+			if (user.isProfaneCount >= 3) {
+				user.isBlocked = true;
+				await user.save();
+				res.status(401).json({
+					status: "failed",
+					isBlocked: true,
+					message: "post contains profane words and account blocked",
+				});
+				return;
+			} else {
+				throw new Error(
+					"post not created, because it contains profane wordss, account will be block after the third time"
+				);
+			}
 		}
+		const cleanHtml = DOMPurify.sanitize(req.body?.content);
+
 		uploadedImage = await handleCloudinaryUpload(
 			req.image,
 			`mern-blog-app/${user?.email}/postImage`
@@ -47,6 +59,7 @@ const createPostCtrl = expressAsyncHandler(async (req, res) => {
 		const post = await Post.create({
 			...req.body,
 			user: id,
+			content: cleanHtml,
 			image: uploadedImage?.url,
 			blurImageUrl: req.blurImageUrl,
 		});
@@ -227,11 +240,22 @@ const updatePostCtrl = expressAsyncHandler(async (req, res) => {
 			req?.body?.content;
 
 		if (checkProfanity(enteredDetails)) {
-			user.isBlocked = true;
+			user.isProfaneCount += 1;
 			await user.save();
-			throw new Error(
-				"post updpate failed, account has been block for using profane words"
-			);
+			if (user.isProfaneCount >= 3) {
+				user.isBlocked = true;
+				await user.save();
+				res.status(401).json({
+					status: "failed",
+					isBlocked: true,
+					message: "post contains profane words and account blocked",
+				});
+				return;
+			} else {
+				throw new Error(
+					"post not created, because it contains profane wordss, account will be block after the third time"
+				);
+			}
 		}
 
 		if (req?.file) {
@@ -567,7 +591,6 @@ const fetchUserSavedPostCtrl = expressAsyncHandler(async (req, res) => {
 
 const postImageCtrl = expressAsyncHandler(async (req, res) => {
 	const user = req.user;
-	console.log('im here post ing ')
 
 	uploadedImage = await handleCloudinaryUpload(
 		req.image,

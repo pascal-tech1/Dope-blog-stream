@@ -218,7 +218,7 @@ th {
 	@apply max-h-[80vh] mx-auto !overflow-y-auto p-2 py-8 rounded-md shadow-inner;
 }
 .code-div {
-	@apply relative dark:bg-[#171717] bg-gray-50 rounded-lg  border dark:border-gray-600;
+	@apply relative dark:bg-[#1b1b1b] bg-gray-50 rounded-lg  border dark:border-gray-600;
 }
 .copy-button {
 	@apply dark:bg-gray-900 drop-shadow-sm text-sm mr-6 mt-2

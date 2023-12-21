@@ -11,14 +11,17 @@ const PostDashboard = ({ posts, status, title, page }) => {
 				<h3 className=" font-bold text-gray-800 dark:text-slate-200 mb-3 text-sm ">
 					{title}
 				</h3>
-				<Link
-					to={`${page}`}
-					className="text-sm font-medium text-blue-500 hover:text-blue-900 transition-all duration-75"
-				>
-					View All
-				</Link>
+				{posts.length > 0 && (
+					<Link
+						to={`${page}`}
+						className="text-sm font-medium text-blue-500 hover:text-blue-900 transition-all duration-75"
+					>
+						View All
+					</Link>
+				)}
 			</div>
 			<div className="  overflow-x-scroll custom-scrollbar flex gap-4 ">
+				{posts.length === 0 && <h3>{`you have no ${title}`}</h3>}
 				{posts?.map((item) => (
 					<Link
 						key={item?.post?._id}

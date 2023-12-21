@@ -111,7 +111,7 @@ const SinglePost = () => {
 				<div className=" font-inter    overflow-x-hidden  gap-[0.5rem] -z-50 ">
 					<div className=" flex flex-col gap-2">
 						<div>
-							<h1 className=" font-bold  text-xl my-2 md:my-4 dark:text-slate-200">
+							<h1 className=" font-bold text-xl  lg:text-3xl  my-2 md:my-4 dark:text-slate-200">
 								{post?.title}
 							</h1>
 						</div>

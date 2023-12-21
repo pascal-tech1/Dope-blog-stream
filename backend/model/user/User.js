@@ -63,6 +63,7 @@ const userSchema = new mongoose.Schema(
 		password: {
 			type: String,
 			required: [true, "Hei buddy Password is required"],
+			select: false,
 		},
 		postCount: {
 			type: Number,
@@ -117,22 +118,11 @@ const userSchema = new mongoose.Schema(
 				},
 			],
 		},
-		// postViewHistory: {
-		// 	type: [
-		// 		{
-		// 			type: mongoose.Schema.Types.ObjectId,
-		// 			ref: "Post",
-		// 		},
-		// 	],
-		// },
-		// savedPost: {
-		// 	type: [
-		// 		{
-		// 			type: mongoose.Schema.Types.ObjectId,
-		// 			ref: "Post",
-		// 		},
-		// 	],
-		// },
+		isProfaneCount: {
+			type: Number,
+			default: 0,
+		},
+
 		passwordChangeAt: Date,
 		passwordRessetToken: String,
 		passwordResetExpires: Date,
@@ -174,6 +164,7 @@ userSchema.virtual("sentMessages", {
 	foreignField: "sender",
 	localField: "_id",
 });
+// virtual method on the user object to populate who viewed user
 userSchema.virtual("userWhoViewProfile", {
 	ref: "UserProfileView",
 	foreignField: "viewedUser",

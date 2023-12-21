@@ -1,15 +1,27 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Modal from "./Modal";
 import { sendMsg } from "../redux/message/messageSlice";
 
 import { LuSend } from "react-icons/lu";
+import { logOutUser } from "../redux/user/userSlice";
+import { useNavigate } from "react-router-dom";
 
 const MessageUser = ({ receiverId }) => {
 	const dispatch = useDispatch();
+	const navigate = useNavigate();
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [message, setMessage] = useState("");
+	const isBlocked = useSelector((store) => store.messageSlice.isBlocked);
+
+	useEffect(() => {
+		if (isBlocked) {
+			dispatch(logOutUser());
+			navigate("/");
+		}
+	}, [isBlocked]);
+
 	const openModal = () => {
 		setIsModalOpen(true);
 	};

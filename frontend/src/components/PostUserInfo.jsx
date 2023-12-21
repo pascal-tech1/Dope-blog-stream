@@ -12,7 +12,7 @@ const PostUserInfo = ({ post }) => {
 	return (
 		<>
 			{user?.firstName && (
-				<div className=" font-inter flex max-[350px]:flex-col text-xs gap-3 text-gray-400 ">
+				<div className=" font-inter flex flex-wrap text-xs gap-3 text-gray-400 ">
 					<Link
 						to={loginUser?._id ? `/profile/${user._id}` : `/login`}
 						className="flex gap-2 self-center"

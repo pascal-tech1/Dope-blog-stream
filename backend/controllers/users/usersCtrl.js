@@ -79,8 +79,10 @@ const userLoginCtrl = expressAsyncHandler(async (req, res) => {
 			"coverPhoto",
 			"isAccountVerified",
 			"isOwner",
+			"isBlocked",
 		]);
-
+		if (userFound?.isBlocked)
+			throw new Error("your account is Blocked contact Admin ");
 		if (
 			userFound &&
 			(await userFound.isPasswordCorrect(req?.body?.password))
@@ -127,7 +129,11 @@ const userLoginWithTokenCtrl = expressAsyncHandler(async (req, res) => {
 		"coverPhoto",
 		"isAccountVerified",
 		"isOwner",
+		"isBlocked",
 	]);
+
+	if (userFound?.isBlocked)
+		throw new Error("your account is Blocked contact Admin ");
 	res.status(200).json({
 		status: "success",
 		user: userFound,
@@ -888,65 +894,58 @@ const fetchWhoViewedUserProfileCtrl = expressAsyncHandler(
 		const numberPerPage = parseInt(req.query.numberPerPage);
 		const { _id } = req.user;
 		if (!_id) throw new Error("User Id is Required");
-
+		console.log(page);
 		try {
-			const pipeline = [
-				{
-					$match: {
-						_id: new mongoose.Types.ObjectId(_id), // Convert _id to ObjectId
-					},
-				},
-				{
-					$lookup: {
-						from: "users", // Replace with the actual collection name
-						localField: "userWhoViewProfile",
-						foreignField: "_id",
-						as: "userWhoViewProfile",
-					},
-				},
-				{
-					$unwind: "$userWhoViewProfile",
-				},
-				{
-					$lookup: {
-						from: "users", // Replace with the actual collection name
-						localField: "userWhoViewProfile.viewedBy",
-						foreignField: "_id",
-						as: "userWhoViewProfile.viewedBy",
-					},
-				},
-				{
-					$match: {
-						"userWhoViewProfile.viewedBy": { $ne: [] }, // Filter out documents where viewedBy is empty
-					},
-				},
-				{
-					$project: {
-						userWhoViewProfile: "$userWhoViewProfile.viewedBy",
-					},
-				},
-				{
-					$sort: {
-						"userWhoViewProfile.updatedAt": -1,
-					},
-				},
-				{
-					$skip: (page - 1) * numberPerPage,
-				},
-				{
-					$limit: numberPerPage,
-				},
-			];
+			let total;
+			if (page === 1) {
+				const { userWhoViewProfile } = await User.findById(_id).populate({
+					path: "userWhoViewProfile",
 
-			const result = await User.aggregate(pipeline);
-			console.log(result);
+					populate: {
+						path: "viewedBy",
+						select: [
+							"_id",
+							"firstName",
+							"lastName",
+							"profilePhoto",
+							"blurProfilePhoto",
+							"blurCoverPhoto",
+							"profession",
+						],
+					},
+				});
 
-			const viewedBy = result.map((user) => user.userWhoViewProfile);
+				total = userWhoViewProfile.filter(
+					(user) => user.viewedBy.length !== 0
+				).length;
+				console.log(total);
+			}
+
+			const { userWhoViewProfile } = await User.findById(_id).populate({
+				path: "userWhoViewProfile",
+				options: { sort: { updatedAt: -1 } },
+				skip: (page - 1) * numberPerPage,
+				limit: numberPerPage,
+				populate: {
+					path: "viewedBy",
+					select: [
+						"_id",
+						"firstName",
+						"lastName",
+						"profilePhoto",
+						"blurProfilePhoto",
+						"blurCoverPhoto",
+						"profession",
+					],
+				},
+			});
+
+			console.log(total);
 
 			res.status(200).json({
 				status: "success",
-				userWhoViewProfile: viewedBy,
-				whoViewUserProfileCount: viewedBy.length,
+				userWhoViewProfile,
+				whoViewUserProfileCount: total,
 			});
 		} catch (error) {
 			res.status(500).json({ status: "failed", message: error.message });
@@ -1102,6 +1101,7 @@ const blockOrUnblockUserCtrl = expressAsyncHandler(async (req, res) => {
 				userId,
 				{
 					isBlocked: false,
+					isProfaneCount: 0,
 				},
 				{
 					new: true,

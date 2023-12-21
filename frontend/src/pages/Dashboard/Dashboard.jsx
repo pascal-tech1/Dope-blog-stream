@@ -41,6 +41,7 @@ const Dashboard = () => {
 		whoViewUserProfile,
 		chartSelectedFilter,
 		whoViewUserProfileStatus,
+		whoViewUserProfileCount,
 	} = useSelector((store) => store?.userSlice);
 
 	const {
@@ -51,7 +52,7 @@ const Dashboard = () => {
 		savedPostHasMore,
 		historyHasMore,
 	} = useSelector((store) => store?.morePostSlice);
-	const { msg, fetchMessageStatus } = useSelector(
+	const { msg, fetchMessageStatus, receivedMessageCount } = useSelector(
 		(store) => store?.messageSlice
 	);
 
@@ -151,10 +152,11 @@ const Dashboard = () => {
 						<h1 className=" font-bold text-gray-800 mb-3 mt-10 lg:mt-0 dark:text-slate-300 ">
 							Who's Viewed your profile
 						</h1>
+						<h3>{`${whoViewUserProfileCount} people have view your profile`}</h3>
 						{whoViewUserProfileStatus === "loading" ? (
 							<LoadingSpinner />
 						) : (
-							whoViewUserProfile.map((users, index) =>
+							whoViewUserProfile.map((users) =>
 								users?.viewedBy?.map((viewedBy, index) => (
 									<div key={index}>
 										<UserToFollow
@@ -176,6 +178,7 @@ const Dashboard = () => {
 				<h1 className=" font-bold text-gray-800 mb-3 dark:text-slate-200">
 					Recent Mesaages
 				</h1>
+				<h3 className=" my-3">{`you have ${receivedMessageCount} messages `}</h3>
 				{fetchMessageStatus === "loading" ? (
 					<LoadingSpinner />
 				) : (
@@ -192,6 +195,7 @@ const Dashboard = () => {
 				/>
 			</div>
 			<div className=" col-start-1 col-span-full mb-6 flex gap-8 flex-col  bg-white dark:bg-[#171717] py-2  rounded-md drop-shadow-sm px-4 ">
+
 				<PostDashboard
 					posts={userSavedPost.slice(0, 10)}
 					status={userSavedPostStatus}

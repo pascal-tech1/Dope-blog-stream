@@ -11,11 +11,6 @@ const User = require("../../model/user/User");
 
 const createMsgCtrl = expressAsyncHandler(async (req, res) => {
 	const { receiverId, message } = req?.body;
-	if (checkProfanity(" " + message)) {
-		throw new Error(
-			"message not sent, because it contains profane wordss"
-		);
-	}
 
 	const senderId = req.user._id;
 
@@ -23,12 +18,32 @@ const createMsgCtrl = expressAsyncHandler(async (req, res) => {
 	const senderInfo = await User.findById(senderId).select([
 		"firstName",
 		"lastName",
+		"isBlocked",
+		"isProfaneCount",
 	]);
+	if (checkProfanity(" " + message)) {
+		senderInfo.isProfaneCount += 1;
+		await senderInfo.save();
+		if (senderInfo.isProfaneCount >= 3) {
+			senderInfo.isBlocked = true;
+			await senderInfo.save();
+			res.status(401).json({
+				status: "failed",
+				isBlocked: true,
+				message: "message contains profane words and account blocked",
+			});
+			return;
+		} else {
+			throw new Error(
+				"message not sent, because it contains profane wordss, account will be block after the third time"
+			);
+		}
+	}
 	const subject = `Message from BlogVana user  ${senderInfo?.firstName} ${senderInfo?.lastName}`;
 
 	let mailDetails = {
 		from: "pascalazubike003@gmail.com",
-		to: "pascalazubike003@gmail.com",
+		to: receiverInfo.email,
 		subject,
 		text: message,
 	};

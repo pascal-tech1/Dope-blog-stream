@@ -81,6 +81,12 @@ function VerifyEmail() {
 							Sorry Sending you email verification failed click the Resend
 							Button below to resend
 						</p>
+						<button
+							onClick={() => dispatch(verifyEmail())}
+							className=" bg-blue-400 drop-shadow-sm px-1 rounded-sm hover:bg-blue-500 transition-all delay-75 text-white mt-4"
+						>
+							{verifyEmailStatus === "loading" ? <Spinner /> : "Resend"}
+						</button>
 					</div>
 				)}
 			</div>

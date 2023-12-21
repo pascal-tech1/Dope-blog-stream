@@ -43,6 +43,7 @@ export const fetchMsg = createAsyncThunk(
 const initialState = {
 	msg: [],
 	receivedMessageCount: 0,
+	isBlocked: false,
 };
 
 const messageSlice = createSlice({
@@ -63,6 +64,7 @@ const messageSlice = createSlice({
 			toast.success(payload.message);
 		},
 		[sendMsg.rejected]: (state, { payload }) => {
+			state.isBlocked = payload.isBlocked;
 			state.SendingMessageStatus = "failed";
 			toast.error(payload.message);
 		},

@@ -18,22 +18,26 @@ const authMiddleWare = expressAsyncHandler(async (req, res, next) => {
 
 	const enteredToken = enteredHeader?.split(" ")[1];
 	if (!enteredToken) throw new Error("Request must contain a valid token");
+	let foundUser;
 	try {
 		//   verify the user entered token with jwt
 		const decodedToken = jwt.verify(enteredToken, process.env.JWT_KEY);
 		const userId = decodedToken?.id;
 		// found the user with the enterd token and return it without the password
-		const foundUser = await User.findById(userId).select("-password");
-
-		req.user = foundUser;
-
-		next();
+		foundUser = await User.findById(userId);
 	} catch (error) {
-		res.status(500).json({
-			status: "failed",
-			messsage: "invalid token or Expired login Again",
-		});
+		console.log(error.Error);
+		throw new Error("invalid token or Expired login Again");
 	}
+	if (foundUser.isBlocked) {
+		throw new Error(
+			" you can't access this resource, your Account is blocked contact Admin"
+		);
+	}
+
+	req.user = foundUser;
+
+	next();
 });
 
 module.exports = authMiddleWare;

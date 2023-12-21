@@ -9,24 +9,30 @@ import {
 } from "../../redux/user/userSlice";
 
 const WhoViewedMyProfile = () => {
-	useEffect(() => {
-		dispatch(setIsSearchBArNeeded(false));
-	}, []);
 	const dispatch = useDispatch();
-
+	const [pageNumber, setPageNumber] = useState(1);
 	const {
 		whoViewUserProfile,
 		whoViewUserProfileStatus,
 		whoViewUserProfileCount,
-	} = useSelector((store) => store?.userSlice);
-	const [pageNumber, setPageNumber] = useState(1);
+	} = useSelector((store) => store.userSlice);
 
 	useEffect(() => {
-		if (pageNumber === 1 && whoViewUserProfile.length > 0) return;
+		dispatch(setIsSearchBArNeeded(false));
+	}, []);
+
+
+
+	useEffect(() => {
+		if (
+			(pageNumber === 1 && whoViewUserProfile.length > 0) ||
+			whoViewUserProfileStatus === "loading" ||
+			whoViewUserProfileStatus === "undefine"
+		)
+			return;
 		dispatch(fetchWhoViewedUserProfile({ page: pageNumber, limit: 10 }));
 	}, [pageNumber]);
-	const users = whoViewUserProfile.map((user) => user.viewedBy);
-	console.log(users);
+
 	return (
 		<div>
 			<div className="flex gap-3 font-inter  flex-col  dark:bg-[#171717] px-4">
@@ -38,7 +44,7 @@ const WhoViewedMyProfile = () => {
 					who viewed your profile count:{" "}
 					<span>{whoViewUserProfileCount} </span>
 				</h3>
-				{console.log(whoViewUserProfile)}
+
 				{whoViewUserProfileCount === 0 && (
 					<h1>NO one have viewed your profile yet</h1>
 				)}

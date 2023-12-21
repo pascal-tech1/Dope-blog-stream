@@ -295,7 +295,7 @@ const MyPosts = () => {
 							creatorPostStatus === "success" && (
 								<tr className=" bg-gray-50  dark:bg-[#1C1C1C]">
 									<td className=" text-yellow-400 tableData stickyBottom bg-gray-50  dark:bg-[#1C1C1C] ">
-										No User Found
+										you have no post
 									</td>
 								</tr>
 							)}

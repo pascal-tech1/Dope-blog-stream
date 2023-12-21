@@ -103,12 +103,12 @@ export function BarChart() {
 			{
 				label: "Likes",
 				data: userPostImpression?.likesDataset,
-				backgroundColor: "rgb(255, 99, 133)",
+				backgroundColor: "rgb(53, 162, 235)",
 			},
 			{
 				label: "Dislikes",
 				data: userPostImpression?.disLikesDataset,
-				backgroundColor: "rgb(53, 162, 235)",
+				backgroundColor: "rgb(255, 99, 133)",
 			},
 		];
 	}
@@ -118,7 +118,7 @@ export function BarChart() {
 			{
 				label: "number of views",
 				data: userPostImpression?.numViewDataset,
-				backgroundColor: "rgba(255, 99, 132, 0.5)",
+				backgroundColor: "rgba(99, 255, 138, 0.929)",
 			},
 		];
 	}
