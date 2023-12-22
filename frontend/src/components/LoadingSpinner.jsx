@@ -6,7 +6,7 @@ export const LoadingSpinner = () => {
 			<div className="flex justify-center items-center space-x-1 text-sm text-gray-700">
 				<svg
 					fill="none"
-					className=" text-blue-400 w-6 h-6 animate-spin"
+					className=" text-colorPrimary w-6 h-6 animate-spin"
 					viewBox="0 0 32 32"
 					xmlns="http://www.w3.org/2000/svg"
 				>
@@ -18,7 +18,9 @@ export const LoadingSpinner = () => {
 					/>
 				</svg>
 
-				<div className=" text-blue-400 hover:text-white">Loading ...</div>
+				<div className=" text-colorPrimary  hover:text-white">
+					Loading ...
+				</div>
 			</div>
 		</div>
 	);

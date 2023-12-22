@@ -7,6 +7,7 @@ import {
 	DashboardNavBAr,
 	ChangeEmailForm,
 	LoadingSpinner,
+	UpdatePassword,
 } from "../../components";
 import { useDispatch, useSelector } from "react-redux";
 import { useClickOutside, useScreenWidth } from "../../customHooks";
@@ -64,8 +65,9 @@ const Layout = () => {
 
 	return (
 		<div className=" overflow-hidden font-inter">
-			<section className="dashboardLayout grid-cols-12 bg-gray-50  h-screen overflow-y-hidden  dark:bg-[#1C1C1C] dark:text-slate-300 text-lg md:text-base  ">
+			<section className="dashboardLayout grid-cols-12 bg-gray-50  h-screen overflow-y-hidden  dark:bg-lightdark dark:text-slate-300 text-lg md:text-base  ">
 				<ChangeEmailForm />
+				<UpdatePassword />
 
 				<div
 					className={`${
@@ -92,7 +94,7 @@ const Layout = () => {
 						isSideBarOpen
 							? "absolute top-12 md:top-0  md:relative "
 							: "hidden "
-					}   col-start-1 col-span-2 row-start-1 row-span-full h-[95vh] md:h-screen  z-10  overflow-y-auto custom-scrollbar bg-white dark:bg-[#171717] drop-shadow-sm rounded-md px-2   `}
+					}   col-start-1 col-span-2 row-start-1 row-span-full  h-screen   z-10 overflow-y-hidden overflow-x-hidden bg-white dark:bg-dark drop-shadow-sm rounded-md px-2   `}
 				>
 					<DashboardSideBar />
 				</div>

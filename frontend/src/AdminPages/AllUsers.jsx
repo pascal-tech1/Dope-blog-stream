@@ -136,7 +136,7 @@ const AllUsers = () => {
 	};
 
 	return (
-		<div className="font-inter overflow-hidden shadow-md relative h-[85vh]">
+		<div className="font-inter overflow-hidden shadow-md relative h-[85vh] bg-dark p-2 rounded-lg">
 			{/* clear search */}
 			<ClearSearch
 				searchQuery={dashboardSearchTerm}
@@ -170,7 +170,7 @@ const AllUsers = () => {
 						allFilters={allFilter}
 						setSelectedFilter={setAllUsersSelectedFilter}
 						selectedFilter={AdminAllUserSelectedFilter}
-						dropdownWidth={"w-[50vw]"}
+						dropdownWidth={"w-[30vw]"}
 					/>
 				</div>
 				<h3 className="flex gap-2 items-center ">
@@ -220,7 +220,7 @@ const AllUsers = () => {
 								}
 								className="transition duration-300 ease-in-out hover:bg-neutral-200  dark:hover:bg-neutral-800"
 							>
-								<td className="bg-gray-50 tableData  dark:bg-[#1C1C1C]">
+								<td className="bg-gray-50 tableData  dark:bg-lightdark">
 									<input
 										type="checkbox"
 										name="check"
@@ -271,7 +271,7 @@ const AllUsers = () => {
 								<td className="tableData ">{singleUser.followersCount}</td>
 								<td className="tableData ">{singleUser.followingCount}</td>
 
-								<td className="flex   bg-gray-50 tableData  dark:bg-[#1C1C1C] items-center ">
+								<td className="flex   bg-gray-50 tableData dark:bg-lightdark  items-center ">
 									<MessageUser receiverId={singleUser._id} />
 
 									<BlockOrUnblockUser user={singleUser} />
@@ -283,8 +283,8 @@ const AllUsers = () => {
 						{/* conditionary rendering user status */}
 						{adminAllUsersStatus === "loading" && (
 							<tr>
-								<td className="bg-gray-50  tableData dark:bg-[#1C1C1C]"></td>
-								<td className=" bg-gray-50 tableData dark:bg-[#1C1C1C]">
+								<td className=" tableData "></td>
+								<td className=" tableData ">
 									<LoadingSpinner />
 								</td>
 							</tr>
@@ -293,9 +293,9 @@ const AllUsers = () => {
 						{!adminFetchUsersHasMore &&
 							adminAllUsersStatus === "success" &&
 							allUsers.length > 0 && (
-								<tr className=" bg-gray-50  dark:bg-[#1C1C1C]">
-									<td className="bg-gray-50 tableData dark:bg-[#1C1C1C]"></td>
-									<td className=" text-yellow-400 tableData  stickyBottom bg-white dark:bg-[#1C1C1C] ">
+								<tr className="  ">
+									<td className="tableData "></td>
+									<td className=" text-yellow-400 tableData  stickyBottom  ">
 										No more User
 									</td>
 								</tr>
@@ -303,7 +303,7 @@ const AllUsers = () => {
 
 						{allUsers.length === 0 &&
 							adminAllUsersStatus === "success" && (
-								<td className=" text-yellow-400 tableData stickyBottom bg-gray-50  dark:bg-[#1C1C1C] ">
+								<td className=" text-yellow-400 tableData stickyBottom  ">
 									No User Found
 								</td>
 							)}

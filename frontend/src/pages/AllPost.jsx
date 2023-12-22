@@ -15,6 +15,7 @@ const AllPost = () => {
 	);
 
 	useEffect(() => {
+		if (isLoading) return;
 		allPost.length === 0 &&
 			searchQuery.length === 0 &&
 			dispatch(fetchPostByCategory());
@@ -24,6 +25,7 @@ const AllPost = () => {
 	const lastPostRef = useCallback(
 		(node) => {
 			if (isLoading) return;
+			console.log(isLoading)
 			if (observer.current) observer.current.disconnect();
 			observer.current = new IntersectionObserver((entries) => {
 				if (entries[0].isIntersecting && hasMore) {
@@ -33,7 +35,7 @@ const AllPost = () => {
 			});
 			if (node) observer.current.observe(node);
 		},
-		[isLoading, hasMore]
+		[hasMore,isLoading]
 	);
 	const handleClearSearch = () => {
 		dispatch(setEmptySearch());

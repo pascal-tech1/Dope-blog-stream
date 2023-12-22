@@ -147,7 +147,7 @@ const MyPosts = () => {
 	};
 
 	return (
-		<div className="  font-inter overflow-hidden shadow-md h-[85vh] ">
+		<div className="  font-inter overflow-hidden shadow-md dark:bg-dark h-[85vh] md:p-4 rounded-lg ">
 			{/* clear search */}
 			<ClearSearch
 				searchQuery={dashboardSearchTerm}
@@ -230,7 +230,7 @@ const MyPosts = () => {
 								}
 								className="border-b transition duration-300 ease-in-out hover:bg-neutral-100 dark:hover:bg-gray-600 dark:border-neutral-100 "
 							>
-								<td className=" bg-gray-50 border-x-blue-600  dark:bg-[#1C1C1C] tableData ">
+								<td className=" bg-gray-50 border-x-blue-600  dark:bg-lightdark tableData ">
 									<input
 										type="checkbox"
 										name="check"
@@ -265,7 +265,7 @@ const MyPosts = () => {
 									</Tooltip>
 								</td>
 								<td className="tableData">{post.disLikes.length}</td>
-								<td className="  flex bg-gray-50 tableData items-center dark:bg-[#1C1C1C] ">
+								<td className="  flex bg-gray-50 tableData items-center dark:bg-lightdark ">
 									<EditPostBtn postId={post._id} />
 								</td>
 							</tr>
@@ -273,8 +273,8 @@ const MyPosts = () => {
 						{/* conditionary rendering post status */}
 						{creatorPostStatus === "loading" && (
 							<tr>
-								<td className="bg-gray-50  tableData dark:bg-[#1C1C1C]"></td>
-								<td className=" bg-gray-50 tableData dark:bg-[#1C1C1C]">
+								<td className="  tableData "></td>
+								<td className="  tableData ">
 									<LoadingSpinner />
 								</td>
 							</tr>
@@ -283,9 +283,9 @@ const MyPosts = () => {
 						{!hasMore &&
 							creatorPostStatus === "success" &&
 							creatorAllPost.length > 0 && (
-								<tr className=" bg-gray-50  dark:bg-[#1C1C1C]">
-									<td className="bg-gray-50 tableData dark:bg-[#1C1C1C]"></td>
-									<td className=" text-yellow-400 tableData  stickyBottom bg-white dark:bg-[#1C1C1C] ">
+								<tr className=" ">
+									<td className=" tableData "></td>
+									<td className=" text-yellow-400 tableData  stickyBottom ">
 										No more User
 									</td>
 								</tr>
@@ -293,8 +293,8 @@ const MyPosts = () => {
 
 						{creatorAllPost.length === 0 &&
 							creatorPostStatus === "success" && (
-								<tr className=" bg-gray-50  dark:bg-[#1C1C1C]">
-									<td className=" text-yellow-400 tableData stickyBottom bg-gray-50  dark:bg-[#1C1C1C] ">
+								<tr className="   ">
+									<td className=" text-yellow-400 tableData stickyBottom    ">
 										you have no post
 									</td>
 								</tr>

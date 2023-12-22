@@ -59,8 +59,8 @@ const ProfileView = () => {
 
 	return (
 		<>
-			<div className=" flex flex-col row-span-2 md:grid grid-cols-6 col-start-1 col-span-4 rounded-xl  lg:mb-6 lg:shadow-sm lg:rounded-md lg:ml-0  font-inter gap-5  backdrop:dark:bg-[#1C1C1C] ">
-				<div className=" col-start-1 col-span-4  bg-white dark:bg-[#171717] lg:shadow-sm lg:rounded-md">
+			<div className=" flex flex-col row-span-2 md:grid grid-cols-6 col-start-1 col-span-4  rounded-lg lg:mb-6 lg:shadow-sm lg:rounded-md lg:ml-0  font-inter gap-5  ">
+				<div className=" col-start-1 col-span-4  bg-white dark:bg-dark lg:shadow-sm lg:rounded-md">
 					<div className="w-full relative ">
 						<div className=" w-full  ">
 							<CoverPhoto user={user} />
@@ -78,8 +78,8 @@ const ProfileView = () => {
 				<AdditionalUserProfile />
 
 				{/* following  */}
-				<div className=" md:col-start-1 col-span-3 px-4 font-inter bg-white dark:bg-[#171717] rounded-md ">
-					<h1 className="font-semibold  max-w-max pt-3 pb-1 text-blue-400 ">
+				<div className=" md:col-start-1 col-span-3 px-4 font-inter bg-white dark:bg-dark rounded-md ">
+					<h1 className="font-semibold  max-w-max pt-3 pb-1 text-colorPrimary ">
 						following
 					</h1>
 
@@ -94,8 +94,8 @@ const ProfileView = () => {
 					/>
 				</div>
 				{/* followers  */}
-				<div className=" md:col-start-4 col-span-full font-inter bg-white dark:bg-[#171717] px-4 rounded-md">
-					<h1 className="font-semibold  max-w-max pt-3 pb-1 text-blue-400 ">
+				<div className=" md:col-start-4 col-span-full font-inter bg-white dark:bg-dark px-4 rounded-md">
+					<h1 className="font-semibold  max-w-max pt-3 pb-1 text-colorPrimary ">
 						followers
 					</h1>
 

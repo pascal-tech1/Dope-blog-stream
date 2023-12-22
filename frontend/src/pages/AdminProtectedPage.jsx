@@ -10,7 +10,6 @@ const AdminProtectedPage = () => {
 	}
 
 	if (user && !user?.isAdmin) {
-		console.log(user);
 		return <Error />;
 	}
 	return (

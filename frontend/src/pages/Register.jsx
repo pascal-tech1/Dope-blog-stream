@@ -51,7 +51,7 @@ const Register = () => {
 
 	return (
 		<div className="h-[90vh] flex justify-center md:grid place-items-center place-content-center grid-cols-2 font-inter font-light dark:text-slate-200">
-			<div className=" hidden md:flex flex-col p-9 bg-gray-100 mr-6 shadow-sm justify-center items-center dark:bg-[#171717] border dark:border-gray-800">
+			<div className=" hidden md:flex flex-col p-9 bg-gray-100 mr-6 shadow-sm justify-center items-center dark:bg-dark  border dark:border-gray-800">
 				<h1 className=" font-medium">
 					Join Our Community and Start Sharing Your Story!
 				</h1>
@@ -65,7 +65,7 @@ const Register = () => {
 			{/* form starts here */}
 			<form
 				onSubmit={formik.handleSubmit}
-				className="flex flex-col w-full  items-center px-8 lg:px-20 dark:bg-[#171717] rounded-md p-2 border dark:border-gray-800"
+				className="flex flex-col w-full  items-center px-8 lg:px-20  rounded-md p-2 border dark:border-gray-800"
 			>
 				<div className=" items-center flex flex-col  mb-6">
 					<p className=" text-lg font-medium mb-3">Get Started</p>
@@ -155,7 +155,7 @@ const Register = () => {
 						Already Have an account?
 						<span>
 							<Link
-								className=" text-blue-600 ml-2 hover:text-blue-400 transition-all"
+								className=" text-colorPrimary ml-2 hover:text-blue-400 transition-all"
 								href="#"
 								to="/login"
 							>

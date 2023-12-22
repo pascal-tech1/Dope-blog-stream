@@ -550,6 +550,7 @@ const updatePasswordCtrl = expressAsyncHandler(async (req, res) => {
 
 		const foundUser = await User.findById(req.user._id);
 		if (!foundUser) throw new Error("invalid login credentials");
+		console.log(foundUser);
 		const isPasswordMatch = await foundUser.isPasswordCorrect(oldPassword);
 		if (!isPasswordMatch) throw new Error("invalid password");
 
@@ -567,13 +568,18 @@ const updatePasswordCtrl = expressAsyncHandler(async (req, res) => {
 		};
 
 		mailTransporter.sendMail(mailDetails, function (err, data) {
-			if (err) res.json(err);
-			res.json({
-				status: "success",
-				message: "password changed successfully",
-			});
+			if (err) {
+				res.status(500).json({ message: "sending email failed" });
+				return;
+			} else
+				res.status(201).json({
+					status: "success",
+					message: "password changed successfully",
+				});
+			return;
 		});
 	} catch (error) {
+		console.log("error", error.message);
 		res.status(400).json({ message: error.message });
 	}
 });
@@ -914,11 +920,7 @@ const fetchWhoViewedUserProfileCtrl = expressAsyncHandler(
 						],
 					},
 				});
-
-				total = userWhoViewProfile.filter(
-					(user) => user.viewedBy.length !== 0
-				).length;
-				console.log(total);
+				total = userWhoViewProfile.length;
 			}
 
 			const { userWhoViewProfile } = await User.findById(_id).populate({
@@ -939,8 +941,6 @@ const fetchWhoViewedUserProfileCtrl = expressAsyncHandler(
 					],
 				},
 			});
-
-			console.log(total);
 
 			res.status(200).json({
 				status: "success",

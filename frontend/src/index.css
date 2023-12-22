@@ -25,202 +25,203 @@
 }
   background-color: #242424;
  */
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-/* Custom Scrollbar Styling */
-
-.Toastify__toast--error {
-	border-left: 1px solid rgb(246, 76, 76);
-}
-.Toastify__toast-body {
-	margin: 0;
-	flex: 1 1 auto;
-	padding: 3px;
-	display: flex;
-	align-items: center;
-}
-.Toastify__toast--success {
-	border-left: 1px solid rgb(93, 220, 93);
-}
-.Toastify__toast--warn {
-	border-left: 1px solid rgb(218, 234, 75);
-}
-
-.copy-button {
-	background-color: rgb(106, 162, 218);
-	padding: 0 6px;
-	position: absolute;
-	top: 0;
-	right: 6px;
-	color: #fff;
-	border-radius: 5px;
-}
-.copy-button:hover {
-	background-color: rgb(37, 140, 235);
-}
-table {
-	border-collapse: collapse;
-	margin-top: 10px;
-	width: 100%;
-}
-
-.ql-toolbar.ql-snow {
-	background: #bfcbda;
-	color: white !important;
-	border: none;
-}
-
-.ql-syntax::-webkit-scrollbar {
-	width: 10px;
-	height: 10px;
-	cursor: grab;
-}
-
-.ql-syntax::-webkit-scrollbar-thumb {
-	background-color: #c8c8c8;
-	border-radius: 6px;
-	height: 1rem;
-}
-
-.ql-syntax::-webkit-scrollbar-track {
-	background-color: transparent;
-	border-radius: 6px;
-}
-th,
-td {
-	padding: 6px;
-	box-sizing: border-box;
-	white-space: nowrap;
-	text-align: start;
-	z-index: -1;
-	/* font-size: 0.875rem 
-	line-height: 1.25rem  */
-}
-td:last-child,
-th:last-child {
-	position: sticky;
-	right: 0;
-	/* width: 85px; */
-}
-td:first-child,
-th:first-child {
-	position: sticky;
-	left: -5px;
-	width: 30px;
-}
-
-th:first-child,
-th:last-child {
-	z-index: 10;
-}
-td:first-child,
-td:last-child {
-	z-index: 1;
-}
-
-.stickyRight {
-	position: sticky;
-	top: 0;
-	height: 100vh;
-	overflow-y: auto;
-}
-.stickyBottom {
-	position: sticky;
-	left: 0;
-}
-.categorySticky {
-	position: sticky;
-	top: 0;
-	z-index: 10;
-	background-color: white;
-	padding: 10px 0;
-}
-th {
-	border: none;
-	z-index: 100;
-}
-
-.tableHeading {
-	position: sticky;
-	top: -5px;
-	border-top: none;
-	padding: 10px 0;
-	z-index: 10;
-}
-
-.tableAction {
-	position: sticky;
-
-	/* background-color: white; Set background color as needed */
-}
-
-.custom-scrollbar::-webkit-scrollbar {
-	width: 10px;
-	height: 10px;
-	cursor: grab;
-}
-
-.custom-scrollbar::-webkit-scrollbar-thumb {
-	background-color: #c8c8c8;
-	border-radius: 6px;
-	height: 1rem;
-}
-
-.custom-scrollbar::-webkit-scrollbar-track {
-	background-color: transparent;
-	border-radius: 6px;
-}
-
-.dashboardLayout {
-	display: grid;
-	grid-template-rows: 3rem 1fr;
-	height: 100vh;
-}
-
-.form-label {
-	@apply text-sm  text-gray-400 self-start;
-}
-
-.form-input {
-	@apply my-1 dark:bg-[#1C1C1C]   rounded-lg py-1 border  border-gray-200 dark:border-gray-800 focus:outline-none  focus:border-b-blue-400 dark:focus:border-b-gray-500 w-full px-2;
-}
-
-.form-container {
-	@apply flex flex-col;
-}
-
-.form-btn {
-	@apply bg-blue-600 w-full py-1 rounded-lg text-white hover:bg-blue-500 transition-all;
-}
-.form-error-text {
-	@apply absolute top-[-0.6rem] left-0 text-white bg-red-400 text-center rounded-md  mt-1  text-xs min-w-max py-[0.15rem];
-}
-
-.tableContainer {
-	@apply shadow-md rounded-lg  font-medium  gap-4  -mx-2;
-}
-.checkboxStyle {
-	@apply w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600;
-}
-
-.tableActionStyle {
-	@apply flex justify-between items-start fixed z-50  mx-6 gap-4 row-start-1 row-span-1;
-}
-.tableBaginsStyle {
-	@apply overflow-y-auto row-start-2 flex flex-col custom-scrollbar;
-}
-.tableData {
-	@apply border border-gray-200 dark:border-neutral-800;
-}
-.ql-syntax {
-	@apply max-h-[60vh] mx-auto !overflow-y-auto px-3 py-4 rounded-md;
-}
-.code-div {
-	@apply relative dark:bg-[#272626] bg-gray-50 rounded-[1rem] drop-shadow-sm;
-}
-.copy-button {
-	@apply dark:bg-gray-900 drop-shadow-sm text-sm mr-6 mt-2
-
-}
+ @tailwind base;
+ @tailwind components;
+ @tailwind utilities;
+ 
+ /* Custom Scrollbar Styling */
+ 
+ .Toastify__toast--error {
+	 border-left: 1px solid rgb(246, 76, 76);
+ }
+ .Toastify__toast-body {
+	 margin: 0;
+	 flex: 1 1 auto;
+	 padding: 3px;
+	 display: flex;
+	 align-items: center;
+ }
+ .Toastify__toast--success {
+	 border-left: 1px solid rgb(93, 220, 93);
+ }
+ .Toastify__toast--warn {
+	 border-left: 1px solid rgb(218, 234, 75);
+ }
+ 
+ .copy-button {
+	 background-color: rgb(106, 162, 218);
+	 padding: 0 6px;
+	 position: absolute;
+	 top: 0;
+	 right: 6px;
+	 color: #fff;
+	 border-radius: 5px;
+ }
+ .copy-button:hover {
+	 background-color: rgb(37, 140, 235);
+ }
+ table {
+	 border-collapse: collapse;
+	 margin-top: 10px;
+	 width: 100%;
+ }
+ 
+ .ql-toolbar.ql-snow {
+	 background: #bfcbda;
+	 color: white !important;
+	 border: none;
+ }
+ 
+ .ql-syntax::-webkit-scrollbar {
+	 width: 10px;
+	 height: 10px;
+	 cursor: grab;
+ }
+ 
+ .ql-syntax::-webkit-scrollbar-thumb {
+	 background-color: #c8c8c8;
+	 border-radius: 6px;
+	 height: 1rem;
+ }
+ 
+ .ql-syntax::-webkit-scrollbar-track {
+	 background-color: transparent;
+	 border-radius: 6px;
+ }
+ th,
+ td {
+	 padding: 6px;
+	 box-sizing: border-box;
+	 white-space: nowrap;
+	 text-align: start;
+	 z-index: -1;
+	 /* font-size: 0.875rem 
+	 line-height: 1.25rem  */
+ }
+ td:last-child,
+ th:last-child {
+	 position: sticky;
+	 right: 0;
+	 /* width: 85px; */
+ }
+ td:first-child,
+ th:first-child {
+	 position: sticky;
+	 left: -5px;
+	 width: 30px;
+ }
+ 
+ th:first-child,
+ th:last-child {
+	 z-index: 10;
+ }
+ td:first-child,
+ td:last-child {
+	 z-index: 1;
+ }
+ 
+ .stickyRight {
+	 position: sticky;
+	 top: 0;
+	 height: 100vh;
+	 overflow-y: auto;
+ }
+ .stickyBottom {
+	 position: sticky;
+	 left: 0;
+ }
+ .categorySticky {
+	 position: sticky;
+	 top: 0;
+	 z-index: 10;
+	 background-color: white;
+	 padding: 10px 0;
+ }
+ th {
+	 border: none;
+	 z-index: 100;
+ }
+ 
+ .tableHeading {
+	 position: sticky;
+	 top: -5px;
+	 border-top: none;
+	 padding: 10px 0;
+	 z-index: 10;
+ }
+ 
+ .tableAction {
+	 position: sticky;
+ 
+	 /* background-color: white; Set background color as needed */
+ }
+ 
+ .custom-scrollbar::-webkit-scrollbar {
+	 width: 10px;
+	 height: 10px;
+	 cursor: grab;
+ }
+ 
+ .custom-scrollbar::-webkit-scrollbar-thumb {
+	 background-color: #c8c8c8;
+	 border-radius: 6px;
+	 height: 1rem;
+ }
+ 
+ .custom-scrollbar::-webkit-scrollbar-track {
+	 background-color: transparent;
+	 border-radius: 6px;
+ }
+ 
+ .dashboardLayout {
+	 display: grid;
+	 grid-template-rows: 3rem 1fr;
+	 height: 100vh;
+ }
+ 
+ .form-label {
+	 @apply text-sm  text-gray-400 self-start;
+ }
+ 
+ .form-input {
+	 @apply my-1 dark:bg-lightdark   rounded-lg py-1 border  border-gray-200 dark:border-gray-800 focus:outline-none  focus:border-b-blue-400 dark:focus:border-b-gray-500 w-full px-2;
+ }
+ 
+ .form-container {
+	 @apply flex flex-col;
+ }
+ 
+ .form-btn {
+	 @apply bg-blue-600 w-full py-1 rounded-lg text-white hover:bg-blue-500 transition-all;
+ }
+ .form-error-text {
+	 @apply absolute top-[-0.6rem] left-0 text-white bg-red-400 text-center rounded-md  mt-1  text-xs min-w-max py-[0.15rem];
+ }
+ 
+ .tableContainer {
+	 @apply shadow-md rounded-lg  font-medium  gap-4  -mx-2;
+ }
+ .checkboxStyle {
+	 @apply w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600;
+ }
+ 
+ .tableActionStyle {
+	 @apply flex justify-between items-start fixed z-50  mx-6 gap-4 row-start-1 row-span-1;
+ }
+ .tableBaginsStyle {
+	 @apply overflow-y-auto row-start-2 flex flex-col custom-scrollbar;
+ }
+ .tableData {
+	 @apply border border-gray-200 dark:border-neutral-800;
+ }
+ .ql-syntax {
+	 @apply max-h-[60vh]  !overflow-y-auto  rounded-md;
+ }
+ .code-div {
+	 @apply relative dark:bg-[#161618] bg-gray-50 px-2 py-10  rounded-lg p-4  ;
+ }
+ .copy-button {
+	 @apply dark:bg-gray-900 drop-shadow-sm text-sm
+ 
+ }
+ 

@@ -22,9 +22,9 @@ const PostDashboard = ({ posts, status, title, page }) => {
 			</div>
 			<div className="  overflow-x-scroll custom-scrollbar flex gap-4 ">
 				{posts.length === 0 && <h3>{`you have no ${title}`}</h3>}
-				{posts?.map((item) => (
+				{posts?.map((item, index) => (
 					<Link
-						key={item?.post?._id}
+						key={index}
 						to={`/single-post/${item?.post?._id}`}
 						className=" "
 					>

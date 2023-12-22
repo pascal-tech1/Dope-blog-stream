@@ -60,7 +60,7 @@ const UserToFollow = ({ user, index, date, numberOfView }) => {
 				<div>
 					<FollowingBtn
 						userToFollowOrUnfollow={user}
-						className=" text-blue-300   hover:dark:bg-gray-700  px-2 my-[0.2rem] rounded-lg hover:bg-blue-200 transition-all delay-75   "
+						className=" dark:text-colorPrimary text-sm text-blue-400  hover:dark:bg-gray-700  px-2 my-[0.2rem] rounded-lg hover:bg-blue-200 transition-all delay-75   "
 					/>
 				</div>
 			)}

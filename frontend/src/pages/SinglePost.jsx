@@ -39,7 +39,8 @@ const SinglePost = () => {
 	);
 	// Call the function to add copy buttons after the component renders
 	useEffect(() => {
-		console.log("i have run");
+		const copyButton = document.querySelector(".copy-button");
+		if (copyButton) return;
 		addCopyButtons();
 	}, [status]);
 
@@ -48,8 +49,8 @@ const SinglePost = () => {
 	const lastPostRef = useCallback(
 		(node) => {
 			if (status !== "success") return;
-			if (morePostStatus === "loading") return;
-			if (userPostStatus === "loading") return;
+			console.log(morePostStatus);
+			console.log(userPostStatus);
 			if (observer.current) observer.current.disconnect();
 			observer.current = new IntersectionObserver((entries) => {
 				if (entries[0].isIntersecting) {
@@ -59,6 +60,8 @@ const SinglePost = () => {
 					dispatch(
 						fetchUserPost({ postId: post?._id, userId: post?.user?._id })
 					);
+
+					// clearing the search because there wont be enough selected category to display for the user since we have limited data
 					dispatch(clearSearchAndCategory());
 					dispatch(
 						fetchPostByCategory({
@@ -67,12 +70,13 @@ const SinglePost = () => {
 							where: "morePost",
 						})
 					);
+
 					dispatch(setStatus("idle"));
 				}
 			});
 			if (node) observer.current.observe(node);
 		},
-		[status, morePostStatus, userPostStatus, morePostHasMore]
+		[status]
 	);
 
 	useEffect(() => {
@@ -105,10 +109,10 @@ const SinglePost = () => {
 
 	if (post)
 		return (
-			<div className="max-w-[90vw]  lg:max-w-[55rem] md:mx-auto">
+			<div className=" lg:max-w-[55rem] md:mx-auto">
 				<PostSearch />
 
-				<div className=" font-inter    overflow-x-hidden  gap-[0.5rem] -z-50 dark:bg-[#171717] lg:px-10 ">
+				<div className=" font-inter    overflow-x-hidden  gap-[0.5rem] -z-50 px-2  md:px-10 ">
 					<div className=" flex flex-col gap-2">
 						<div>
 							<h1 className=" font-bold text-xl  lg:text-3xl  my-2 md:my-4 dark:text-slate-200">
@@ -142,13 +146,14 @@ const SinglePost = () => {
 					</div>
 					{/*  the post content in the dom */}
 					<div
+						ref={lastPostRef}
 						className=" mt-4 dark:text-slate-300 "
 						dangerouslySetInnerHTML={{ __html: post?.content }}
 					/>
 
 					{/* when the user scroll to this div with lasPostRef a fetch request for 
 					userPost and morePost is trigered in the useCallBackHook */}
-					<div ref={lastPostRef} className=" border-y py-4 my-4 ">
+					<div className=" border-y dark:border-y-lightdark py-4 my-4 ">
 						<div className="flex justify-between flex-col my-4">
 							<img
 								src={post?.user?.profilePhoto}

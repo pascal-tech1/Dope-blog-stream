@@ -127,7 +127,7 @@ const AllUsersPosts = () => {
 	};
 
 	return (
-		<div className=" font-inter shadow-md  overflow-hidden h-[85vh]  ">
+		<div className=" font-inter shadow-md  overflow-hidden h-[85vh] dark:bg-dark rounded-lg p-2  ">
 			{/* clear search */}
 			<ClearSearch
 				searchQuery={dashboardSearchTerm}
@@ -208,7 +208,7 @@ const AllUsersPosts = () => {
 								}
 								className=" transition duration-300 ease-in-out hover:bg-neutral-200  dark:hover:bg-neutral-800"
 							>
-								<td className=" bg-gray-50 tableData dark:bg-[#1C1C1C]">
+								<td className=" bg-gray-50 tableData dark:bg-lightdark">
 									<input
 										type="checkbox"
 										name="check"
@@ -246,7 +246,7 @@ const AllUsersPosts = () => {
 									</Tooltip>
 								</td>
 
-								<td className="flex items-center px-3 gap-2   bg-gray-50 tableData dark:bg-[#1C1C1C] ">
+								<td className="flex items-center px-3 gap-2   bg-gray-50 tableData dark:bg-lightdark ">
 									<Link
 										to={`/profile/${post.user._id}`}
 										className=" p-2 hover:bg-blue-200 transition-all duration-75 rounded-full"
@@ -261,23 +261,23 @@ const AllUsersPosts = () => {
 
 						{adminAllPostStatus === "loading" && (
 							<tr>
-								<td className="text-yellow-400  stickyBottom  bg-gray-50 tableData dark:bg-[#1C1C1C] "></td>
-								<td className="text-yellow-400  stickyBottom  bg-gray-50 tableData dark:bg-[#1C1C1C] ">
+								<td className="text-yellow-400  stickyBottom   tableData "></td>
+								<td className="text-yellow-400  stickyBottom   tableData ">
 									<LoadingSpinner />
 								</td>
 							</tr>
 						)}
 						{allPost.length === 0 && adminAllPostStatus === "success" && (
-							<td className="text-yellow-400  stickyBottom  bg-gray-50 tableData dark:bg-[#1C1C1C] ">
+							<td className="text-yellow-400  stickyBottom   tableData ">
 								No User Found
 							</td>
 						)}
 						{!hasMore &&
 							adminAllPostStatus === "success" &&
 							allPost.length > 0 && (
-								<tr className="  bg-gray-50 tableData">
+								<tr className="   tableData">
 									<td></td>
-									<td className="text-yellow-400  stickyBottom  bg-gray-50 tableData dark:bg-[#1C1C1C] ">
+									<td className="text-yellow-400  stickyBottom   tableData ">
 										No more User
 									</td>
 								</tr>

@@ -25,7 +25,7 @@ export const FollowingBtn = ({ userToFollowOrUnfollow, className }) => {
 
 	className = className
 		? className
-		: `  self-center hover:bg-blue-800 text-center py-[0.2rem] px-2 bg-blue-900 text-white hover:text-white  transition-all delay-75`;
+		: `  self-center hover:bg-blue-800 text-center py-[0.2rem] px-2 bg-colorPrimary text-white hover:text-white  transition-all delay-75`;
 
 	return (
 		<button onClick={handleFollowUser} className={className}>

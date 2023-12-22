@@ -8,7 +8,7 @@ const Tooltip = ({ info, children }) => {
 					<div className=" px-1">{children}</div>
 				</div>
 				<div className=" ">
-					<div className=" rounded-lg group-hover:bg-black group-hover:opacity-80 border border-blue-400 pointer-events-none  -top-7 left-0 opacity-0 transition-opacity text-white px-1 backdrop-blur-md absolute py-1">
+					<div className=" rounded-lg group-hover:bg-black  group-hover:opacity-80 border border-blue-400 pointer-events-none  -top-7 left-0 opacity-0 transition-opacity text-white px-1 group-hover:backdrop-blur-md absolute py-1">
 						{info}
 					</div>
 				</div>

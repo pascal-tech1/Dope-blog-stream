@@ -22,13 +22,13 @@ function VerifyEmail() {
 
 	return (
 		<div className=" flex items-center justify-center">
-			<div className=" py-4 relative text-sm  font-inter h-[90vh] lg:h-[80vh] w-[90vw] lg:w-[60vw] bg-white grid place-content-center z-[500] rounded-md dark:bg-[#171717] border  dark:border-gray-800  ">
+			<div className=" py-4 relative text-sm  font-inter h-[90vh] lg:h-[80vh] w-[90vw] lg:w-[60vw] bg-white grid place-content-center z-[500] rounded-md dark:bg-dark border  dark:border-gray-800  ">
 				{user?.isAccountVerified === true && (
 					<div className="flex justify-center items-center h-[80vh] w-screen  mx-auto  ">
 						<h1> your Account is Already Verified</h1>
 					</div>
 				)}
-				{verifyEmailStatus === "success" && (
+				{verifyEmailStatus === "success" && !user?.isAccountVerified === true &&  (
 					<div className=" px-6 flex justify-start items-center  gap-4 flex-col  ">
 						<h1 className=" text-xl bg-blue-400 p-4 py-1 rounded-md text-white ">
 							Welcome to blogVana!
@@ -39,14 +39,14 @@ function VerifyEmail() {
 							together, we need to verify your email address.{" "}
 						</p>
 						<p>
-							<span className=" text-blue-400 drop-shadow-md pr-1">
+							<span className=" text-colorPrimary drop-shadow-md pr-1">
 								Check Your Inbox:
 							</span>
 							We've just sent a magical email to your inbox. Click on the
 							verification link inside to unlock a world of possibilities!
 						</p>
 						<p className=" self-start">
-							<span className=" text-blue-400 drop-shadow-md pr-1">
+							<span className=" text-colorPrimary drop-shadow-md pr-1">
 								Pro Tip:
 							</span>
 							Can't find our email? Check your spam or junk folder.
@@ -67,7 +67,7 @@ function VerifyEmail() {
 					</div>
 				)}
 
-				{verifyEmailStatus === "failed" && (
+				{verifyEmailStatus === "failed" && !user?.isAccountVerified === true && (
 					<div className="px-6 flex justify-start items-center  gap-4 flex-col ">
 						<h1 className=" text-xl bg-blue-400 p-4 py-1 rounded-md text-white ">
 							Welcome to blogVana!

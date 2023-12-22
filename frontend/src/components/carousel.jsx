@@ -44,7 +44,7 @@ const Carousel = () => {
 				return (
 					<div
 						key={testimony.id}
-						className={` w-80 dark:bg-[#1C1C1C] rounded-md p-2 font-inter dark:text-slate-200  border dark:border-gray-800 h-40 py-4 px-4 bg-blue-100 space-x-3 gap-1 flex items-center flex-col ${
+						className={` w-80 dark:bg-lightdark rounded-md p-2 font-inter dark:text-slate-200  border dark:border-gray-800 h-40 py-4 px-4 bg-blue-100 space-x-3 gap-1 flex items-center flex-col ${
 							currentIndex === index ? " order-2" : "hidden"
 						}`}
 					>

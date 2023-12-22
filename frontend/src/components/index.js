@@ -38,6 +38,7 @@ import { LoadingSpinner } from "./LoadingSpinner";
 import Carousel from "./carousel";
 import Spinner from "./Spinner";
 import PostSearch from "./PostSearch";
+import UpdatePassword from "./UpdatePassword";
 
 export {
 	DashboardSideBar,
@@ -77,4 +78,5 @@ export {
 	Carousel,
 	Spinner,
 	PostSearch,
+	UpdatePassword
 };

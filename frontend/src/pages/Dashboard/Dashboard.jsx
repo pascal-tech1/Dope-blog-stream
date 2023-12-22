@@ -6,6 +6,7 @@ import {
 	MessagesComp,
 	PostDashboard,
 	Spinner,
+	Tooltip,
 	UserDetailsCount,
 	UserToFollow,
 } from "../../components";
@@ -55,7 +56,6 @@ const Dashboard = () => {
 	const { msg, fetchMessageStatus, receivedMessageCount } = useSelector(
 		(store) => store?.messageSlice
 	);
-
 	const _id = user?._id;
 
 	useEffect(() => {
@@ -140,7 +140,7 @@ const Dashboard = () => {
 
 				{/* chart  */}
 				<div className=" pt-4  flex flex-col gap-4 lg:flex-row justify-between">
-					<div className="lg:w-[60%] bg-white dark:bg-[#171717] pt-2 pb-8 rounded-md drop-shadow-sm px-2 ">
+					<div className="lg:w-[60%] bg-white dark:bg-dark pt-2 pb-8 rounded-md drop-shadow-sm px-2 ">
 						<h1 className=" font-bold  text-gray-800 mb-3 dark:text-slate-300">
 							post Charts
 						</h1>
@@ -148,33 +148,51 @@ const Dashboard = () => {
 						<BarChart />
 					</div>
 					{/* viewedBy */}
-					<div className=" col-start-8 col-span-4 font-inter  lg:w-[37%]  bg-white dark:bg-[#171717] py-2  rounded-md shadow-sm px-4 ">
-						<h1 className=" font-bold text-gray-800 mb-3 mt-10 lg:mt-0 dark:text-slate-300 ">
+					<div className=" col-start-8 col-span-4 font-inter  lg:w-[37%]  bg-white dark:bg-dark py-2  rounded-md shadow-sm px-4 ">
+						<h1 className=" font-bold text-gray-800 mb-3 mt-4 lg:mt-0 dark:text-slate-300 ">
 							Who's Viewed your profile
 						</h1>
-						<h3>{`${whoViewUserProfileCount} people have view your profile`}</h3>
+						<h3 className=" mb-3">{`${whoViewUserProfileCount} people have view your profile`}</h3>
 						{whoViewUserProfileStatus === "loading" ? (
 							<LoadingSpinner />
 						) : (
-							whoViewUserProfile.map((users) =>
-								users?.viewedBy?.map((viewedBy, index) => (
-									<div key={index}>
-										<UserToFollow
-											user={viewedBy}
-											index={index}
-											date={users.updatedAt}
-											numberOfView={users.numberOfView}
-										/>
-									</div>
-								))
-							)
+							whoViewUserProfile.map((users,index) => {
+								if (users?.viewedBy?.length === 0) {
+									return (
+										<div key={index} className=" flex gap-3 mb-3 ">
+											<img
+												src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blq…auto,w_200/ank-profile-picture-973460_960_720.png"
+												alt=""
+												className=" rounded-full  w-6 h-6 "
+											/>
+											<Tooltip info={"this user is deleted"}>
+												<h3 className=" text-red-400 text-sm gap-2 font-light capitalize">
+													deleted user
+												</h3>
+											</Tooltip>
+										</div>
+									);
+								} else
+									return users?.viewedBy?.map((viewedBy, index) => {
+										return (
+											<div key={index}>
+												<UserToFollow
+													user={viewedBy}
+													index={index}
+													date={users.updatedAt}
+													numberOfView={users.numberOfView}
+												/>
+											</div>
+										);
+									});
+							})
 						)}
 					</div>
 				</div>
 			</div>
 
 			{/* messages */}
-			<div className=" lg:col-start-10 lg:col-span-full row-start-1  bg-white dark:bg-[#171717] py-2 rounded-md drop-shadow-sm px-2 ">
+			<div className=" lg:col-start-10 lg:col-span-full row-start-1  bg-white dark:bg-dark py-2 rounded-md drop-shadow-sm px-2 overflow-x-auto custom-scrollbar ">
 				<h1 className=" font-bold text-gray-800 mb-3 dark:text-slate-200">
 					Recent Mesaages
 				</h1>
@@ -182,11 +200,11 @@ const Dashboard = () => {
 				{fetchMessageStatus === "loading" ? (
 					<LoadingSpinner />
 				) : (
-					<MessagesComp msg={msg} length={25} />
+					<MessagesComp msg={msg?.slice(0, 5)} />
 				)}
 			</div>
 			{/* post history */}
-			<div className=" col-start-1 col-span-full  flex gap-8 flex-col bg-white dark:bg-[#171717] py-2  rounded-md drop-shadow-sm px-4 ">
+			<div className=" col-start-1 col-span-full  flex gap-8 flex-col bg-white dark:bg-dark py-2  rounded-md drop-shadow-sm px-4 ">
 				<PostDashboard
 					posts={userPostHistory.slice(0, 10)}
 					status={userPostHistoryStatus}
@@ -194,8 +212,7 @@ const Dashboard = () => {
 					page={"/post-History"}
 				/>
 			</div>
-			<div className=" col-start-1 col-span-full mb-6 flex gap-8 flex-col  bg-white dark:bg-[#171717] py-2  rounded-md drop-shadow-sm px-4 ">
-
+			<div className=" col-start-1 col-span-full mb-6 flex gap-8 flex-col  bg-white dark:bg-dark py-2  rounded-md drop-shadow-sm px-4 ">
 				<PostDashboard
 					posts={userSavedPost.slice(0, 10)}
 					status={userSavedPostStatus}

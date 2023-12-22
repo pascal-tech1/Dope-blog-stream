@@ -49,7 +49,7 @@ const MessageUser = ({ receiverId }) => {
 						name="message"
 						id="message"
 						placeholder="Enter your message"
-						className=" bg-gray-100 dark:bg-[#171717] py-2 px-2  border rounded-md outline-none focus:border-gray-400"
+						className=" bg-gray-100 dark:bg-dark py-2 px-2  border rounded-md outline-none focus:border-gray-400"
 					/>
 				</div>
 			</Modal>

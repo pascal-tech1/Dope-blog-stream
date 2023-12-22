@@ -65,7 +65,7 @@ const Saved = () => {
 		dispatch(setSearchTermInStore(""));
 	};
 	return (
-		<div className=" font-inter">
+		<div className=" font-inter  bg-dark rounded-lg p-4">
 			{/* clear search */}
 			<ClearSearch
 				searchQuery={dashboardSearchTerm}
@@ -74,9 +74,9 @@ const Saved = () => {
 			{Object.keys(organizedPosts).map((dateKey, firstIndex) => (
 				<div
 					key={dateKey}
-					className=" border-b dark:border-b-gray-800 py-3"
+					className=" border-b dark:border-b-gray-800 "
 				>
-					<h2 className=" text-blue-400 ">{dateKey}</h2>
+					<h2 className=" text-colorPrimary my-3 ">{dateKey}</h2>
 					<div className=" grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 ">
 						{organizedPosts[dateKey].map((item, index) => {
 							let isLastPost;
@@ -95,7 +95,7 @@ const Saved = () => {
 								<div
 									key={index}
 									ref={isLastPost ? lastPostRef : null}
-									className="dark:bg-[#171717] rounded-md"
+									className="dark:bg-lightdark rounded-md"
 								>
 									<Link
 										to={`/single-post/${post?._id}`}

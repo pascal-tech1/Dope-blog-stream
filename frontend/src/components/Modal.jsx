@@ -40,7 +40,7 @@ function Modal({ isOpen, onClose, onContinue, children }) {
 				>
 					{/* ... modal content ... */}
 					<div
-						className="  bg-white  text-black dark:text-white p-4 w-[90%] rounded-lg md:w-1/2 flex flex-col items-center gap-6 dark:bg-[#171717] border dark:border-gray-800  "
+						className="  bg-white  text-black dark:text-white p-4 w-[90%] rounded-lg md:w-1/2 flex flex-col items-center gap-6 dark:bg-dark border dark:border-gray-800  "
 						onClick={(e) => e.stopPropagation()}
 					>
 						<div className="p-4">{children}</div>

@@ -2,24 +2,35 @@ import React from "react";
 import LazyLoadImg from "./LazyLoadImg";
 import { Link } from "react-router-dom";
 import MessageUser from "./MessageUser";
+import Tooltip from "./Tooltip";
 
 const MessagesComp = ({ msg, length, IsMessage }) => {
 	return (
-		<div className="flex gap-6 flex-col font-inter">
+		<div className="flex gap-6 flex-col font-inter max-w-fit">
 			{msg.map((message, index) => {
 				return (
 					<div key={index} className="flex  justify-between gap-2">
 						<div className="flex gap-2">
-							<Link to={`/profile/${message?.sender?._id}`}>
+							<Link
+								to={
+									message?.sender?._id
+										? `/profile/${message?.sender?._id}`
+										: ""
+								}
+							>
 								<LazyLoadImg
 									backgroundClassName={
-										"self-start border w-10 h10 rounded-lg relative"
+										"self-start border w-8 h10 rounded-lg relative"
 									}
 									imgClassName={
 										"absolute inset-0 w-full h-full  object-cover rounded-lg "
 									}
-									originalImgUrl={message.sender.profilePhoto}
-									blurImageStr={message.sender.blurProfilePhoto}
+									originalImgUrl={
+										message?.sender?.profilePhoto
+											? message?.sender?.profilePhoto
+											: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blq…auto,w_200/ank-profile-picture-973460_960_720.png"
+									}
+									blurImageStr={message?.sender?.blurProfilePhoto}
 									optimizationStr={"q_auto,f_auto,w_100"}
 									paddingBottom={"100%"}
 								/>
@@ -30,16 +41,12 @@ const MessagesComp = ({ msg, length, IsMessage }) => {
 							>
 								<div className=" font-medium flex gap-1 flex-col">
 									<h3 className="  text-pink-400">
-										{`${message?.sender?.firstName} ${message?.sender?.lastName}`}
+										{message?.sender
+											? `${message?.sender?.firstName} ${message?.sender?.lastName}`
+											: "deleted user"}
 									</h3>
-									{length ? (
-										<h3 className="text-sm">{`${message?.message.slice(
-											0,
-											length
-										)}...`}</h3>
-									) : (
-										<h3>{message?.message}</h3>
-									)}
+
+									<h3 className="">{message?.message}</h3>
 								</div>
 							</Link>
 						</div>

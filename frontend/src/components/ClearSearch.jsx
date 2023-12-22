@@ -8,7 +8,7 @@ const ClearSearch = ({ searchQuery, handleClearSearch, where }) => {
 				<div className="flex gap-2 my-2 font-inter">
 					<h3>
 						All Search result for
-						<span className=" ml-1 text-blue-400">{searchQuery} </span>
+						<span className=" ml-1 text-colorPrimary ">{searchQuery} </span>
 					</h3>
 					<button
 						onClick={handleClearSearch}

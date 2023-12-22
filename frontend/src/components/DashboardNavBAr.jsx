@@ -87,7 +87,7 @@ const DashboardNavBAr = ({ refOpt, screenWidth }) => {
 		isSearching && searchInputRef.current.focus();
 	}, [isSearching]);
 	return (
-		<div className=" flex font-inter  w-full bg-opacity-0 backdrop-blur top-0 right-0 justify-between   dark:bg-[#171717]  border-b dark:border-b-gray-900 z-50 items-center relative   py-2 dark:text-slate-300 ">
+		<div className=" flex font-inter  w-full bg-opacity-0 backdrop-blur top-0 right-0 justify-between   dark:bg-dark  border-b dark:border-b-gray-900 z-50 items-center relative   py-2 dark:text-slate-300 ">
 			{isMenuOpen && (
 				<div ref={divRef} className=" absolute right-0 ">
 					<UserDashboardMenu
@@ -107,8 +107,8 @@ const DashboardNavBAr = ({ refOpt, screenWidth }) => {
 					<input
 						ref={searchInputRef}
 						className={`  ${
-							isSearching ? " w-[60vw] md:w-1/2 " : "hidden md:flex"
-						}   md:relative md:bottom-0 outline-none mx-6 text-center border-b border-b-gray-300 dark:bg-[#171717]  transition-all rounded-lg focus:border-b-blue-400 placeholder:text-gray-400`}
+							isSearching ? " w-[70vw] md:w-[100%] " : "hidden md:flex"
+						}   md:relative md:bottom-0 py-[0.1rem] outline-none mx-6 text-center border  border-gray-100 focus:border-b-gray-300 dark:border-gray-800 dark:focus:border-b-gray-600  dark:bg-lightdark transition-all rounded-lg  placeholder:text-gray-400`}
 						type="text"
 						id="searchInput"
 						placeholder="Search"
@@ -145,7 +145,7 @@ const DashboardNavBAr = ({ refOpt, screenWidth }) => {
 				<h3 className=" hidden md:flex text-xs border-l pl-1">
 					Hello, {user?.lastName}
 				</h3>
-				<div className=" flex gap-2 rounded-full w-8 h-8 text-blue-400 ">
+				<div className=" flex gap-2 rounded-full w-8 h-8 text-colorPrimary  ">
 					<img
 						src={user?.profilePhoto}
 						alt=""

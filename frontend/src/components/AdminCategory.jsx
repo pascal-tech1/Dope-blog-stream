@@ -3,7 +3,6 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
 	fetchPostByCategory,
-	setActiveCategory,
 	setFetchFirstCategory,
 } from "../redux/post/allPostSlice";
 import { useNavigate } from "react-router-dom";
@@ -43,7 +42,6 @@ const AdminCategory = ({
 							key={index}
 							onClick={(e) => {
 								if (!isCategoryEditing) {
-									dispatch(setActiveCategory(category.title));
 									dispatch(setFetchFirstCategory(category.title));
 									dispatch(fetchPostByCategory());
 									navigate("/");

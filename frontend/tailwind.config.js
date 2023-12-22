@@ -16,12 +16,12 @@ export default {
 			fontFamily: {
 				inter: ["Inter", "sans-serif"],
 			},
-			// colors: {
-			// 	dark: {
-			// 		// background: "#242424",
-			// 		// ... and so on for other properties
-			// 	},
-			// },
+			colors: {
+				lightdark: "#202127",
+				dark: "#1b1b1f",
+				colorPrimary: "#a8b1ff",
+				// ... and so on for other properties
+			},
 		},
 	},
 	plugins: [],

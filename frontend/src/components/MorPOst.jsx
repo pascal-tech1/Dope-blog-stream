@@ -14,7 +14,7 @@ export const MorePost = ({ post, status }) => {
 				{post?.map((post, index) => (
 					<div
 						key={index}
-						className=" max-w-full col-span-1 flex gap-3 flex-col dark:text-slate-300 dark:bg-[#1C1C1C] bg-gray-100 rounded-lg
+						className=" max-w-full col-span-1 flex gap-3 flex-col dark:text-slate-300 dark:bg-lightdark bg-gray-100 rounded-lg
 					"
 					>
 						<Link
@@ -52,14 +52,3 @@ export const MorePost = ({ post, status }) => {
 		</>
 	);
 };
-
-{
-	/* <LazyLoadImg
-	backgroundClassName={" w-full rounded-md relative "}
-	imgClassName={"absolute inset-0 w-full h-full object-cover rounded-md"}
-	originalImgUrl={post?.image}
-	blurImageStr={post.blurImageUrl}
-	optimizationStr={`q_auto,f_auto,w_384`}
-	// paddingBottom={true}
-/>; */
-}

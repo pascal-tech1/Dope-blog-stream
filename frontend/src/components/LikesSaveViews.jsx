@@ -10,7 +10,6 @@ import { savePost } from "../redux/user/userSlice";
 import { Link } from "react-router-dom";
 import {
 	fetchPostByCategory,
-	setActiveCategory,
 	setFetchFirstCategory,
 } from "../redux/post/allPostSlice";
 
@@ -56,11 +55,10 @@ const LikesSaveViews = ({ post }) => {
 			<Link
 				to={"/"}
 				onClick={(e) => {
-					dispatch(setActiveCategory(post?.category));
 					dispatch(setFetchFirstCategory(post?.category));
 					dispatch(fetchPostByCategory());
 				}}
-				className="whitespace-nowrap gap-2 mt-1 text-sm delay-75 cursor-pointer flex bg-gray-200 hover:bg-gray-300 rounded-md dark:text-slate-300 dark:bg-[#1C1C1C] hover:dark:bg-gray-700 py-[0.1rem] px-4"
+				className="whitespace-nowrap gap-2 mt-1 text-sm delay-75 cursor-pointer flex bg-gray-200 hover:bg-gray-300 rounded-md dark:text-slate-300 dark:bg-lightdark hover:dark:bg-gray-700 py-[0.1rem] px-4"
 			>
 				{post?.category?.charAt(0).toUpperCase() +
 					post?.category?.slice(1).toLowerCase()}

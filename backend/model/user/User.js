@@ -63,7 +63,6 @@ const userSchema = new mongoose.Schema(
 		password: {
 			type: String,
 			required: [true, "Hei buddy Password is required"],
-			select: false,
 		},
 		postCount: {
 			type: Number,

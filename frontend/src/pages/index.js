@@ -8,7 +8,7 @@ import AllPost from "./AllPost";
 import VerifyEmail from "./VerifyEmail";
 import ConfirmEmailPage from "./ComfirmEmailPage";
 import PasswordReset from "./PasswordReset";
-import UpdatePassword from "./UpdatePassword";
+
 import UserPage from "./UserPage";
 import Error from "./Error";
 
@@ -23,6 +23,5 @@ export {
 	VerifyEmail,
 	ConfirmEmailPage,
 	PasswordReset,
-	UpdatePassword,
 	Error,
 };

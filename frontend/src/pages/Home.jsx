@@ -6,7 +6,6 @@ import { fetchRandomUser } from "../redux/user/userSlice";
 
 import {
 	fetchPostByCategory,
-	setActiveCategory,
 	setFetchFirstCategory,
 } from "../redux/post/allPostSlice";
 
@@ -27,15 +26,12 @@ const Home = () => {
 	}, []);
 
 	const handleSelected = (filter) => {
-		dispatch(setActiveCategory(filter));
 		dispatch(setFetchFirstCategory(filter));
 		dispatch(fetchPostByCategory());
 		navigate("/");
 	};
 	return (
-		<div
-			className={`font-inter mt-2 text-lg lg:text-base dark:bg-[#171717] `}
-		>
+		<div className={`font-inter mt-2 text-lg lg:text-base `}>
 			<div className=" md:grid grid-cols-5 ">
 				{/* right section */}
 				<main className=" col-span-3  ">
@@ -47,14 +43,14 @@ const Home = () => {
 				</main>
 				{/* left section */}
 
-				<div className="hidden md:flex flex-col col-start-4 col-span-full  stickyRight custom-scrollbar border-l dark:border-l-[#1C1C1C] mb-6 px-4 dark:bg-[#171717] pt-2 ">
-					<div className="flex gap-2  bg-gray-100 justify-between py-2  text-lg  md:text-sm px-2 rounded-lg dark:bg-[#171717] dark:text-slate-300  ">
+				<div className="hidden md:flex flex-col col-start-4 col-span-full  stickyRight custom-scrollbar border-l dark:bg-dark  dark:border-l-lightdark px-2 !h-[87vh] pt-2 ">
+					<div className="flex gap-2  bg-gray-100 justify-between py-2  text-lg md:text-sm px-2 rounded-lg dark:bg-lightdark dark:text-slate-300  ">
 						<div className="flex flex-col justify-center items-center text-center gap-2">
 							<h3 className=" font-medium hidden lg:flex ">
 								Get unlimited access to everything on BlogVana
 							</h3>
 
-							<h1 className="  bg-blue-300 text-white py-1 px-2 rounded-lg ">
+							<h1 className=" bg-colorPrimary text-white py-1 px-2 rounded-lg ">
 								Premium comming soon
 							</h1>
 						</div>

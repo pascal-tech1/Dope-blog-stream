@@ -128,7 +128,7 @@ const AdminAllCategory = () => {
 	};
 
 	return (
-		<section className="flex  flex-col py-3  items-center h-screen font-inter">
+		<section className="flex  flex-col py-3  items-center h-screen font-inter dark:bg-dark rounded-lg p-4">
 			{/* clear search */}
 			<ClearSearch
 				searchQuery={dashboardSearchTerm}
@@ -147,7 +147,7 @@ const AdminAllCategory = () => {
 					<h3>Remember this Action cannot be undone</h3>
 				</div>
 			</Modal>
-			<h2 className=" text-gray-900 font-medium dark:text-blue-400  text-center">
+			<h2 className=" text-gray-900 font-medium dark:text-colorPrimary   text-center">
 				All Categories
 			</h2>
 			<div className="flex items-center justify-between w-full px-11 mb-2 mt-4">
@@ -177,7 +177,7 @@ const AdminAllCategory = () => {
 						dispatch(setIsCategoryEdting(!isCategoryEditing));
 						isCategoryEditing && setCheckedItemId([]);
 					}}
-					className={` text-blue-400 hover:text-blue-600 drop-shadow-md hover:drop-shadow-none ${
+					className={` text-colorPrimary  hover:text-blue-600 drop-shadow-md hover:drop-shadow-none ${
 						!isCategoryEditing && "ml-auto"
 					}  `}
 				>
@@ -193,7 +193,7 @@ const AdminAllCategory = () => {
 				</button>
 			</div>
 			<div className=" h-full flex flex-col gap-6 px-6  ">
-				<div className="border dark:border-gray-800 rounded-lg px-2 py-2 mx-3 drop-shadow-md  h-[50%] overflow-y-auto custom-scrollbar">
+				<div className="border dark:border-gray-800 rounded-lg px-2 py-2 mx-3 drop-shadow-md  h-[50%] overflow-y-auto custom-scrollbar dark:bg-lightdark">
 					<AdminCategory
 						checkedItems={checkedItems}
 						handleCheckedItemcsChange={handleCheckedItemcsChange}
@@ -215,7 +215,7 @@ const AdminAllCategory = () => {
 							type="text"
 							name="category"
 							id="category"
-							className="border  px-4 py-2 rounded-lg outline-none dark:bg-[#171717]  focus:border-gray-600 dark:border-gray-800 border-gray-400  "
+							className="border  px-4 py-2 rounded-lg outline-none dark:bg-dark bg-gray-100 focus:border-b-gray-300 dark:focus:border-b-gray-600 dark:border-gray-800 border-gray-200  "
 						/>
 						<div className=" relative mb-2 self-start">
 							<h1 className=" form-error-text ">
@@ -230,13 +230,13 @@ const AdminAllCategory = () => {
 						<input
 							type="submit"
 							value="Edit"
-							className=" px-2 py-1 bg-blue-400 hover:bg-blue-300 text-white drop-shadow-md rounded-lg self-center hover:drop-shadow-none cursor-pointer"
+							className=" px-2 py-1 bg-colorPrimary hover:bg-blue-300 text-white drop-shadow-md rounded-lg self-center hover:drop-shadow-none cursor-pointer"
 						/>
 					) : (
 						<input
 							type="submit"
 							value="submit"
-							className=" px-2 py-1 bg-blue-400 hover:bg-blue-300 text-white drop-shadow-md rounded-lg self-center hover:drop-shadow-none cursor-pointer"
+							className=" px-2 py-1 bg-colorPrimary hover:bg-blue-300 text-white drop-shadow-md rounded-lg self-center hover:drop-shadow-none cursor-pointer"
 						/>
 					)}
 				</form>

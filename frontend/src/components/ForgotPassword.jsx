@@ -27,7 +27,7 @@ const ForgotPassword = ({ setIsOpen }) => {
 		},
 	});
 	return (
-		<div className=" w-[90vw] h-[90vh] lg:w-[60vw] font-inter bg-white dark:bg-[#171717] border dark:border-gray-900 flex gap-4  items-center justify-center flex-col rounded-s-lg px-4 relative rounded-lg">
+		<div className=" w-[90vw] h-[90vh] lg:w-[60vw] font-inter  border dark:border-gray-900 flex gap-4  items-center justify-center flex-col rounded-s-lg px-4 relative rounded-lg">
 			<div
 				onClick={() => setIsOpen(false)}
 				className=" absolute top-1 right-2"

@@ -53,7 +53,7 @@ const Login = () => {
 				<ForgotPassword setIsOpen={setIsOpen} />
 			</div>
 
-			<div className=" hidden md:flex flex-col p-9 bg-gray-100 mr-6 shadow-sm justify-center items-center dark:bg-[#171717] border dark:border-gray-800 ">
+			<div className=" hidden md:flex flex-col p-9 bg-gray-100 mr-6 shadow-sm justify-center items-center dark:bg-dark border dark:border-gray-800 ">
 				<h1 className=" font-medium">Get Ready to Be Inspired</h1>
 				<p className=" font-light text-gray-400 text-xs mt-5 mb-[3.5rem] max-w-md">
 					Explore our latest blog posts and embark on a journey of
@@ -69,7 +69,7 @@ const Login = () => {
 			{/* form starts here */}
 			<form
 				onSubmit={formik.handleSubmit}
-				className="flex flex-col w-full  items-center px-8 lg:px-20 dark:bg-[#171717] rounded-md p-2 border dark:border-gray-800"
+				className="flex flex-col w-full  items-center px-8 lg:px-20 dark:bg-dark rounded-md p-2 border dark:border-gray-800"
 			>
 				<div className=" items-center flex flex-col  mb-6">
 					<p className=" text-lg font-medium mb-3">Welcome Back</p>
@@ -126,7 +126,7 @@ const Login = () => {
 						<span>
 							<Link
 								to="/register"
-								className=" text-blue-600 ml-2 hover:text-blue-400 transition-all"
+								className=" text-colorPrimary  ml-2 hover:text-blue-400 transition-all"
 							>
 								Register
 							</Link>

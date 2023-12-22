@@ -10,7 +10,6 @@ import {
 	UserPage,
 	VerifyEmail,
 	PasswordReset,
-	UpdatePassword,
 	Error,
 } from "./pages";
 import {
@@ -37,6 +36,7 @@ import { CropImage, LoadingSpinner } from "./components";
 import ComfirmEmailPage from "./pages/ComfirmEmailPage";
 import PagesLayout from "./pages/PagesLayout";
 import { useDarkMode } from "./customHooks";
+import { getUserFromLocalStorage } from "./utils/localStorage";
 
 const AdminProtectedPage = lazy(() =>
 	import("./pages/AdminProtectedPage")
@@ -52,8 +52,9 @@ const App = () => {
 		}
 	}, []);
 	const theme = localStorage.getItem("theme");
-
+	const dispatch = useDispatch();
 	const isSystemInDakMode = useDarkMode();
+	const userToken = getUserFromLocalStorage();
 
 	useEffect(() => {
 		if (!theme && isSystemInDakMode) {
@@ -66,7 +67,13 @@ const App = () => {
 			document.documentElement.classList.remove("dark");
 		}
 	}, [theme, isSystemInDakMode]);
-	const dispatch = useDispatch();
+
+	
+	useEffect(() => {
+		if (userToken) {
+			dispatch(loginUserWithToken());
+		}
+	}, []);
 
 	useEffect(() => {
 		const handleKeyPress = (e) => {
@@ -113,7 +120,7 @@ const App = () => {
 						path="/profile/:userId"
 						element={token ? <UserPage /> : <Login />}
 					/>
-					<Route path="/update-password" element={<UpdatePassword />} />
+
 					<Route
 						path="/confirm-sent-email/:token"
 						element={<ComfirmEmailPage />}

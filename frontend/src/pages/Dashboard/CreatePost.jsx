@@ -143,7 +143,7 @@ const CreatePost = () => {
 		<div
 			className={`${
 				quillIsFocus && ""
-			}font-inter font-medium  gap-7 pb-6  relative  `}
+			}font-inter font-medium  gap-7 pb-6  relative bg-dark p-4 rounded-md  `}
 		>
 			<form onSubmit={formik.handleSubmit} className=" ">
 				<div
@@ -162,7 +162,7 @@ const CreatePost = () => {
 							type="text"
 							name="title"
 							id="title"
-							className=" col-start-2 col-span-full  w-full px-2 rounded-lg py-2 outline-none border border-blue-300 focus:border-blue-800  dark:bg-[#1C1C1C] "
+							className=" col-start-2 col-span-full  w-full px-2 rounded-lg py-2 outline-none border dark:border-gray-800 dark:focus:border-gray-600 border-blue-300 focus:border-blue-800  dark:bg-lightdark "
 						/>
 						<div className=" relative mb-2 place-self-end">
 							<h1 className=" form-error-text">
@@ -198,7 +198,7 @@ const CreatePost = () => {
 							type="text"
 							name="description"
 							id="description"
-							className=" col-start-2 col-span-full w-full rounded-lg px-2 py-2 outline-none border dark:bg-[#1C1C1C] border-blue-300 focus:border-blue-800"
+							className=" col-start-2 col-span-full w-full rounded-lg px-2 py-2 outline-none border dark:border-gray-800 dark:focus:border-gray-600 dark:bg-lightdark  border-blue-300 focus:border-blue-800"
 						/>
 						<div className=" relative mb-2 place-self-end">
 							<h1 className=" form-error-text">
@@ -223,7 +223,7 @@ const CreatePost = () => {
 								}}
 								className=" hidden z-50"
 							/>
-							<h1 className="bg-blue-400 py-2 rounded-md px-3">
+							<h1 className="bg-blue-400 dark:bg-colorPrimary py-2 rounded-md px-3">
 								Upload Image
 							</h1>
 						</label>
@@ -244,7 +244,7 @@ const CreatePost = () => {
 					<div className=" flex gap-2 items-center justify-center absolute -top-4 right-0 ">
 						<button
 							type="submit"
-							className={`self-start border border-blue-400  py-1 px-2 hover:bg-blue-400 transition-all hover:text-white ${
+							className={`self-start border border-blue-400  py-1 px-2 dark:border-gray-800 dark:focus:border-gray-600 hover:bg-blue-400 transition-all hover:text-white ${
 								postEditingStatus === "loading" && "bg-blue-400"
 							} rounded-md`}
 						>

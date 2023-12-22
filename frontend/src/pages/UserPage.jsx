@@ -81,7 +81,7 @@ const UserPage = () => {
 		return (
 			<div>
 				<PostSearch />
-				<div className=" md:grid lg:grid-cols-3 mt-2  font-inter  gap-10 dark:bg-[#171717]  ">
+				<div className=" md:grid lg:grid-cols-3 mt-2  font-inter  gap-10   ">
 					<div className=" flex flex-col gap-4 col-start-1 col-span-2   md:pt-4 h-max ">
 						<div className="w-full">
 							<div className=" w-full  relative">
@@ -165,13 +165,13 @@ const UserPage = () => {
 					</div>
 					{/* left */}
 
-					<div className="  flex gap-3 lg:px-4 flex-col lg:sticky lg:top-0 lg:h-screen overflow-y-auto custom-scrollbar lg:pb-6 ">
+					<div className="  flex gap-3 lg:px-4 flex-col lg:sticky lg:top-0  overflow-y-auto custom-scrollbar lg:pb-6 lg:dark:bg-lightdark rounded-lg lg:h-[80vh] ">
 						<div className="flex gap-3 items-center lg:pt-4 ">
 							<h1 className="font-semibold   text-black  dark:text-slate-200 ">
 								{`${postCreatorProfile?.firstName} ${postCreatorProfile?.lastName} Profile`}
 							</h1>
 							<FollowingBtn
-								className="self-center text-blue-400 text-center  hover:text-blue-600 rounded-lg transition-all delay-75"
+								className="self-center text-colorPrimary  text-center  hover:text-blue-600 rounded-lg transition-all delay-75"
 								userToFollowOrUnfollow={postCreatorProfile}
 							/>
 							<MessageUser receiverId={postCreatorProfile?._id} />
@@ -179,20 +179,20 @@ const UserPage = () => {
 
 						<h1 className=" ">{`${postCreatorProfile?.followersCount} followers`}</h1>
 						<div className=" mb-2  flex gap-1 items-center">
-							<MdWork className="text-blue-400" />{" "}
+							<MdWork className="text-colorPrimary " />{" "}
 							{postCreatorProfile?.profession}
 						</div>
 						<div className=" mb-2  flex gap-1 items-center">
-							<MdOutlineLanguage className="text-blue-400" />{" "}
+							<MdOutlineLanguage className="text-colorPrimary " />{" "}
 							{postCreatorProfile?.language}
 						</div>
 						<div className="  mb-2  flex gap-1 items-center">
-							<BiSolidUserAccount className="text-blue-400" />{" "}
+							<BiSolidUserAccount className="text-colorPrimary " />{" "}
 							{postCreatorProfile?.nickName}
 						</div>
 
 						<div className=" mb-2  flex gap-1 items-center">
-							<BiMap className="text-blue-400" />{" "}
+							<BiMap className="text-colorPrimary " />{" "}
 							{postCreatorProfile?.location}
 						</div>
 
@@ -211,7 +211,7 @@ const UserPage = () => {
 					</div>
 					{/* small screen more post */}
 
-					<div className=" lg:hidden flex flex-col col-start-1 col-span-2  bg-white z-10 dark:bg-[#1C1C1C] px-4 rounded-md drop-shadow-sm  ">
+					<div className=" lg:hidden flex flex-col col-start-1 col-span-2   px-4 rounded-md drop-shadow-sm  ">
 						<h1 className="max-w-max font-semibold py-4 dark:text-slate-200 ">
 							{`Posts By ${postCreatorProfile?.firstName} ${postCreatorProfile?.lastName}`}
 						</h1>

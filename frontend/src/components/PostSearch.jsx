@@ -5,7 +5,6 @@ import { useNavigate } from "react-router-dom";
 import { fetchAllCategorys } from "../redux/category/categorySlice";
 import {
 	fetchPostByCategory,
-	setActiveCategory,
 	setFetchFirstCategory,
 } from "../redux/post/allPostSlice";
 import Category from "./Category";
@@ -28,13 +27,13 @@ const PostSearch = ({}) => {
 			.filter((category) => category != activeCategory)
 			.slice(0, 5),
 	];
-	console.log(allCategory);
+
 	useEffect(() => {
-		allCategory.length == 0 && dispatch(fetchAllCategorys());
+		allCategory.length === 0 && dispatch(fetchAllCategorys());
 	}, []);
 
 	const handleSelected = (filter) => {
-		dispatch(setActiveCategory(filter));
+		
 		dispatch(setFetchFirstCategory(filter));
 		dispatch(fetchPostByCategory());
 		navigate("/");
@@ -43,7 +42,7 @@ const PostSearch = ({}) => {
 	const { searchTerm, handleInputChange } = useSearchWithDebounce();
 
 	return (
-		<div className="  dark:bg-[#171717]  gap-4 categorySticky dark:border-b border-gray-800 shadow-sm">
+		<div className="  dark:bg-dark   gap-4 categorySticky ">
 			<div className=" hidden md:flex justify-center">
 				<Category
 					allCategory={displayedCategoryArray}
@@ -61,8 +60,7 @@ const PostSearch = ({}) => {
 				/>
 				<form className="relative z-50   w-[50vw]">
 					<input
-						className={`
-     text-xs  px-1 font-sm py-[0.1rem] border-b dark:border-b-slate-600  rounded-lg border-blue-200 text-center focus:outline-none focus:border-blue-400  w-full bg-transparent `}
+						className={` text-xs  px-1 font-sm rounded-lg bg-gray-100 border dark:border-gray-800 focus:border-b-gray-300 dark:bg-lightdark py-2  text-center focus:outline-none w-full  dark:focus:border-b-gray-600`}
 						type="text"
 						id="searchInput"
 						placeholder="Search"

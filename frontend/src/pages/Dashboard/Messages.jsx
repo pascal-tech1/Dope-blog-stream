@@ -27,12 +27,12 @@ const Messages = () => {
 
 	return (
 		<div>
-			<div className="flex gap-6 font-inter flex-col dark:bg-[#171717] p-4 drop-shadow-sm">
+			<div className="flex gap-6 font-inter flex-col rounded-lg dark:bg-dark p-4 drop-shadow-sm">
 				{fetchMessageStatus === "loading" && pageNumber === 1 ? (
 					<LoadingSpinner />
 				) : (
 					<div>
-						<h1 className="font-semibold place-self-center text-blue-400   max-w-max pb-1 ">
+						<h1 className="font-semibold place-self-center text-colorPrimary    max-w-max pb-1 ">
 							messages
 						</h1>
 

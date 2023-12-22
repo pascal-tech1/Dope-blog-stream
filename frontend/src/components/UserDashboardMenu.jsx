@@ -1,6 +1,10 @@
 import React from "react";
 import { useDispatch } from "react-redux";
-import { logOutUser, setChangeEmail } from "../redux/user/userSlice";
+import {
+	logOutUser,
+	setChangeEmail,
+	setChangePassword,
+} from "../redux/user/userSlice";
 import { useNavigate } from "react-router-dom";
 import { BsLock, BsMessenger } from "react-icons/bs";
 import { CiUser } from "react-icons/ci";
@@ -16,7 +20,7 @@ const UserDashboardMenu = ({ isMenuOpen, setIsMenuOpen }) => {
 	};
 
 	const handleUupdatePassword = () => {
-		navigate("/update-password");
+		dispatch(setChangePassword());
 	};
 
 	const handleChangeEmail = () => {
@@ -32,7 +36,7 @@ const UserDashboardMenu = ({ isMenuOpen, setIsMenuOpen }) => {
 
 	return (
 		<>
-			<div className="absolute top-8 right-4 drop-shadow-lg h-[50vh] rounded-lg z-[500] dark:bg-[#171717] border dark:border-gray-700   bg-white">
+			<div className="absolute top-8 right-4 drop-shadow-lg h-[50vh] rounded-lg z-[500] dark:bg-lightdark border dark:border-gray-700   bg-white">
 				<div className=" flex flex-col px-4 justify-start whitespace-nowrap  items-start font-inter gap-3 py-3 md:text-sm  ">
 					<button
 						onClick={() => {

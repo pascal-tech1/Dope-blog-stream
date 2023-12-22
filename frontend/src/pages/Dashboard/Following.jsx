@@ -29,7 +29,7 @@ const Following = ({ id }) => {
 	const userLists = id
 		? followingUserListForNonLoginUser
 		: userfollowinglist;
-	const status = id
+	const toalFollowing = id
 		? followingUserListForNonLoginUserTotalNumber
 		: followinglistTotalNumber;
 
@@ -47,33 +47,36 @@ const Following = ({ id }) => {
 	const handleClearSearch = () => {
 		dispatch(setSearchTermInStore(""));
 	};
-console.log(userLists, status)
+	console.log(followinglistTotalNumber);
+	console.log(userLists, status);
 	return (
-		<div className=" grid max-w-md w-full font-inter ">
-			{/* clear search */}
-			<ClearSearch
-				searchQuery={dashboardSearchTerm}
-				handleClearSearch={handleClearSearch}
-			/>
-			{!id && (
-				<h1 className="font-semibold place-self-center text-blue-400   max-w-max pb-1 ">
-					Users you are following
-				</h1>
-			)}
-			<div>
-				<h3 className=" font-medium text-gray-900 drop-shadow-md dark:text-slate-200">
-					total following user: <span>{followinglistTotalNumber} </span>{" "}
-				</h3>
-			</div>
+		<div className="dark:bg-dark rounded-lg p-4">
+			<div className=" grid max-w-md w-full font-inter ">
+				{/* clear search */}
+				<ClearSearch
+					searchQuery={dashboardSearchTerm}
+					handleClearSearch={handleClearSearch}
+				/>
+				{!id && (
+					<h1 className="font-semibold place-self-center text-colorPrimary   max-w-max pb-1 ">
+						Users you are following
+					</h1>
+				)}
+				<div>
+					<h3 className=" font-medium text-gray-900 drop-shadow-md dark:text-slate-200">
+						total following user: <span>{toalFollowing} </span>{" "}
+					</h3>
+				</div>
 
-			<FollowUsersList
-				list={userLists}
-				listTotalNumber={followinglistTotalNumber}
-				fetchingListStatus={fetchingFollowingListStatus}
-				fetchAction={handleFetchMoreButtonClicked}
-				_id={_id}
-				title={"following"}
-			/>
+				<FollowUsersList
+					list={userLists}
+					listTotalNumber={toalFollowing}
+					fetchingListStatus={fetchingFollowingListStatus}
+					fetchAction={handleFetchMoreButtonClicked}
+					_id={_id}
+					title={"following"}
+				/>
+			</div>
 		</div>
 	);
 };

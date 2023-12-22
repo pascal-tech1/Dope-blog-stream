@@ -234,7 +234,7 @@ export const CropImage = ({
 				<div
 					className={`${
 						isPreview ? "hidden" : ""
-					}  flex gap-4 flex-wrap   bg-slate-200 dark:bg-[#1C1C1C] drop-shadow-md border dark:border-gray-900 px-8 py-2 mb-4 rounded-md items-center mt-4  text-lg `}
+					}  flex gap-4 flex-wrap   bg-slate-200 dark:bg-lightdark drop-shadow-md border dark:border-gray-900 px-8 py-2 mb-4 rounded-md items-center mt-4  text-lg `}
 				>
 					<button
 						className=" shadow-md hover:shadow-none rounded-md px-1"

@@ -8,13 +8,9 @@ import {
 	MdOutlineArrowDropUp,
 } from "react-icons/md";
 import { logOutUser } from "../redux/user/userSlice.js";
-import { useFormik } from "formik";
-import * as Yup from "yup";
+
 import { useSelector, useDispatch } from "react-redux";
-import {
-	fetchPostByCategory,
-	setFirstSearch,
-} from "../redux/post/allPostSlice.js";
+
 import LazyLoadImg from "./LazyLoadImg.jsx";
 import { FiLogOut, FiUser } from "react-icons/fi";
 
@@ -22,7 +18,7 @@ import { LuLogIn } from "react-icons/lu";
 import useClickOutside from "../customHooks/useClickOutside.js";
 
 import { Theme } from "../components";
-import { BiSearch } from "react-icons/bi";
+
 import { useSearchWithDebounce } from "../customHooks/SearchWithDebounce.js";
 
 const NavBar = () => {
@@ -30,7 +26,6 @@ const NavBar = () => {
 	const [showLogOut, setShowLogOut] = useState(false);
 
 	const dispatch = useDispatch();
-	const navigate = useNavigate();
 
 	const handleLogOut = () => {
 		dispatch(logOutUser("user"));
@@ -48,7 +43,7 @@ const NavBar = () => {
 	}, [isOutsideClicked]);
 
 	return (
-		<div className=" flex w-full font-inter items-center justify-between border-b   dark:border-b-slate-800 gap-4 dark:bg-[#171717] px-4 md:px-8 dark:text-slate-200 py-3">
+		<div className=" flex w-full font-inter items-center justify-between border-b   dark:border-b-slate-800 gap-4 dark:bg-lightdark px-4 md:px-8 dark:text-slate-200 py-3">
 			<Link to="/" className="">
 				<img
 					src="/blogvana.png"
@@ -59,7 +54,7 @@ const NavBar = () => {
 
 			<form className="relative md:w-1/3 justify-center z-50  items-center">
 				<input
-					className={` hidden md:flex text-xs  px-1 font-sm py-[0.1rem] border-b dark:border-b-slate-600  rounded-lg border-blue-200 text-center focus:outline-none focus:border-blue-400  w-full bg-transparent `}
+					className={` hidden md:flex text-xs  font-sm dark:bg-dark px-1 py-2 border border-gray-100 dark:border-gray-800 focus:border-b-gray-300 dark:border-b-gray-600   rounded-full bg-gray-100 text-center focus:outline-none  w-full bg-transparent `}
 					type="text"
 					id="searchInput"
 					placeholder="Search"
@@ -98,9 +93,9 @@ const NavBar = () => {
 									/>
 								</div>
 								{showLogOut ? (
-									<MdOutlineArrowDropDown className="text-blue-400 transition-all" />
+									<MdOutlineArrowDropDown className="text-colorPrimary transition-all" />
 								) : (
-									<MdOutlineArrowDropUp className="text-blue-400 transition-all " />
+									<MdOutlineArrowDropUp className="text-colorPrimary transition-all " />
 								)}
 							</div>
 						</button>
@@ -109,7 +104,7 @@ const NavBar = () => {
 							ref={divRef}
 							className={`${
 								showLogOut ? "" : "hidden"
-							} flex flex-col  absolute drop-shadow-lg text-lg md:text-base h-[30vh] gap-4 ]  top-12 z-50 right-[0.5rem] md:right-20 border dark:border-slate-700 bg-slate-50 rounded-md px-6 py-6  transition-all dark:bg-[#171717] `}
+							} flex flex-col  absolute drop-shadow-lg text-lg md:text-base h-[30vh] gap-4 ]  top-12 z-50 right-[0.5rem] md:right-20 border dark:border-slate-700 bg-slate-50 rounded-md px-6 py-6  transition-all dark:bg-lightdark `}
 						>
 							<Link
 								to="/stats"

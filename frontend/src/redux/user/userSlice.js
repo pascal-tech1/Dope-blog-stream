@@ -421,6 +421,7 @@ const initialState = {
 	confirmSentEmailStatus: "idle",
 	resetPasswordStatus: "idle",
 	changeEmailStatus: false,
+	changePasswordStatus: false,
 	followingUserListForNonLoginUser: [],
 	followingUserListForNonLoginUserTotalNumber: 0,
 	dashboardSearchTerm: "",
@@ -455,6 +456,10 @@ const userSlice = createSlice({
 		},
 		setChangeEmail: (state) => {
 			state.changeEmailStatus = !state.changeEmailStatus;
+		},
+		setChangePassword: (state) => {
+			console.log("im here");
+			state.changePasswordStatus = !state.changePasswordStatus;
 		},
 		setUserState: (state, action) => {
 			state.user = action.payload;
@@ -771,6 +776,7 @@ const userSlice = createSlice({
 			state.updatePasswordStatus = "success";
 		},
 		[updatePassword.rejected]: (state, { payload }) => {
+			console.log(payload);
 			state.updatePasswordStatus = "failed";
 			toast.error(payload?.message);
 		},
@@ -804,4 +810,5 @@ export const {
 	setIsSearchBArNeeded,
 	SetverifyEmailStatus,
 	setIsAdmin,
+	setChangePassword,
 } = userSlice.actions;
