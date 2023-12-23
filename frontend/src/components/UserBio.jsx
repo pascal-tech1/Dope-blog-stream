@@ -41,9 +41,9 @@ const UserBio = () => {
 			className="  rounded-xl flex flex-col px-4 mt-4 mb-4 font-inter"
 		>
 			<div className=" flex justify-between mr-4 mt-4">
-				<h1 className=" font-bold text-colorPrimary ">Summary</h1>
+				<h1 className=" font-bold  text-blue-400 dark:text-colorPrimary ">Summary</h1>
 				<button type="submit" className="flex gap-1">
-					<MdEdit className=" text-colorPrimary " />
+					<MdEdit className="  text-blue-400 dark:text-colorPrimary " />
 					<h3 className="font-bold text-gray-600 md:text-sm hover:text-gray-900  dark:hover:text-gray-400">
 						{isUserProfileClicked ? "save" : "Edit"}
 					</h3>

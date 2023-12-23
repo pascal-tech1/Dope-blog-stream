@@ -678,7 +678,7 @@ const profilePhotoUploadCtrl = expressAsyncHandler(async (req, res) => {
 			user.blurCoverPhoto = req.blurProfilePhoto;
 			await user.save();
 
-			res.send({
+			res.status(201).json({
 				message: "cover image uploaoded successfully",
 				userImage: user.coverPhoto,
 				blurCoverPhoto: user.blurCoverPhoto,
@@ -690,6 +690,7 @@ const profilePhotoUploadCtrl = expressAsyncHandler(async (req, res) => {
 		res.status(500).json({
 			status: "failed",
 			message: "failed to upload file try again",
+			
 		});
 	}
 });

@@ -60,6 +60,7 @@ const Dashboard = () => {
 
 	useEffect(() => {
 		if (!_id) return;
+
 		dispatch(fetchUserDetailsCounts());
 		dispatch(clearMsg());
 		dispatch(fetchMsg({ page: 1, limit: 5 }));
@@ -78,6 +79,7 @@ const Dashboard = () => {
 
 	useEffect(() => {
 		if (!_id) return;
+
 		dispatch(fetchPostImpressionsCount({ page: 1, numberPerPage: 10 }));
 	}, [chartSelectedFilter, _id]);
 
@@ -156,7 +158,7 @@ const Dashboard = () => {
 						{whoViewUserProfileStatus === "loading" ? (
 							<LoadingSpinner />
 						) : (
-							whoViewUserProfile.map((users,index) => {
+							whoViewUserProfile.map((users, index) => {
 								if (users?.viewedBy?.length === 0) {
 									return (
 										<div key={index} className=" flex gap-3 mb-3 ">
@@ -166,7 +168,7 @@ const Dashboard = () => {
 												className=" rounded-full  w-6 h-6 "
 											/>
 											<Tooltip info={"this user is deleted"}>
-												<h3 className=" text-red-400 text-sm gap-2 font-light capitalize">
+												<h3 className=" text-red-400 text-sm gap-2 capitalize">
 													deleted user
 												</h3>
 											</Tooltip>

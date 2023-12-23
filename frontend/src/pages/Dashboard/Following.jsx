@@ -47,8 +47,7 @@ const Following = ({ id }) => {
 	const handleClearSearch = () => {
 		dispatch(setSearchTermInStore(""));
 	};
-	console.log(followinglistTotalNumber);
-	console.log(userLists, status);
+
 	return (
 		<div className="dark:bg-dark rounded-lg p-4">
 			<div className=" grid max-w-md w-full font-inter ">

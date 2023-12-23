@@ -65,7 +65,7 @@ const Saved = () => {
 		dispatch(setSearchTermInStore(""));
 	};
 	return (
-		<div className=" font-inter  bg-dark rounded-lg p-4">
+		<div className=" font-inter  dark:bg-dark rounded-lg p-4">
 			{/* clear search */}
 			<ClearSearch
 				searchQuery={dashboardSearchTerm}

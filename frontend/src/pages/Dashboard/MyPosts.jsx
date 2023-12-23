@@ -67,7 +67,7 @@ const MyPosts = () => {
 	);
 
 	useEffect(() => {
-		if (id) {
+		if (!id) return
 			page = 1;
 			dispatch(clearCreatorAllPost());
 			dispatch(
@@ -77,7 +77,7 @@ const MyPosts = () => {
 					page,
 				})
 			);
-		} else return;
+		
 	}, [MyPostSelectedFilter, id, dashboardSearchTerm]);
 
 	const posts = [

@@ -136,7 +136,7 @@ const AllUsers = () => {
 	};
 
 	return (
-		<div className="font-inter overflow-hidden shadow-md relative h-[85vh] bg-dark p-2 rounded-lg">
+		<div className="font-inter overflow-hidden shadow-md relative h-[85vh] dark:bg-dark p-2 rounded-lg">
 			{/* clear search */}
 			<ClearSearch
 				searchQuery={dashboardSearchTerm}

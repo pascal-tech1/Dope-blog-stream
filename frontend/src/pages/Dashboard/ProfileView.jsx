@@ -79,7 +79,7 @@ const ProfileView = () => {
 
 				{/* following  */}
 				<div className=" md:col-start-1 col-span-3 px-4 font-inter bg-white dark:bg-dark rounded-md ">
-					<h1 className="font-semibold  max-w-max pt-3 pb-1 text-colorPrimary ">
+					<h1 className="font-semibold  max-w-max pt-3 pb-1 dark:text-colorPrimary  ">
 						following
 					</h1>
 
@@ -95,7 +95,7 @@ const ProfileView = () => {
 				</div>
 				{/* followers  */}
 				<div className=" md:col-start-4 col-span-full font-inter bg-white dark:bg-dark px-4 rounded-md">
-					<h1 className="font-semibold  max-w-max pt-3 pb-1 text-colorPrimary ">
+					<h1 className="font-semibold  max-w-max pt-3 pb-1 dark:text-colorPrimary  ">
 						followers
 					</h1>
 

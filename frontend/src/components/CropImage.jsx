@@ -19,10 +19,7 @@ import {
 import Cropper from "react-cropper";
 import "cropperjs/dist/cropper.css";
 import { useDispatch } from "react-redux";
-import { BsCrop } from "react-icons/bs";
 
-const defaultSrc =
-	"https://raw.githubusercontent.com/roadmanfong/react-cropper/master/example/img/child.jpg";
 
 export const CropImage = ({
 	handleFileChange,
@@ -142,11 +139,11 @@ export const CropImage = ({
 		}
 	};
 	return (
-		<div className=" z-[1000] fixed left-0 top-10 w-full h-screen  overscroll-y-auto flex justify-center bg-black bg-opacity-80 backdrop-blur-sm font-inter   ">
+		<div className=" z-[1000] fixed left-0 top-10 w-full h-screen   overscroll-y-auto md:flex md:justify-end  bg-black bg-opacity-80 backdrop-blur-sm font-inter   ">
 			<div
 				className={` ${
 					!isPreview && "justify-between"
-				}  flex items-center  flex-col bg-white h-[90vh] overscroll-y-auto dark:bg-[#171717] mt-4 dark:border dark:border-gray-900 w-[100vw] lg:w-[80vw] shadow-lg rounded-lg mx-2  relative px-4  `}
+				}  flex items-center  flex-col bg-white h-[90vh] overscroll-y-auto dark:bg-dark mt-4 dark:border  md:mx-4 dark:border-gray-900 w-[100vw] md:w-[80vw] shadow-lg rounded-lg overflow-auto custom-scrollbar relative  `}
 			>
 				<button
 					onClick={(e) => {
@@ -192,7 +189,7 @@ export const CropImage = ({
 				</div>
 				{/* cropper image */}
 				<div className={`${isPreview && "hidden"}  `}>
-					<div className="flex gap-4  md:text-sm  py-4">
+					<div className="flex gap-4  md:text-sm   py-4">
 						<button
 							onClick={handleSetCoverCropping}
 							className=" shadow-sm  rounded-md hover:shadow-none flex items-center justify-center flex-col"

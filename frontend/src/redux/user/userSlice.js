@@ -268,8 +268,10 @@ export const fetchPostImpressionsCount = createAsyncThunk(
 );
 export const uploadProfilePhoto = createAsyncThunk(
 	"uploadProfile/Photo",
-	async (userImage, { getState, rejectWithValue }) => {
+	async (userImage, { getState, rejectWithValue, dispatch }) => {
 		try {
+			dispatch(setWhatIsUploading(userImage?.whatUploading));
+
 			const resp = await customFetch.post(
 				`/users/profile-picture-upload`,
 				{ image: userImage.file, whatUploading: userImage.whatUploading },
@@ -498,6 +500,9 @@ const userSlice = createSlice({
 		},
 		setIsAdmin: (state, { payload }) => {
 			state.user.isAdmin = payload;
+		},
+		setWhatIsUploading: (state, { payload }) => {
+			state.whatUploading = payload;
 		},
 	},
 	extraReducers: {
@@ -811,4 +816,5 @@ export const {
 	SetverifyEmailStatus,
 	setIsAdmin,
 	setChangePassword,
+	setWhatIsUploading,
 } = userSlice.actions;

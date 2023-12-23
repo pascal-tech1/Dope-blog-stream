@@ -39,6 +39,8 @@ const CreatePost = () => {
 	const [postImage, setPostImage] = useState(null);
 	const [selectedFilter, setSelectedFilter] = useState("general");
 	const { isBlocked } = useSelector((store) => store.singlePostSlice);
+	const { user } = useSelector((store) => store.userSlice);
+	const _id = user?._id;
 	const wordsPerMinute = 200;
 	const {
 		status,
@@ -81,9 +83,10 @@ const CreatePost = () => {
 		}
 	}, [postEditingStatus]);
 	useEffect(() => {
+		if (!_id) return;
 		dispatch(fetchAllCategorys());
 		isEditing && setSelectedFilter(postToBeEdited?.category);
-	}, []);
+	}, [_id]);
 
 	const allCategorytitle = allCategory.map((category) => category.title);
 
@@ -143,7 +146,7 @@ const CreatePost = () => {
 		<div
 			className={`${
 				quillIsFocus && ""
-			}font-inter font-medium  gap-7 pb-6  relative bg-dark p-4 rounded-md  `}
+			}font-inter font-medium  gap-7 pb-6  relative dark:bg-dark p-4 rounded-md  `}
 		>
 			<form onSubmit={formik.handleSubmit} className=" ">
 				<div

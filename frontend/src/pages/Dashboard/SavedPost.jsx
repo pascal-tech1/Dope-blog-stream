@@ -59,7 +59,7 @@ const Saved = () => {
 	};
 
 	return (
-		<div className=" font-inter bg-dark p-4 rounded-lg">
+		<div className=" font-inter dark:bg-dark p-4 rounded-lg">
 			{/* clear search */}
 			<ClearSearch
 				searchQuery={dashboardSearchTerm}

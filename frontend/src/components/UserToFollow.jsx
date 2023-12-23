@@ -33,7 +33,7 @@ const UserToFollow = ({ user, index, date, numberOfView }) => {
 				</div>
 
 				<div>
-					<div className=" flex items-center text-sm gap-2 font-light">
+					<div className=" flex items-center text-sm gap-2 ">
 						<div className=" flex flex-wrap gap-1">
 							<h1 className=" capitalize">{user?.firstName}</h1>
 							<h1 className=" capitalize">{user?.lastName}</h1>

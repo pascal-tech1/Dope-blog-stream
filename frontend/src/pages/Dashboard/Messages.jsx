@@ -13,17 +13,20 @@ const Messages = () => {
 	const { msg, fetchMessageStatus, receivedMessageCount } = useSelector(
 		(store) => store?.messageSlice
 	);
+	const { user } = useSelector((store) => store.userSlice);
+	const _id = user?._id;
 	const [pageNumber, setPageNumber] = useState(1);
 
 	useEffect(() => {
 		if (
 			(pageNumber === 1 && msg.length > 0) ||
 			fetchMessageStatus === "loading" ||
-			fetchMessageStatus === "undefine"
+			fetchMessageStatus === "undefine" ||
+			!_id
 		)
 			return;
 		dispatch(fetchMsg({ page: pageNumber, limit: 2 }));
-	}, [pageNumber]);
+	}, [pageNumber, _id]);
 
 	return (
 		<div>

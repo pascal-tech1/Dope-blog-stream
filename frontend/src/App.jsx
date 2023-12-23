@@ -37,6 +37,7 @@ import ComfirmEmailPage from "./pages/ComfirmEmailPage";
 import PagesLayout from "./pages/PagesLayout";
 import { useDarkMode } from "./customHooks";
 import { getUserFromLocalStorage } from "./utils/localStorage";
+import ConfrimUserEmail from "./pages/ConfrimUserEmail";
 
 const AdminProtectedPage = lazy(() =>
 	import("./pages/AdminProtectedPage")
@@ -123,7 +124,7 @@ const App = () => {
 
 					<Route
 						path="/confirm-sent-email/:token"
-						element={<ComfirmEmailPage />}
+						element={<ConfrimUserEmail />}
 					/>
 					<Route
 						path="/send-email-verification"

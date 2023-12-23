@@ -18,15 +18,19 @@ const ProfilePhoto = ({ user }) => {
 		} else if (e.target) {
 			files = e.target.files;
 
-			if (files[0].name) setFileName(files[0].name);
+			if (files[0]?.name) setFileName(files[0]?.name + new Date());
 			else setFileName("blogVanaImage");
 		}
 		const reader = new FileReader();
 		reader.onload = () => {
 			setImage(reader.result);
+			setFileName(
+				fileName !== "blogVanaImage" && fileName + "blogVanaImage"
+			);
 		};
 		reader.readAsDataURL(files[0]);
 	};
+
 	return (
 		<div className=" w-full relative">
 			{image && (
@@ -52,25 +56,24 @@ const ProfilePhoto = ({ user }) => {
 					paddingBottom={"100%"}
 				/>
 			</div>
-			<label className=" absolute cursor-pointer  text-center px-1 flex items-center justify-center bg-blue-200 drop-shadow-md hover:drop-shadow-sm hover:bg-blue-300 transition-all delay-75  h-8 w-8 rounded-full ">
-				<input
-					onChange={(e) => handleFileChange(e)}
-					type="file"
-					name="image"
-					accept="image/*"
-					id="image"
-					className="hidden z-50"
-				/>
 
-				{profilePictureUploadStatus === "loading" &&
-				whatUploading === "coverPhoto" ? (
-					<div className=" self-center w-[2.1rem] h-[2.1rem] ml-2 mt-1">
-						<Spinner />
-					</div>
-				) : (
+			{profilePictureUploadStatus === "loading" &&
+			whatUploading === "profilePhoto" ? (
+				<Spinner />
+			) : (
+				<label className=" absolute cursor-pointer  text-center px-1 flex items-center justify-center bg-blue-400 dark:bg-colorPrimary dark:hover:bg-blue-500 drop-shadow-md hover:drop-shadow-sm  hover:bg-blue-600 transition-all delay-75  h-8 w-8 rounded-full ">
+					<input
+						onChange={(e) => handleFileChange(e)}
+						type="file"
+						name="image"
+						accept="image/*"
+						id="image"
+						className="hidden z-50"
+					/>
+
 					<BiCamera className=" text-4xl fill-white -rotate-3" />
-				)}
-			</label>
+				</label>
+			)}
 		</div>
 	);
 };
