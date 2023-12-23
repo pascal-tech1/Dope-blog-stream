@@ -15,6 +15,8 @@ const ComfirmEmailPage = () => {
 	const email = searchParams.get("email");
 
 	useEffect(() => {
+		if (confirmSentEmailStatus !== "idle") return;
+		console.log(confirmSentEmailStatus);
 		dispatch(confirmSentEmail(token));
 	}, []);
 

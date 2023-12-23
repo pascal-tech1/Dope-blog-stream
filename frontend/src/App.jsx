@@ -11,6 +11,7 @@ import {
 	VerifyEmail,
 	PasswordReset,
 	Error,
+	ConfirmUserEmail,
 } from "./pages";
 import {
 	Dashboard,
@@ -33,11 +34,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { loginUserWithToken } from "./redux/user/userSlice";
 import { AllUsers, AllUsersPost, AdminAllCategory } from "./AdminPages";
 import { CropImage, LoadingSpinner } from "./components";
-import ComfirmEmailPage from "./pages/ComfirmEmailPage";
+
 import PagesLayout from "./pages/PagesLayout";
 import { useDarkMode } from "./customHooks";
 import { getUserFromLocalStorage } from "./utils/localStorage";
-import ConfrimUserEmail from "./pages/ConfrimUserEmail";
 
 const AdminProtectedPage = lazy(() =>
 	import("./pages/AdminProtectedPage")
@@ -69,7 +69,6 @@ const App = () => {
 		}
 	}, [theme, isSystemInDakMode]);
 
-	
 	useEffect(() => {
 		if (userToken) {
 			dispatch(loginUserWithToken());
@@ -92,7 +91,7 @@ const App = () => {
 	}, []);
 	if (loginUserTokenStatus === "loading" || !"undefine") {
 		return (
-			<div className=" grid place-content-center place-items-center h-screen dark:bg-[#1C1C1C]">
+			<div className=" grid place-content-center place-items-center h-screen dark:bg-dark">
 				<LoadingSpinner />
 			</div>
 		);
@@ -124,7 +123,7 @@ const App = () => {
 
 					<Route
 						path="/confirm-sent-email/:token"
-						element={<ConfrimUserEmail />}
+						element={<ConfirmUserEmail />}
 					/>
 					<Route
 						path="/send-email-verification"

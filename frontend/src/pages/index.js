@@ -6,7 +6,7 @@ import SinglePost from "./SinglePost";
 import AllPost from "./AllPost";
 
 import VerifyEmail from "./VerifyEmail";
-import ConfirmEmailPage from "./ComfirmEmailPage";
+import ConfirmUserEmail from "./ConfrimUserEmail";
 import PasswordReset from "./PasswordReset";
 
 import UserPage from "./UserPage";
@@ -21,7 +21,7 @@ export {
 	AllPost,
 	UserPage,
 	VerifyEmail,
-	ConfirmEmailPage,
+	ConfirmUserEmail,
 	PasswordReset,
 	Error,
 };
