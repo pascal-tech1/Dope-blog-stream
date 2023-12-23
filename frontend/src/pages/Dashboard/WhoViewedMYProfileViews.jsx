@@ -64,7 +64,7 @@ const WhoViewedMyProfile = () => {
 											className=" rounded-full  w-6 h-6 "
 										/>
 										<Tooltip info={"this user is deleted"}>
-											<h3 className=" text-red-400 text-sm gap-2 font-light capitalize">
+											<h3 className=" text-red-400 gap-2 font-light capitalize">
 												deleted user
 											</h3>
 										</Tooltip>

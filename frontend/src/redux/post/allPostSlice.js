@@ -99,10 +99,8 @@ const allPostSlice = createSlice({
 			state.morePostHasMore = true;
 		},
 		clearSearchAndCategory: (state, { payload }) => {
-			console.log("i just run ");
 			state.searchQuery = "";
 			state.activeCategory = "all";
-			state.allPost = [];
 		},
 	},
 

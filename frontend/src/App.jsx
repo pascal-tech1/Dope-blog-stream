@@ -55,7 +55,6 @@ const App = () => {
 	const theme = localStorage.getItem("theme");
 	const dispatch = useDispatch();
 	const isSystemInDakMode = useDarkMode();
-	const userToken = getUserFromLocalStorage();
 
 	useEffect(() => {
 		if (!theme && isSystemInDakMode) {
@@ -68,12 +67,6 @@ const App = () => {
 			document.documentElement.classList.remove("dark");
 		}
 	}, [theme, isSystemInDakMode]);
-
-	useEffect(() => {
-		if (userToken) {
-			dispatch(loginUserWithToken());
-		}
-	}, []);
 
 	useEffect(() => {
 		const handleKeyPress = (e) => {
@@ -89,7 +82,8 @@ const App = () => {
 			document.removeEventListener("keydown", handleKeyPress);
 		};
 	}, []);
-	if (loginUserTokenStatus === "loading" || !"undefine") {
+
+	if (loginUserTokenStatus === "loading") {
 		return (
 			<div className=" grid place-content-center place-items-center h-screen dark:bg-dark">
 				<LoadingSpinner />

@@ -1,4 +1,4 @@
-const emailVerificationHtml = (foundUser, verificationToken) => {
+const sendEmailForgotPassword = (foundUser, verificationToken) => {
 	return `<!DOCTYPE html>
 <html lang="en">
 	<head>
@@ -48,20 +48,19 @@ const emailVerificationHtml = (foundUser, verificationToken) => {
 			<h2>Account Verification</h2>
 			<p>Dear ${foundUser.firstName},</p>
 			<p>
-				Thank you for creating an account. To activate your account, please
-				click the verification link below:
+			you have requested to change your email click the below link to proceed 
 			</p>
-			<a href= "https://blogvana-up63.onrender.com/confirm-sent-email/${verificationToken}?email=${foundUser.email}" class="verification-link"
-				>Verify Your Email</a
+			<a href= "https://blogvana-up63.onrender.com/reset-password/${resetToken}" class="verification-link"
+				>Reset Password</a
 			>
-			<p>if the button is not working click below</p>
+			<p>if the button is not working copy the below link to the browser </p>
 			
 			<p>https://blogvana-up63.onrender.com/confirm-sent-email/${verificationToken}?email=${foundUser.email}</p>
 
-			<p>If you did not create an account, please disregard this email.</p>
+			<p>If you did initiate this action, please disregard this email.</p>
 			<p>Best regards,<br />BlogVana</p>
 		</div>
 	</body>
 </html>`;
 };
-module.exports = emailVerificationHtml;
+module.exports = sendEmailForgotPassword;

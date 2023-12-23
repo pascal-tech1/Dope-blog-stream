@@ -113,7 +113,7 @@ const DashboardSideBar = () => {
 	user?.isAdmin && sideBarItems.push(AdminObject);
 
 	return (
-		<aside className=" flex flex-col  font-medium font-inter md:h-[95vh] h-[85vh] overflow-y-auto custom-scrollbar   ">
+		<aside className=" flex flex-col  font-medium font-inter md:h-[95vh] h-[85vh] overflow-y-auto overflow-x-hidden   custom-scrollbar   ">
 			<Link to="/" className="mt-4 self-center md:flex">
 				<img
 					src="/blogvana.png"

@@ -137,7 +137,8 @@ export function BarChart() {
 					allFilters={allFilter}
 					setSelectedFilter={setChartSelectedFilter}
 					selectedFilter={chartSelectedFilter}
-					dropdownWidth={"yes"}
+					dropdownWidth={"w-[170px"}
+					left={"l-3"}
 				/>
 			</div>
 

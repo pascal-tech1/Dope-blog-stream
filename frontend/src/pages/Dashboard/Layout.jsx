@@ -60,7 +60,7 @@ const Layout = () => {
 	}, [isSideBarOpen]);
 
 	useEffect(() => {
-		dispatch(setSideBarStateInStore(screenWidth < 798 ? false : true));
+		dispatch(setSideBarStateInStore(screenWidth < 768 ? false : true));
 	}, [screenWidth]);
 
 	return (
@@ -94,7 +94,7 @@ const Layout = () => {
 						isSideBarOpen
 							? "absolute top-12 md:top-0  md:relative "
 							: "hidden "
-					}   col-start-1 col-span-2 row-start-1 row-span-full  h-screen   z-10 overflow-y-hidden overflow-x-hidden bg-white dark:bg-dark drop-shadow-sm rounded-md px-2   `}
+					}   col-start-1 col-span-2 row-start-1 row-span-full  h-screen  z-10 overflow-y-hidden overflow-x-hidden bg-white dark:bg-dark drop-shadow-sm rounded-md    `}
 				>
 					<DashboardSideBar />
 				</div>

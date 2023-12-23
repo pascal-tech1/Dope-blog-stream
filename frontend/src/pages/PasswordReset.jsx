@@ -69,7 +69,9 @@ const PasswordReset = () => {
 
 	return (
 		<div className=" font-inter">
+			
 			<div className=" flex items-center justify-center h-[80vh] w-screen">
+				
 				<form className="flex flex-col" onSubmit={formik.handleSubmit}>
 					<label className=" form-label" htmlFor="password">
 						new password
@@ -95,6 +97,9 @@ const PasswordReset = () => {
 						</h1>
 					</div>
 					<div>
+					<label className=" form-label" htmlFor="password">
+						confirm password
+					</label>
 						<input
 							type={showPassword ? "text" : "password"}
 							className="form-input "

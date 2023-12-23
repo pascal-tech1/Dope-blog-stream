@@ -25,7 +25,7 @@ const AllPost = () => {
 	const lastPostRef = useCallback(
 		(node) => {
 			if (isLoading) return;
-			console.log(isLoading)
+
 			if (observer.current) observer.current.disconnect();
 			observer.current = new IntersectionObserver((entries) => {
 				if (entries[0].isIntersecting && hasMore) {
@@ -35,7 +35,7 @@ const AllPost = () => {
 			});
 			if (node) observer.current.observe(node);
 		},
-		[hasMore,isLoading]
+		[hasMore, isLoading]
 	);
 	const handleClearSearch = () => {
 		dispatch(setEmptySearch());
@@ -49,6 +49,7 @@ const AllPost = () => {
 			/>
 
 			{allPost.map((post, index) => {
+				console.log(searchQuery)
 				return (
 					<div
 						key={index}

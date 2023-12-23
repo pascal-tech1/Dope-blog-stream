@@ -428,6 +428,7 @@ const initialState = {
 	followingUserListForNonLoginUserTotalNumber: 0,
 	dashboardSearchTerm: "",
 	isSearchBarNeeded: false,
+	loginUserTokenStatus: "idle",
 };
 const userSlice = createSlice({
 	name: "userSlice",

@@ -33,7 +33,7 @@ const UserToFollow = ({ user, index, date, numberOfView }) => {
 				</div>
 
 				<div>
-					<div className=" flex items-center text-sm gap-2 ">
+					<div className=" flex items-center  gap-2 ">
 						<div className=" flex flex-wrap gap-1">
 							<h1 className=" capitalize">{user?.firstName}</h1>
 							<h1 className=" capitalize">{user?.lastName}</h1>
@@ -60,7 +60,7 @@ const UserToFollow = ({ user, index, date, numberOfView }) => {
 				<div>
 					<FollowingBtn
 						userToFollowOrUnfollow={user}
-						className=" dark:text-colorPrimary text-sm text-blue-400  hover:dark:bg-gray-700  px-2 my-[0.2rem] rounded-lg hover:bg-blue-200 transition-all delay-75   "
+						className=" dark:text-colorPrimary  text-blue-400  hover:dark:bg-gray-700  px-2 my-[0.2rem] rounded-lg hover:bg-blue-200 transition-all delay-75   "
 					/>
 				</div>
 			)}

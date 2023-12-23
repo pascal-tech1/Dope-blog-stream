@@ -16,6 +16,9 @@ const Post = require("../../model/post/Post");
 const emailVerificationHtml = require("./sendEmailVerificationLink");
 const emailChangeVerificationHtml = require("./sendChangeEmailLink");
 const SavedPosts = require("../../model/savedPosts/SavedPosts");
+const sendPasswoedChangeEmail = require("./sendPasswoedChangeEmail");
+const sendEmailVerified = require("./sendEmailVerified");
+const sendEmailForgotPassword = require("./sendEmailForgotPassword");
 
 // '''''''''''''''''''''''''''''''''''''''''
 //         Register user
@@ -430,14 +433,12 @@ const confirmSentEmailCtrl = expressAsyncHandler(async (req, res) => {
 		foundUser.accountVerificationToken = undefined;
 		foundUser.accountVerificationTokenExpires = undefined;
 		await foundUser.save();
-
+		const emailToSend = sendEmailVerified(foundUser?.firstName);
 		let mailDetails = {
 			from: "pascalazubike003@gmail.com",
 			to: `${foundUser.email}`,
-			subject: "Mern-blog-app Email verification",
-			html: `
-    <h1>Email Verification</h1>
-    <p>your email successfully verified!`,
+			subject: "BlogVana email verified",
+			html: emailToSend,
 		};
 
 		mailTransporter.sendMail(mailDetails, function (err, data) {
@@ -472,17 +473,12 @@ const sendPasswordResetEmailCtrl = expressAsyncHandler(
 		try {
 			const resetToken = await foundUser.passwordResetHandler();
 			await foundUser.save(); // this save the user info altered in passwordResetHandler in the user model
-
+			const emailToSend = sendEmailForgotPassword(foundUser, resetToken);
 			let mailDetails = {
 				from: "pascalazubike003@gmail.com",
 				to: `${foundUser.email}`,
-				subject: "Mern-blog-app forgotten Password",
-				html: `
-                      <h1>Password Reset</h1>
-                       <p>You have requested to reset your password. Please click the link below to reset your password:</p>
-                       <a href="http://localhost:5173/reset-password/${resetToken}">Reset Password</a>
-                       <p>If you didn't initiate this password reset, please contact the MERN Blog App admin immediately.</p>
-                         `,
+				subject: "BlogVana forgotten Password",
+				html: emailToSend,
 			};
 
 			mailTransporter.sendMail(mailDetails, function (err, data) {
@@ -525,13 +521,13 @@ const resetPasswordCtrl = expressAsyncHandler(async (req, res) => {
 
 		foundUser.password = newPassword;
 		await foundUser.save();
+
+		const emailToSend = sendPasswoedChangeEmail(foundUser.firstName);
 		let mailDetails = {
 			from: "pascalazubike003@gmail.com",
 			to: `${foundUser.email}`,
-			subject: "Mern-blog-app Email verification",
-			html: `
-    <h1>Mern Blog App Password Reset</h1>
-    <p>your password have been reset successfully!`,
+			subject: "BlogVana Password Reset",
+			html: emailToSend,
 		};
 
 		mailTransporter.sendMail(mailDetails, function (err, data) {
@@ -558,13 +554,12 @@ const updatePasswordCtrl = expressAsyncHandler(async (req, res) => {
 		foundUser.password = newPassword;
 		await foundUser.save();
 
+		const emailToSend = sendPasswoedChangeEmail(foundUser.firstName);
 		let mailDetails = {
 			from: "pascalazubike003@gmail.com",
 			to: `${foundUser.email}`,
-			subject: "Mern-blog-app Email verification",
-			html: `
-    <h1>Mern Blog App Password Reset</h1>
-    <p>your password have been reset successfully!`,
+			subject: "BlogVana Password Reset",
+			html: emailToSend,
 		};
 
 		mailTransporter.sendMail(mailDetails, function (err, data) {
@@ -608,7 +603,7 @@ const ChangeEmailCtrl = expressAsyncHandler(async (req, res) => {
 		let mailDetails = {
 			from: "pascalazubike003@gmail.com",
 			to: `${newEmail}`,
-			subject: "Account Email Change activation token",
+			subject: "Account Email Change activation",
 			html: emailToSend,
 		};
 
@@ -690,7 +685,6 @@ const profilePhotoUploadCtrl = expressAsyncHandler(async (req, res) => {
 		res.status(500).json({
 			status: "failed",
 			message: "failed to upload file try again",
-			
 		});
 	}
 });

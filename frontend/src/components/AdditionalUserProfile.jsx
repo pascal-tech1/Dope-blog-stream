@@ -53,7 +53,7 @@ const AdditionalUserProfile = () => {
 	return (
 		<form
 			onSubmit={formik.handleSubmit}
-			className=" col-start-5 col-span-2 px-4 bg-white row-start-1 lg:shadow-sm font-inter lg:rounded-md dark:bg-dark"
+			className=" col-start-5 col-span-2 px-4 bg-white row-start-1 lg:shadow-sm font-inter lg:rounded-md custom-scrollbar dark:bg-dark overflow-x-auto"
 		>
 			<div className=" flex justify-between mr-4 ">
 				<h1 className=" font-bold dark:text-colorPrimary text-blue-400 ">

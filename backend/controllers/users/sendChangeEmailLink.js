@@ -27,7 +27,12 @@ const emailChangeVerificationHtml = (
 				box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 			}
 			h2 {
-				color: #333333;
+				margin: 0 auto;
+				background-color: #004aff;
+				text-align: center;
+				color: #ffffff;
+				padding: 10px 0;
+				border-radius: 10px 10px 0 0px;
 			}
 			p {
 				color: #555555;
@@ -44,17 +49,17 @@ const emailChangeVerificationHtml = (
 	</head>
 	<body>
 		<div class="container">
-			<h2>Account Verification</h2>
+			<h2>Account Email change</h2>
 			<p>Dear ${firstName},</p>
 			<p>
-				you have requested to change your email. To activate your new email, please
+				you have requested to change your blogvana account email. To activate your new email, please
 				click the verification link below:
 			</p>
-			<a href= "https://blogvana-rmf6.onrender.com/confirm-sent-email/${verificationToken}?email=${email}" class="verification-link"
+			<a href= "https://blogvana-up63.onrender.com/confirm-sent-email/${verificationToken}?email=${email}" class="verification-link"
 				>Verify Your Email</a
 			>
-			<p>if the button is not working click below</p>
-			<p>https://blogvana-rmf6.onrender.com/confirm-sent-email/${verificationToken}?email=${email}</p>
+			<p>if the button is not working copy the link below to your browser</p>
+			<p>https://blogvana-up63.onrender.com/confirm-sent-email/${verificationToken}?email=${email}</p>
 
 			<p>If you did not make this actionn, please disregard this email and contact blogvana admin immmediately</p>
 			<p>Best regards,<br />BlogVana</p>

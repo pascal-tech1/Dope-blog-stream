@@ -31,8 +31,11 @@ const Register = () => {
 		email: Yup.string().email().required("Email is Required."),
 		password: Yup.string()
 			.required("No password provided.")
-			.min(8, "Password is too short - should be 8 chars minimum.")
-			.matches(/(?=.*[0-9])/, "Password must contain a number."),
+
+			.matches(
+				/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+				"Password must contain at least one uppercase letter, one lowercase letter, one number, one special character, and be at least 8 characters long."
+			),
 	});
 
 	const formik = useFormik({
@@ -59,7 +62,7 @@ const Register = () => {
 					Be a part of our vibrant community where your voice matters. Sign
 					up now and let your journey as a blogger begin!
 				</p>
-				<Carousel/>
+				<Carousel />
 			</div>
 
 			{/* form starts here */}
@@ -134,9 +137,9 @@ const Register = () => {
 					className="form-input"
 				/>
 				<div className=" relative mb-2 self-start ">
-					<h1 className=" form-error-text ">
+					<div className=" text-sm text-red-400">
 						{formik.touched.password && formik.errors.password}
-					</h1>
+					</div>
 				</div>
 				<button
 					onClick={() => setIsRegistering(true)}

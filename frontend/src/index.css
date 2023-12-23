@@ -187,7 +187,7 @@ th {
 }
 
 .form-label {
-	@apply text-sm  text-gray-400 self-start;
+	@apply text-sm mt-2 text-gray-400 self-start;
 }
 
 .form-input {
@@ -202,7 +202,7 @@ th {
 	@apply bg-blue-600 w-full py-1 rounded-lg text-white hover:bg-blue-500 transition-all;
 }
 .form-error-text {
-	@apply absolute top-[-0.6rem] left-0 text-white bg-red-400 text-center rounded-md  mt-1  text-xs min-w-max py-[0.15rem];
+	@apply absolute top-[-0.6rem] left-0  text-red-400 text-center rounded-md  mt-1  text-xs min-w-max py-[0.15rem];
 }
 
 .tableContainer {
@@ -225,7 +225,7 @@ th {
 	@apply max-h-[60vh]  !overflow-y-auto  rounded-md;
 }
 .code-div {
-	@apply relative dark:bg-[#161618] bg-gray-50 px-2 py-10  rounded-lg p-4;
+	@apply relative dark:bg-[#161618] bg-[#f7f7f7] px-2 pt-6 pb-2  rounded-lg p-4;
 }
 .copy-button {
 	@apply dark:bg-gray-900 drop-shadow-sm text-sm;

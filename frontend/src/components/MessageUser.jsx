@@ -4,11 +4,12 @@ import { useDispatch, useSelector } from "react-redux";
 import Modal from "./Modal";
 import { sendMsg } from "../redux/message/messageSlice";
 
-import { LuSend } from "react-icons/lu";
+import { LuSend, LuSendHorizonal } from "react-icons/lu";
 import { logOutUser } from "../redux/user/userSlice";
 import { useNavigate } from "react-router-dom";
 
 const MessageUser = ({ receiverId }) => {
+	console.log(receiverId);
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 	const [isModalOpen, setIsModalOpen] = useState(false);
@@ -57,7 +58,7 @@ const MessageUser = ({ receiverId }) => {
 				onClick={openModal}
 				className=" cursor-pointer p-2 rounded-full hover:bg-gray-500 hover:rounded-full flex items-center justify-center dark:text-white text-gray-600 transition-all delay-75 "
 			>
-				<LuSend className=" text-lg  " />
+				<LuSendHorizonal className=" text-lg  " />
 			</div>
 		</div>
 	);
