@@ -54,7 +54,6 @@ const PasswordReset = () => {
 	if (resetPasswordStatus === "success") {
 		return (
 			<div>
-				<NavBar />
 				<div className="flex items-center justify-center h-[80vh] w-screen flex-col">
 					<h1>your password have been changed successfully</h1>
 					<button
@@ -70,9 +69,6 @@ const PasswordReset = () => {
 
 	return (
 		<div className=" font-inter">
-			<div>
-				<NavBar />
-			</div>
 			<div className=" flex items-center justify-center h-[80vh] w-screen">
 				<form className="flex flex-col" onSubmit={formik.handleSubmit}>
 					<label className=" form-label" htmlFor="password">

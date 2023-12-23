@@ -6,7 +6,6 @@ import * as Yup from "yup";
 import { MdCancel } from "react-icons/md";
 import { LoadingSpinner } from "./LoadingSpinner";
 
-
 const ForgotPassword = ({ setIsOpen }) => {
 	const dispatch = useDispatch();
 	const { sendForgotPasswordEmailStatus } = useSelector(
@@ -27,7 +26,9 @@ const ForgotPassword = ({ setIsOpen }) => {
 		},
 	});
 	return (
-		<div className=" w-[90vw] h-[90vh] lg:w-[60vw] font-inter  border dark:border-gray-900 flex gap-4  items-center justify-center flex-col rounded-s-lg px-4 relative rounded-lg">
+		<div className=" w-[90vw] h-[70vh] lg:w-[60vw] font-inter z-50 bg-white  border dark:border-gray-900 flex gap-4 dark:bg-dark items-center justify-center flex-col rounded-s-lg px-4 relative rounded-lg">
+			
+			<h3 className=" text-blue-400 drop-shadow-md">Forgot Password</h3>
 			<div
 				onClick={() => setIsOpen(false)}
 				className=" absolute top-1 right-2"
@@ -58,11 +59,13 @@ const ForgotPassword = ({ setIsOpen }) => {
 				</div>
 				<button
 					type="submit"
-					className="mt-4  bg-blue-600 px-2 rounded-md hover:bg-blue-800 transition-all delay-75  text-white  "
+					className="mt-4  bg-blue-600 px-2  py-1 rounded-md hover:bg-blue-800 transition-all delay-75  text-white  "
 				>
-					{sendForgotPasswordEmailStatus === "loading"
-						? LoadingSpinner
-						: "submit"}
+					{sendForgotPasswordEmailStatus === "loading" ? (
+						<LoadingSpinner />
+					) : (
+						"submit"
+					)}
 				</button>
 			</form>
 		</div>
