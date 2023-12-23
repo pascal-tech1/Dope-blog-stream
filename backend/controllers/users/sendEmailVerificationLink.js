@@ -28,7 +28,7 @@ const emailVerificationHtml = (foundUser, verificationToken) => {
 				text-align: center;
 				color: #ffffff;
 				padding: 10px 0;
-				border-radius: 10px;
+				border-radius: 10px 10px 0 0px;
 			}
 			p {
 				color: #555555;
